@@ -29,7 +29,7 @@ Each site is a dictionary with the following attributes:
   - `loggedOutRegex` (optional): If any text on the page matches this regex, the site is treated as being logged out.
   - `configName` (optional): Use this to allow changing names without breaking existing users.
 
-To create a search URL, there are four parameters you can use inside the URL:
+Parameters you can use inside the URL:
   - %tt%: The IMDb id with the tt prefix (e.g. tt0055630)
   - %nott%: The IMDb id without the tt prefix (e.g. 0055630)
   - %search_string%: The movie title (e.g. Yojimbo)
