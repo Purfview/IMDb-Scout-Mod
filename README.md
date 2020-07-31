@@ -25,7 +25,7 @@ Each site is a dictionary with the following attributes:
   - `TV` (optional): If true, it means that this site will only show up on TV pages. By default, sites only show up on movie pages
   - `both` (optional): Means that the site will show up on both movie and TV pages
   - `spaceEncode` (optional): Changes the character used to encode spaces in movie titles. The default is '+'.
-  - `goToUrl` (optional): URL used to GO instead of Override checking/search URL that.
+  - `goToUrl` (optional): Different URL used for link (instead of `searchUrl`).
   - `loggedOutRegex` (optional): If any text on the page matches this regex, the site is treated as being logged out.
   - `configName` (optional): Use this to allow changing names without breaking existing users.
 
