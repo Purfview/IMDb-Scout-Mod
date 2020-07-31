@@ -2,7 +2,7 @@
 
 Add links from IMDb pages to torrent and other sites -- easy downloading from IMDb
 
-Greasemonkey v4 is currently not supported (v3.xx works). Try alternatives plugins such as Violentmonkey or Tampermonkey.
+Greasemonkey v4 is currently not supported (v3.xx works). Try alternative plugins such as Violentmonkey or Tampermonkey.
 
 ## Usage
 
