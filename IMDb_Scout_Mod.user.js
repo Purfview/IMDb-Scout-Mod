@@ -7,7 +7,7 @@
 // @require     https://greasyfork.org/libraries/GM_config/20131122/GM_config.js
 // @require     http://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js
 //
-// @version        5.0
+// @version        5.1
 // @include        http*://*.imdb.tld/title/tt*
 // @include        http*://*.imdb.tld/search/title*
 // @include        http*://*.imdb.tld/user/*/watchlist*
@@ -349,6 +349,7 @@
 4.12.1  -    Add CCT
         -    Update CHD, AB, TTG
 
+
 #==============================================================================#
 #    IMDb Scout Mod:
 #==============================================================================#
@@ -394,6 +395,11 @@
              -   Tweak: SDBits, U2. 
 
 5.0     -   Fix: @namespace & @name changed to fix updating for plugins.
+
+5.1     -   Tweak: TVV, BB-HD.
+        -   Fixed: Invisible icons on dark background JoyHD, Rarelust, CZ, Zooqle, KG.
+        -   New feature: The new layout (icons are placed at top). Option to turn it off.
+        -   New feature: Option to select background for the new layout.
 
        
 -------------------------------------------------------*/
@@ -488,6 +494,7 @@ var public_sites = [
       'positiveMatch': true,
       'both': true},
   {   'name': 'Rarelust',
+      'icon': 'https://rarelust.com/wp-content/uploads/2015/10/rarelust.ico',
       'searchUrl': 'https://rarelust.com/?s=%tt%',
       'matchRegex': 'Nothing Found'},
   {   'name': 'RlsBB',
@@ -524,7 +531,7 @@ var public_sites = [
       'matchRegex': 'Aucun résultat !',
       'both': true},
   {   'name': 'Zooqle',
-      'icon': 'https://zooqle.com/img/zq-favicon16.png',
+      'icon': 'https://i.imgur.com/jqKceYP.png',
       'searchUrl': 'https://zooqle.com/search?q=%tt%',
       'loggedOutRegex': /Error 522|Checking your browser|security check to access/,
       'matchRegex': 'Sorry, no torrents match',
@@ -585,7 +592,7 @@ var private_sites = [
       'TV': true},
   {   'name': 'BB-HD',
       'searchUrl': 'https://bluebird-hd.org/browse.php?search=&incldead=0&cat=0&dsearch=%tt%&stype=or',
-      'loggedOutRegex': /Восстановление пароля/,      
+      'loggedOutRegex': /Восстановление пароля|Bad Gateway/,      
       'matchRegex': /Nothing found|Ничего не найдено/,
       'both': true},
   {   'name': 'BHD',
@@ -658,14 +665,14 @@ var private_sites = [
       'matchRegex': /Database Error/,
       'TV': true},
   {   'name': 'CZ',
-      'icon': 'https://i.imgur.com/uKJguu8.png',
+      'icon': 'https://i.imgur.com/HYNMAuJ.png',
       'configName': 'ET',
       'searchUrl': 'https://cinemaz.to/movies?search=&imdb=%tt%',
       'loggedOutRegex': /Forgot Your Password/,
       'matchRegex': /class="overlay-container"/,
       'positiveMatch': true},
   {   'name': 'CZ',
-      'icon': 'https://i.imgur.com/uKJguu8.png',
+      'icon': 'https://i.imgur.com/HYNMAuJ.png',
       'configName': 'ET',
       'searchUrl': 'https://cinemaz.to/tv-shows?search=&imdb=%tt%',
       'loggedOutRegex': /Forgot Your Password/,
@@ -764,16 +771,18 @@ var private_sites = [
       'matchRegex': /No Torrents Found!/,
       'TV': true},
   {   'name': 'JoyHD',
+      'icon': 'https://i.imgur.com/z5kbxta.png',
       'searchUrl': 'https://www.joyhd.net/torrents.php?search_area=4&search=%tt%',
       'loggedOutRegex': /Resend Email Verification/,
       'matchRegex': /Nothing found! Try again with a refined search string/},
   {   'name': 'KG',
+      'icon': 'https://i.imgur.com/0JFxPY5.png',
       'searchUrl': 'https://www.karagarga.in/browse.php?search_type=imdb&search=%nott%',
       'loggedOutRegex': /Not logged in!/,
       'matchRegex': /No torrents found/,
       'both': true},
   {   'name': 'KG-Req',
-      'icon': 'https://i.imgur.com/59gKydg.png',
+      'icon': 'https://i.imgur.com/ZQgliKg.png',
       'searchUrl': 'https://karagarga.in/viewrequests.php?search=%nott%&filter=true',
       'loggedOutRegex': /Not logged in!/,
       'matchRegex': /1&nbsp;-/,
@@ -1009,7 +1018,7 @@ var private_sites = [
       'matchRegex': /<b>Nothing Found<\/b>/},
   {   'name': 'TVV',
       'searchUrl': 'https://tv-vault.me/torrents.php?action=advanced&imdbid=%tt%&order_by=s3&order_way=desc',
-      'loggedOutRegex': /Lost your password\?/,
+      'loggedOutRegex': /Lost your password\?|Browse quota exceeded/,
       'matchRegex': /Nothing found<\/h2>/,
       'TV': true},
   {   'name': 'U2',
@@ -1465,6 +1474,18 @@ function getLinkArea() {
     'padding': '0px 20px',
     'font-weight': 'bold'
   });
+  var background_color = (GM_config.get('new_layout_dark')) ? '#333333' : '#EEEEEE';
+  var p_new = $('<p />').append(GM_config.get('imdbscout_header_text')).attr('id', 'imdbscout_header').css({
+    'padding': '4px 11px',
+    'font-weight': 'bold',
+    'background-color': background_color,
+    'margin-top': '0px',
+    'margin-bottom': '0px',
+    'overflow': 'hidden'
+  });
+  if (GM_config.get('use_new_layout')) {
+  var p = p_new;
+  }
   $.each(valid_states, function(i, name) {
     if (GM_config.get('one_line')) {
       p.append($('<span />').attr('id', 'imdbscout_' + name));
@@ -1479,7 +1500,13 @@ function getLinkArea() {
   });
   if ($('h1.header:first').length) {
     $('h1.header:first').parent().append(p);
-  } else if ($('#title-overview-widget').length) {
+  } else if (GM_config.get('use_new_layout')) {
+      if ($('.button_panel.navigation_panel').length) {
+      $('.button_panel.navigation_panel').after(p);
+      } else if ($('.title_block').length) { 
+        $('.title_block').after(p);
+        }
+  } else if ($('#title-overview-widget').length && !GM_config.get('use_new_layout')) {
     $('#title-overview-widget').parent().append(p);
   } else if ($('.titlereference-header').length) {
     $('.titlereference-header').append(p);
@@ -1514,8 +1541,18 @@ var config_fields = {
     'type': 'text',
     'default': ''
   },
-  'call_http_movie': {
+  'use_new_layout': {
     'section': 'Movie Page:'.bold(),
+    'type': 'checkbox',
+    'label': 'Use the new layout?',
+    'default': true
+  },
+  'new_layout_dark': {
+    'type': 'checkbox',
+    'label': 'Dark background for the new layout?',
+    'default': true
+  },
+  'call_http_movie': {
     'type': 'checkbox',
     'label': 'Actually check for torrents?',
     'default': true
