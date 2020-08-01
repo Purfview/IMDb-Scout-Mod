@@ -7,7 +7,7 @@
 // @require     https://greasyfork.org/libraries/GM_config/20131122/GM_config.js
 // @require     http://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js
 //
-// @version        5.2
+// @version        5.2.1
 // @include        http*://*.imdb.tld/title/tt*
 // @include        http*://*.imdb.tld/search/title*
 // @include        http*://*.imdb.tld/user/*/watchlist*
@@ -403,7 +403,10 @@
 
 5.2     -   Tweak: Small tweaks (some preferences will reset to default).
         -   Fixed: Rarelust icon.
-
+        
+5.2.1   -   Fixed: Rarelust icon (forgot to update it)
+        -   Added: RlsBB-Proxy ('RlsBB' now points to the main domain)
+        
         
 -------------------------------------------------------*/
 
@@ -497,10 +500,17 @@ var public_sites = [
       'positiveMatch': true,
       'both': true},
   {   'name': 'Rarelust',
-      'icon': 'https://rarelust.com/wp-content/uploads/2015/10/rarelust.ico',
+      'icon': 'https://i.imgur.com/kaaYhsp.png',
       'searchUrl': 'https://rarelust.com/?s=%tt%',
       'matchRegex': 'Nothing Found'},
   {   'name': 'RlsBB',
+      'icon': 'https://i.imgur.com/Ve3T1rC.png',
+      'searchUrl': 'http://search.rlsbb.ru/Home/GetPost?phrase=%tt%&pindex=1&content=true&type=Simple',
+      'goToUrl': 'http://rlsbb.ru/?serach_mode=light&s=%tt%',
+      'loggedOutRegex': /Error 522|Checking your browser|security check to access/,
+      'matchRegex': /"results":\[\]|Not Found/,
+      'both': true},
+  {   'name': 'RlsBB-Proxy',
       'icon': 'https://i.imgur.com/Ve3T1rC.png',
       'searchUrl': 'http://search.proxybb.com/Home/GetPost?phrase=%tt%&pindex=1&content=true&type=Simple',
       'goToUrl': 'http://search.proxybb.com/?serach_mode=light&s=%tt%',
