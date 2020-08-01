@@ -7,7 +7,7 @@
 // @require     https://greasyfork.org/libraries/GM_config/20131122/GM_config.js
 // @require     http://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js
 //
-// @version        5.1
+// @version        5.2
 // @include        http*://*.imdb.tld/title/tt*
 // @include        http*://*.imdb.tld/search/title*
 // @include        http*://*.imdb.tld/user/*/watchlist*
@@ -401,7 +401,10 @@
         -   New feature: The new layout (icons are placed at top). Option to turn it off.
         -   New feature: Option to select background for the new layout.
 
-       
+5.2     -   Tweak: Small tweaks (some preferences will reset to default).
+        -   Fixed: Rarelust icon.
+
+        
 -------------------------------------------------------*/
 
 //------------------------------------------------------
@@ -1156,7 +1159,7 @@ function addLink(elem, link_text, target, site, state) {
   if ($.inArray(state, valid_states) < 0) {
     console.log("Unknown state " + state);
   }
-  if (getPageSetting('use_icons')) {
+  if (getPageSetting('use_mod_icons')) {
     var icon = getFavicon(site);
     icon.css({'border-width': '3px', 'border-style': 'solid', 'border-radius': '2px'});
     if (state == 'error' || state == 'logged_out') {
@@ -1273,7 +1276,7 @@ function perform(elem, movie_id, movie_title, movie_title_orig, is_tv, is_movie)
             'searchUrl': site['goToUrl'],
             'spaceEncode': ('spaceEncode' in site) ? site['spaceEncode'] : '+'
           }, movie_id, movie_title, movie_title_orig);
-        if (getPageSetting('call_http')) {
+        if (getPageSetting('call_http_mod')) {
           maybeAddLink(elem, site['name'], searchUrl, site);
         } else {
           addLink(elem, site['name'], searchUrl, site, 'found');
@@ -1282,7 +1285,7 @@ function perform(elem, movie_id, movie_title, movie_title_orig, is_tv, is_movie)
     }
   });
   if (!site_shown) {
-    $(elem).append('No sites enabled! You can change this via the Greasemonkey option "IMDb Scout Preferences".');
+    $(elem).append('No sites enabled! "IMDb Scout Mod Preferences" button you can find on Monkeys plugin icon.');
   }
 }
 
@@ -1470,12 +1473,12 @@ function getLinkArea() {
   if ($('#imdbscout_header').length) {
     return $('#imdbscout_header');
   }
-  var p = $('<p />').append('<h2>' + GM_config.get('imdbscout_header_text') + '</h2>').attr('id', 'imdbscout_header').css({
+  var p = $('<p />').append('<h2>' + GM_config.get('imdbscoutmod_header_text') + '</h2>').attr('id', 'imdbscout_header').css({
     'padding': '0px 20px',
     'font-weight': 'bold'
   });
   var background_color = (GM_config.get('new_layout_dark')) ? '#333333' : '#EEEEEE';
-  var p_new = $('<p />').append(GM_config.get('imdbscout_header_text')).attr('id', 'imdbscout_header').css({
+  var p_new = $('<p />').append(GM_config.get('imdbscoutmod_header_text')).attr('id', 'imdbscout_header').css({
     'padding': '4px 11px',
     'font-weight': 'bold',
     'background-color': background_color,
@@ -1536,8 +1539,8 @@ function configName(site) {
 
 // Create the non-site dictionary for GM_config
 var config_fields = {
-  'imdbscout_header_text': {
-    'label': 'Header text:',
+  'imdbscoutmod_header_text': {
+    'label': 'Header text for torrent sites:',
     'type': 'text',
     'default': ''
   },
@@ -1552,14 +1555,14 @@ var config_fields = {
     'label': 'Dark background for the new layout?',
     'default': true
   },
-  'call_http_movie': {
-    'type': 'checkbox',
-    'label': 'Actually check for torrents?',
-    'default': true
-  },
-  'load_on_start_movie': {
+  'loadmod_on_start_movie': {
     'type': 'checkbox',
     'label': 'Load on start?',
+    'default': true
+  },
+  'call_http_mod_movie': {
+    'type': 'checkbox',
+    'label': 'Actually check for torrents?',
     'default': true
   },
   'hide_missing_movie': {
@@ -1567,7 +1570,7 @@ var config_fields = {
     'label': 'Hide missing links?',
     'default': false
   },
-  'use_icons_movie': {
+  'use_mod_icons_movie': {
     'type': 'checkbox',
     'label': 'Use icons instead of text?',
     'default': true
@@ -1587,15 +1590,15 @@ var config_fields = {
     'type': 'text',
     'default': ''
   },
-  'call_http_search': {
+  'loadmod_on_start_search': {
     'section': 'Search Page:'.bold(),
     'type': 'checkbox',
-    'label': 'Actually check for torrents?',
+    'label': 'Load on start?',
     'default': false
   },
-  'load_on_start_search': {
+  'call_http_mod_search': {
     'type': 'checkbox',
-    'label': 'Load on start?',
+    'label': 'Actually check for torrents?',
     'default': false
   },
   'hide_missing_search': {
@@ -1603,7 +1606,7 @@ var config_fields = {
     'label': 'Hide missing links?',
     'default': false
   },
-  'use_icons_search': {
+  'use_mod_icons_search': {
     'type': 'checkbox',
     'label': 'Use icons instead of text?',
     'default': true
@@ -1660,7 +1663,7 @@ $.each(icon_sites, function(index, icon_site) {
 // Initialize and register GM_config
 GM_config.init({
   'id': 'imdb_scout',
-  'title': 'IMDb Scout Preferences',
+  'title': 'IMDb Scout Mod Preferences',
   'fields': config_fields,
   'css': '.section_header { \
             background: white   !important; \
@@ -1691,7 +1694,7 @@ GM_config.init({
   }
 });
 
-GM_registerMenuCommand('IMDb Scout Preferences', function() {GM_config.open()});
+GM_registerMenuCommand('IMDb Scout Mod Preferences', function() {GM_config.open()});
 
 // Fetch per-site values from GM_config
 $.each(sites, function(index, site) {
@@ -1709,9 +1712,9 @@ var onSearchPage = Boolean(location.href.match('search')) || Boolean(location.hr
 
 $('title').ready(function() {
   if (window.top == window.self) {
-    if (!onSearchPage && GM_config.get('load_on_start_movie')) {
+    if (!onSearchPage && GM_config.get('loadmod_on_start_movie')) {
       performPage();
-    } else if (onSearchPage && GM_config.get('load_on_start_search')) {
+    } else if (onSearchPage && GM_config.get('loadmod_on_start_search')) {
       if (Boolean(location.href.match('watchlist')) && GM_config.get('watchlist_as_search')) {
         performWatchlist();
       } else {
