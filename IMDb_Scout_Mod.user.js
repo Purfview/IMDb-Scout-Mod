@@ -7,7 +7,7 @@
 // @require     https://greasyfork.org/libraries/GM_config/20131122/GM_config.js
 // @require     http://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js
 //
-// @version        5.3
+// @version        5.3.1
 // @include        http*://*.imdb.tld/title/tt*
 // @include        http*://*.imdb.tld/search/title*
 // @include        http*://*.imdb.tld/user/*/watchlist*
@@ -412,7 +412,10 @@
         -   Fixed: Text color on the new layout.
         -   New feature: Option to change size of the icons.         
         
-        
+5.3.1   -   Added: JPTV.
+        -   Fixed: ACM icon.
+
+
 -------------------------------------------------------*/
 
 //------------------------------------------------------
@@ -563,6 +566,7 @@ var private_sites = [
       'matchRegex': /Translation: No search results/,
       'both': true},
   {   'name': 'ACM',
+      'icon': 'https://i.imgur.com/7jLeQqf.png',
       'searchUrl': 'https://asiancinema.me/torrents/filter?imdb=%tt%',
       'loggedOutRegex': /Forgot Your Password/,
       'matchRegex': /<tbody>\n\ {16}<\/tbody>/,
@@ -799,6 +803,11 @@ var private_sites = [
       'searchUrl': 'https://www.joyhd.net/torrents.php?search_area=4&search=%tt%',
       'loggedOutRegex': /Resend Email Verification/,
       'matchRegex': /Nothing found! Try again with a refined search string/},
+  {   'name': 'JPTV',
+      'searchUrl': 'https://jptv.club/torrents/filter?imdb=%tt%',
+      'loggedOutRegex': /Forgot Your Password/,
+      'matchRegex': /<tbody>\n\ {20}<\/tbody>/,
+      'both': true},
   {   'name': 'KG',
       'icon': 'https://i.imgur.com/0JFxPY5.png',
       'searchUrl': 'https://www.karagarga.in/browse.php?search_type=imdb&search=%nott%',
