@@ -7,7 +7,7 @@
 // @require     https://greasyfork.org/libraries/GM_config/20131122/GM_config.js
 // @require     http://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js
 //
-// @version        5.2.1
+// @version        5.3
 // @include        http*://*.imdb.tld/title/tt*
 // @include        http*://*.imdb.tld/search/title*
 // @include        http*://*.imdb.tld/user/*/watchlist*
@@ -407,6 +407,11 @@
 5.2.1   -   Fixed: Rarelust icon (forgot to update it)
         -   Added: RlsBB-Proxy ('RlsBB' now points to the main domain)
         
+5.3     -   Added: Tik-Req, AHD-Req.
+        -   Tweak: No icon borders if "Show results on one line" is off.
+        -   Fixed: Text color on the new layout.
+        -   New feature: Option to change size of the icons.         
+        
         
 -------------------------------------------------------*/
 
@@ -566,6 +571,12 @@ var private_sites = [
       'searchUrl': 'https://awesome-hd.me/torrents.php?id=%tt%',
       'loggedOutRegex': /Keep me logged in./,
       'matchRegex': /Your search did not match anything.|Error 404/,
+      'both': true},
+  {   'name': 'AHD-Req',
+      'icon': 'https://i.imgur.com/wEs3QZL.png',
+      'searchUrl': 'https://awesome-hd.me/requests.php?submit=true&search=%tt%',
+      'loggedOutRegex': /Keep me logged in./,
+      'matchRegex': /Nothing found!|Error 404/,
       'both': true},
   {   'name': 'ANT',
       'icon': 'https://i.imgur.com/hKZo4s2.png',
@@ -1008,6 +1019,12 @@ var private_sites = [
       'loggedOutRegex': /Not logged in!/,
       'matchRegex': /Nothing found!/,
       'both': true},
+  {   'name': 'Tik-Req',
+      'icon': 'https://i.imgur.com/bM8D1m2.png',
+      'searchUrl': 'https://www.cinematik.net/viewrequests.php?search=%search_string%&filter=1',
+      'loggedOutRegex': /Not logged in!/,
+      'matchRegex': /No requests found!/,
+      'both': true},
   {   'name': 'TL',
       'searchUrl': 'https://www.torrentleech.org/torrents/browse/list/categories/8,9,11,12,13,14,15,29/query/%search_string% %year%',
       'goToUrl': 'http://www.torrentleech.org/torrents/browse/index/query/%search_string% %year%/categories/1,8,9,10,11,12,13,14,15,29',
@@ -1152,9 +1169,9 @@ function getFavicon(site, hide_on_err) {
   } else {
     var url = new URL(site['searchUrl']);
     favicon = url.origin + '/favicon.ico';
-  }
+  } 
   var img = $('<img />').attr({'style': '-moz-opacity: 0.4; border: 0; vertical-align: text-top',
-                               'width': '20',
+                               'width': GM_config.get('cfg_icons_size'),
                                'src': favicon,
                                'title': site['name'],
                                'alt': site['name']});
@@ -1171,7 +1188,7 @@ function addLink(elem, link_text, target, site, state) {
   }
   if (getPageSetting('use_mod_icons')) {
     var icon = getFavicon(site);
-    icon.css({'border-width': '3px', 'border-style': 'solid', 'border-radius': '2px'});
+    (GM_config.get('one_line')) ? icon.css({'border-width': '3px', 'border-style': 'solid', 'border-radius': '2px'}) : icon.css({'border-width': '0px', 'border-style': 'solid', 'border-radius': '2px'});
     if (state == 'error' || state == 'logged_out') {
       icon.css('border-color', 'red');
     } else if (state == 'missing') {
@@ -1488,13 +1505,15 @@ function getLinkArea() {
     'font-weight': 'bold'
   });
   var background_color = (GM_config.get('new_layout_dark')) ? '#333333' : '#EEEEEE';
+  var txt_color = (GM_config.get('new_layout_dark')) ? '#EEEEEE' : '#333333';
   var p_new = $('<p />').append(GM_config.get('imdbscoutmod_header_text')).attr('id', 'imdbscout_header').css({
     'padding': '4px 11px',
     'font-weight': 'bold',
     'background-color': background_color,
     'margin-top': '0px',
     'margin-bottom': '0px',
-    'overflow': 'hidden'
+    'overflow': 'hidden',
+    'color': txt_color
   });
   if (GM_config.get('use_new_layout')) {
   var p = p_new;
@@ -1553,6 +1572,11 @@ var config_fields = {
     'label': 'Header text for torrent sites:',
     'type': 'text',
     'default': ''
+  },
+  'cfg_icons_size': {
+    'label': 'Size of the icons (pixels):',
+    'type': 'text',
+    'default': '20'
   },
   'use_new_layout': {
     'section': 'Movie Page:'.bold(),
