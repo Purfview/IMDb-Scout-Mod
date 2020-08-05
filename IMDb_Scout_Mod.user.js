@@ -7,7 +7,7 @@
 // @require     https://greasyfork.org/libraries/GM_config/20131122/GM_config.js
 // @require     http://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js
 //
-// @version        5.3.1
+// @version        5.4
 // @include        http*://*.imdb.tld/title/tt*
 // @include        http*://*.imdb.tld/search/title*
 // @include        http*://*.imdb.tld/user/*/watchlist*
@@ -415,7 +415,12 @@
 5.3.1   -   Added: JPTV.
         -   Fixed: ACM icon.
 
-
+5.4     -   Added: AG, CPS, Deildu (as public because open reg).
+        -   Tweak: PTP, DVDSeeds, AHD, PTer. 
+        -   Fixed: Button code for legacy & new layout.
+        -   Fixed: Reference view for the new layout.
+        
+        
 -------------------------------------------------------*/
 
 //------------------------------------------------------
@@ -477,6 +482,21 @@ var public_sites = [
       'searchUrl': 'https://1337x.unblocker.cc/category-search/%search_string%/TV/1/',
       'matchRegex': /No results were returned/,
       'TV': true},
+  {   'name': 'AG',
+      'searchUrl': 'https://asgrd.org/browse.php?si=%tt%&incldead=1',
+      'loggedOutRegex': /Remember Me\?/,
+      'matchRegex': /Nothing here!/,
+      'both': true},
+  {   'name': 'CPS',
+      'searchUrl': 'https://mycarpathians.net/browse.php?c194=1&c60=1&c10=1&c20=1&c181=1&c183=1&c192=1&c190=1&c70=1&c30=1&c40=1&search=%search_string%',
+      'loggedOutRegex': /Nem vagy bejelentkezve!/,
+      'matchRegex': /Nincs itt semmi!/,
+      'both': true},
+  {   'name': 'Deildu',
+      'searchUrl': 'https://deildu.net/browse.php?search=%tt%&cat=0&Lysing=1',
+      'loggedOutRegex': /Forgot Your Password/,
+      'matchRegex': /Ekkert fannst!/,
+      'both': true},
   {   'name': 'Demonoid',
       'searchUrl': 'http://www.dnoid.pw/files/?query=%tt%',
       'loggedOutRegex': /Error 522|Checking your browser|security check to access|daily site maintenance|page is not available/,
@@ -573,7 +593,7 @@ var private_sites = [
       'both': true},
   {   'name': 'AHD',
       'searchUrl': 'https://awesome-hd.me/torrents.php?id=%tt%',
-      'loggedOutRegex': /Keep me logged in./,
+      'loggedOutRegex': /Keep me logged in.|Gateway Time-out/,
       'matchRegex': /Your search did not match anything.|Error 404/,
       'both': true},
   {   'name': 'AHD-Req',
@@ -714,7 +734,7 @@ var private_sites = [
       'both': true},            
   {   'name': 'DVDSeed',
       'searchUrl': 'http://www.dvdseed.eu/browse2.php?search=%tt%&wheresearch=2&incldead=1&polish=0&nuke=0&rodzaj=0',
-      'loggedOutRegex': /Nie masz konta/,
+      'loggedOutRegex': /Nie masz konta|Nie zalogowany!/,
       'matchRegex': /Nic tutaj nie ma!/},
   {   'name': 'eThor',
       'searchUrl': 'http://ethor.net/browse.php?stype=b&c23=1&c20=1&c42=1&c5=1&c19=1&c25=1&c6=1&c37=1&c43=1&c7=1&c9=1&advcat=0&incldead=0&includedesc=1&search=%tt%',
@@ -912,6 +932,7 @@ var private_sites = [
       'matchRegex': /Nothing found!/,
       'both': true},
   {   'name': 'PTP',
+      'icon': 'https://passthepopcorn.me/static/common/touch-icon-iphone.png',
       'searchUrl': 'https://passthepopcorn.me/torrents.php?imdb=%tt%',
       'loggedOutRegex': /Keep me logged in/,
       'matchRegex': /Your search did not match anything/},
@@ -1343,8 +1364,16 @@ function displayButton() {
     $('#sidebar').append(p);
   } else if ($('h1.header:first').length) {
     $('h1.header:first').parent().append(p);
-  } else {
+  } else if (GM_config.get('use_new_layout') && $('.button_panel.navigation_panel').length) {
+    $('.button_panel.navigation_panel').after(p);
+  } else if (GM_config.get('use_new_layout') && $('.title_block').length) { 
+    $('.title_block').after(p);
+  } else if ($('#title-overview-widget').length) {
     $('#title-overview-widget').parent().append(p);
+  } else if ($('.titlereference-header').length) {
+    $('.titlereference-header').append(p);
+  } else {
+    $('#tn15rating').before(p);
   }
 }
 
@@ -1495,8 +1524,7 @@ function performPage() {
       Boolean($('.tv-extra').length);
   var is_movie_page = Boolean($('title').text().match(/.*? \(([0-9]*)\)/));
   //Create area to put links in
-  perform(getLinkArea(), movie_id, movie_title, movie_title_orig,
-          is_tv_page, is_movie_page);
+  perform(getLinkArea(), movie_id, movie_title, movie_title_orig, is_tv_page, is_movie_page);
   addIconBar(movie_id, movie_title, movie_title_orig);
 }
 
@@ -1541,13 +1569,11 @@ function getLinkArea() {
   });
   if ($('h1.header:first').length) {
     $('h1.header:first').parent().append(p);
-  } else if (GM_config.get('use_new_layout')) {
-      if ($('.button_panel.navigation_panel').length) {
-      $('.button_panel.navigation_panel').after(p);
-      } else if ($('.title_block').length) { 
-        $('.title_block').after(p);
-        }
-  } else if ($('#title-overview-widget').length && !GM_config.get('use_new_layout')) {
+  } else if (GM_config.get('use_new_layout') && $('.button_panel.navigation_panel').length) {
+    $('.button_panel.navigation_panel').after(p);
+  } else if (GM_config.get('use_new_layout') && $('.title_block').length) { 
+    $('.title_block').after(p);
+  } else if ($('#title-overview-widget').length) {
     $('#title-overview-widget').parent().append(p);
   } else if ($('.titlereference-header').length) {
     $('.titlereference-header').append(p);
@@ -1731,7 +1757,7 @@ GM_config.init({
         $(label).prepend(getFavicon(private_sites[index], true));
       });
       $('#imdb_scout').contents().find('#imdb_scout_section_4').find('.field_label').each(function(index, label) {
-  $(label).prepend(getFavicon(icon_sites[index], true));
+        $(label).prepend(getFavicon(icon_sites[index], true));
       });
     }
   }
