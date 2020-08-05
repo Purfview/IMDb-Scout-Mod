@@ -919,7 +919,7 @@ var private_sites = [
       'TV': true},
   {   'name': 'PTer',
       'searchUrl': 'https://pterclub.com/torrents.php?search=%tt%&search_area=4',
-      'loggedOutRegex': /SSL \(HTTPS\)/,
+      'loggedOutRegex': /SSL \(HTTPS\)|Err code|Cloudflare Ray ID/,
       'matchRegex': /Nothing found!/},
   {   'name': 'PTF',
       'searchUrl': 'https://ptfiles.net/browse.php?search=%search_string%&incldead=0&title=0',
