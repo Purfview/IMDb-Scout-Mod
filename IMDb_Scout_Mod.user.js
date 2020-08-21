@@ -7,7 +7,7 @@
 // @require     https://greasyfork.org/libraries/GM_config/20131122/GM_config.js
 // @require     http://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js
 //
-// @version        5.5
+// @version        5.5.1
 // @include        http*://*.imdb.tld/title/tt*
 // @include        http*://*.imdb.tld/search/title*
 // @include        http*://*.imdb.tld/user/*/watchlist*
@@ -429,6 +429,9 @@
                          Subtitles & Other searchable sites are set to 2nd bar.
                          3rd bar is empty, free space for custom configuration.
 
+5.5.1   -   Added: TVV-Req, GT, WC, RareFilm, Titlovi, MoviePosterDB, Ulož, srrDB, xREL.
+            Tweak: PreDB, TE, 1337x, LimeTor, HDB, BTN.
+
 
 -------------------------------------------------------*/
 
@@ -489,7 +492,7 @@
 
 var public_sites = [
   {   'name': '1337x',
-      'searchUrl': 'https://1337x.unblocker.cc/category-search/%search_string%+%year%/Movies/1/',
+      'searchUrl': 'https://1337x.to/category-search/%search_string%+%year%/Movies/1/',
       'matchRegex': /No results were returned/},
   {   'name': '1337x',
       'searchUrl': 'https://1337x.unblocker.cc/category-search/%search_string%/TV/1/',
@@ -527,7 +530,7 @@ var public_sites = [
       'matchRegex': 'Нет активных раздач, приносим извинения. Пожалуйста, уточните параметры поиска',
       'TV': true},
   {   'name': 'LimeTor',
-      'searchUrl': 'https://limetorrents.unblockit.win/search/movies/%search_string%+%year%/seeds/1/',
+      'searchUrl': 'https://www.limetorrents.info/search/movies/%search_string%+%year%/seeds/1/',
       'matchRegex': /csprite_dl14/,
       'positiveMatch': true},
   {   'name': 'NNM',
@@ -539,6 +542,11 @@ var public_sites = [
       'loggedOutRegex': /something wrong|Please wait|enter the captcha/,
       'matchRegex': '//dyncdn.me/static/20/images/imdb_thumb.gif',
       'positiveMatch': true,
+      'both': true},
+  {   'name': 'RareFilm',
+      'icon': 'http://rarefilm.net/wp-content/themes/sahifa/favicon.ico',
+      'searchUrl': 'http://rarefilm.net/?s=%tt%',
+      'matchRegex': /Nothing Found/,
       'both': true},
   {   'name': 'Rarelust',
       'icon': 'https://i.imgur.com/kaaYhsp.png',
@@ -580,6 +588,10 @@ var public_sites = [
       'icon': 'https://torrentgalaxy.to/common/favicon/favicon-16x16.png',
       'searchUrl': 'https://torrentgalaxy.org/torrents.php?search=%tt%',
       'matchRegex': /No results found/},
+  {   'name': 'WC',
+      'searchUrl': 'http://worldscinema.org/?s=%tt%',
+      'matchRegex': /Nothing Found/,
+      'both': true},
   {   'name': 'YGG',
       'searchUrl': 'https://www2.yggtorrent.si/engine/search?name=%search_string_orig%&category=2145&sub_category=all&do=search',
       'matchRegex': 'Aucun résultat !',
@@ -680,7 +692,7 @@ var private_sites = [
       'searchUrl': 'https://broadcasthe.net/torrents.php?imdb=%tt%',
       'loggedOutRegex': /Lost your password\?/,
       'matchRegex': /Error 404/,
-      'both': true},
+      'TV': true},
   {   'name': 'BTN-Req',
       'icon': 'https://i.imgur.com/yj9qrwa.png',
       'searchUrl':  'https://broadcasthe.net/requests.php?search=%search_string%',
@@ -767,8 +779,13 @@ var private_sites = [
       'searchUrl': 'https://finvip.org/index.php?page=torrents&search=%tt%&options=1',
       'loggedOutRegex': /Sinulla ei ole oikeuksia sivulle/,
       'matchRegex': /<td colspan="2" align="center"> <\/td>/},
+  {   'name': 'GT',
+      'searchUrl': 'https://greek-team.cc/browse.php?incldead=0&search=%search_string_orig%&blah=0',
+      'loggedOutRegex': /Retrieve Password/,
+      'matchRegex': /xxx Change Me xxx/,
+      'both': true},
   {   'name': 'HDb',
-      'searchUrl': 'https://hdbits.org/browse.php?c3=1&c1=1&c4=1&c2=1&imdb=%tt%',
+      'searchUrl': 'https://hdbits.org/browse.php?c1=1&c2=1&c3=1&c4=1&c5=1&c7=1&c8=1&imdb=%tt%',
       'loggedOutRegex': /Make sure your passcode generating/,
       'matchRegex': /Nothing here!/,
       'both': true},
@@ -808,7 +825,7 @@ var private_sites = [
       'matchRegex': /<td colspan="2" align="center"> <\/td>/,
       'both': true},
   {   'name': 'HDSpain',
-      'searchUrl': 'https://www.hd-spain.com/browse.php?%search_string%',
+      'searchUrl': 'https://www.hd-spain.com/browse.php?%search_string_orig%',
       'loggedOutRegex': /Error 404 No encontrado/,
       'matchRegex': /xxx Change Me xxx/,
       'both': true},
@@ -1017,7 +1034,7 @@ var private_sites = [
       'searchUrl': 'https://theempire.click/browse.php?incldead=0&country=&nonboolean=1&search=%tt%',
       'loggedOutRegex': /404 - Not Found|You need cookies enabled/,
       'matchRegex': /Try again with a refined search string/,
-      'both': true},
+      'TV': true},
   {   'name': 'TG',
       'searchUrl': 'https://thegeeks.click/browse.php?incldead=0&country=&nonboolean=1&search=%tt%',
       'loggedOutRegex': /404 - Not Found|You need cookies enabled/,
@@ -1093,6 +1110,12 @@ var private_sites = [
       'searchUrl': 'https://tv-vault.me/torrents.php?action=advanced&imdbid=%tt%&order_by=s3&order_way=desc',
       'loggedOutRegex': /Lost your password\?|Browse quota exceeded/,
       'matchRegex': /Nothing found<\/h2>/,
+      'TV': true},
+  {   'name': 'TVV-Req',
+      'icon': 'https://i.imgur.com/dNtCggC.png',
+      'searchUrl': 'http://tv-vault.me/requests.php?search=&imdbid=%tt%',
+      'loggedOutRegex': /Lost your password\?|Browse quota exceeded/,
+      'matchRegex': /Nothing found|Yes/,
       'TV': true},
   {   'name': 'U2',
       'searchUrl': 'https://u2.dmhy.org/torrents.php?incldead=0&spstate=0&inclbookmarked=0&search=%tt%&search_area=1&search_mode=0',
@@ -1258,6 +1281,12 @@ var subs_sites = [
       'matchRegex': />0</,
       'inSecondSearchBar': true,
       'both': true},
+  {   'name': 'Titlovi (BiH|HR|MK|SLO|SRB)',
+      'searchUrl': 'https://titlovi.com/titlovi/?prijevod=%tt%',
+      'loggedOutRegex': /Error 522|Checking your browser|security check to access|Još samo jedan/,
+      'matchRegex': /<b>0<\/b> rezultata/,
+      'inSecondSearchBar': true,
+      'both': true},
   {   'name': 'TransHeaven (BG)',
       'icon': 'https://i.imgur.com/f3zgy93.png',
       'searchUrl': 'http://subs.sab.bz/index.php?act=search&movie=%search_string_orig%&yr=%year%',
@@ -1274,27 +1303,42 @@ var subs_sites = [
 
 var other_searchable_sites = [
   {   'name': 'PreDB',
-      'loggedOutRegex': /seconds to search again/,
+      'loggedOutRegex': /Error 522|Checking your browser|security check to access|seconds to search again/,
       'searchUrl': 'https://predb.me/?search=%search_string%+%year%&cats=movies',
       'matchRegex': /Nothing found.../,
       'inSecondSearchBar': true},
   {   'name': 'PreDB',
-      'loggedOutRegex': /seconds to search again/,
+      'loggedOutRegex': /Error 522|Checking your browser|security check to access|seconds to search again/,
       'searchUrl': 'https://predb.me/?search=%search_string%&cats=tv',
       'matchRegex': /Nothing found.../,
       'inSecondSearchBar': true,
       'TV': true},
   {   'name': 'PreDB-Orig',
-      'loggedOutRegex': /seconds to search again/,
+      'loggedOutRegex': /Error 522|Checking your browser|security check to access|seconds to search again/,
       'searchUrl': 'https://predb.me/?search=%search_string_orig%+%year%&cats=movies',
       'matchRegex': /Nothing found.../,
       'inSecondSearchBar': true},
   {   'name': 'PreDB-Orig',
-      'loggedOutRegex': /seconds to search again/,
+      'loggedOutRegex': /Error 522|Checking your browser|security check to access|seconds to search again/,
       'searchUrl': 'https://predb.me/?search=%search_string_orig%&cats=tv',
       'matchRegex': /Nothing found.../,
       'inSecondSearchBar': true,
-      'TV': true}
+      'TV': true},
+  {   'name': 'srrDB',
+      'searchUrl': 'https://www.srrdb.com/browse/imdb:%nott%',
+      'matchRegex': />0 results</,
+      'inSecondSearchBar': true,
+      'both': true},
+  {   'name': 'Ulož',
+      'searchUrl': 'https://uloz.to/hledej?type=videos&q=%search_string_orig%',
+      'matchRegex': /nebylo nic nalezeno/,
+      'inSecondSearchBar': true,
+      'both': true},
+  {   'name': 'xREL',
+      'searchUrl': 'https://www.xrel.to/search.html?xrel_search_query=%tt%&lang=en_US',
+      'matchRegex': /not return any results/,
+      'inSecondSearchBar': true,
+      'both': true}
 ];
 
 var sites = public_sites.concat(private_sites, subs_sites, other_searchable_sites);
@@ -1328,6 +1372,9 @@ var icon_sites = [
       'searchUrl': 'https://letterboxd.com/imdb/%nott%'},
   {   'name': 'Metacritic',
       'searchUrl': 'https://www.metacritic.com/search/all/%search_string%/results?cats[movie]=1&cats[tv]=1&search_type=advanced&sort=relevancy',
+      'showByDefault': false},
+  {   'name': 'MoviePosterDB',
+      'searchUrl': 'https://www.movieposterdb.com/search?category=title&q=%tt%',
       'showByDefault': false},
   {   'name': 'Netflix',
       'searchUrl': 'https://www.netflix.com/search/%search_string%',
