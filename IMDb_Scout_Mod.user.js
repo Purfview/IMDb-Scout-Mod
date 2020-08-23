@@ -7,7 +7,7 @@
 // @require     https://greasyfork.org/libraries/GM_config/20131122/GM_config.js
 // @require     http://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js
 //
-// @version        5.5.1
+// @version        5.5.2
 // @include        http*://*.imdb.tld/title/tt*
 // @include        http*://*.imdb.tld/search/title*
 // @include        http*://*.imdb.tld/user/*/watchlist*
@@ -432,6 +432,9 @@
 5.5.1   -   Added: TVV-Req, GT, WC, RareFilm, Titlovi, MoviePosterDB, Ulož, srrDB, xREL.
             Tweak: PreDB, TE, 1337x, LimeTor, HDB, BTN.
 
+5.5.2   -   Added: XDCC, ixIRC.
+            Tweak: GT.
+
 
 -------------------------------------------------------*/
 
@@ -522,6 +525,13 @@ var public_sites = [
       'searchUrl': 'https://www.ettvdl.com/torrents-search.php?search=%search_string%+%year%',
       'matchRegex': /Nothing Found/,
       'both': true},
+  {   'name': 'ixIRC',
+      'searchUrl': 'https://ixirc.com/?q=%search_string%+%year%',
+      'matchRegex': /No results/},
+  {   'name': 'ixIRC',
+      'searchUrl': 'https://ixirc.com/?q=%search_string%',
+      'matchRegex': /No results/,
+      'TV': true},
   {   'name': 'KZ',
       'searchUrl': 'http://kinozal.tv/browse.php?s=%search_string%+%year%&g=0&c=1002&v=0&d=0&w=0&t=0&f=0',
       'matchRegex': 'Нет активных раздач, приносим извинения. Пожалуйста, уточните параметры поиска'},
@@ -592,6 +602,13 @@ var public_sites = [
       'searchUrl': 'http://worldscinema.org/?s=%tt%',
       'matchRegex': /Nothing Found/,
       'both': true},
+  {   'name': 'XDCC',
+      'searchUrl': 'https://www.xdcc.eu/search.php?searchkey=%search_string%+%year%',
+      'matchRegex': /No result found/},
+  {   'name': 'XDCC',
+      'searchUrl': 'https://www.xdcc.eu/search.php?searchkey=%search_string%',
+      'matchRegex': /No result found/,
+      'TV': true},
   {   'name': 'YGG',
       'searchUrl': 'https://www2.yggtorrent.si/engine/search?name=%search_string_orig%&category=2145&sub_category=all&do=search',
       'matchRegex': 'Aucun résultat !',
@@ -782,7 +799,7 @@ var private_sites = [
   {   'name': 'GT',
       'searchUrl': 'https://greek-team.cc/browse.php?incldead=0&search=%search_string_orig%&blah=0',
       'loggedOutRegex': /Retrieve Password/,
-      'matchRegex': /xxx Change Me xxx/,
+      'matchRegex': /No data found/,
       'both': true},
   {   'name': 'HDb',
       'searchUrl': 'https://hdbits.org/browse.php?c1=1&c2=1&c3=1&c4=1&c5=1&c7=1&c8=1&imdb=%tt%',
