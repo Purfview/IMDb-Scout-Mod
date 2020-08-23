@@ -28,12 +28,14 @@ Each site is a dictionary with the following attributes:
   - `goToUrl` (optional): Different URL used for link (instead of `searchUrl`).
   - `loggedOutRegex` (optional): If any text on the page matches this regex, the site is treated as being logged out.
   - `configName` (optional): Use this to allow changing names without breaking existing users.
+  - `inSecondSearchBar` (optional): Places site at the second searchable bar.
+  - `inThirdSearchBar` (optional): Places site at the third searchable bar.
 
 Parameters you can use inside the URL:
   - %tt%: The IMDb id with the tt prefix (e.g. tt0055630)
   - %nott%: The IMDb id without the tt prefix (e.g. 0055630)
-  - %search_string%: The movie title (e.g. Yojimbo)
-  - %search_string_orig%: The original movie title (e.g. Yojimbo)
+  - %search_string%: The movie title (Depends on your preferences at www.imdb.com/preferences/general)
+  - %search_string_orig%: The original movie title 
   - %year%: The movie year (e.g. 1961)
 
 See the script for examples.
