@@ -7,7 +7,7 @@
 // @require     https://greasyfork.org/libraries/GM_config/20131122/GM_config.js
 // @require     http://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js
 //
-// @version        5.5.2
+// @version        5.5.3
 // @include        http*://*.imdb.tld/title/tt*
 // @include        http*://*.imdb.tld/search/title*
 // @include        http*://*.imdb.tld/user/*/watchlist*
@@ -435,6 +435,8 @@
 5.5.2   -   Added: XDCC, ixIRC.
             Tweak: GT.
 
+5.5.3   -   Added: EUC, 1337x-Proxy, LimeTor-Proxy. 
+
 
 -------------------------------------------------------*/
 
@@ -498,6 +500,13 @@ var public_sites = [
       'searchUrl': 'https://1337x.to/category-search/%search_string%+%year%/Movies/1/',
       'matchRegex': /No results were returned/},
   {   'name': '1337x',
+      'searchUrl': 'https://1337x.to/category-search/%search_string%/TV/1/',
+      'matchRegex': /No results were returned/,
+      'TV': true},
+  {   'name': '1337x-Proxy',
+      'searchUrl': 'https://1337x.unblocker.cc/category-search/%search_string%+%year%/Movies/1/',
+      'matchRegex': /No results were returned/},
+  {   'name': '1337x-Proxy',
       'searchUrl': 'https://1337x.unblocker.cc/category-search/%search_string%/TV/1/',
       'matchRegex': /No results were returned/,
       'TV': true},
@@ -525,6 +534,11 @@ var public_sites = [
       'searchUrl': 'https://www.ettvdl.com/torrents-search.php?search=%search_string%+%year%',
       'matchRegex': /Nothing Found/,
       'both': true},
+  {   'name': 'EUC',
+      'searchUrl': 'https://eliteunitedcrew.org/browse.php?search=%tt%&cat=0&incldead=1&btn=Search',
+      'loggedOutRegex': /Not logged in/,
+      'matchRegex': /nijedan torent/,
+      'both': true},
   {   'name': 'ixIRC',
       'icon': 'https://ixirc.com/favicon.png',
       'searchUrl': 'https://ixirc.com/?q=%search_string_orig%+%year%',
@@ -542,7 +556,13 @@ var public_sites = [
       'matchRegex': 'Нет активных раздач, приносим извинения. Пожалуйста, уточните параметры поиска',
       'TV': true},
   {   'name': 'LimeTor',
+      'loggedOutRegex': /Error 522|Checking your browser|security check to access|Please turn JavaScript/,
       'searchUrl': 'https://www.limetorrents.info/search/movies/%search_string%+%year%/seeds/1/',
+      'matchRegex': /csprite_dl14/,
+      'positiveMatch': true},
+  {   'name': 'LimeTor-Proxy',
+      'loggedOutRegex': /Error 522|Checking your browser|security check to access|Please turn JavaScript/,
+      'searchUrl': 'https://limetorrents.unblockit.win/search/movies/%search_string%+%year%/seeds/1/',
       'matchRegex': /csprite_dl14/,
       'positiveMatch': true},
   {   'name': 'NNM',
