@@ -7,13 +7,15 @@
 // @require     https://greasyfork.org/libraries/GM_config/20131122/GM_config.js
 // @require     http://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js
 //
-// @version        5.5.3
+// @version        6.0
 // @include        http*://*.imdb.tld/title/tt*
 // @include        http*://*.imdb.tld/search/title*
 // @include        http*://*.imdb.tld/user/*/watchlist*
+// @include        http*://*.imdb.tld/list/*
 // @include        http*://*.imdb.com/title/tt*
 // @include        http*://*.imdb.com/search/title*
 // @include        http*://*.imdb.com/user/*/watchlist*
+// @include        http*://*.imdb.com/list/*
 //
 // @connect      *
 // @grant        GM_log
@@ -25,7 +27,9 @@
 // @grant        GM_registerMenuCommand
 //
 // ==/UserScript==
-/*---------------------Version History--------------------
+//
+/*=========================  Version History  ==================================
+
 1.00    -    Initial public release, everything works on barebones greasemonkey
 
 1.50    -    Added the ability to select which sites to load from the GM script commands
@@ -435,65 +439,87 @@
 5.5.2   -   Added: XDCC, ixIRC.
             Tweak: GT.
 
-5.5.3   -   Added: EUC, 1337x-Proxy, LimeTor-Proxy. 
+5.5.3   -   Added: EUC, 1337x-Proxy, LimeTor-Proxy.
+
+6.0     -   Added: BTN-Title (if someone prefer to search by the titles).
+        -   Tweak: PTP, "Your popcorn quota" added to loggedOutRegex.
+        -   Tweak: Refinement of code, comments and documentation.
+        -   Fixed: "TV Special" is not recognized as "TV" (now it works same as "TV Movie").
+        -   Fixed: Broken TV/Movie distinction on the Search/Watchlist pages.
+        -   Fixed: Broken Watchlist search if "episode" is present.
+        -   Fixed: Broken 'Load' button on Watchlist pages.
+        -   Fixed: Broken %year% search on Search/Watchlist pages.
+        -   Fixed: Broken %goToUrl% on Search/Watchlist pages when "check for results" is on.
+        -   Fixed: Broken %goToUrl% on all pages when "check for results" is off.
+        -   Fixed: Broken %year% on TV-series pages.
+        -   Removed: 'Treat the watchlist as a search page?' option.
+        -   New Feature: Documentaries are treated as TV & Movie.
+        -   New Feature: %search_string_orig% works on Search/List/Watchlist pages too.
+        -   New Feature: Script supports List pages.
 
 
--------------------------------------------------------*/
+//==============================================================================
+//    A list of all the sites.
+//==============================================================================
 
-//------------------------------------------------------
-// A list of all the sites, and the data necessary to
-// check IMDb against them.
-// Each site is a dictionary with the following attributes:
-//
-//  - name:
-//      The site name, abbreviated
-//  - searchUrl:
-//      The URL to perform the search against, see below for how
-//      to tailor the string to a site
-//  - matchRegex:
-//      The string which appears if the searchUrl *doesn't* return a result
-//  - positiveMatch (optional):
-//      Changes the test to return true if the searchUrl *does* return
-//      a result that matches matchRegex
-//  - TV (optional):
-//      If true, it means that this site will only show up on TV pages.
-//      By default, sites only show up on movie pages.
-//  - both (optional):
-//      Means that the site will show up on both movie and TV pages
-//  - spaceEncode (optional):
-//      Changes the character used to encode spaces in movie titles
-//      The default is '+'.
-//  - goToUrl (optional):
-//      Most of the time the same URLs that are used for checking are
-//      the ones that are used to actually get to the movie,
-//      but this allows overriding that.
-//  - loggedOutRegex (optional):
-//      If any text on the page matches this regex, the site is treated
-//      as being logged out, rather than mising the movie. This option is
-//      not effected by positiveMatch.
-//  - configName (optional):
-//      Use this to allow changing names without breaking existing users.
-//  - inSecondSearchBar (optional):
-//  - inThirdSearchBar (optional):
-//      Places site at the extra searchable bar (by defaut site goes to the 1st bar),
-//      extra bars can be enabled/disabled/swapped at the preferences.
-//
-// To create a search URL, there are four parameters
-// you can use inside the URL:
-//  - %tt%:
-//      The IMDb id with the tt prefix (e.g. tt0055630)
-//  - %nott%:
-//      The IMDb id without the tt prefix (e.g. 0055630)
-//  - %search_string%:
-//      The movie title (e.g. Yojimbo)
-//      Depends on your preferences at www.imdb.com/preferences/general
-//  - %search_string_orig%:
-//      The original movie title (e.g. Yojimbo)
-//      Affects only TV/Movie pages (on Watchlist/Search pages it will switch to %search_string%)
-//  - %year%:
-//      The movie year (e.g. 1961)
-// See below for examples
-//------------------------------------------------------
+    -= Each site is a dictionary with the following attributes: =-
+
+#  'name':
+The site name, abbreviated.
+
+#  'searchUrl':
+The URL to perform the search against, see below for how to tailor the string to a site.
+
+#  'matchRegex':
+The string which appears if the searchUrl *doesn't* return a result.
+
+#  'positiveMatch' (optional):
+Changes the test to return true if the searchUrl *does* return a result that matches matchRegex.
+
+#  'TV' (optional):
+If true, it means that this site will only show up on TV pages.
+By default, sites only show up on movie pages.
+
+#  'both' (optional):
+Means that the site will show up on both movie and TV pages.
+
+#  'SpaceEncode' (optional):
+Changes the character used to encode spaces in movie/TV titles. The default is '+'.
+
+#  'goToUrl' (optional):
+Most of the time the same URLs that are used for checking are the ones that
+are used to actually get to the movie, but this allows overriding that.
+
+#  'loggedOutRegex' (optional):
+If any text on the page matches this regex, the site is treated as being logged out,
+rather than mising the movie. This option is not effected by positiveMatch.
+
+#  'ConfigName' (optional):
+Use this to allow changing names without breaking existing users.
+
+#  'inSecondSearchBar' & 'inThirdSearchBar' (optional):
+Places site at the extra searchable bar. Subtitles and other sites are set to 2nd bar.
+3rd bar is empty, space for custom user's configuration. By defaut site goes to the 1st bar.
+Extra bars can be enabled/disabled/swapped at the preferences.
+
+    -=  Search URL parameters: =-
+
+#  %tt%:
+The IMDb id with the tt prefix (e.g. tt0055630).
+
+#  %nott%:
+The IMDb id without the tt prefix (e.g. 0055630).
+
+#  %search_string%:
+The movie title (e.g. Yojimbo). Depends on your preferences at www.imdb.com/preferences/general.
+
+#  %search_string_orig%:
+The original movie title (e.g. Yôjinbô). Reverts to %search_string% if original title is not set at IMDb.
+
+#  %year%:
+The movie year (e.g. 1961).
+
+*/
 
 var public_sites = [
   {   'name': '1337x',
@@ -731,6 +757,11 @@ var private_sites = [
       'searchUrl': 'https://broadcasthe.net/torrents.php?imdb=%tt%',
       'loggedOutRegex': /Lost your password\?/,
       'matchRegex': /Error 404/,
+      'TV': true},
+  {   'name': 'BTN-Title',
+      'searchUrl': 'https://broadcasthe.net/torrents.php?searchstr=%search_string_orig%',
+      'loggedOutRegex': /Lost your password\?/,
+      'matchRegex': /No search results/,
       'TV': true},
   {   'name': 'BTN-Req',
       'icon': 'https://i.imgur.com/yj9qrwa.png',
@@ -1003,12 +1034,12 @@ var private_sites = [
   {   'name': 'PTP',
       'icon': 'https://passthepopcorn.me/static/common/touch-icon-iphone.png',
       'searchUrl': 'https://passthepopcorn.me/torrents.php?imdb=%tt%',
-      'loggedOutRegex': /Keep me logged in/,
+      'loggedOutRegex': /Keep me logged in|Your popcorn quota/,
       'matchRegex': /Your search did not match anything/},
   {   'name': 'PTP-Req',
       'icon': 'https://i.imgur.com/EFCRrc9.png',
       'searchUrl': 'https://passthepopcorn.me/requests.php?submit=true&search=%tt%',
-      'loggedOutRegex': /Keep me logged in/,
+      'loggedOutRegex': /Keep me logged in|Your popcorn quota/,
       'matchRegex': /Your search did not match anything/},
   {   'name': 'PxHD',
       'icon': 'https://i.imgur.com/OA7JJ6x.png',
@@ -1444,15 +1475,11 @@ var icon_sites = [
       'searchUrl': 'https://www.youtube.com/results?search_query="%search_string%"+%year%+trailer'}
 ];
 
-// For internal use (order matters)
-var valid_states = [
-  'found',
-  'missing',
-  'logged_out',
-  'error'
-];
+//==============================================================================
+//    Replace Search URL parameters
+//==============================================================================
 
-function replaceSearchUrlParams(site, movie_id, movie_title, movie_title_orig) {
+function replaceSearchUrlParams(site, movie_id, movie_title, movie_title_orig, movie_year) {
   var search_url = site['searchUrl'];
   // If an array, do a little bit of recursion
   if ($.isArray(search_url)) {
@@ -1462,23 +1489,30 @@ function replaceSearchUrlParams(site, movie_id, movie_title, movie_title_orig) {
     });
     return search_array;
   }
-  var space_replace = ('spaceEncode' in site) ? site['spaceEncode'] : '+';
-  var search_string = movie_title.trim().replace(/ +\(.*|&/g, '').replace(/\s+/g, space_replace);
+  var space_replace      = ('spaceEncode' in site) ? site['spaceEncode'] : '+';
+  var search_string      = movie_title.trim().replace(/ +\(.*|&/g, '').replace(/\s+/g, space_replace);
   var search_string_orig = movie_title_orig.trim().replace(/ +\(.*|&/g, '').replace(/\s+/g, space_replace);
-  var movie_year = document.title.replace(/^(.+) \((.*)([0-9]{4})(.*)$/gi, '$3');
+  var movie_year         = (onSearchPage) ? movie_year : document.title.replace(/^(.+) \((\D*|)(\d{4})(.*)$/gi, '$3');
   var s = search_url.replace(/%tt%/g, 'tt' + movie_id)
-    .replace(/%nott%/g, movie_id)
-    .replace(/%search_string%/g, search_string)
-    .replace(/%search_string_orig%/g, search_string_orig)
-    .replace(/%year%/g, movie_year);
+                    .replace(/%nott%/g, movie_id)
+                    .replace(/%search_string%/g, search_string)
+                    .replace(/%search_string_orig%/g, search_string_orig)
+                    .replace(/%year%/g, movie_year);
   return s;
 }
+
+//==============================================================================
+//    Construct & return Title/List GM_config setting
+//==============================================================================
 
 function getPageSetting(key) {
   return (onSearchPage ? GM_config.get(key + '_search') : GM_config.get(key + '_movie'));
 }
 
-// Small utility function to return a site's icon
+//==============================================================================
+//    Get site's icon
+//==============================================================================
+
 function getFavicon(site, hide_on_err) {
     var favicon;
   if (typeof(hide_on_err) === 'undefined') { hide_on_err = false }
@@ -1497,8 +1531,11 @@ function getFavicon(site, hide_on_err) {
   return img;
 }
 
-// Adds search links to an element
-// state should always be one of the values defined in valid_states
+//==============================================================================
+//    Add search links to an element
+//==============================================================================
+
+// State should always be one of the values defined in valid_states
 function addLink(elem, link_text, target, site, state) {
   var link = $('<a />').attr('href', target).attr('target', '_blank');
   if ($.inArray(state, valid_states) < 0) {
@@ -1525,10 +1562,9 @@ function addLink(elem, link_text, target, site, state) {
       link.css('color', 'red');
     }
   }
-
+  // Only 1st bar for List/Watchlist/Search pages.
   var in_element_two = ('inSecondSearchBar' in site) ? site['inSecondSearchBar'] : false;
   var in_element_three = ('inThirdSearchBar' in site) ? site['inThirdSearchBar'] : false;
-
   if (onSearchPage && in_element_two || onSearchPage && in_element_three || in_element_two && in_element_three) {
     return;
   } else if (!onSearchPage && in_element_two) {
@@ -1547,9 +1583,11 @@ function addLink(elem, link_text, target, site, state) {
   }
 }
 
-// Performs an ajax request to determine
-// whether or not a url should be displayed
-function maybeAddLink(elem, link_text, search_url, site) {
+//==============================================================================
+//    Determine whether a site should be displayed
+//==============================================================================
+
+function maybeAddLink(elem, link_text, search_url, site, movie_id, movie_title, movie_title_orig, movie_year) {
   // If the search URL is an array, recurse briefly on the elements.
   if ($.isArray(search_url)) {
     $.each(search_url, function(index, url) {
@@ -1567,7 +1605,7 @@ function maybeAddLink(elem, link_text, search_url, site) {
     lastLoaded = parseInt(lastLoaded);
   }
   if (now-lastLoaded < 1000) {
-    window.setTimeout(maybeAddLink.bind(undefined, elem, site['name'], search_url, site), 1000);
+        window.setTimeout(maybeAddLink.bind(undefined, elem, site['name'], search_url, site, movie_id, movie_title, movie_title_orig, movie_year), 1000);
     return;
   }
   else
@@ -1576,8 +1614,8 @@ function maybeAddLink(elem, link_text, search_url, site) {
   }
 
   var target = search_url;
-  if (site.goToUrl) {
-    target = site.goToUrl;
+  if ('goToUrl' in site) {
+    target = replaceSearchUrlParams({'searchUrl': site['goToUrl']}, movie_id, movie_title, movie_title_orig, movie_year);
   }
   var in_element_two = ('inSecondSearchBar' in site) ? site['inSecondSearchBar'] : false;
   var in_element_three = ('inThirdSearchBar' in site) ? site['inThirdSearchBar'] : false;
@@ -1619,25 +1657,29 @@ function maybeAddLink(elem, link_text, search_url, site) {
   });
 }
 
-// Run code to create fields and display sites
-function perform(elem, movie_id, movie_title, movie_title_orig, is_tv, is_movie) {
+//==============================================================================
+//    Perform code to create fields and display sites
+//==============================================================================
+
+function perform(elem, movie_id, movie_title, movie_title_orig, is_tv, is_movie, movie_year) {
   var site_shown = false;
   $.each(sites, function(index, site) {
     if (site['show']) {
       site_shown = true;
-      // If we're on a TV page, only show TV links.
-      if ((Boolean(site['TV']) == is_tv ||
-           Boolean(site['both'])) ||
-          (!is_tv && !is_movie) || getPageSetting('ignore_type')) {
-        var searchUrl = replaceSearchUrlParams(site, movie_id, movie_title, movie_title_orig);
-        if (site.goToUrl)
-          site.goToUrl = replaceSearchUrlParams({
-            'searchUrl': site['goToUrl'],
-            'spaceEncode': ('spaceEncode' in site) ? site['spaceEncode'] : '+'
-          }, movie_id, movie_title, movie_title_orig);
-        if (getPageSetting('call_http_mod')) {
+      // For TV Series show only TV links. TV Special, TV Movie, Episode & Documentary are treated as TV and Movie.
+      if ((Boolean(site['TV']) == is_tv || Boolean(site['both'])) || (!is_tv && !is_movie) || getPageSetting('ignore_type')) {
+        var searchUrl = replaceSearchUrlParams(site, movie_id, movie_title, movie_title_orig, movie_year);
+        if ('goToUrl' in site && getPageSetting('call_http_mod')) {
+          maybeAddLink(elem, site['name'], searchUrl, site, movie_id, movie_title, movie_title_orig, movie_year);
+        }
+        if ('goToUrl' in site && !getPageSetting('call_http_mod')) {
+          searchUrl = replaceSearchUrlParams({'searchUrl': site['goToUrl']}, movie_id, movie_title, movie_title_orig, movie_year);
+          addLink(elem, site['name'], searchUrl, site, 'found');
+        }
+        if (!('goToUrl' in site) && getPageSetting('call_http_mod')) {
           maybeAddLink(elem, site['name'], searchUrl, site);
-        } else {
+        }
+        if (!('goToUrl' in site) && !getPageSetting('call_http_mod')){
           addLink(elem, site['name'], searchUrl, site, 'found');
         }
       }
@@ -1648,10 +1690,11 @@ function perform(elem, movie_id, movie_title, movie_title_orig, is_tv, is_movie)
   }
 }
 
-//------------------------------------------------------
-// Button Code
-//------------------------------------------------------
+//==============================================================================
+//    'Load' button code
+//==============================================================================
 
+// Runs when "Load on Start?" is disabled.
 function displayButton() {
   var p = $('<p />').attr('id', 'imdbscout_button');
   p.append($('<button>Load IMDb Scout</button>').click(function() {
@@ -1679,11 +1722,10 @@ function displayButton() {
   }
 }
 
-//------------------------------------------------------
-// Icons at top bar
-//------------------------------------------------------
+//==============================================================================
+//    Icons at top bar on Title page
+//==============================================================================
 
-// Adds a dictionary of icons to the top of the page.
 // Unlike the other URLs, they aren't checked to see if the movie exists.
 function addIconBar(movie_id, movie_title, movie_title_orig) {
   var iconbar;
@@ -1721,96 +1763,56 @@ function addIconBar(movie_id, movie_title, movie_title_orig) {
   }
 }
 
-//------------------------------------------------------
-// Search page code
-//------------------------------------------------------
+//==============================================================================
+//    Search/List/Watchlist page code
+//==============================================================================
 
 function performSearch() {
   //Add css for the new table cells we're going to add
-  var styles = '.result_box {width: 335px}';
-  styles += ' .result_box a { margin-right: 5px; color: #444;} ';
-  styles += ' .result_box a:visited { color: #551A8B; }';
-  styles += ' #content-2-wide #main, #content-2-wide';
-  styles += ' .maindetails_center {margin-left: 5px; width: 1001px;} ';
+  var styles  = '.result_box {width: 975px}';
+      styles += '.result_box a { margin-right: 5px; color: #444;}';
+      styles += '.result_box a:visited { color: #551A8B; }';
+      styles += '#content-2-wide #main, #content-2-wide';
+      styles += '.maindetails_center {margin-left: 5px; width: 1001px;}';
   GM_addStyle(styles);
 
-  if($('div#main table.results tr.detailed').length !== 0) {
-    //Loop through each result row
-    $('div#main table.results tr.detailed').each(function() {
-      var link = $(this).find('.title>a');
-      var is_tv = Boolean($(this).find('.year_type').html()
-                          .match('TV Series'));
-      var is_movie = Boolean($(this).find('.year_type').html()
-                             .match(/\(([0-9]*)\)/));
-      var movie_title = link.html();
-      var movie_title_orig = movie_title;
-      var movie_id = link.attr('href').match(/tt([0-9]*)\/?$/)[1];
+  var search_page = (Boolean(location.href.match('/search/'))) ? true : false;
 
-      $(this).find('span.genre a').each(function() {
-        if ($(this).html() == 'Adult') {
-          $(this).parent().parent().parent()
-            .css('background-color', 'red');
+  if($('.lister-list').children().length !== 0) {
+    $('.lister-list').children().each(function() {
+      var elem     = (search_page) ? $(this).find('.lister-item-content') : $(this);
+      var link     = $(this).find('.lister-item-image>a');
+      var movie_id = link.attr('href').match(/tt([0-9]*)\/?.*/)[1];
+
+      GM_xmlhttpRequest ({
+          method: "GET",
+          url:    "https://www.imdb.com" + link.attr('href'),
+          onload: function(response) {
+            var parser = new DOMParser();
+            var result = parser.parseFromString(response.responseText, "text/html");
+
+            var is_tv    = Boolean($(result).find('title').text().match('TV Series')) || Boolean($(result).find('.tv-extra').length);
+            var is_movie = (Boolean($(result).find('.subtext').text().match('TV Special'))) ? false : Boolean($(result).find('title').text().match(/.*? \(([0-9]*)\)/));
+            if (Boolean($(result).find('.subtext').text().match('Documentary'))) {
+              is_tv    = false;
+              is_movie = false;
+            }
+            var movie_year       = result.title.replace(/^(.+) \((\D*|)(\d{4})(.*)$/gi, '$3');
+            var movie_title      = $(result).find('.title_wrapper>h1').clone().children().remove().end().text();
+            var movie_title_orig = $(result).find('.originalTitle').clone().children().remove().end().text();
+            if (movie_title_orig === "") {
+                movie_title_orig = movie_title;
+            }
+            perform(elem, movie_id, movie_title, movie_title_orig, is_tv, is_movie, movie_year);
         }
       });
-      perform($(this), movie_id, movie_title, movie_title_orig, is_tv, is_movie);
-    });
-  } else {
-    // Chameleon code, in a different style
-    var titleDivs = document.getElementsByClassName('col-title');
-    var compact = true;
-    if(titleDivs.length === 0)
-    {
-      titleDivs=document.getElementsByClassName('lister-item-header');
-      compact=false;
-    }
-    for(var i=0; i<titleDivs.length; i++)
-    {
-      var t = titleDivs[i];
-      var link = t.getElementsByTagName('a')[0];
-      var is_tv = link.nextElementSibling.textContent.indexOf('-')!==-1;
-      var is_movie = !is_tv;
-      var movie_title = link.textContent;
-      var movie_title_orig = movie_title;
-      var movie_id = link.href.split("/title/tt")[1].split("/")[0];
-
-      var elem = t.parentNode.parentNode;
-      if(!compact)
-        elem = t.parentNode;
-      perform(elem, movie_id, movie_title, movie_title_orig, is_tv, is_movie);
-    }
-  }
-}
-
-//------------------------------------------------------
-// Watchlist page code
-//------------------------------------------------------
-
-function performWatchlist() {
-  //Add css for the new table cells we're going to add
-  var styles = '.result_box {width: 335px}';
-  styles += ' .result_box a { margin-right: 5px; color: #444;} ';
-  styles += ' .result_box a:visited { color: #551A8B; }';
-  styles += ' #content-2-wide #main, #content-2-wide';
-  styles += ' .maindetails_center {margin-left: 5px; width: 1001px;} ';
-  GM_addStyle(styles);
-  if($('div .lister-list.mode-detail').children().length !== 0) {
-    $('div .lister-list.mode-detail').children().each(function() {
-      var link = $(this).find('.lister-item-header>a');
-      var is_tv = Boolean($(this).find('.lister-item-details').html()
-                          .match('TV Series'));
-      var is_movie = Boolean($(this).find('.lister-item-year').html()
-                             .match(/^([0-9]*)$/));
-      var movie_title = link.html();
-      var movie_title_orig = movie_title;
-      var movie_id = link.attr('href').match(/tt([0-9]*)\/?.*/)[1];
-      perform($(this), movie_id, movie_title, movie_title_orig, is_tv, is_movie);
     });
   }
 }
 
-//------------------------------------------------------
-// TV/movie page code
-//------------------------------------------------------
+//==============================================================================
+//    Title page code
+//==============================================================================
 
 function performPage() {
   var movie_title = $('.title_wrapper>h1').clone().children().remove().end().text();
@@ -1822,10 +1824,13 @@ function performPage() {
     movie_title_orig = movie_title;
   }
   var movie_id = document.URL.match(/\/tt([0-9]+)\//)[1].trim('tt');
-  var is_tv_page = Boolean($('title').text().match('TV Series')) ||
-      Boolean($('.tv-extra').length);
-  var is_movie_page = Boolean($('title').text().match(/.*? \(([0-9]*)\)/));
-  //Create area to put links in
+  var is_tv    = Boolean($('title').text().match('TV Series')) || Boolean($('.tv-extra').length);
+  var is_movie = (Boolean($('.subtext').text().match('TV Special')) || Boolean($('li.ipl-inline-list__item').text().match('TV Special'))) ? false : Boolean($('title').text().match(/.*? \(([0-9]*)\)/));
+  if (Boolean($('.subtext').text().match('Documentary')) || Boolean($('li.ipl-inline-list__item').text().match('Documentary'))) {
+    is_tv    = false;
+    is_movie = false;
+  }
+  //Create areas to put links in
   if (GM_config.get('load_second_bar') && !GM_config.get('load_third_bar')) {
     getLinkAreaSecond(GM_config.get('load_second_bar'));
   } else if (!GM_config.get('load_second_bar') && GM_config.get('load_third_bar')) {
@@ -1837,13 +1842,13 @@ function performPage() {
     getLinkAreaSecond();
     getLinkAreaThird();
   }
-  perform(getLinkArea(), movie_id, movie_title, movie_title_orig, is_tv_page, is_movie_page);
+  perform(getLinkArea(), movie_id, movie_title, movie_title_orig, is_tv, is_movie);
   addIconBar(movie_id, movie_title, movie_title_orig);
 }
 
-//------------------------------------------------------
-// Find/create elements
-//------------------------------------------------------
+//==============================================================================
+//    Create elements for the 1st search bar on Title page
+//==============================================================================
 
 function getLinkArea() {
   // If it already exists, just return it
@@ -1896,9 +1901,9 @@ function getLinkArea() {
   return $('#imdbscout_header');
 }
 
-//------------------------------------------------------
-// Find/create elements for the second search bar
-//------------------------------------------------------
+//==============================================================================
+//    Create elements for the 2nd search bar on Title page
+//==============================================================================
 
 function getLinkAreaSecond() {
   // If it already exists, just return it
@@ -1951,9 +1956,9 @@ function getLinkAreaSecond() {
   return $('#imdbscoutsecondbar_header');
 }
 
-//------------------------------------------------------
-// Find/create elements for the third search bar
-//------------------------------------------------------
+//==============================================================================
+//     Create elements for the 3rd search bar on Title page
+//==============================================================================
 
 function getLinkAreaThird() {
   // If it already exists, just return it
@@ -2006,9 +2011,9 @@ function getLinkAreaThird() {
   return $('#imdbscoutthirdbar_header');
 }
 
-//------------------------------------------------------
-// Create the config name
-//------------------------------------------------------
+//==============================================================================
+//    Create the config name (GM_config)
+//==============================================================================
 
 function configName(site) {
   if ('configName' in site) {
@@ -2018,13 +2023,14 @@ function configName(site) {
   }
 }
 
-//------------------------------------------------------
-// Code being run (main)
-//------------------------------------------------------
 
-// Get everything configured
+//================================  MAIN  ====================================//
 
-// Create the non-site dictionary for GM_config
+
+//==============================================================================
+//    Preferences Menu (GM_config)
+//==============================================================================
+
 var config_fields = {
   'imdbscoutmod_header_text': {
     'label': 'Header text for the 1st bar:',
@@ -2047,7 +2053,7 @@ var config_fields = {
     'default': '20'
   },
   'loadmod_on_start_movie': {
-    'section': 'Movie Page:'.bold(),
+    'section': 'Title Page:'.bold(),
     'type': 'checkbox',
     'label': 'Load on start?',
     'default': true
@@ -2108,7 +2114,7 @@ var config_fields = {
     'default': ''
   },
   'loadmod_on_start_search': {
-    'section': 'Search Page:'.bold(),
+    'section': 'Search/List/Watchlist Page:'.bold(),
     'type': 'checkbox',
     'label': 'Load on start?',
     'default': false
@@ -2116,7 +2122,7 @@ var config_fields = {
   'call_http_mod_search': {
     'type': 'checkbox',
     'label': 'Actually check for the search results?',
-    'default': false
+    'default': true
   },
   'hide_missing_search': {
     'type': 'checkbox',
@@ -2133,11 +2139,6 @@ var config_fields = {
     'label': 'Search all sites, ignoring movie/tv distinction?',
     'default': false
   },
-  'watchlist_as_search': {
-    'type': 'checkbox',
-    'label': 'Treat the watchlist as a search page?',
-    'default': false
-  },
   'highlight_missing_search': {
     'label': 'Highlight when not on:',
     'type': 'text',
@@ -2145,8 +2146,10 @@ var config_fields = {
   }
 };
 
-// Add each public site to a GM_config dictionary schema
-// The GM_config default for checkboxes is false
+//==============================================================================
+//    Add sites to preferences (GM_config)
+//==============================================================================
+
 $.each(public_sites, function(index, site) {
   config_fields[configName(site)] = {
     'section': (index == 0) ? ['Public download sites:'.bold()] : '',
@@ -2155,8 +2158,6 @@ $.each(public_sites, function(index, site) {
   };
 });
 
-// Add each private site to a GM_config dictionary schema
-// The GM_config default for checkboxes is false
 $.each(private_sites, function(index, site) {
   config_fields[configName(site)] = {
     'section': (index == 0) ? ['Private download sites:'.bold()] : '',
@@ -2165,8 +2166,6 @@ $.each(private_sites, function(index, site) {
   };
 });
 
-// Add each subtitle site to a GM_config dictionary schema
-// The GM_config default for checkboxes is false
 $.each(subs_sites, function(index, site) {
   config_fields[configName(site)] = {
     'section': (index == 0) ? ['Subtitles sites (in 2nd bar):'.bold()] : '',
@@ -2175,8 +2174,6 @@ $.each(subs_sites, function(index, site) {
   };
 });
 
-// Add each other_searchable site to a GM_config dictionary schema
-// The GM_config default for checkboxes is false
 $.each(other_searchable_sites, function(index, site) {
   config_fields[configName(site)] = {
     'section': (index == 0) ? ['Other searchable sites (in 2nd bar):'.bold()] : '',
@@ -2185,8 +2182,6 @@ $.each(other_searchable_sites, function(index, site) {
   };
 });
 
-// Icon sites should be shown by default though,
-// since they barely use any resources.
 $.each(icon_sites, function(index, icon_site) {
   config_fields['show_icon_' + icon_site['name']] = {
     'section': (index == 0) ? ['Other sites (no search):'.bold()] : '',
@@ -2197,7 +2192,10 @@ $.each(icon_sites, function(index, icon_site) {
   };
 });
 
-// Initialize and register GM_config
+//==============================================================================
+//    Initialize and register GM_config
+//==============================================================================
+
 GM_config.init({
   'id': 'imdb_scout',
   'title': 'IMDb Scout Mod Preferences',
@@ -2245,7 +2243,10 @@ GM_config.init({
 
 GM_registerMenuCommand('IMDb Scout Mod Preferences', function() {GM_config.open()});
 
-// Fetch per-site values from GM_config
+//==============================================================================
+//    Fetch per-site values from GM_config
+//==============================================================================
+
 $.each(sites, function(index, site) {
   site['show'] = GM_config.get(configName(site));
 });
@@ -2254,23 +2255,35 @@ $.each(icon_sites, function(index, icon_site) {
   icon_site['show'] = GM_config.get('show_icon_' + icon_site['name']);
 });
 
-// Are we on a search page?
-// This variable is camelCased to show it's global
-// Hopefully it can be factored out of the global scope in the future
-var onSearchPage = Boolean(location.href.match('search')) || Boolean(location.href.match('watchlist'));
+//==============================================================================
+//    Global variables
+//==============================================================================
+
+// For internal use (order matters).
+var valid_states = [
+  'found',
+  'missing',
+  'logged_out',
+  'error'
+];
+
+// Are we on a search/list page?
+var onSearchPage = Boolean(location.href.match('/search/'))
+                || Boolean(location.href.match('/list/'))
+                || Boolean(location.href.match('watchlist'));
+
+//==============================================================================
+//    Start: Display 'Load' button or add links to sites
+//==============================================================================
 
 $('title').ready(function() {
   if (window.top == window.self) {
     if (!onSearchPage && GM_config.get('loadmod_on_start_movie')) {
       performPage();
     } else if (onSearchPage && GM_config.get('loadmod_on_start_search')) {
-      if (Boolean(location.href.match('watchlist')) && GM_config.get('watchlist_as_search')) {
-        performWatchlist();
-      } else {
         performSearch();
-      }
     } else {
-      displayButton();
+        displayButton();
     }
   }
 });
