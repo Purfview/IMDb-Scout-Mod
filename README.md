@@ -35,7 +35,7 @@ Parameters you can use inside the URL:
   - %tt%: The IMDb id with the tt prefix (e.g. tt0055630).
   - %nott%: The IMDb id without the tt prefix (e.g. 0055630).
   - %search_string%: The movie title (e.g. Yojimbo). Depends on your preferences at www.imdb.com/preferences/general .
-  - %search_string_orig%: The original movie title (e.g. Yôjinbô). Reverts to %search_string% if original title is not set at IMDb.
+  - %search_string_orig%: The original movie title (e.g. Yôjinbô). Reverts to %search_string% if an original title is not set at IMDb.
   - %year%: The movie year (e.g. 1961).
 
 See the script for examples.
