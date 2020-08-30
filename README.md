@@ -1,4 +1,4 @@
-# IMDb-Scout-Mod
+# IMDb-Scout-Mod:
 
 New additions, features, tweaks and bugfixes.
 
@@ -6,17 +6,17 @@ Add links from IMDb pages to torrent trackers and other movie sites -- easy down
 
 Greasemonkey v4 is currently not supported (v3.xx works). Try alternative plugins such as Violentmonkey or Tampermonkey.
 
-## Usage
+## Usage:
 
 'IMDb Scout Mod Preferences' button you'll find on plugin's icon (you must open a movie page on IMDb first).
 
 Currently the script works on individual title pages, various search pages, watchlist and list pages.
 
-## Contributing
+## Contributing:
 
 Contributions are welcome.
 
-## Adding new sites
+## Adding new sites:
 
 Inside the script, there is a list of dictionaries that contains of all the sites, and the data necessary to check IMDb against them.
 Each site is a dictionary with the following attributes:
@@ -42,7 +42,7 @@ Parameters you can use inside the URL:
 
 See the script for examples.
 
-## Versioning
+## Versioning:
 Follows a bastardization of the [semver](http://semver.org/) standard:
 * Patch versions will not change behavior, only the URL/settings for trackers.
 * Minor versions will definitely change code, although behavior may in fact remain the same.
