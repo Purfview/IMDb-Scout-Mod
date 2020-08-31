@@ -1178,7 +1178,7 @@ var private_sites = [
       'matchRegex': /Nothing found!/,
       'spaceEncode': ' '},
   {   'name': 'TSeeds',
-      'searchUrl': 'https://torrentseeds.org/browse.php?c67=1&c65=1&c61=1&c11=1&c23=1&c24=1&c18=1&c26=1&c64=1+&search=+%search_string_orig%&searchin=title&incldead=0',
+      'searchUrl': 'https://torrentseeds.org/browse.php?c67=1&c65=1&c61=1&c11=1&c23=1&c24=1&c18=1&c26=1&c64=1&search=+%search_string_orig%&searchin=title&incldead=0',
       'loggedOutRegex': /Not logged in!/,
       'matchRegex': /Nothing found!/,
       'spaceEncode': ' ',
