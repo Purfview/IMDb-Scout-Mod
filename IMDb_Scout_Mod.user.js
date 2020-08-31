@@ -7,7 +7,7 @@
 // @require     https://greasyfork.org/libraries/GM_config/20131122/GM_config.js
 // @require     http://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js
 //
-// @version        6.0.1
+// @version        6.0.2
 // @include        http*://*.imdb.tld/title/tt*
 // @include        http*://*.imdb.tld/search/title*
 // @include        http*://*.imdb.tld/user/*/watchlist*
@@ -458,6 +458,8 @@
         -   New Feature: Script supports List pages.
 
 6.0.1   -   Added: TSeeds.
+
+6.0.2   -   Tweak: TSeeds.
 
 
 //==============================================================================
@@ -1171,13 +1173,15 @@ var private_sites = [
       'matchRegex': /Try again with a refined search string/,
       'both': true},
   {   'name': 'TSeeds',
-      'searchUrl': 'https://torrentseeds.org/browse.php?c50=1&c31=1&c3=1&c39=1&c62=1&c19=1&c49=1&c25=1&search=%search_string_orig%+%year%&searchin=title&incldead=0',
-      'loggedOutRegex': /Not logged in!/,
-      'matchRegex': /Nothing found!/},
-  {   'name': 'TSeeds',
-      'searchUrl': 'https://torrentseeds.org/browse.php?c67=1&c65=1&c61=1&c11=1&c23=1&c24=1&c18=1&c26=1&c64=1&search=%search_string_orig%&searchin=title&incldead=0',
+      'searchUrl': 'https://torrentseeds.org/browse.php?c50=1&c31=1&c3=1&c39=1&c62=1&c19=1&c49=1&c25=1&search=+%search_string_orig% +%year%&searchin=title&incldead=0',
       'loggedOutRegex': /Not logged in!/,
       'matchRegex': /Nothing found!/,
+      'spaceEncode': ' '},
+  {   'name': 'TSeeds',
+      'searchUrl': 'https://torrentseeds.org/browse.php?c67=1&c65=1&c61=1&c11=1&c23=1&c24=1&c18=1&c26=1&c64=1+&search=+%search_string_orig%&searchin=title&incldead=0',
+      'loggedOutRegex': /Not logged in!/,
+      'matchRegex': /Nothing found!/,
+      'spaceEncode': ' ',
       'TV': true},
   {   'name': 'TTG',
       'searchUrl': 'https://totheglory.im/browse.php?c=M&search_field=imdb%nott%',
