@@ -1,4 +1,4 @@
-# IMDb-Scout-Mod:
+# IMDb Scout Mod:
 
 New additions, features, tweaks and bugfixes.
 
