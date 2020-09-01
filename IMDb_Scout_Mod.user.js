@@ -7,7 +7,7 @@
 // @require     https://greasyfork.org/libraries/GM_config/20131122/GM_config.js
 // @require     http://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js
 //
-// @version        6.0.2
+// @version        6.1
 // @include        http*://*.imdb.tld/title/tt*
 // @include        http*://*.imdb.tld/search/title*
 // @include        http*://*.imdb.tld/user/*/watchlist*
@@ -461,6 +461,14 @@
 
 6.0.2   -   Tweak: TSeeds.
 
+6.1     -   Added: DC.
+        -   Tweak: BTN-Title, WC, TVV, TVV-Req, ACM, Blu, JPTV, M-T, U2 and ect..
+        -   Tweak: Some code optimizations.
+        -   New Feature: Connection rate limiting for IMDb's domain.
+                         Sites are added more consequent on Search/List pages.
+        -   New Feature: Dynamic rates. Search on Title pages are much faster now.
+        -   New Feature: Optional 'rateLimit' attribute for sites.
+
 
 //==============================================================================
 //    A list of all the sites.
@@ -506,6 +514,10 @@ Places site at the extra searchable bar. Subtitles and other sites are set to 2n
 3rd bar is empty, space for custom user's configuration. By defaut site goes to the 1st bar.
 Extra bars can be enabled/disabled/swapped at the preferences.
 
+#  'rateLimit' (optional):
+Connection rate limit in milliseconds. Default is 200.
+On the Search/List pages it will be increased by a factor of 4.
+
     -=  Search URL parameters: =-
 
 #  %tt%:
@@ -540,11 +552,6 @@ var public_sites = [
       'searchUrl': 'https://1337x.unblocker.cc/category-search/%search_string%/TV/1/',
       'matchRegex': /No results were returned/,
       'TV': true},
-  {   'name': 'AG',
-      'searchUrl': 'https://asgrd.org/browse.php?si=%tt%&incldead=1',
-      'loggedOutRegex': /Remember Me\?/,
-      'matchRegex': /Nothing here!/,
-      'both': true},
   {   'name': 'CPS',
       'searchUrl': 'https://mycarpathians.net/browse.php?c194=1&c60=1&c10=1&c20=1&c181=1&c183=1&c192=1&c190=1&c70=1&c30=1&c40=1&search=%search_string%',
       'loggedOutRegex': /Nem vagy bejelentkezve!/,
@@ -557,7 +564,7 @@ var public_sites = [
       'both': true},
   {   'name': 'Demonoid',
       'searchUrl': 'http://www.dnoid.pw/files/?query=%tt%',
-      'loggedOutRegex': /Error 522|Checking your browser|security check to access|daily site maintenance|page is not available/,
+      'loggedOutRegex': /Cloudflare Ray ID|Checking your browser|security check to access|daily site maintenance|page is not available/,
       'matchRegex': /No torrents found/,
       'both': true},
   {   'name': 'ETTV',
@@ -586,12 +593,12 @@ var public_sites = [
       'matchRegex': 'Нет активных раздач, приносим извинения. Пожалуйста, уточните параметры поиска',
       'TV': true},
   {   'name': 'LimeTor',
-      'loggedOutRegex': /Error 522|Checking your browser|security check to access|Please turn JavaScript/,
+      'loggedOutRegex': /Cloudflare Ray ID|Checking your browser|security check to access|Please turn JavaScript/,
       'searchUrl': 'https://www.limetorrents.info/search/movies/%search_string%+%year%/seeds/1/',
       'matchRegex': /csprite_dl14/,
       'positiveMatch': true},
   {   'name': 'LimeTor-Proxy',
-      'loggedOutRegex': /Error 522|Checking your browser|security check to access|Please turn JavaScript/,
+      'loggedOutRegex': /Cloudflare Ray ID|Checking your browser|security check to access|Please turn JavaScript/,
       'searchUrl': 'https://limetorrents.unblockit.win/search/movies/%search_string%+%year%/seeds/1/',
       'matchRegex': /csprite_dl14/,
       'positiveMatch': true},
@@ -601,9 +608,10 @@ var public_sites = [
       'both': true},
   {   'name': 'RARBG',
       'searchUrl': 'https://rarbgweb.org/torrents.php?imdb=%tt%',
-      'loggedOutRegex': /something wrong|Please wait|enter the captcha/,
+      'loggedOutRegex': /something wrong|Please wait|enter the captcha|too many requests/,
       'matchRegex': '//dyncdn.me/static/20/images/imdb_thumb.gif',
       'positiveMatch': true,
+      'rateLimit': 250,
       'both': true},
   {   'name': 'RareFilm',
       'icon': 'http://rarefilm.net/wp-content/themes/sahifa/favicon.ico',
@@ -618,15 +626,17 @@ var public_sites = [
       'icon': 'https://i.imgur.com/Ve3T1rC.png',
       'searchUrl': 'http://search.rlsbb.ru/Home/GetPost?phrase=%tt%&pindex=1&content=true&type=Simple',
       'goToUrl': 'http://rlsbb.ru/?serach_mode=light&s=%tt%',
-      'loggedOutRegex': /Error 522|Checking your browser|security check to access/,
+      'loggedOutRegex': /Cloudflare Ray ID|Checking your browser|security check to access/,
       'matchRegex': /"results":\[\]|Not Found/,
+      'rateLimit': 250,
       'both': true},
   {   'name': 'RlsBB-Proxy',
       'icon': 'https://i.imgur.com/Ve3T1rC.png',
       'searchUrl': 'http://search.proxybb.com/Home/GetPost?phrase=%tt%&pindex=1&content=true&type=Simple',
       'goToUrl': 'http://search.proxybb.com/?serach_mode=light&s=%tt%',
-      'loggedOutRegex': /Error 522|Checking your browser|security check to access/,
+      'loggedOutRegex': /Cloudflare Ray ID|Checking your browser|security check to access/,
       'matchRegex': /"results":\[\]|Not Found/,
+      'rateLimit': 250,
       'both': true},
   {   'name': 'RuT',
       'searchUrl': 'https://rutracker.org/forum/tracker.php?f=100,101,103,1105,1114,1213,1235,124,1247,1278,1280,1281,1327,1363,1389,1391,140,1453,1457,1467,1468,1469,1475,1543,1576,1577,1666,1670,187,1900,1908,1936,194,1950,2076,208,2082,209,2090,2091,2092,2093,2107,2109,2110,2112,212,2123,2139,2159,2160,2163,2164,2166,2168,2169,2176,2177,2178,2198,2199,22,2200,2201,2220,2221,2258,2323,2339,2343,2365,2380,2459,249,2491,251,2535,2538,2540,294,312,313,33,352,376,4,484,500,505,511,521,539,549,552,56,572,599,656,671,672,7,709,752,821,822,851,863,876,877,893,905,921,93,930,934,941,97,979,98&nm=%search_string_orig%',
@@ -651,7 +661,8 @@ var public_sites = [
       'searchUrl': 'https://torrentgalaxy.org/torrents.php?search=%tt%',
       'matchRegex': /No results found/},
   {   'name': 'WC',
-      'searchUrl': 'http://worldscinema.org/?s=%tt%',
+      'icon': 'https://i.imgur.com/ojFZp6N.png',
+      'searchUrl': 'https://worldscinema.org/?s=%tt%',
       'matchRegex': /Nothing Found/,
       'both': true},
   {   'name': 'XDCC',
@@ -663,12 +674,13 @@ var public_sites = [
       'TV': true},
   {   'name': 'YGG',
       'searchUrl': 'https://www2.yggtorrent.si/engine/search?name=%search_string_orig%&category=2145&sub_category=all&do=search',
+      'loggedOutRegex': /Cloudflare Ray ID|Checking your browser|security check to access/,
       'matchRegex': 'Aucun résultat !',
       'both': true},
   {   'name': 'Zooqle',
       'icon': 'https://i.imgur.com/jqKceYP.png',
       'searchUrl': 'https://zooqle.com/search?q=%tt%',
-      'loggedOutRegex': /Error 522|Checking your browser|security check to access/,
+      'loggedOutRegex': /Cloudflare Ray ID|Checking your browser|security check to access/,
       'matchRegex': 'Sorry, no torrents match',
       'both': true}
 ];
@@ -683,18 +695,25 @@ var private_sites = [
       'icon': 'https://i.imgur.com/7jLeQqf.png',
       'searchUrl': 'https://asiancinema.me/torrents/filter?imdb=%tt%',
       'loggedOutRegex': /Forgot Your Password/,
-      'matchRegex': /<tbody>\n\ {16}<\/tbody>/,
+      'matchRegex': /<tbody>\s*<\/tbody>/,
+      'both': true},
+  {   'name': 'AG',
+      'searchUrl': 'https://asgrd.org/browse.php?si=%tt%&incldead=1',
+      'loggedOutRegex': /Remember Me\?/,
+      'matchRegex': /Nothing here!/,
       'both': true},
   {   'name': 'AHD',
       'searchUrl': 'https://awesome-hd.me/torrents.php?id=%tt%',
       'loggedOutRegex': /Keep me logged in.|Gateway Time-out/,
       'matchRegex': /Your search did not match anything.|Error 404/,
+      'rateLimit': 250,
       'both': true},
   {   'name': 'AHD-Req',
       'icon': 'https://i.imgur.com/wEs3QZL.png',
       'searchUrl': 'https://awesome-hd.me/requests.php?submit=true&search=%tt%',
       'loggedOutRegex': /Keep me logged in./,
       'matchRegex': /Nothing found!|Error 404/,
+      'rateLimit': 250,
       'both': true},
   {   'name': 'ANT',
       'icon': 'https://i.imgur.com/hKZo4s2.png',
@@ -748,8 +767,8 @@ var private_sites = [
       'matchRegex': /No match!/},
   {   'name': 'Blu',
       'searchUrl': 'https://blutopia.xyz/torrents/filter?imdb=%tt%',
-      'loggedOutRegex': /Forgot Your Password/,
-      'matchRegex': /<tbody>\n\ {20}<\/tbody>/,
+      'loggedOutRegex': /Forgot Your Password|Service Unavailable/,
+      'matchRegex': /<tbody>\s*<\/tbody>/,
       'both': true},
   {   'name': 'BRT',
       'icon': 'https://i.imgur.com/KVaHMKi.png',
@@ -763,7 +782,7 @@ var private_sites = [
       'matchRegex': /Error 404/,
       'TV': true},
   {   'name': 'BTN-Title',
-      'searchUrl': 'https://broadcasthe.net/torrents.php?searchstr=%search_string_orig%',
+      'searchUrl': 'https://broadcasthe.net/torrents.php?action=basic&searchstr=%search_string_orig%',
       'loggedOutRegex': /Lost your password\?/,
       'matchRegex': /No search results/,
       'TV': true},
@@ -831,6 +850,21 @@ var private_sites = [
       'loggedOutRegex': /Glemt din kode\?/,
       'matchRegex': /Your search did not match/,
       'both': true},
+  {   'name': 'DC',
+      'searchUrl': 'https://digitalcore.club/api/v1/torrents?categories[]=1&categories[]=2&categories[]=3&categories[]=4&categories[]=5&categories[]=6&categories[]=7&dead=false&limit=1&page=search&searchText=%search_string%+%year%',
+      'goToUrl': 'https://digitalcore.club/search?search=%search_string%+%year%&cats=1,2,5,6,3,4,7&fc=true',
+      'loggedOutRegex': /It doesnt work here/,
+      'matchRegex': /imdbid/,
+      'rateLimit': 250,
+      'positiveMatch': true},
+  {   'name': 'DC',
+      'searchUrl': 'https://digitalcore.club/api/v1/torrents?categories[]=8&categories[]=9&categories[]=10&categories[]=11&categories[]=12&categories[]=13&categories[]=14&dead=false&limit=1&page=search&searchText=%search_string%',
+      'goToUrl': 'https://digitalcore.club/search?search=%search_string%&cats=8,9,10,11,13,12,14&fc=true',
+      'loggedOutRegex': /It doesnt work here/,
+      'matchRegex': /imdbid/,
+      'rateLimit': 250,
+      'positiveMatch': true,
+      'TV': true},
   {   'name': 'DVDSeed',
       'searchUrl': 'http://www.dvdseed.eu/browse2.php?search=%tt%&wheresearch=2&incldead=1&polish=0&nuke=0&rodzaj=0',
       'loggedOutRegex': /Nie masz konta|Nie zalogowany!/,
@@ -930,7 +964,7 @@ var private_sites = [
   {   'name': 'JPTV',
       'searchUrl': 'https://jptv.club/torrents/filter?imdb=%tt%',
       'loggedOutRegex': /Forgot Your Password/,
-      'matchRegex': /<tbody>\n\ {20}<\/tbody>/,
+      'matchRegex': /<tbody>\s*<\/tbody>/,
       'both': true},
   {   'name': 'KG',
       'icon': 'https://i.imgur.com/0JFxPY5.png',
@@ -961,7 +995,7 @@ var private_sites = [
       'both': true},
   {   'name': 'M-T',
       'searchUrl': 'https://pt.m-team.cc/torrents.php?incldead=1&spstate=0&inclbookmarked=0&search=%tt%&search_area=4&search_mode=0',
-      'loggedOutRegex': /type="password" name="password"|An error occurred./,
+      'loggedOutRegex': /type="password" name="password"|An error occurred|Please input the 6-digit code/,
       'matchRegex': /Nothing here!|Try again with a refined search string./,
       'both': true},
   {   'name': 'MS',
@@ -1012,6 +1046,7 @@ var private_sites = [
       'goToUrl': 'https://pte.nu/torrents?cat=["6","7","9"]&search=%search_string%',
       'loggedOutRegex': /submit">Sign in/,
       'matchRegex': /"count":0/,
+      'rateLimit': 250,
       'spaceEncode': ' '},
   {   'name': 'PTE',
       'icon': 'https://cdn.pte.nu/img/favicon.ico',
@@ -1019,6 +1054,7 @@ var private_sites = [
       'goToUrl': 'https://pte.nu/torrents?cat=["11","12"]&search=%search_string%',
       'loggedOutRegex': /submit">Sign in/,
       'matchRegex': /"count":0/,
+      'rateLimit': 250,
       'spaceEncode': ' ',
       'TV': true},
   {   'name': 'PTer',
@@ -1039,12 +1075,14 @@ var private_sites = [
       'icon': 'https://passthepopcorn.me/static/common/touch-icon-iphone.png',
       'searchUrl': 'https://passthepopcorn.me/torrents.php?imdb=%tt%',
       'loggedOutRegex': /Keep me logged in|Your popcorn quota/,
-      'matchRegex': /Your search did not match anything/},
+      'matchRegex': /Your search did not match anything/,
+      'rateLimit': 250},
   {   'name': 'PTP-Req',
       'icon': 'https://i.imgur.com/EFCRrc9.png',
       'searchUrl': 'https://passthepopcorn.me/requests.php?submit=true&search=%tt%',
       'loggedOutRegex': /Keep me logged in|Your popcorn quota/,
-      'matchRegex': /Your search did not match anything/},
+      'matchRegex': /Your search did not match anything/,
+      'rateLimit': 250},
   {   'name': 'PxHD',
       'icon': 'https://i.imgur.com/OA7JJ6x.png',
       'searchUrl': 'https://pixelhd.me/torrents.php?groupname=&year=&tmdbover=&tmdbunder=&tmdbid=&imdbover=&imdbunder=&imdbid=%tt%&order_by=time&order_way=desc&taglist=&tags_type=1&filterTorrentsButton=Filter+Torrents',
@@ -1139,12 +1177,14 @@ var private_sites = [
       'goToUrl': 'http://www.torrentleech.org/torrents/browse/index/query/%search_string% %year%/categories/1,8,9,10,11,12,13,14,15,29',
       'loggedOutRegex': /Signup With Invite/,
       'matchRegex': /"numFound":0/,
+      'rateLimit': 250,
       'spaceEncode': ' '},
   {   'name': 'TL',
       'searchUrl': 'https://www.torrentleech.org/torrents/browse/list/categories/26,27,32/query/%search_string%',
       'goToUrl': 'http://www.torrentleech.org/torrents/browse/index/query/%search_string%/categories/2,26,27,32',
       'loggedOutRegex': /Signup With Invite/,
       'matchRegex': /"numFound":0/,
+      'rateLimit': 250,
       'spaceEncode': ' ',
       'TV': true},
   {   'name': 'TO',
@@ -1191,18 +1231,20 @@ var private_sites = [
       'matchRegex': /<b>Nothing Found<\/b>/},
   {   'name': 'TVV',
       'searchUrl': 'https://tv-vault.me/torrents.php?action=advanced&imdbid=%tt%&order_by=s3&order_way=desc',
-      'loggedOutRegex': /Lost your password\?|Browse quota exceeded/,
+      'loggedOutRegex': /Lost your password\?|Browse quota exceeded|Cloudflare Ray ID/,
       'matchRegex': /Nothing found<\/h2>/,
+      'rateLimit': 250,
       'TV': true},
   {   'name': 'TVV-Req',
       'icon': 'https://i.imgur.com/dNtCggC.png',
-      'searchUrl': 'http://tv-vault.me/requests.php?search=&imdbid=%tt%',
-      'loggedOutRegex': /Lost your password\?|Browse quota exceeded/,
+      'searchUrl': 'https://tv-vault.me/requests.php?search=&imdbid=%tt%',
+      'loggedOutRegex': /Lost your password\?|Browse quota exceeded|Cloudflare Ray ID/,
       'matchRegex': /Nothing found|Yes/,
+      'rateLimit': 250,
       'TV': true},
   {   'name': 'U2',
       'searchUrl': 'https://u2.dmhy.org/torrents.php?incldead=0&spstate=0&inclbookmarked=0&search=%tt%&search_area=1&search_mode=0',
-      'loggedOutRegex': /<title>Access Point :: U2</,
+      'loggedOutRegex': /<title>Access Point :: U2<|Cloudflare Ray ID/,
       'matchRegex': /Nothing found/},
   {   'name': 'UHDB',
       'searchUrl': 'https://uhdbits.org/torrents.php?action=advanced&groupname=%tt%',
@@ -1332,17 +1374,19 @@ var subs_sites = [
       'loggedOutRegex': /Please do not hammer/,
       'matchRegex': />Exact</,
       'positiveMatch': true,
+      'rateLimit': 4500,
       'inSecondSearchBar': true},
   {   'name': 'Subscene',
       'searchUrl': 'https://subscene.com/subtitles/searchbytitle?query=%search_string%',
       'loggedOutRegex': /Please do not hammer/,
       'matchRegex': />TV-Series</,
       'positiveMatch': true,
+      'rateLimit': 4500,
       'inSecondSearchBar': true,
       'TV': true},
   {   'name': 'SubsLand (BG)',
       'searchUrl': 'https://subsland.com/index.php?s=%search_string_orig%&w=name&category=1',
-      'matchRegex': /Няма намерени субтитри/,
+      'matchRegex': /Няма намерени субтитри|Не са открити/,
       'inSecondSearchBar': true,
       'both': true},
   {   'name': 'SubsUnacs (BG)',
@@ -1366,7 +1410,7 @@ var subs_sites = [
       'both': true},
   {   'name': 'Titlovi (BiH|HR|MK|SLO|SRB)',
       'searchUrl': 'https://titlovi.com/titlovi/?prijevod=%tt%',
-      'loggedOutRegex': /Error 522|Checking your browser|security check to access|Još samo jedan/,
+      'loggedOutRegex': /Cloudflare Ray ID|Checking your browser|security check to access|Još samo jedan/,
       'matchRegex': /<b>0<\/b> rezultata/,
       'inSecondSearchBar': true,
       'both': true},
@@ -1386,23 +1430,23 @@ var subs_sites = [
 
 var other_searchable_sites = [
   {   'name': 'PreDB',
-      'loggedOutRegex': /Error 522|Checking your browser|security check to access|seconds to search again/,
+      'loggedOutRegex': /Cloudflare Ray ID|Checking your browser|security check to access|seconds to search again/,
       'searchUrl': 'https://predb.me/?search=%search_string%+%year%&cats=movies',
       'matchRegex': /Nothing found.../,
       'inSecondSearchBar': true},
   {   'name': 'PreDB',
-      'loggedOutRegex': /Error 522|Checking your browser|security check to access|seconds to search again/,
+      'loggedOutRegex': /Cloudflare Ray ID|Checking your browser|security check to access|seconds to search again/,
       'searchUrl': 'https://predb.me/?search=%search_string%&cats=tv',
       'matchRegex': /Nothing found.../,
       'inSecondSearchBar': true,
       'TV': true},
   {   'name': 'PreDB-Orig',
-      'loggedOutRegex': /Error 522|Checking your browser|security check to access|seconds to search again/,
+      'loggedOutRegex': /Cloudflare Ray ID|Checking your browser|security check to access|seconds to search again/,
       'searchUrl': 'https://predb.me/?search=%search_string_orig%+%year%&cats=movies',
       'matchRegex': /Nothing found.../,
       'inSecondSearchBar': true},
   {   'name': 'PreDB-Orig',
-      'loggedOutRegex': /Error 522|Checking your browser|security check to access|seconds to search again/,
+      'loggedOutRegex': /Cloudflare Ray ID|Checking your browser|security check to access|seconds to search again/,
       'searchUrl': 'https://predb.me/?search=%search_string_orig%&cats=tv',
       'matchRegex': /Nothing found.../,
       'inSecondSearchBar': true,
@@ -1575,10 +1619,11 @@ function addLink(elem, link_text, target, site, state) {
       link.css('color', 'red');
     }
   }
-  // Only 1st bar for List/Watchlist/Search pages.
+
   var in_element_two = ('inSecondSearchBar' in site) ? site['inSecondSearchBar'] : false;
   var in_element_three = ('inThirdSearchBar' in site) ? site['inThirdSearchBar'] : false;
   if (onSearchPage && in_element_two || onSearchPage && in_element_three || in_element_two && in_element_three) {
+    // No second/third bar sites on Search/List/Watchlist page.
     return;
   } else if (!onSearchPage && in_element_two) {
     $('#imdbscoutsecondbar_' + state).append(link).append(' ');
@@ -1608,34 +1653,40 @@ function maybeAddLink(elem, link_text, search_url, site, movie_id, movie_title, 
     });
     return;
   }
-
-  var domain = search_url.split('/')[2];
-  var now = (new Date())*1;
+  // Don't check the second/third bar sites if a 2nd/3rd bar is disabled in the preferences.
+  var in_element_two = ('inSecondSearchBar' in site) ? site['inSecondSearchBar'] : false;
+  var in_element_three = ('inThirdSearchBar' in site) ? site['inThirdSearchBar'] : false;
+  if (in_element_two && !GM_config.get('load_second_bar') || in_element_three && !GM_config.get('load_third_bar') || in_element_two && in_element_three) {
+    return;
+  }
+  // Don't check the second/third bar sites on a Search/List/Watchlist page.
+  if (in_element_two && onSearchPage || in_element_three && onSearchPage) {
+    return;
+  }
+  // Connection rate limiter per domain.
+  var set_rate = ('rateLimit' in site) ? site['rateLimit'] : 200;
+  var rate     = (onSearchPage) ? set_rate * 4 : set_rate;
+  var domain   = search_url.split('/')[2];
+  var now      = (new Date())*1;
   var lastLoaded = window.localStorage[domain+'_lastLoaded'];
   if (!lastLoaded) {
-    lastLoaded = now - 5000;
+    lastLoaded = now - 50000;
   } else {
     lastLoaded = parseInt(lastLoaded);
   }
-  if (now-lastLoaded < 1000) {
-        window.setTimeout(maybeAddLink.bind(undefined, elem, site['name'], search_url, site, movie_id, movie_title, movie_title_orig, movie_year), 1000);
+  if (now - lastLoaded < rate) {
+    window.setTimeout(maybeAddLink.bind(undefined, elem, site['name'], search_url, site, movie_id, movie_title, movie_title_orig, movie_year), rate);
     return;
-  }
-  else
-  {
-    window.localStorage[domain+'_lastLoaded']=(new Date())*1;
+  } else {
+    window.localStorage[domain+'_lastLoaded'] = (new Date())*1;
   }
 
   var target = search_url;
   if ('goToUrl' in site) {
     target = replaceSearchUrlParams({'searchUrl': site['goToUrl']}, movie_id, movie_title, movie_title_orig, movie_year);
   }
-  var in_element_two = ('inSecondSearchBar' in site) ? site['inSecondSearchBar'] : false;
-  var in_element_three = ('inThirdSearchBar' in site) ? site['inThirdSearchBar'] : false;
+
   var success_match = ('positiveMatch' in site) ? site['positiveMatch'] : false;
-  if (in_element_two && !GM_config.get('load_second_bar') || in_element_three && !GM_config.get('load_third_bar') || in_element_two && in_element_three) {
-    return;
-  }
   GM_xmlhttpRequest({
     method: 'GET',
     url: search_url,
@@ -1789,38 +1840,77 @@ function performSearch() {
       styles += '.maindetails_center {margin-left: 5px; width: 1001px;}';
   GM_addStyle(styles);
 
-  var search_page = (Boolean(location.href.match('/search/'))) ? true : false;
+  var showsites = sites.reduce(function (n, x) {
+      return n + (x.show == true); }, 0);
 
+  var search_page = (Boolean(location.href.match('/search/'))) ? true : false;
   if($('.lister-list').children().length !== 0) {
     $('.lister-list').children().each(function() {
       var elem     = (search_page) ? $(this).find('.lister-item-content') : $(this);
       var link     = $(this).find('.lister-item-image>a');
       var movie_id = link.attr('href').match(/tt([0-9]*)\/?.*/)[1];
-
-      GM_xmlhttpRequest ({
-          method: "GET",
-          url:    "https://www.imdb.com" + link.attr('href'),
-          onload: function(response) {
-            var parser = new DOMParser();
-            var result = parser.parseFromString(response.responseText, "text/html");
-
-            var is_tv    = Boolean($(result).find('title').text().match('TV Series')) || Boolean($(result).find('.tv-extra').length);
-            var is_movie = (Boolean($(result).find('.subtext').text().match('TV Special'))) ? false : Boolean($(result).find('title').text().match(/.*? \(([0-9]*)\)/));
-            if (Boolean($(result).find('.subtext').text().match('Documentary'))) {
-              is_tv    = false;
-              is_movie = false;
-            }
-            var movie_year       = result.title.replace(/^(.+) \((\D*|)(\d{4})(.*)$/gi, '$3');
-            var movie_title      = $(result).find('.title_wrapper>h1').clone().children().remove().end().text();
-            var movie_title_orig = $(result).find('.originalTitle').clone().children().remove().end().text();
-            if (movie_title_orig === "") {
-                movie_title_orig = movie_title;
-            }
-            perform(elem, movie_id, movie_title, movie_title_orig, is_tv, is_movie, movie_year);
-        }
-      });
+      performSearchSecondPart(elem, link, movie_id, showsites);
     });
   }
+}
+
+function performSearchSecondPart(elem, link, movie_id, showsites) {
+  // Connection rate limiter for IMDb.
+  var rate;
+  if (!(GM_config.get('call_http_mod_search'))) {
+    rate =  400;
+  } else if (showsites > 99) {
+    rate = 6000;
+  } else if (showsites > 80) {
+    rate = 5000;
+  } else if (showsites > 60) {
+    rate = 3500;
+  } else if (showsites > 40) {
+    rate = 2500;
+  } else if (showsites > 20) {
+    rate = 2000;
+  } else if (showsites > 10) {
+    rate = 1500;
+  } else {
+    rate = 1000;
+  }
+  var domain = "https://www.imdb.com";
+  var now    = (new Date())*1;
+  var lastLoaded = window.localStorage[domain+'_lastLoaded'];
+  if (!lastLoaded) {
+    lastLoaded = now - 8000;
+  } else {
+    lastLoaded = parseInt(lastLoaded);
+  }
+  if (now - lastLoaded < rate) {
+    window.setTimeout(performSearchSecondPart.bind(undefined, elem, link, movie_id, showsites), rate);
+    return;
+  } else {
+    window.localStorage[domain+'_lastLoaded'] = (new Date())*1;
+  }
+
+  GM_xmlhttpRequest ({
+      method: "GET",
+      url:    "https://www.imdb.com" + link.attr('href'),
+      onload: function(response) {
+        var parser = new DOMParser();
+        var result = parser.parseFromString(response.responseText, "text/html");
+
+        var is_tv    = Boolean($(result).find('title').text().match('TV Series')) || Boolean($(result).find('.tv-extra').length);
+        var is_movie = (Boolean($(result).find('.subtext').text().match('TV Special'))) ? false : Boolean($(result).find('title').text().match(/.*? \(([0-9]*)\)/));
+        if (Boolean($(result).find('.subtext').text().match('Documentary'))) {
+          is_tv    = false;
+          is_movie = false;
+        }
+        var movie_year       = result.title.replace(/^(.+) \((\D*|)(\d{4})(.*)$/gi, '$3');
+        var movie_title      = $(result).find('.title_wrapper>h1').clone().children().remove().end().text();
+        var movie_title_orig = $(result).find('.originalTitle').clone().children().remove().end().text();
+        if (movie_title_orig === "") {
+            movie_title_orig = movie_title;
+        }
+        perform(elem, movie_id, movie_title, movie_title_orig, is_tv, is_movie, movie_year);
+    }
+  });
 }
 
 //==============================================================================
