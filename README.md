@@ -32,6 +32,7 @@ Each site is a dictionary with the following attributes:
   - `configName` (optional): Use this to allow changing names without breaking existing users.
   - `inSecondSearchBar` (optional): Places site at the second searchable bar.
   - `inThirdSearchBar` (optional): Places site at the third searchable bar.
+  - `rateLimit` (optional): Connection rate limit in milliseconds. Default is 200. On the Search/List pages it will be increased by a factor of 4.
 
 Parameters you can use inside the URL:
   - `%tt%`: The IMDb id with the tt prefix (e.g. tt0055630).
