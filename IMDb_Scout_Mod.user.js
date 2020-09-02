@@ -7,7 +7,7 @@
 // @require     https://greasyfork.org/libraries/GM_config/20131122/GM_config.js
 // @require     http://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js
 //
-// @version        6.1.1
+// @version        6.1.2
 // @include        http*://*.imdb.tld/title/tt*
 // @include        http*://*.imdb.tld/search/title*
 // @include        http*://*.imdb.tld/user/*/watchlist*
@@ -471,6 +471,9 @@
 
 6.1.1   -   Fixed: TL, TSeeds.
 
+6.1.2   -   Added: TL-PL, 3CT, IT.
+        -   Tweaks: BTN-Req icon, Tik, Tik-Req.
+
 
 //==============================================================================
 //    A list of all the sites.
@@ -613,7 +616,7 @@ var public_sites = [
       'loggedOutRegex': /something wrong|Please wait|enter the captcha|too many requests/,
       'matchRegex': '//dyncdn.me/static/20/images/imdb_thumb.gif',
       'positiveMatch': true,
-      'rateLimit': 600,
+      'rateLimit': 250,
       'both': true},
   {   'name': 'RareFilm',
       'icon': 'http://rarefilm.net/wp-content/themes/sahifa/favicon.ico',
@@ -688,6 +691,12 @@ var public_sites = [
 ];
 
 var private_sites = [
+  {   'name': '3CT',
+      'icon': 'https://i.imgur.com/ECgERTH.png',
+      'searchUrl': 'https://3changtrai.com/torrents.php?incldead=0&spstate=0&search=%tt%&search_area=4&search_mode=0',
+      'loggedOutRegex': /Ray ID|SSL \(HTTPS\)/,
+      'matchRegex': /Không tìm thấy/,
+      'both': true},
   {   'name': 'AB',
       'searchUrl': 'https://animebytes.tv/torrents.php?searchstr=%search_string%&action=advanced&search_type=title&tags=-lolicon+-shotacon+&sort=relevance&way=desc&hentai=0&showhidden=1&anime%5Btv_series%5D=1&anime%5Btv_special%5D=1&anime%5Bmovie%5D=1&anime%5Bova%5D=1&anime%5Bona%5D=1&anime%5Bdvd_special%5D=1&anime%5Bbd_special%5D=1&airing=2',
       'loggedOutRegex': /Forgot your username/,
@@ -789,7 +798,7 @@ var private_sites = [
       'matchRegex': /No search results/,
       'TV': true},
   {   'name': 'BTN-Req',
-      'icon': 'https://i.imgur.com/yj9qrwa.png',
+      'icon': 'https://i.imgur.com/foa4ZKI.png',
       'searchUrl':  'https://broadcasthe.net/requests.php?search=%search_string%',
       'loggedOutRegex': /Lost your password\?/,
       'matchRegex': /Nothing found/,
@@ -958,6 +967,11 @@ var private_sites = [
       'loggedOutRegex': /Error 522|Checking your browser|security check to access|Forgot your password/,
       'matchRegex': /No Torrents Found!/,
       'TV': true},
+  {   'name': 'IT',
+      'searchUrl': 'https://newinsane.info/browse.php?search=%tt%',
+      'loggedOutRegex': /Ray ID|login_button/,
+      'matchRegex': /Nincs találat|Nothing found|Nu s-a găsit|Nič sa nenašlo|kein treffer/,
+      'both': true},
   {   'name': 'JoyHD',
       'icon': 'https://i.imgur.com/z5kbxta.png',
       'searchUrl': 'https://www.joyhd.net/torrents.php?search_area=4&search=%tt%',
@@ -1157,7 +1171,7 @@ var private_sites = [
   {   'name': 'THC',
       'searchUrl': 'https://horrorcharnel.org/browse.php?search=%nott%&cat=0&incldead=1',
       'loggedOutRegex': /Not logged in!/,
-      'matchRegex': /<h2>Nothing found!<\/h2>/},
+      'matchRegex': /Nothing found!/},
   {   'name': 'THR',
       'searchUrl': 'https://www.torrenthr.org/browse.php?search=%search_string%&blah=0&incldead=1',
       'loggedOutRegex': /registraciju morate imati omogućene cookiese/,
@@ -1165,13 +1179,13 @@ var private_sites = [
       'both': true},
   {   'name': 'Tik',
       'searchUrl': 'https://www.cinematik.net/browse.php?cat=0&incldead=1&srchdtls=1&search=%tt%',
-      'loggedOutRegex': /Not logged in!/,
+      'loggedOutRegex': /Not logged in!|Ray ID/,
       'matchRegex': /Nothing found!/,
       'both': true},
   {   'name': 'Tik-Req',
       'icon': 'https://i.imgur.com/bM8D1m2.png',
       'searchUrl': 'https://www.cinematik.net/viewrequests.php?search=%search_string%&filter=1',
-      'loggedOutRegex': /Not logged in!/,
+      'loggedOutRegex': /Not logged in!|Ray ID/,
       'matchRegex': /No requests found!/,
       'both': true},
   {   'name': 'TL',
@@ -1189,6 +1203,12 @@ var private_sites = [
       'rateLimit': 250,
       'spaceEncode': ' ',
       'TV': true},
+  {   'name': 'TL-PL',
+      'icon': 'https://torrentleech.pl/pic/Favikona.png',
+      'searchUrl': 'https://torrentleech.pl/browse.php?search=%tt%&incldead=0&titlesearch=1&polish=0&cat_film=&napisy=0',
+      'loggedOutRegex': /Ray ID|Niezalogowany!/,
+      'matchRegex': /Nic tutaj nie ma/,
+      'both': true},
   {   'name': 'TO',
       'searchUrl': 'https://theoccult.click/browse.php?incldead=0&country=&nonboolean=1&search=%tt%',
       'loggedOutRegex': /404 - Not Found|You need cookies enabled/,
