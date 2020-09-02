@@ -7,7 +7,7 @@
 // @require     https://greasyfork.org/libraries/GM_config/20131122/GM_config.js
 // @require     http://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js
 //
-// @version        6.1
+// @version        6.1.1
 // @include        http*://*.imdb.tld/title/tt*
 // @include        http*://*.imdb.tld/search/title*
 // @include        http*://*.imdb.tld/user/*/watchlist*
@@ -469,6 +469,8 @@
         -   New Feature: Dynamic rates. Search on Title pages are much faster now.
         -   New Feature: Optional 'rateLimit' attribute for sites.
 
+6.1.1   -   Fixed: TL, TSeeds.
+
 
 //==============================================================================
 //    A list of all the sites.
@@ -611,7 +613,7 @@ var public_sites = [
       'loggedOutRegex': /something wrong|Please wait|enter the captcha|too many requests/,
       'matchRegex': '//dyncdn.me/static/20/images/imdb_thumb.gif',
       'positiveMatch': true,
-      'rateLimit': 250,
+      'rateLimit': 600,
       'both': true},
   {   'name': 'RareFilm',
       'icon': 'http://rarefilm.net/wp-content/themes/sahifa/favicon.ico',
@@ -1173,15 +1175,15 @@ var private_sites = [
       'matchRegex': /No requests found!/,
       'both': true},
   {   'name': 'TL',
-      'searchUrl': 'https://www.torrentleech.org/torrents/browse/list/categories/8,9,11,12,13,14,15,29/query/%search_string% %year%',
-      'goToUrl': 'http://www.torrentleech.org/torrents/browse/index/query/%search_string% %year%/categories/1,8,9,10,11,12,13,14,15,29',
+      'searchUrl': 'https://www.torrentleech.org/torrents/browse/list/categories/8,9,11,12,13,14,15,29,34,35,36,37,43,47/query/%search_string% %year%',
+      'goToUrl': 'http://www.torrentleech.org/torrents/browse/index/query/%search_string% %year%/categories/8,9,11,12,13,14,15,29,34,35,36,37,43,47',
       'loggedOutRegex': /Signup With Invite/,
       'matchRegex': /"numFound":0/,
       'rateLimit': 250,
       'spaceEncode': ' '},
   {   'name': 'TL',
-      'searchUrl': 'https://www.torrentleech.org/torrents/browse/list/categories/26,27,32/query/%search_string%',
-      'goToUrl': 'http://www.torrentleech.org/torrents/browse/index/query/%search_string%/categories/2,26,27,32',
+      'searchUrl': 'https://www.torrentleech.org/torrents/browse/list/categories/26,27,29,32,34,35,44/query/%search_string%',
+      'goToUrl': 'http://www.torrentleech.org/torrents/browse/index/query/%search_string%/categories/26,27,29,32,34,35,44',
       'loggedOutRegex': /Signup With Invite/,
       'matchRegex': /"numFound":0/,
       'rateLimit': 250,
@@ -1213,11 +1215,11 @@ var private_sites = [
       'matchRegex': /Try again with a refined search string/,
       'both': true},
   {   'name': 'TSeeds',
-      'searchUrl': 'https://torrentseeds.org/browse.php?c50=1&c31=1&c3=1&c39=1&c62=1&c19=1&c49=1&c25=1&search=+%search_string_orig% +%year%&searchin=title&incldead=0',
+      'searchUrl': 'https://torrentseeds.org/browse_elastic.php?cat[3]=1&cat[39]=1&cat[62]=1&cat[19]=1&cat[49]=1&cat[25]=1&cat[50]=1&cat[31]=1&query=%search_string_orig%+%year%&search_in=title',
       'loggedOutRegex': /Not logged in!/,
       'matchRegex': /Nothing found!/},
   {   'name': 'TSeeds',
-      'searchUrl': 'https://torrentseeds.org/browse.php?c67=1&c65=1&c61=1&c11=1&c23=1&c24=1&c18=1&c26=1&c64=1&search=+%search_string_orig%&searchin=title&incldead=0',
+      'searchUrl': 'https://torrentseeds.org/browse_elastic.php?cat[61]=1&cat[11]=1&cat[23]=1&cat[24]=1&cat[18]=1&cat[67]=1&cat[26]=1&cat[65]=1&cat[64]=1&query=%search_string_orig%&search_in=title',
       'loggedOutRegex': /Not logged in!/,
       'matchRegex': /Nothing found!/,
       'TV': true},
