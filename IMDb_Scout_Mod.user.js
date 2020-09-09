@@ -7,7 +7,7 @@
 // @require     https://greasyfork.org/libraries/GM_config/20131122/GM_config.js
 // @require     http://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js
 //
-// @version        6.2
+// @version        6.2.1
 // @include        http*://*.imdb.tld/title/tt*
 // @include        http*://*.imdb.tld/search/title*
 // @include        http*://*.imdb.tld/user/*/watchlist*
@@ -482,6 +482,9 @@
         -   New feature: All icons of request sites ('-Req') are highlighted with a blue border if 'found'.
         -   New feature: 3rd bar supported on Search/List pages.
         -   New feature: Separate space in Config for the custom sites. Replace 'Dummy' placeholder with your custom sites.
+
+6.2.1   -   Added: TDB.
+        -   Tweaks: SDBits, TSeeds.
 
 
 //==============================================================================
@@ -1183,7 +1186,7 @@ var private_sites = [
       'both': true},
   {   'name': 'SDBits',
       'searchUrl': 'https://sdbits.org/browse.php?incldead=1&imdb=%tt%',
-      'loggedOutRegex': /Not logged in!/,
+      'loggedOutRegex': /Not logged in!|Technical Difficulties/,
       'matchRegex': /Nothing here!|Nothing found!/},
   {   'name': 'sHD',
       'searchUrl': 'https://scenehd.org/browse.php?search=%tt%',
@@ -1220,6 +1223,11 @@ var private_sites = [
       'searchUrl': 'https://tday.findnemo.net/t?q=%tt%',
       'loggedOutRegex': /Error 522|Checking your browser|security check to access|Forgot Password\?/,
       'matchRegex': /No Torrents Found!/,
+      'both': true},
+  {   'name': 'TDB',
+      'searchUrl': 'https://torrentdb.net/filter/torrents?&search=%nott%',
+      'loggedOutRegex': /Forgot Your Password|Service Unavailable|Ray ID/,
+      'matchRegex': /<tbody>\s*<\/tbody>/,
       'both': true},
   {   'name': 'TE',
       'searchUrl': 'https://theempire.click/browse.php?incldead=0&country=&nonboolean=1&search=%tt%',
@@ -1306,7 +1314,7 @@ var private_sites = [
   {   'name': 'TSeeds',
       'searchUrl': 'https://torrentseeds.org/browse_elastic.php?cat[61]=1&cat[11]=1&cat[23]=1&cat[24]=1&cat[18]=1&cat[67]=1&cat[26]=1&cat[65]=1&cat[64]=1&query=%search_string_orig%&search_in=title',
       'loggedOutRegex': /Not logged in!/,
-      'matchRegex': /Nothing found!/,
+      'matchRegex': />Genres<\/div>\s*<\/div>/,
       'TV': true},
   {   'name': 'TTG',
       'searchUrl': 'https://totheglory.im/browse.php?c=M&search_field=imdb%nott%',
