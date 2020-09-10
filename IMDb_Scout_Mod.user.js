@@ -7,7 +7,7 @@
 // @require     https://greasyfork.org/libraries/GM_config/20131122/GM_config.js
 // @require     http://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js
 //
-// @version        6.2.1
+// @version        6.3
 // @include        http*://*.imdb.tld/title/tt*
 // @include        http*://*.imdb.tld/search/title*
 // @include        http*://*.imdb.tld/user/*/watchlist*
@@ -485,6 +485,10 @@
 
 6.2.1   -   Added: TDB.
         -   Tweaks: SDBits, TSeeds.
+
+6.3     -   Added: iTS.
+        -   Tweaks: TSeeds, Retroflix, Subscene.
+        -   New feature: Infotip on icons shows '(TV)' for 'TV' sites.
 
 
 //==============================================================================
@@ -1018,6 +1022,11 @@ var private_sites = [
       'loggedOutRegex': /Ray ID|login_button/,
       'matchRegex': /Nincs találat|Nothing found|Nu s-a găsit|Nič sa nenašlo|kein treffer/,
       'both': true},
+  {   'name': 'iTS',
+      'searchUrl': 'https://shadowthein.net/browse.php?incldead=1&search=%tt%&search_in=all',
+      'loggedOutRegex': /most comprehensive people/,
+      'matchRegex': /Nothing found!/,
+      'both': true},
   {   'name': 'JoyHD',
       'icon': 'https://i.imgur.com/z5kbxta.png',
       'searchUrl': 'https://www.joyhd.net/torrents.php?search_area=4&search=%tt%',
@@ -1168,7 +1177,7 @@ var private_sites = [
       'TV': true},
   {   'name': 'Retroflix',
       'searchUrl': 'https://retroflix.club/torrents1.php?incldead=0&spstate=0&inclbookmarked=0&search=%tt%&search_area=4&search_mode=0',
-      'loggedOutRegex': /Restrict session to my IP/,
+      'loggedOutRegex': /Restrict session to my IP|Ray ID/,
       'matchRegex': /Nothing found!/,
       'both': true},
   {   'name': 'SC',
@@ -1310,7 +1319,7 @@ var private_sites = [
   {   'name': 'TSeeds',
       'searchUrl': 'https://torrentseeds.org/browse_elastic.php?cat[3]=1&cat[39]=1&cat[62]=1&cat[19]=1&cat[49]=1&cat[25]=1&cat[50]=1&cat[31]=1&query=%search_string_orig%+%year%&search_in=title',
       'loggedOutRegex': /Not logged in!/,
-      'matchRegex': /Nothing found!/},
+      'matchRegex': />Genres<\/div>\s*<\/div>/},
   {   'name': 'TSeeds',
       'searchUrl': 'https://torrentseeds.org/browse_elastic.php?cat[61]=1&cat[11]=1&cat[23]=1&cat[24]=1&cat[18]=1&cat[67]=1&cat[26]=1&cat[65]=1&cat[64]=1&query=%search_string_orig%&search_in=title',
       'loggedOutRegex': /Not logged in!/,
@@ -1469,14 +1478,14 @@ var subs_sites = [
       'loggedOutRegex': /Please do not hammer/,
       'matchRegex': />Exact</,
       'positiveMatch': true,
-      'rateLimit': 4500,
+      'rateLimit': 7500,
       'inSecondSearchBar': true},
   {   'name': 'Subscene',
       'searchUrl': 'https://subscene.com/subtitles/searchbytitle?query=%search_string%',
       'loggedOutRegex': /Please do not hammer/,
       'matchRegex': />TV-Series</,
       'positiveMatch': true,
-      'rateLimit': 4500,
+      'rateLimit': 7500,
       'inSecondSearchBar': true,
       'TV': true},
   {   'name': 'SubsLand (BG)',
@@ -1674,10 +1683,11 @@ function getFavicon(site, hide_on_err) {
     var url = new URL(site['searchUrl']);
     favicon = url.origin + '/favicon.ico';
   }
+  var title = (site['TV']) ? site['name'] + ' (TV)' : site['name'];
   var img = $('<img />').attr({'style': '-moz-opacity: 0.4; border: 0; vertical-align: text-top',
                                'width': GM_config.get('cfg_icons_size'),
                                'src': favicon,
-                               'title': site['name'],
+                               'title': title,
                                'alt': site['name']});
   if (hide_on_err) { img.attr('onerror', "this.style.display='none';") }
   return img;
@@ -2098,7 +2108,7 @@ function getLinkArea() {
   var background_color = (GM_config.get('new_layout_dark')) ? '#333333' : '#EEEEEE';
   var txt_color = (GM_config.get('new_layout_dark')) ? '#EEEEEE' : '#333333';
   var p_new_bold = $('<p />').append(GM_config.get('imdbscoutmod_header_text')).attr('id', 'imdbscout_header').css({
-    'padding': '4px 11px',
+    'padding': '4px 10px',
     'font-weight': 'bold',
     'background-color': background_color,
     'margin-top': '0px',
@@ -2108,7 +2118,7 @@ function getLinkArea() {
   });
 
   var p_new_normal = $('<p />').append(GM_config.get('imdbscoutmod_header_text')).attr('id', 'imdbscout_header').css({
-    'padding': '4px 11px',
+    'padding': '4px 10px',
     'font-weight': 'normal',
     'background-color': background_color,
     'margin-top': '0px',
@@ -2167,7 +2177,7 @@ function getLinkAreaSecond() {
   var background_color = (GM_config.get('new_layout_dark')) ? '#333333' : '#EEEEEE';
   var txt_color = (GM_config.get('new_layout_dark')) ? '#EEEEEE' : '#333333';
   var p_new_bold = $('<p />').append(GM_config.get('imdbscoutsecondbar_header_text')).attr('id', 'imdbscoutsecondbar_header').css({
-    'padding': '4px 11px',
+    'padding': '4px 10px',
     'font-weight': 'bold',
     'background-color': background_color,
     'margin-top': '0px',
@@ -2177,7 +2187,7 @@ function getLinkAreaSecond() {
   });
 
   var p_new_normal = $('<p />').append(GM_config.get('imdbscoutsecondbar_header_text')).attr('id', 'imdbscoutsecondbar_header').css({
-    'padding': '4px 11px',
+    'padding': '4px 10px',
     'font-weight': 'normal',
     'background-color': background_color,
     'margin-top': '0px',
@@ -2236,7 +2246,7 @@ function getLinkAreaThird() {
   var background_color = (GM_config.get('new_layout_dark')) ? '#333333' : '#EEEEEE';
   var txt_color = (GM_config.get('new_layout_dark')) ? '#EEEEEE' : '#333333';
   var p_new_bold = $('<p />').append(GM_config.get('imdbscoutthirdbar_header_text')).attr('id', 'imdbscoutthirdbar_header').css({
-    'padding': '4px 11px',
+    'padding': '4px 10px',
     'font-weight': 'bold',
     'background-color': background_color,
     'margin-top': '0px',
@@ -2246,7 +2256,7 @@ function getLinkAreaThird() {
   });
 
   var p_new_normal = $('<p />').append(GM_config.get('imdbscoutthirdbar_header_text')).attr('id', 'imdbscoutthirdbar_header').css({
-    'padding': '4px 11px',
+    'padding': '4px 10px',
     'font-weight': 'normal',
     'background-color': background_color,
     'margin-top': '0px',
