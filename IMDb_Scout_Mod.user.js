@@ -733,7 +733,7 @@ var private_sites = [
       'both': true},
   {   'name': 'AB',
       'searchUrl': 'https://animebytes.tv/torrents.php?searchstr=%search_string%&action=advanced&search_type=title&tags=-lolicon+-shotacon+&sort=relevance&way=desc&hentai=0&showhidden=1&anime%5Btv_series%5D=1&anime%5Btv_special%5D=1&anime%5Bmovie%5D=1&anime%5Bova%5D=1&anime%5Bona%5D=1&anime%5Bdvd_special%5D=1&anime%5Bbd_special%5D=1&airing=2',
-      'loggedOutRegex': /Forgot your username/,
+      'loggedOutRegex': /Forgot your username|Ray ID/,
       'matchRegex': /Translation: No search results/,
       'both': true},
   {   'name': 'ACM',
