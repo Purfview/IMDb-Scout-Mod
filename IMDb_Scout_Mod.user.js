@@ -7,7 +7,7 @@
 // @require     https://greasyfork.org/libraries/GM_config/20131122/GM_config.js
 // @require     http://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js
 //
-// @version        6.3
+// @version        6.3.1
 // @include        http*://*.imdb.tld/title/tt*
 // @include        http*://*.imdb.tld/search/title*
 // @include        http*://*.imdb.tld/user/*/watchlist*
@@ -490,6 +490,8 @@
         -   Tweaks: TSeeds, Retroflix, Subscene.
         -   New feature: Infotip on icons shows '(TV)' for 'TV' sites.
 
+6.3.1   -   Added: TT, TBA.
+
 
 //==============================================================================
 //    A list of all the sites.
@@ -811,7 +813,7 @@ var private_sites = [
       'both': true},
   {   'name': 'Bit-Titan',
       'searchUrl': 'https://bit-titan.net/browse.php?suchfeld=2&suche=%tt%&durchsuche=11&suchein=2',
-      'loggedOutRegex': /eingeschaltet haben um dich/,
+      'loggedOutRegex': /eingeschaltet haben um dich|jscheck.php|JavaScript aktivieren/,
       'matchRegex': /keine Einträge mit/,
       'both': true},
   {   'name': 'BitHD',
@@ -1222,6 +1224,12 @@ var private_sites = [
       'matchRegex': /Click to Download/,
       'positiveMatch': true,
       'TV': true},
+  {   'name': 'TBA',
+      'searchUrl': 'https://tb-asian.org/index.php?page=torrents&search=%search_string%&category=0&active=0',
+      'loggedOutRegex': /not authorized to view/,
+      'matchRegex': /download.gif/,
+      'positiveMatch': true,
+      'both': true},
   {   'name': 'TBD',
       'icon': 'https://1.bp.blogspot.com/-F2JeKtPCJYI/VgjpVxwMO4I/AAAAAAAAADg/VyNyp-yW9Ac/s1600/TBD.ico',
       'searchUrl': 'https://www.torrentbd.me/torrent/movies.php?module=torrents&id=%nott%',
@@ -1325,6 +1333,12 @@ var private_sites = [
       'loggedOutRegex': /Not logged in!/,
       'matchRegex': />Genres<\/div>\s*<\/div>/,
       'TV': true},
+  {   'name': 'TT',
+      'icon': 'https://torrenting.com/T-favicon.ico',
+      'searchUrl': 'https://torrenting.com/t?q=%tt%',
+      'loggedOutRegex': /Ray ID|Checking your browser|security check to access|Reset Password/,
+      'matchRegex': /No Torrents Found!/,
+      'both': true},
   {   'name': 'TTG',
       'searchUrl': 'https://totheglory.im/browse.php?c=M&search_field=imdb%nott%',
       'loggedOutRegex': /Forget your password/,
