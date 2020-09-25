@@ -1,3 +1,5 @@
+![alt text](https://i.imgur.com/scanaxX.png)
+
 # IMDb Scout Mod:
 
 New additions, features, tweaks and bugfixes.
