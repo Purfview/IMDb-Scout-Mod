@@ -7,7 +7,7 @@
 // @require     https://greasyfork.org/libraries/GM_config/20131122/GM_config.js
 // @require     http://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js
 //
-// @version        6.3.1
+// @version        6.4
 // @include        http*://*.imdb.tld/title/tt*
 // @include        http*://*.imdb.tld/search/title*
 // @include        http*://*.imdb.tld/user/*/watchlist*
@@ -492,6 +492,12 @@
 
 6.3.1   -   Added: TT, TBA.
 
+6.4     -   Added: T2K, DT.
+        -   Tweak: Retroflix, TPB/TPB-Proxy.
+        -   Fixed: Broken "Open All" button.
+        -   New feature: Links of "icon sites" opens in new tabs.
+        -   New feature: Support for POST method with new 'mPOST' attribute.
+
 
 //==============================================================================
 //    A list of all the sites.
@@ -540,6 +546,11 @@ Extra bars can be enabled/disabled/swapped at the preferences.
 #  'rateLimit' (optional):
 Connection rate limit in milliseconds. Default is 200.
 On the Search/List pages it will be increased by a factor of 4.
+
+#  'mPOST':
+HTTP request by POST method. For the sites that doesn't support GET.
+Right mouse click won't submit such request.
+Atm 'SpaceEncode' attribute is not supported with this method.
 
     -=  Search URL parameters: =-
 
@@ -684,13 +695,37 @@ var public_sites = [
       'loggedOutRegex': /Gateway Time-out/,
       'matchRegex': 'Результатов поиска 0',
       'both': true},
+  {   'name': 'T2K',
+      'searchUrl': 'https://torrentz2k.xyz/search/',
+      'loggedOutRegex': /Ray ID|Checking your browser|security check to access|Please turn JavaScript/,
+      'matchRegex': /No Results Found/,
+      'mPOST': 'q=%search_string%&category=movies&x=0&y=0'},
+  {   'name': 'T2K',
+      'searchUrl': 'https://torrentz2k.xyz/search/',
+      'loggedOutRegex': /Ray ID|Checking your browser|security check to access|Please turn JavaScript/,
+      'matchRegex': /No Results Found/,
+      'mPOST': 'q=%search_string%&category=movies&x=0&y=0',
+      'TV': true},
   {   'name': 'TGx',
       'icon': 'https://torrentgalaxy.to/common/favicon/favicon-16x16.png',
       'searchUrl': 'https://torrentgalaxy.org/torrents.php?search=%tt%',
       'matchRegex': /No results found/},
   {   'name': 'TPB',
-      'searchUrl': 'https://proxyproxy.fi/s/?q=%search_string%&video=on&category=0&page=0&orderby=99',
-      'matchRegex': /No hits. Try adding an asterisk in you search phrase./,
+      'searchUrl': 'https://apibay.org/q.php?q=%search_string%&cat=201,202,207,209',
+      'goToUrl': 'https://thepiratebay.org/search.php?q=%search_string%&cat=201,202,207,209',
+      'loggedOutRegex': /Ray ID/,
+      'matchRegex': /No results/},
+  {   'name': 'TPB',
+      'searchUrl': 'https://apibay.org/q.php?q=%search_string%&cat=205,208',
+      'goToUrl': 'https://thepiratebay.org/search.php?q=%search_string%&cat=205,208',
+      'loggedOutRegex': /Ray ID/,
+      'matchRegex': /No results/,
+      'TV': true},
+  {   'name': 'TPB-Proxy',
+      'searchUrl': 'https://apibay.org/q.php?q=%search_string%&cat=201,202,207,209,205,208',
+      'goToUrl': 'https://tpbmirror.website/search/%search_string%',
+      'loggedOutRegex': /Ray ID/,
+      'matchRegex': /No results/,
       'both': true},
   {   'name': 'TVU',
       'searchUrl': 'https://tvunderground.org.ru/index.php?show=search&search=%search_string_orig%+%year%',
@@ -802,7 +837,7 @@ var private_sites = [
   {   'name': 'BDC',
       'icon': 'https://i.imgur.com/zO6inRw.png',
       'searchUrl': 'http://broadcity.in/browse.php?do=search&search_type=t_both&keywords=%tt%',
-      'loggedOutRegex': /Recover Password|Şifre Sıfırlama/,
+      'loggedOutRegex': /Recover Password|Şifre Sıfırlama|BunnyGuard/,
       'matchRegex': /Click to Download|Bu Torrenti İndirmek/,
       'positiveMatch': true,
       'both': true},
@@ -923,6 +958,11 @@ var private_sites = [
       'rateLimit': 250,
       'positiveMatch': true,
       'TV': true},
+  {   'name': 'DT',
+      'searchUrl': 'https://desitorrents.tv/torrents.php?searchstr=%search_string_orig%&action=basic',
+      'loggedOutRegex': /Ray ID|Recover Password/,
+      'matchRegex': /did not match/,
+      'both': true},
   {   'name': 'DVDSeed',
       'searchUrl': 'http://www.dvdseed.eu/browse2.php?search=%tt%&wheresearch=2&incldead=1&polish=0&nuke=0&rodzaj=0',
       'loggedOutRegex': /Nie masz konta|Nie zalogowany!/,
@@ -1026,7 +1066,7 @@ var private_sites = [
       'both': true},
   {   'name': 'iTS',
       'searchUrl': 'https://shadowthein.net/browse.php?incldead=1&search=%tt%&search_in=all',
-      'loggedOutRegex': /most comprehensive people/,
+      'loggedOutRegex': /most comprehensive people|JavaScript is disabled/,
       'matchRegex': /Nothing found!/,
       'both': true},
   {   'name': 'JoyHD',
@@ -1178,7 +1218,7 @@ var private_sites = [
       'matchRegex': /Nothing found!/,
       'TV': true},
   {   'name': 'Retroflix',
-      'searchUrl': 'https://retroflix.club/torrents1.php?incldead=0&spstate=0&inclbookmarked=0&search=%tt%&search_area=4&search_mode=0',
+      'searchUrl': 'https://retroflix.club/torrents.php?incldead=0&spstate=0&inclbookmarked=0&search=%tt%&search_area=4&search_mode=0',
       'loggedOutRegex': /Restrict session to my IP|Ray ID/,
       'matchRegex': /Nothing found!/,
       'both': true},
@@ -1660,7 +1700,7 @@ function replaceSearchUrlParams(site, movie_id, movie_title, movie_title_orig, m
   if ($.isArray(search_url)) {
     var search_array = [];
     $.each(search_url, function(index, url) {
-      search_array[index] = replaceSearchUrlParams(url, movie_id, movie_title, movie_title_orig);
+      search_array[index] = replaceSearchUrlParams(url, movie_id, movie_title, movie_title_orig, movie_year);
     });
     return search_array;
   }
@@ -1711,12 +1751,36 @@ function getFavicon(site, hide_on_err) {
 //    Add search links to an element
 //==============================================================================
 
-// State should always be one of the values defined in valid_states
-function addLink(elem, link_text, target, site, state, scout_tick) {
+function addLink(elem, site_name, target, site, state, scout_tick) {
+  // State should always be one of the values defined in valid_states
   var link = $('<a />').attr('href', target).attr('target', '_blank');
   if ($.inArray(state, valid_states) < 0) {
     console.log("Unknown state " + state);
   }
+  // Link and add Form element for POST method.
+  if ('mPOST' in site) {
+    var form_name = (site['TV']) ? site['name'] + '-TV-form' : site['name'] + '-form';
+    var placebo_url = new URL(target).origin;
+    link = $('<a />').attr('href', placebo_url).attr('onclick', "$('#" + form_name + "').submit(); return false;").attr('target', '_blank');
+
+    var data = '{"' + site['mPOST'].replace(/&/g, '","').replace(/=/g, '":"').replace(/\+/g, ' ') + '"}',
+        data = JSON.parse(data);
+    var addform = $('<form></form>');
+        addform.attr('id', form_name);
+        addform.attr('action', target);
+        addform.attr('method', 'post');
+        addform.attr('style', 'display: none;');
+        addform.attr('target', '_blank');
+    for (name in data) {
+       var addinput = $("<input>");
+           addinput.attr('type', 'text');
+           addinput.attr('name', name);
+           addinput.attr('value', data[name]);
+       addform.append(addinput);
+       $('body').append(addform);
+    }
+  }
+  // Icon/Text appearance.
   if (getPageSetting('use_mod_icons')) {
     var icon = getFavicon(site);
     (!GM_config.get('one_line') && !onSearchPage) ? icon.css({'border-width': '0px', 'border-style': 'solid', 'border-radius': '2px'})
@@ -1734,17 +1798,17 @@ function addLink(elem, link_text, target, site, state, scout_tick) {
     }
     link.append(icon);
   } else {
-    link_text = (getPageSetting('highlight_sites').split(',').includes(site['name'])) ? link_text.bold() : link_text;
+    site_name = (getPageSetting('highlight_sites').split(',').includes(site['name'])) ? site_name.bold() : site_name;
     if (state == 'missing' || state == 'error' || state == 'logged_out') {
-      link.append($('<s />').append(link_text));
+      link.append($('<s />').append(site_name));
     } else {
-      link.append(link_text);
+      link.append(site_name);
     }
     if (state == 'error' || state == 'logged_out') {
       link.css('color', 'red');
     }
   }
-  // Create/find elements for Search/List pages
+  // Create/find elements for Search/List pages.
   if (onSearchPage) {
     var result_box = $(elem).find('td.result_box');
     if (result_box.length == 0) {
@@ -1763,7 +1827,7 @@ function addLink(elem, link_text, target, site, state, scout_tick) {
       });
     }
   }
-
+  // Add links to IMDb page.
   var in_element_two = ('inSecondSearchBar' in site) ? site['inSecondSearchBar'] : false;
   var in_element_three = ('inThirdSearchBar' in site) ? site['inThirdSearchBar'] : false;
   if (onSearchPage && in_element_two || in_element_three && !getPageSetting('load_third_bar') || in_element_two && in_element_three) {
@@ -1785,11 +1849,11 @@ function addLink(elem, link_text, target, site, state, scout_tick) {
 //    Determine whether a site should be displayed
 //==============================================================================
 
-function maybeAddLink(elem, link_text, search_url, site, scout_tick, movie_id, movie_title, movie_title_orig, movie_year) {
+function maybeAddLink(elem, site_name, search_url, site, scout_tick, movie_id, movie_title, movie_title_orig, movie_year) {
   // If the search URL is an array, recurse briefly on the elements.
   if ($.isArray(search_url)) {
     $.each(search_url, function(index, url) {
-      maybeAddLink(elem, link_text + '_' + (index + 1).toString(), url, site);
+      maybeAddLink(elem, site_name + '_' + (index + 1).toString(), url, site);
     });
     return;
   }
@@ -1821,20 +1885,59 @@ function maybeAddLink(elem, link_text, search_url, site, scout_tick, movie_id, m
     window.localStorage[domain+'_lastLoaded'] = (new Date())*1;
   }
 
+  var success_match = ('positiveMatch' in site) ? site['positiveMatch'] : false;
   var target = search_url;
   if ('goToUrl' in site) {
     target = replaceSearchUrlParams({'searchUrl': site['goToUrl']}, movie_id, movie_title, movie_title_orig, movie_year);
   }
-
-  var success_match = ('positiveMatch' in site) ? site['positiveMatch'] : false;
+  // Check for results with POST method.
+  if ('mPOST' in site) {
+    var data = site['mPOST'];
+    GM_xmlhttpRequest({
+      method: 'POST',
+      url: search_url,
+      data: data,
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
+      onload: function(response) {
+        if (response.responseHeaders.indexOf('efresh: 0; url') > -1) {
+        addLink(elem, site_name, target, site, 'logged_out', scout_tick);
+        } else if (site['positiveMatch'] && site['loggedOutRegex'] && String(response.responseText).match(site['loggedOutRegex'])) {
+          addLink(elem, site_name, target, site, 'logged_out', scout_tick);
+        } else if (String(response.responseText).match(site['matchRegex']) ? !(success_match) : success_match) {
+            if (getPageSetting('highlight_missing').split(',').includes(site['name'])) {
+              if (elem.style) {
+              elem.parentNode.style.background = 'rgba(255,104,104,0.7)';
+              } else {
+                document.querySelector('#imdbscout_missing').style.background = 'rgba(255,104,104,0.7)';
+              }
+            }
+            if (!getPageSetting('hide_missing')) {
+            addLink(elem, site_name, target, site, 'missing', scout_tick);
+            }
+        } else if (site['loggedOutRegex'] && String(response.responseText).match(site['loggedOutRegex'])) {
+          addLink(elem, site_name, target, site, 'logged_out', scout_tick);
+        } else {
+          addLink(elem, site_name, target, site, 'found', scout_tick);
+        }
+      },
+      onerror: function() {
+        addLink(elem, site_name, target, site, 'error', scout_tick);
+      },
+      onabort: function() {
+        addLink(elem, site_name, target, site, 'error', scout_tick);
+      }
+    });
+    return;
+  }
+  // Check for results with GET method.
   GM_xmlhttpRequest({
     method: 'GET',
     url: search_url,
     onload: function(response) {
       if (response.responseHeaders.indexOf('efresh: 0; url') > -1) {
-      addLink(elem, link_text, target, site, 'logged_out', scout_tick);
+      addLink(elem, site_name, target, site, 'logged_out', scout_tick);
       } else if (site['positiveMatch'] && site['loggedOutRegex'] && String(response.responseText).match(site['loggedOutRegex'])) {
-        addLink(elem, link_text, target, site, 'logged_out', scout_tick);
+        addLink(elem, site_name, target, site, 'logged_out', scout_tick);
       } else if (String(response.responseText).match(site['matchRegex']) ? !(success_match) : success_match) {
           if (getPageSetting('highlight_missing').split(',').includes(site['name'])) {
             if (elem.style) {
@@ -1844,19 +1947,19 @@ function maybeAddLink(elem, link_text, search_url, site, scout_tick, movie_id, m
             }
           }
           if (!getPageSetting('hide_missing')) {
-          addLink(elem, link_text, target, site, 'missing', scout_tick);
+          addLink(elem, site_name, target, site, 'missing', scout_tick);
           }
       } else if (site['loggedOutRegex'] && String(response.responseText).match(site['loggedOutRegex'])) {
-        addLink(elem, link_text, target, site, 'logged_out', scout_tick);
+        addLink(elem, site_name, target, site, 'logged_out', scout_tick);
       } else {
-        addLink(elem, link_text, target, site, 'found', scout_tick);
+        addLink(elem, site_name, target, site, 'found', scout_tick);
       }
     },
     onerror: function() {
-      addLink(elem, link_text, target, site, 'error', scout_tick);
+      addLink(elem, site_name, target, site, 'error', scout_tick);
     },
     onabort: function() {
-      addLink(elem, link_text, target, site, 'error', scout_tick);
+      addLink(elem, site_name, target, site, 'error', scout_tick);
     }
   });
 }
@@ -1873,6 +1976,9 @@ function perform(elem, movie_id, movie_title, movie_title_orig, is_tv, is_movie,
       // For TV Series show only TV links. TV Special, TV Movie, Episode & Documentary are treated as TV and Movie.
       if ((Boolean(site['TV']) == is_tv || Boolean(site['both'])) || (!is_tv && !is_movie) || getPageSetting('ignore_type')) {
         var searchUrl = replaceSearchUrlParams(site, movie_id, movie_title, movie_title_orig, movie_year);
+        if ('mPOST' in site) {
+          site['mPOST'] = replaceSearchUrlParams({'searchUrl': site['mPOST']}, movie_id, movie_title, movie_title_orig, movie_year);
+        }
         if ('goToUrl' in site && getPageSetting('call_http_mod')) {
           maybeAddLink(elem, site['name'], searchUrl, site, scout_tick, movie_id, movie_title, movie_title_orig, movie_year);
         }
@@ -1946,23 +2052,42 @@ function addIconBar(movie_id, movie_title, movie_title_orig) {
     if (site['show']) {
       var search_url = replaceSearchUrlParams(site, movie_id, movie_title, movie_title_orig);
       var image = getFavicon(site);
-      var html = $('<span />').append("&nbsp;").attr('style', 'font-size: 11px;').append(
-        $('<a />').attr('href', search_url)
-          .addClass('iconbar_icon').append(image));
+      var html = $('<span />').append("&nbsp;").attr('style', 'font-size: 11px;').append($('<a />').attr('href', search_url).attr('target', '_blank').addClass('iconbar_icon').append(image));
+      // Link and add Form element for POST method.
+      if ('mPOST' in site) {
+        var form_name = site['name'] + '-iconform';
+        var placebo_url = new URL(search_url).origin;
+        html = $('<span />').append("&nbsp;").attr('style', 'font-size: 11px;').append($('<a />').attr('href', placebo_url).attr('onclick', "$('#" + form_name + "').submit(); return false;").attr('target', '_blank').addClass('iconbar_icon').append(image));
+
+        site['mPOST'] = replaceSearchUrlParams({'searchUrl': site['mPOST']}, movie_id, movie_title, movie_title_orig);
+        var data = '{"' + site['mPOST'].replace(/&/g, '","').replace(/=/g, '":"').replace(/\+/g, ' ') + '"}',
+            data = JSON.parse(data);
+        var addform = $('<form></form>');
+            addform.attr('id', form_name);
+            addform.attr('action', search_url);
+            addform.attr('method', 'post');
+            addform.attr('style', 'display: none;');
+            addform.attr('target', '_blank');
+        for (name in data) {
+           var addinput = $("<input>");
+               addinput.attr('type', 'text');
+               addinput.attr('name', name);
+               addinput.attr('value', data[name]);
+           addform.append(addinput);
+           $('body').append(addform);
+        }
+      }
       iconbar.append(html).append();
     }
   });
   //If we have access to the openInTab function, add an Open All feature
   if (GM_openInTab) {
-    var aopenall = $('<a />').text('Open All')
-        .prepend("&nbsp;")
-        .attr('href', 'javascript:;')
-        .attr('style', 'font-weight:bold;font-size:11px;font-family: Calibri, Verdana, Arial, Helvetica, sans-serif;');
-    aopenall.click(function() {
-      $('.iconbar_icon').each(function() {
-        GM_openInTab($(this).attr('href'));
-      });
-    }, false);
+    var aopenall = $('<a />').text('Open All').prepend("&nbsp;").attr('href', 'javascript:;').attr('style', 'font-weight:bold;font-size:11px;font-family: Calibri, Verdana, Arial, Helvetica, sans-serif;');
+        aopenall.click(function() {
+          $('.iconbar_icon').each(function() {
+          GM_openInTab($(this).attr('href'));
+        });
+    });
     iconbar.append(aopenall);
   }
 }
