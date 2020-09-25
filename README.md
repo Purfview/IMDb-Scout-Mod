@@ -33,6 +33,8 @@ Each site is a dictionary with the following attributes:
   - `inSecondSearchBar` (optional): Places site at the second searchable bar.
   - `inThirdSearchBar` (optional): Places site at the third searchable bar.
   - `rateLimit` (optional): Connection rate limit in milliseconds. Default is 200. On the Search/List pages it will be increased by a factor of 4.
+  - `mPOST`: HTTP request by POST method. For the sites that doesn't support GET.
+  
 
 Parameters you can use inside the URL:
   - `%tt%`: The IMDb id with the tt prefix (e.g. tt0055630).
