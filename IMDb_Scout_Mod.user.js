@@ -4,7 +4,7 @@
 // @description    Add links from IMDb pages to torrent and other sites -- easy downloading from IMDb
 //
 // Preference window for userscripts, hosted by greasyfork:
-// @require     https://raw.githubusercontent.com/sizzlemctwizzle/GM_config/master/gm_config.js
+// @require     https://openuserjs.org/src/libs/sizzle/GM_config.js
 // @require     https://code.jquery.com/jquery-3.5.1.min.js
 // @require     https://greasemonkey.github.io/gm4-polyfill/gm4-polyfill.js
 //
