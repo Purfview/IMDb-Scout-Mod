@@ -6,7 +6,7 @@ New additions, features, tweaks and bugfixes.
 
 Add links from IMDb pages to torrent trackers and other movie sites -- easy downloading from IMDb.
 
-Supports [TamperMonkey](https://www.tampermonkey.net/), [GreaseMonkey](https://www.greasespot.net/) & [ViolentMonkey](https://violentmonkey.github.io/).
+Supports [Greasemonkey](https://www.greasespot.net/), [Violentmonkey](https://violentmonkey.github.io/) & [Tampermonkey](https://www.tampermonkey.net/).
 
 ## Usage:
 
