@@ -1,5 +1,6 @@
 ﻿// ==UserScript==
 // @name           IMDb Scout Mod
+// @version        7.1
 // @namespace      https://github.com/Purfview/IMDb-Scout-Mod
 // @description    Add links from IMDb pages to torrent and other sites -- easy downloading from IMDb
 //
@@ -7,7 +8,6 @@
 // @require     https://code.jquery.com/jquery-3.5.1.min.js
 // @require     https://greasemonkey.github.io/gm4-polyfill/gm4-polyfill.js
 //
-// @version        7.0
 // @include        http*://*.imdb.tld/title/tt*
 // @include        http*://*.imdb.tld/search/title*
 // @include        http*://*.imdb.tld/user/*/watchlist*
@@ -521,6 +521,9 @@
         -   New feature: "Selected sites" stats at the top of config.
         -   New feature: Greasemonkey v4 is supported.
 
+7.1     -   Added: AS, DVDCompare, DVDTalk, DVDBeaver.
+        -   New feature: Icon sites have hyperlinks in Settings too.
+
 
 //==============================================================================
 //    A list of all the sites.
@@ -830,6 +833,12 @@ var private_sites = [
       'loggedOutRegex': /Ray ID|<title>Login :: AlphaRatio/,
       'matchRegex': /Your search did not match anything/,
       'TV': true},
+  {   'name': 'AS',
+      'icon': 'https://i.imgur.com/ZWjDAtD.png',
+      'searchUrl': 'https://asylumshare.net/torrents-search.php?c120=1&c4=1&c47=1&c114=1&c23=1&c24=1&c25=1&c26=1&c27=1&c33=1&c117=1&c34=1&c35=1&c36=1&c37=1&c124=1&c42=1&c7=1&c39=1&c5=1&c41=1&c40=1&c6=1&c95=1&c110=1&c49=1&search=%search_string%',
+      'loggedOutRegex': /Cookies MUST|Cookies DEVEM|max_user_connections/,
+      'matchRegex': /Nada encontrado/,
+      'both': true},
   {   'name': 'AT',
       'icon': 'https://i.imgur.com/ON1FGGO.png',
       'searchUrl': 'https://avistaz.to/movies?search=&imdb=%tt%',
@@ -1686,6 +1695,17 @@ var icon_sites = [
       'showByDefault': false},
   {   'name': 'Criticker',
       'searchUrl': 'https://www.criticker.com/?search=%search_string%&type=films'},
+  {   'name': 'DVDBeaver',
+      'icon': 'https://i.imgur.com/s2ErKFm.png',
+      'searchUrl': 'https://www.google.com/search?q="%search_string%"+site:www.dvdbeaver.com',
+      'showByDefault': false},
+  {   'name': 'DVDCompare',
+      'searchUrl': 'https://www.dvdcompare.net/comparisons/search.php',
+      'mPOST': 'param=%search_string%&searchtype=text',
+      'showByDefault': false},
+  {   'name': 'DVDTalk',
+      'searchUrl': 'https://www.dvdtalk.com/reviews/search?orderBy=Date&reviewType=All&NReviews=50&searchText=%search_string%&searchType=advanced',
+      'showByDefault': false},
   {   'name': 'Facebook',
       'searchUrl': 'https://www.facebook.com/search/str/%search_string%/keywords_pages',
       'showByDefault': false},
@@ -2882,6 +2902,9 @@ GM_config.init({
         $(label).prepend(getFavicon(other_searchable_sites[index], true));
       });
       $('#imdb_scout').contents().find('#imdb_scout_section_8').find('.field_label').each(function(index, label) {
+        var url = new URL(icon_sites[index].searchUrl);
+        $(label).append(' ' + '<a class="grey_link" target="_blank" style="color: gray; text-decoration : none" href="' + url.origin + '">'
+                        + (/www./.test(url.hostname) ? url.hostname.match(/www.(.*)/)[1] : url.hostname) + '</a>');
         $(label).prepend(getFavicon(icon_sites[index], true));
       });
     }
