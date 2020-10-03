@@ -527,7 +527,7 @@
 
 7.2     -   Added: ProStyleX, TorDL, PHD-Req, DonTor, CineCalidad, DVD-Basen, MRQE.
         -   Tweaks: uNoGS, ETTV, CG, TVV-Req.
-        -   New feature: Icons of the "icon sites" same size as other icons.
+        -   New feature: Icons of the "icon sites" are same size as other icons.
 
 
 //==============================================================================
