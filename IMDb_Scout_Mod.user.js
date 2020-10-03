@@ -525,7 +525,7 @@
 7.1     -   Added: AS, DVDCompare, DVDTalk, DVDBeaver.
         -   New feature: Icon sites have hyperlinks in Settings too.
 
-7.2     -   Added: ProStyleX, TorDL, PHD-Req, DonTor, CineCalidad, DVD-Basen, MRQE.
+7.2     -   Added: ProStyleX, TorDL, PHD-Req, DonTor, CineCalidad, DVD-Basen, MRQE, Movie-Censorship.
         -   Tweaks: uNoGS, ETTV, CG, TVV-Req.
         -   New feature: Icons of the "icon sites" are same size as other icons.
 
