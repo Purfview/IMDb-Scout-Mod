@@ -3,16 +3,8 @@
 # IMDb Scout Mod:
 
 New additions, features, tweaks and bugfixes.
-
 Add links from IMDb pages to torrent trackers and other movie sites -- easy downloading from IMDb.
-
 Supports [Greasemonkey](https://www.greasespot.net/), [Violentmonkey](https://violentmonkey.github.io/) & [Tampermonkey](https://www.tampermonkey.net/).
-
-## Usage:
-
-'IMDb Scout Mod Preferences' button you'll find on plugin's icon (you must open a movie page on IMDb first).
-
-Currently the script works on individual title pages, various search pages, watchlist and list pages.
 
 ## Contributing:
 
