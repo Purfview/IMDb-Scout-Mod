@@ -1,8 +1,9 @@
 ﻿// ==UserScript==
 // @name           IMDb Scout Mod
-// @version        7.1
+// @version        7.2
 // @namespace      https://github.com/Purfview/IMDb-Scout-Mod
-// @description    Add links from IMDb pages to torrent and other sites -- easy downloading from IMDb
+// @description    Adds links to IMDb pages from the torrent, ddl, subtitles, streaming and other movie sites.
+// @icon           https://i.imgur.com/u17jjYj.png
 //
 // @require     https://openuserjs.org/src/libs/sizzle/GM_config.js
 // @require     https://code.jquery.com/jquery-3.5.1.min.js
@@ -524,6 +525,10 @@
 7.1     -   Added: AS, DVDCompare, DVDTalk, DVDBeaver.
         -   New feature: Icon sites have hyperlinks in Settings too.
 
+7.2     -   Added: ProStyleX, TorDL, PHD-Req, DonTor, CineCalidad, DVD-Basen, MRQE.
+        -   Tweaks: uNoGS, ETTV, CG, TVV-Req.
+        -   New feature: Icons of the "icon sites" same size as other icons.
+
 
 //==============================================================================
 //    A list of all the sites.
@@ -621,6 +626,12 @@ var public_sites = [
       'searchUrl': 'https://1337x.unblocker.cc/category-search/%search_string%/TV/1/',
       'matchRegex': /No results were returned/,
       'TV': true},
+  {   'name': 'CineCalidad',
+      'searchUrl': 'https://www.cinecalidad.is/?s=%tt%',
+      'loggedOutRegex': /Cloudflare|Ray ID/,
+      'matchRegex': /in_title/,
+      'positiveMatch': true,
+      'both': true},
   {   'name': 'CPS',
       'searchUrl': 'https://mycarpathians.net/browse.php?c194=1&c60=1&c10=1&c20=1&c181=1&c183=1&c192=1&c190=1&c70=1&c30=1&c40=1&search=%search_string%',
       'loggedOutRegex': /Nem vagy bejelentkezve!/,
@@ -636,8 +647,14 @@ var public_sites = [
       'loggedOutRegex': /Ray ID|security check to access|daily site maintenance|page is not available/,
       'matchRegex': /No torrents found/,
       'both': true},
+  {   'name': 'DonTor',
+      'icon': 'https://dontorrent.io/images/touch-icon-ipad.png',
+      'searchUrl': 'https://dontorrent.io/buscar/%search_string%',
+      'loggedOutRegex': /Cloudflare|Ray ID/,
+      'matchRegex': /encontrado <b>0</,
+      'both': true},
   {   'name': 'ETTV',
-      'searchUrl': 'https://www.ettvdl.com/torrents-search.php?search=%search_string%+%year%',
+      'searchUrl': 'https://www.ettvcentral.com/torrents-search.php?search=%search_string%+%year%',
       'matchRegex': /Nothing Found/,
       'both': true},
   {   'name': 'EUC',
@@ -675,6 +692,17 @@ var public_sites = [
       'searchUrl': 'https://nnm-club.me/forum/tracker.php?nm=%search_string%+%year%',
       'matchRegex': 'Не найдено',
       'both': true},
+  {   'name': 'ProStyleX',
+      'icon': 'https://prostylex.org/themes/default/images/favicon.ico',
+      'searchUrl': 'https://prostylex.org/search.php?c1=1&c2=1&c3=1&c4=1&c5=1&c6=1&c7=1&c8=1&c9=1&c10=1&c65=1&c68=1&search=%search_string%&cat=0&lang=0',
+      'loggedOutRegex': /Cloudflare|Ray ID/,
+      'matchRegex': /No torrents were found/},
+  {   'name': 'ProStyleX',
+      'icon': 'https://prostylex.org/themes/default/images/favicon.ico',
+      'searchUrl': 'https://prostylex.org/search.php?c12=1&c13=1&c14=1&c15=1&c17=1&c65=1&c68=1&search=%search_string%&cat=0&lang=0',
+      'loggedOutRegex': /Cloudflare|Ray ID/,
+      'matchRegex': /No torrents were found/,
+      'TV': true},
   {   'name': 'RARBG',
       'searchUrl': 'https://rarbgweb.org/torrents.php?imdb=%tt%',
       'loggedOutRegex': /something wrong|Please wait|enter the captcha|too many requests/,
@@ -736,6 +764,11 @@ var public_sites = [
       'icon': 'https://torrentgalaxy.to/common/favicon/favicon-16x16.png',
       'searchUrl': 'https://torrentgalaxy.org/torrents.php?search=%tt%',
       'matchRegex': /No results found/},
+  {   'name': 'TorDL',
+      'searchUrl': 'https://www.torrentdownloads.me/search/?new=1&s_cat=0&search=%search_string%',
+      'loggedOutRegex': /Cloudflare|Ray ID/,
+      'matchRegex': /No results found/,
+      'both': true},
   {   'name': 'TPB',
       'searchUrl': 'https://apibay.org/q.php?q=%search_string%&cat=201,202,207,209',
       'goToUrl': 'https://thepiratebay.org/search.php?q=%search_string%&cat=201,202,207,209',
@@ -930,17 +963,17 @@ var private_sites = [
       'both': true},
   {   'name': 'CG',
       'searchUrl': 'https://cinemageddon.net/browse.php?search=%tt%',
-      'loggedOutRegex': 'Not logged in!',
+      'loggedOutRegex': /Ray ID|Not logged in!/,
       'matchRegex': /Nothing found!/},
   {   'name': 'CG-c',
       'icon': 'https://i.imgur.com/CdCbVW4.png',
       'searchUrl': 'https://cinemageddon.net/cocks/endoscope.php?what=imdb&q=%tt%',
-      'loggedOutRegex': 'Not logged in!',
+      'loggedOutRegex': /Ray ID|Not logged in!/,
       'matchRegex': /Nothing found!/},
   {   'name': 'CG-Req',
       'icon': 'https://i.imgur.com/305SsHL.png',
       'searchUrl': 'https://cinemageddon.net/viewrequests.php?search=%tt%&incdesc=1&filter=true',
-      'loggedOutRegex': 'Not logged in!',
+      'loggedOutRegex': /Ray ID|Not logged in!/,
       'matchRegex': /Nothing found./},
   {   'name': 'CHD',
       'searchUrl': 'https://chdbits.co/torrents.php?incldead=0&spstate=0&inclbookmarked=0&search_area=4&search_mode=0&search=%tt%',
@@ -1187,6 +1220,12 @@ var private_sites = [
       'matchRegex': /class="overlay-container"/,
       'positiveMatch': true,
       'TV': true},
+  {   'name': 'PHD-Req',
+      'icon': 'https://i.imgur.com/MJJGioU.png',
+      'searchUrl': 'https://privatehd.to/requests?type=movie&search=%search_string%&language=0&condition=new',
+      'loggedOutRegex': /Forgot Your Password/,
+      'matchRegex': /Vote this Request/,
+      'positiveMatch': true},
   {   'name': 'PTE',
       'icon': 'https://cdn.pte.nu/img/favicon.ico',
       'searchUrl': 'https://pte.nu/apitorrents?tpage=1&cat[]=6&cat[]=7&cat[]=9&search=%search_string%',
@@ -1441,7 +1480,7 @@ var private_sites = [
       'icon': 'https://i.imgur.com/dNtCggC.png',
       'searchUrl': 'https://tv-vault.me/requests.php?search=&imdbid=%tt%',
       'loggedOutRegex': /Lost your password\?|Browse quota exceeded|Cloudflare Ray ID/,
-      'matchRegex': /Nothing found|Yes/,
+      'matchRegex': /Nothing found|<strong>Yes</,
       'rateLimit': 250,
       'TV': true},
   {   'name': 'U2',
@@ -1695,6 +1734,10 @@ var icon_sites = [
       'showByDefault': false},
   {   'name': 'Criticker',
       'searchUrl': 'https://www.criticker.com/?search=%search_string%&type=films'},
+  {   'name': 'DVD-Basen',
+      'icon': 'https://i.imgur.com/H4PYPdf.png',
+      'searchUrl': 'http://www.dvd-basen.dk/uk/home.php3?search=%search_string%&mvis=ok&region=z&land=z&ok=go',
+      'showByDefault': false},
   {   'name': 'DVDBeaver',
       'icon': 'https://i.imgur.com/s2ErKFm.png',
       'searchUrl': 'https://www.google.com/search?q="%search_string%"+site:www.dvdbeaver.com',
@@ -1728,6 +1771,10 @@ var icon_sites = [
   {   'name': 'Metacritic',
       'searchUrl': 'https://www.metacritic.com/search/all/%search_string%/results?cats[movie]=1&cats[tv]=1&search_type=advanced&sort=relevancy',
       'showByDefault': false},
+  {   'name': 'Movie-Censorship',
+      'icon': 'https://i.imgur.com/4gF8xKW.png',
+      'searchUrl': 'https://www.movie-censorship.com/list.php?s=%search_string%',
+      'showByDefault': false},
   {   'name': 'MovieChat',
       'icon': 'https://moviechat.org/favicons/favicon-32x32.png',
       'searchUrl': 'https://moviechat.org/%tt%'},
@@ -1736,6 +1783,10 @@ var icon_sites = [
       'showByDefault': false},
   {   'name': 'MoviePosterDB',
       'searchUrl': 'https://www.movieposterdb.com/search?category=title&q=%tt%',
+      'showByDefault': false},
+  {   'name': 'MRQE',
+      'icon': 'https://www.mrqe.com/images/mrqe/favicon.ico',
+      'searchUrl': 'https://www.mrqe.com/search?utf8=✓&q=%search_string%',
       'showByDefault': false},
   {   'name': 'Netflix',
       'searchUrl': 'https://www.netflix.com/search/%search_string%',
@@ -1774,7 +1825,7 @@ var icon_sites = [
       'icon': 'https://www.thetvdb.com/images/icon.png',
       'searchUrl': 'https://www.thetvdb.com/search?query=%search_string%'},
   {   'name': 'uNoGS',
-      'searchUrl': 'https://unogs.com/?q=%tt%',
+      'searchUrl': 'https://unogs.com/?q=%search_string%',
       'showByDefault': false},
   {   'name': 'Wikipedia',
       'searchUrl': 'https://en.wikipedia.org/w/index.php?search=%search_string%&go=Go'},
@@ -1829,9 +1880,10 @@ function getFavicon(site, hide_on_err) {
     var url = new URL(site['searchUrl']);
     favicon = url.origin + '/favicon.ico';
   }
+  var iconsize = ('matchRegex' in site) ? GM_config.get('cfg_icons_size') : GM_config.get('cfg_icons_size') - 2;
   var title = (site['TV']) ? site['name'] + ' (TV)' : site['name'];
   var img = $('<img />').attr({'style': '-moz-opacity: 0.4; border: 0; vertical-align: text-top',
-                               'width': GM_config.get('cfg_icons_size'),
+                               'width': iconsize,
                                'src': favicon,
                                'title': title,
                                'alt': site['name']});
