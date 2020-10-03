@@ -3,7 +3,7 @@
 # IMDb Scout Mod:
 
 New additions, features, tweaks and bugfixes.   
-Add links from IMDb pages to torrent trackers and other movie sites -- easy downloading from IMDb.  
+Adds links to IMDb pages from the torrent, ddl, subtitles, streaming and other sites.  
 Supports [Greasemonkey](https://www.greasespot.net/), [Violentmonkey](https://violentmonkey.github.io/) & [Tampermonkey](https://www.tampermonkey.net/).  
 
 Meanings of the color borders around the icons:  
