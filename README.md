@@ -6,6 +6,12 @@ New additions, features, tweaks and bugfixes.
 Add links from IMDb pages to torrent trackers and other movie sites -- easy downloading from IMDb.  
 Supports [Greasemonkey](https://www.greasespot.net/), [Violentmonkey](https://violentmonkey.github.io/) & [Tampermonkey](https://www.tampermonkey.net/).  
 
+Meanings of the color borders around the icons:  
+![#008000](https://via.placeholder.com/15/008000/000000?text=+) - `Search completed. Results found.`  
+![#daa520](https://via.placeholder.com/15/daa520/000000?text=+) - `Search completed. Results not found.`  
+![#ff0000](https://via.placeholder.com/15/ff0000/000000?text=+) - `No access to search`  
+![#0000ff](https://via.placeholder.com/15/0000ff/000000?text=+) - `Search completed. Request found.` 
+
 ## Contributing:
 
 Contributions are welcome.
