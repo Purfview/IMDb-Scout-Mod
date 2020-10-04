@@ -1,6 +1,6 @@
 ﻿// ==UserScript==
 // @name           IMDb Scout Mod
-// @version        7.2
+// @version        7.3
 // @namespace      https://github.com/Purfview/IMDb-Scout-Mod
 // @description    Adds links to IMDb pages from the torrent, ddl, subtitles, streaming and other movie sites.
 // @icon           https://i.imgur.com/u17jjYj.png
@@ -529,6 +529,9 @@
         -   Tweaks: uNoGS, ETTV, CG, TVV-Req.
         -   New feature: Icons of the "icon sites" are same size as other icons.
 
+7.3     -   Added: OmgWtf, DrunkenSlug.
+        -   New feature: Streamlined "icon sites" area.
+
 
 //==============================================================================
 //    A list of all the sites.
@@ -1023,6 +1026,17 @@ var private_sites = [
       'rateLimit': 250,
       'positiveMatch': true,
       'TV': true},
+  {   'name': 'DrunkenSlug',
+      'icon': 'https://drunkenslug.com/themes/shared/img/favicon.ico',
+      'searchUrl': 'https://drunkenslug.com/search/%search_string% %year%?t=2000',
+      'loggedOutRegex': /Cloudflare|Ray ID|>Remember me/,
+      'matchRegex': /No result!/},
+  {   'name': 'DrunkenSlug',
+      'icon': 'https://drunkenslug.com/themes/shared/img/favicon.ico',
+      'searchUrl': 'https://drunkenslug.com/search/%search_string%?t=5000',
+      'loggedOutRegex': /Cloudflare|Ray ID|>Remember me/,
+      'matchRegex': /No result!/,
+      'TV': true},
   {   'name': 'DT',
       'searchUrl': 'https://desitorrents.tv/torrents.php?searchstr=%search_string_orig%&action=basic',
       'loggedOutRegex': /Ray ID|Recover Password/,
@@ -1207,6 +1221,11 @@ var private_sites = [
       'searchUrl': 'https://ourbits.club/torrents.php?search_area=4&search=%tt%',
       'loggedOutRegex': /SSL \(HTTPS\)/,
       'matchRegex': /Nothing found! Try again with a refined search string/},
+  {   'name': 'OmgWtf',
+      'searchUrl': 'https://omgwtfnzbs.me/browse?search=%tt%&cat=default',
+      'loggedOutRegex': /Cloudflare|Ray ID|Forgot your username/,
+      'matchRegex': /returned no results/,
+      'both': true},
   {   'name': 'PHD',
       'icon': 'https://i.imgur.com/MJJGioU.png',
       'searchUrl': 'https://privatehd.to/movies?search=&imdb=%tt%',
@@ -2190,9 +2209,9 @@ function displayButton() {
 function addIconBar(movie_id, movie_title, movie_title_orig) {
   var iconbar;
   if ($('h1.header:first').length) {
-    iconbar = $('h1.header:first').append($('<br/>'));
+    iconbar = getIconsLinkArea();
   } else if ($('.title_wrapper h1').length) {
-    iconbar = $('.title_wrapper h1').append($('<br/>'));
+    iconbar = getIconsLinkArea();
   } else if ($('h3[itemprop="name"]').length) {
     iconbar = $('h3[itemprop="name"]').append($('<br/>'));
   } else {
@@ -2240,6 +2259,30 @@ function addIconBar(movie_id, movie_title, movie_title_orig) {
     });
     iconbar.append(aopenall);
   }
+}
+
+// Create elements for the icons bar
+function getIconsLinkArea() {
+  // If it already exists, just return it
+  if ($('#imdbscout_iconsheader').length) {
+    return $('#imdbscout_iconsheader');
+  }
+  var p = $('<p />').attr('id', 'imdbscout_iconsheader').css({
+    'padding': '0px 0px',
+    'margin-left': '0px',
+    'margin-right': '0px',
+    'margin-top': '0px',
+    'margin-bottom': '0px',
+    'overflow': 'hidden',
+  });
+  if ($('h1.header:first').length) {
+    $('h1.header:first').append(p);
+  } else if ($('.title_wrapper h1').length) {
+    $('.title_wrapper h1').append(p);
+  }
+  var styles = '#imdbscout_iconsheader {line-height: 16px; width: 575px;} ';
+  GM.addStyle(styles);
+  return $('#imdbscout_iconsheader');
 }
 
 //==============================================================================
