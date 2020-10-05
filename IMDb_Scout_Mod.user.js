@@ -1,8 +1,8 @@
 ﻿// ==UserScript==
 // @name           IMDb Scout Mod
-// @version        7.3
+// @version        7.4
 // @namespace      https://github.com/Purfview/IMDb-Scout-Mod
-// @description    Adds links to IMDb pages from the torrent, ddl, subtitles, streaming and other movie sites.
+// @description    Adds links to IMDb pages from the torrent, ddl, subtitles, streaming, usenet and other sites.
 // @icon           https://i.imgur.com/u17jjYj.png
 //
 // @require     https://openuserjs.org/src/libs/sizzle/GM_config.js
@@ -532,6 +532,10 @@
 7.3     -   Added: OmgWtf, DrunkenSlug.
         -   New feature: Streamlined "icon sites" area.
 
+7.4     -   Added: NZBgeek, NZBfinder, NZBGrabit, NZBsu, abNZB, BD25, NZBplanet, NZBnoob,
+                   TVmaze, Aither.
+        -   New feature: Usenet sites are separated in Settings.
+
 
 //==============================================================================
 //    A list of all the sites.
@@ -855,6 +859,11 @@ var private_sites = [
       'loggedOutRegex': /Keep me logged in.|Gateway Time-out|Password Reset/,
       'matchRegex': /Nothing found!|Error 404/,
       'both': true},
+  {   'name': 'Aither',
+      'searchUrl': 'https://aither.cc/torrents/filter?&imdb=%tt%',
+      'loggedOutRegex': /Cloudflare|Ray ID|Forgot Your Password/,
+      'matchRegex': /<tbody>\s*<\/tbody>/,
+      'both': true},
   {   'name': 'ANT',
       'icon': 'https://i.imgur.com/hKZo4s2.png',
       'searchUrl': 'https://anthelion.me/torrents.php?searchstr=%search_string%&order_by=time&order_way=desc&group_results=1&action=basic&searchsubmit=1',
@@ -862,11 +871,11 @@ var private_sites = [
       'matchRegex': /Your search did not match anything/},
   {   'name': 'AR',
       'searchUrl': 'https://alpharatio.cc/torrents.php?searchstr=%search_string%+%year%&tags_type=1&order_by=time&order_way=desc&filter_cat%5B8%5D=1&filter_cat%5B9%5D=1&filter_cat%5B10%5D=1&filter_cat%5B11%5D=1&filter_cat%5B12%5D=1&filter_cat%5B13%5D=1&filter_cat%5B15%5D=1&action=advanced&searchsubmit=1',
-      'loggedOutRegex': /Ray ID|<title>Login :: AlphaRatio/,
+      'loggedOutRegex': /Ray ID|<title>Login :: AlphaRatio|Something was wrong/,
       'matchRegex': /Your search did not match anything/},
   {   'name': 'AR',
       'searchUrl': 'https://alpharatio.cc/torrents.php?searchstr=%search_string%&tags_type=1&order_by=time&order_way=desc&filter_cat%5B1%5D=1&filter_cat%5B2%5D=1&filter_cat%5B3%5D=1&filter_cat%5B4%5D=1&filter_cat%5B5%5D=1&filter_cat%5B6%5D=1&filter_cat%5B7%5D=1&action=advanced&searchsubmit=1',
-      'loggedOutRegex': /Ray ID|<title>Login :: AlphaRatio/,
+      'loggedOutRegex': /Ray ID|<title>Login :: AlphaRatio|Something was wrong/,
       'matchRegex': /Your search did not match anything/,
       'TV': true},
   {   'name': 'AS',
@@ -904,8 +913,8 @@ var private_sites = [
       'both': true},
   {   'name': 'BDC',
       'icon': 'https://i.imgur.com/zO6inRw.png',
-      'searchUrl': 'http://broadcity.in/browse.php?do=search&search_type=t_both&keywords=%tt%',
-      'loggedOutRegex': /Recover Password|Şifre Sıfırlama|BunnyGuard/,
+      'searchUrl': 'https://broadcity.in/browse.php?do=search&search_type=t_both&keywords=%tt%',
+      'loggedOutRegex': /Recover Password|Şifre Sıfırlama|BunnyGuard|>Fatal Error</,
       'matchRegex': /Click to Download|Bu Torrenti İndirmek/,
       'positiveMatch': true,
       'both': true},
@@ -1025,17 +1034,6 @@ var private_sites = [
       'matchRegex': /imdbid/,
       'rateLimit': 250,
       'positiveMatch': true,
-      'TV': true},
-  {   'name': 'DrunkenSlug',
-      'icon': 'https://drunkenslug.com/themes/shared/img/favicon.ico',
-      'searchUrl': 'https://drunkenslug.com/search/%search_string% %year%?t=2000',
-      'loggedOutRegex': /Cloudflare|Ray ID|>Remember me/,
-      'matchRegex': /No result!/},
-  {   'name': 'DrunkenSlug',
-      'icon': 'https://drunkenslug.com/themes/shared/img/favicon.ico',
-      'searchUrl': 'https://drunkenslug.com/search/%search_string%?t=5000',
-      'loggedOutRegex': /Cloudflare|Ray ID|>Remember me/,
-      'matchRegex': /No result!/,
       'TV': true},
   {   'name': 'DT',
       'searchUrl': 'https://desitorrents.tv/torrents.php?searchstr=%search_string_orig%&action=basic',
@@ -1221,11 +1219,6 @@ var private_sites = [
       'searchUrl': 'https://ourbits.club/torrents.php?search_area=4&search=%tt%',
       'loggedOutRegex': /SSL \(HTTPS\)/,
       'matchRegex': /Nothing found! Try again with a refined search string/},
-  {   'name': 'OmgWtf',
-      'searchUrl': 'https://omgwtfnzbs.me/browse?search=%tt%&cat=default',
-      'loggedOutRegex': /Cloudflare|Ray ID|Forgot your username/,
-      'matchRegex': /returned no results/,
-      'both': true},
   {   'name': 'PHD',
       'icon': 'https://i.imgur.com/MJJGioU.png',
       'searchUrl': 'https://privatehd.to/movies?search=&imdb=%tt%',
@@ -1516,6 +1509,97 @@ var private_sites = [
       'matchRegex': /<b>Nothing Found<\/b>/}
 ];
 
+var usenet_sites = [
+  {   'name': 'abNZB',
+      'searchUrl': 'https://www.abnzb.com/search/%search_string% %year%?t=2000',
+      'loggedOutRegex': /Cloudflare|Ray ID|Forgotten your password/,
+      'matchRegex': /did not match any/},
+  {   'name': 'abNZB',
+      'searchUrl': 'https://www.abnzb.com/search/%search_string%?t=5000',
+      'loggedOutRegex': /Cloudflare|Ray ID|Forgotten your password/,
+      'matchRegex': /did not match any/,
+      'TV': true},
+  {   'name': 'BD25',
+      'searchUrl': 'http://www.bd25.eu/index.php?page=files&search=%search_string%',
+      'loggedOutRegex': /Cloudflare|Ray ID|not authorized to view/,
+      'matchRegex': /download.gif/,
+      'positiveMatch': true,
+      'both': true},
+  {   'name': 'DrunkenSlug',
+      'icon': 'https://drunkenslug.com/themes/shared/img/favicon.ico',
+      'searchUrl': 'https://drunkenslug.com/search/%search_string% %year%?t=2000',
+      'loggedOutRegex': /Cloudflare|Ray ID|>Remember me/,
+      'matchRegex': /No result!/},
+  {   'name': 'DrunkenSlug',
+      'icon': 'https://drunkenslug.com/themes/shared/img/favicon.ico',
+      'searchUrl': 'https://drunkenslug.com/search/%search_string%?t=5000',
+      'loggedOutRegex': /Cloudflare|Ray ID|>Remember me/,
+      'matchRegex': /No result!/,
+      'TV': true},
+  {   'name': 'NZBfinder',
+      'icon': 'https://nzbfinder.ws/assets/nzbfinder-theme/images/appicons/favicon-32x32.png',
+      'searchUrl': 'https://nzbfinder.ws/search?id=%search_string% %year%&t=2000',
+      'loggedOutRegex': /Cloudflare|Ray ID|Forgot password/,
+      'matchRegex': /No result!/},
+  {   'name': 'NZBfinder',
+      'icon': 'https://nzbfinder.ws/assets/nzbfinder-theme/images/appicons/favicon-32x32.png',
+      'searchUrl': 'https://nzbfinder.ws/search?id=%search_string%&t=5000',
+      'loggedOutRegex': /Cloudflare|Ray ID|Forgot password/,
+      'matchRegex': /No result!/,
+      'TV': true},
+  {   'name': 'NZBgeek',
+      'searchUrl': 'https://nzbgeek.info/geekseek.php?moviesgeekseek=1&browsecategory=2000&browseincludewords=%search_string% %year%',
+      'loggedOutRegex': /Cloudflare|Ray ID|forgot password/,
+      'matchRegex': /returned 0 releases/},
+  {   'name': 'NZBgeek',
+      'searchUrl': 'https://nzbgeek.info/geekseek.php?moviesgeekseek=1&browsecategory=5000&browseincludewords=%search_string%',
+      'loggedOutRegex': /Cloudflare|Ray ID|forgot password/,
+      'matchRegex': /returned 0 releases/,
+      'TV': true},
+  {   'name': 'NZBGrabit',
+      'icon': 'https://www.nzbgrabit.xyz/animated_favicon.gif',
+      'searchUrl': 'https://www.nzbgrabit.xyz/nzbsearch.php?query=%tt%',
+      'loggedOutRegex': /Cloudflare|Ray ID|You are not logged in/,
+      'matchRegex': /There are no posts/,
+      'both': true},
+  {   'name': 'NZBnoob',
+      'icon': 'https://nzbnoob.com/templates/bookstrap/images/icons/favicon.ico',
+      'searchUrl': 'https://nzbnoob.com/search/%search_string% %year%?t=2000',
+      'loggedOutRegex': /Cloudflare|Ray ID|Forgotten your password/,
+      'matchRegex': /did not match any/},
+  {   'name': 'NZBnoob',
+      'icon': 'https://nzbnoob.com/templates/bookstrap/images/icons/favicon.ico',
+      'searchUrl': 'https://nzbnoob.com/search/%search_string%?t=5000',
+      'loggedOutRegex': /Cloudflare|Ray ID|Forgotten your password/,
+      'matchRegex': /did not match any/,
+      'TV': true},
+  {   'name': 'NZBplanet',
+      'searchUrl': 'https://nzbplanet.net/search/%search_string% %year%?t=2000',
+      'loggedOutRegex': /Cloudflare|Ray ID|>Remember Me</,
+      'matchRegex': /did not match any/},
+  {   'name': 'NZBplanet',
+      'searchUrl': 'https://nzbplanet.net/search/%search_string%?t=5000',
+      'loggedOutRegex': /Cloudflare|Ray ID|>Remember Me</,
+      'matchRegex': /did not match any/,
+      'TV': true},
+  {   'name': 'NZBsu',
+      'icon': 'https://www.nzb.su/templates/light/images/icons/favicon.ico',
+      'searchUrl': 'https://www.nzb.su/search/%search_string% %year%?t=2000',
+      'loggedOutRegex': /Cloudflare|Ray ID|Forgotten your password/,
+      'matchRegex': /did not match any/},
+  {   'name': 'NZBsu',
+      'icon': 'https://www.nzb.su/templates/light/images/icons/favicon.ico',
+      'searchUrl': 'https://www.nzb.su/search/%search_string%?t=5000',
+      'loggedOutRegex': /Cloudflare|Ray ID|Forgotten your password/,
+      'matchRegex': /did not match any/,
+      'TV': true},
+  {   'name': 'OmgWtf',
+      'searchUrl': 'https://omgwtfnzbs.me/browse?search=%tt%&cat=default',
+      'loggedOutRegex': /Cloudflare|Ray ID|Forgot your username/,
+      'matchRegex': /returned no results/,
+      'both': true}
+];
+
 var subs_sites = [
   {   'name': 'Addic7ed',
       'searchUrl': 'https://www.addic7ed.com/search.php?search=%search_string%&Submit=Search',
@@ -1565,12 +1649,14 @@ var subs_sites = [
       'both': true},
   {   'name': 'OpenSubtitles',
       'searchUrl': 'https://www.opensubtitles.org/en/search/imdbid-%tt%',
+      'loggedOutRegex': /Guru Meditation/,
       'matchRegex': /div itemscope/,
       'positiveMatch': true,
       'inSecondSearchBar': true,
       'both': true},
   {   'name': 'OpenSubtitles (EN)',
       'searchUrl': 'https://www.opensubtitles.org/en/search/sublanguageid-eng/imdbid-%tt%',
+      'loggedOutRegex': /Guru Meditation/,
       'matchRegex': /div itemscope/,
       'positiveMatch': true,
       'inSecondSearchBar': true,
@@ -1728,7 +1814,7 @@ var other_searchable_sites = [
       'both': true}
 ];
 
-var sites = public_sites.concat(private_sites, custom_sites, subs_sites, other_searchable_sites);
+var sites = public_sites.concat(private_sites, usenet_sites, custom_sites, subs_sites, other_searchable_sites);
 
 var icon_sites = [
   {   'name': 'AllMovie',
@@ -1843,6 +1929,10 @@ var icon_sites = [
   {   'name': 'TVDB',
       'icon': 'https://www.thetvdb.com/images/icon.png',
       'searchUrl': 'https://www.thetvdb.com/search?query=%search_string%'},
+  {   'name': 'TVmaze',
+      'icon': 'https://static.tvmaze.com/images/favico/favicon.ico',
+      'searchUrl': 'http://www.tvmaze.com/search?q=%search_string%',
+      'showByDefault': false},
   {   'name': 'uNoGS',
       'searchUrl': 'https://unogs.com/?q=%search_string%',
       'showByDefault': false},
@@ -2688,6 +2778,7 @@ function countSites(task) {
     $.each(custom_sites, function(index, site) {config_fields[configName(site)] = {'type': 'checkbox'};});
     $.each(public_sites, function(index, site) {config_fields[configName(site)] = {'type': 'checkbox'};});
     $.each(private_sites, function(index, site) {config_fields[configName(site)] = {'type': 'checkbox'};});
+    $.each(usenet_sites, function(index, site) {config_fields[configName(site)] = {'type': 'checkbox'};});
     $.each(subs_sites, function(index, site) {config_fields[configName(site)] = {'type': 'checkbox'};});
     $.each(other_searchable_sites, function(index, site) {config_fields[configName(site)] = {'type': 'checkbox'};});
     $.each(icon_sites, function(index, icon_site) {config_fields['show_icon_' + icon_site['name']] = {'type': 'checkbox'};});
@@ -2887,6 +2978,14 @@ $.each(private_sites, function(index, site) {
   };
 });
 
+$.each(usenet_sites, function(index, site) {
+  config_fields[configName(site)] = {
+    'section': (index == 0) ? ['Usenet sites:'] : '',
+    'type': 'checkbox',
+    'label': ' ' + site['name'] + (site['TV'] ? ' (TV)' : '')
+  };
+});
+
 $.each(subs_sites, function(index, site) {
   config_fields[configName(site)] = {
     'section': (index == 0) ? ['Subtitles sites (in 2nd bar):'] : '',
@@ -2922,7 +3021,7 @@ GM_config.init({
   'fields': config_fields,
   'css': '#imdb_scout_section_header_1, #imdb_scout_section_header_2, #imdb_scout_section_header_3, \
           #imdb_scout_section_header_4, #imdb_scout_section_header_5, #imdb_scout_section_header_6, \
-          #imdb_scout_section_header_7, #imdb_scout_section_header_8 { \
+          #imdb_scout_section_header_7, #imdb_scout_section_header_8, #imdb_scout_section_header_9 { \
              background:   #00ab00 !important; \
              color:          black !important; \
              font-weight:     bold !important; \
@@ -2985,18 +3084,24 @@ GM_config.init({
         $(label).prepend(getFavicon(private_sites[index], true));
       });
       $('#imdb_scout').contents().find('#imdb_scout_section_6').find('.field_label').each(function(index, label) {
+        var url = new URL(usenet_sites[index].searchUrl);
+        $(label).append(' ' + '<a class="grey_link" target="_blank" style="color: gray; text-decoration : none" href="' + url.origin + '">'
+                        + (/www./.test(url.hostname) ? url.hostname.match(/www.(.*)/)[1] : url.hostname) + '</a>');
+        $(label).prepend(getFavicon(usenet_sites[index], true));
+      });
+      $('#imdb_scout').contents().find('#imdb_scout_section_7').find('.field_label').each(function(index, label) {
         var url = new URL(subs_sites[index].searchUrl);
         $(label).append(' ' + '<a class="grey_link" target="_blank" style="color: gray; text-decoration : none" href="' + url.origin + '">'
                         + (/www./.test(url.hostname) ? url.hostname.match(/www.(.*)/)[1] : url.hostname) + '</a>');
         $(label).prepend(getFavicon(subs_sites[index], true));
       });
-      $('#imdb_scout').contents().find('#imdb_scout_section_7').find('.field_label').each(function(index, label) {
+      $('#imdb_scout').contents().find('#imdb_scout_section_8').find('.field_label').each(function(index, label) {
         var url = new URL(other_searchable_sites[index].searchUrl);
         $(label).append(' ' + '<a class="grey_link" target="_blank" style="color: gray; text-decoration : none" href="' + url.origin + '">'
                         + (/www./.test(url.hostname) ? url.hostname.match(/www.(.*)/)[1] : url.hostname) + '</a>');
         $(label).prepend(getFavicon(other_searchable_sites[index], true));
       });
-      $('#imdb_scout').contents().find('#imdb_scout_section_8').find('.field_label').each(function(index, label) {
+      $('#imdb_scout').contents().find('#imdb_scout_section_9').find('.field_label').each(function(index, label) {
         var url = new URL(icon_sites[index].searchUrl);
         $(label).append(' ' + '<a class="grey_link" target="_blank" style="color: gray; text-decoration : none" href="' + url.origin + '">'
                         + (/www./.test(url.hostname) ? url.hostname.match(/www.(.*)/)[1] : url.hostname) + '</a>');
