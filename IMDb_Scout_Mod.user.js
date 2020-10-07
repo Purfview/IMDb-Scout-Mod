@@ -1,6 +1,6 @@
 ﻿// ==UserScript==
 // @name           IMDb Scout Mod
-// @version        7.4
+// @version        7.5
 // @namespace      https://github.com/Purfview/IMDb-Scout-Mod
 // @description    Adds links to IMDb pages from the torrent, ddl, subtitles, streaming, usenet and other sites.
 // @icon           https://i.imgur.com/u17jjYj.png
@@ -536,6 +536,10 @@
                    TVmaze, Aither.
         -   New feature: Usenet sites are separated in Settings.
 
+7.5     -   Added: NinjaCentral, MIAtrix, altHUB, SceneNZB, NzbNdx, nzbforyou, GingaDADDY,
+                   HDA, FindAnyFilm, xThor.
+        -   New feature: 'mPOST' can be formed as json (atm only for icon sites).
+
 
 //==============================================================================
 //    A list of all the sites.
@@ -544,7 +548,7 @@
     -= Each site is a dictionary with the following attributes: =-
 
 #  'name':
-The site name, abbreviated.
+The site name, abbreviated, unique (the 'TV' atribute internaly adds 'TV' to the name).
 
 #  'searchUrl':
 The URL to perform the search against, see below for how to tailor the string to a site.
@@ -1072,6 +1076,12 @@ var private_sites = [
       'loggedOutRegex': /Retrieve Password/,
       'matchRegex': /No data found/,
       'both': true},
+ {   'name': 'HDA',
+      'icon': 'http://www.hdarea.co/favicon.ico',
+      'searchUrl': 'https://www.hdarea.co/torrents.php?incldead=1&search=%tt%&search_area=4',
+      'loggedOutRegex': /Cloudflare|Ray ID|recover.php/,
+      'matchRegex': /Nothing found!|没有种子/,
+      'both': true},
   {   'name': 'HDb',
       'searchUrl': 'https://hdbits.org/browse.php?c1=1&c2=1&c3=1&c4=1&c5=1&c7=1&c8=1&imdb=%tt%',
       'loggedOutRegex': /Make sure your passcode generating|nginx/,
@@ -1506,7 +1516,16 @@ var private_sites = [
   {   'name': 'XS',
       'searchUrl': 'https://www.xspeeds.eu/browse.php?do=search&keywords=%search_string%&search_type=t_name&category=0&include_dead_torrents=yes',
       'loggedOutRegex': /Forget your password/,
-      'matchRegex': /<b>Nothing Found<\/b>/}
+      'matchRegex': /<b>Nothing Found<\/b>/},
+  {   'name': 'xThor',
+      'searchUrl': 'https://xthor.tk/browse.php?c118=1&c119=1&c107=1&c1=1&c2=1&c100=1&c4=1&c5=1&c7=1&c3=1&c6=1&c8=1&c122=1&c94=1&c95=1&c12=1&c31=1&c33=1&c9=1&searchin=title&incldead=0&group=0&state=0&accent=0&price=0&gang=0&mqr=0&staff=0&sch=%search_string_orig% %year%',
+      'loggedOutRegex': /Cloudflare|Ray ID|Vous devez autoriser les cookies/,
+      'matchRegex': 'Aucun résultat'},
+  {   'name': 'xThor',
+      'searchUrl': 'https://xthor.tk/browse.php?c104=1&c13=1&c15=1&c14=1&c98=1&c17=1&c16=1&c101=1&c32=1&c110=1&c123=1&c109=1&c30=1&searchin=title&incldead=0&group=0&state=0&accent=0&price=0&gang=0&mqr=0&staff=0&sch=%search_string_orig%',
+      'loggedOutRegex': /Cloudflare|Ray ID|Vous devez autoriser les cookies/,
+      'matchRegex': 'Aucun résultat',
+      'TV': true}
 ];
 
 var usenet_sites = [
@@ -1518,6 +1537,21 @@ var usenet_sites = [
       'searchUrl': 'https://www.abnzb.com/search/%search_string%?t=5000',
       'loggedOutRegex': /Cloudflare|Ray ID|Forgotten your password/,
       'matchRegex': /did not match any/,
+      'TV': true},
+  {   'name': 'altHUB',
+      'icon': 'https://althub.co.za/favicon.png',
+      'searchUrl': 'https://althub.co.za/search/%search_string% %year%?t=2000',
+      'loggedOutRegex': /Cloudflare|Ray ID|Forgotten your password/,
+      'matchRegex': /nzb_check/,
+      'spaceEncode': ' ',
+      'positiveMatch': true},
+  {   'name': 'altHUB',
+      'icon': 'https://althub.co.za/favicon.png',
+      'searchUrl': 'https://althub.co.za/search/%search_string%?t=5000',
+      'loggedOutRegex': /Cloudflare|Ray ID|Forgotten your password/,
+      'matchRegex': /nzb_check/,
+      'spaceEncode': ' ',
+      'positiveMatch': true,
       'TV': true},
   {   'name': 'BD25',
       'searchUrl': 'http://www.bd25.eu/index.php?page=files&search=%search_string%',
@@ -1536,6 +1570,31 @@ var usenet_sites = [
       'loggedOutRegex': /Cloudflare|Ray ID|>Remember me/,
       'matchRegex': /No result!/,
       'TV': true},
+  {   'name': 'GingaDADDY',
+      'searchUrl': 'https://www.gingadaddy.com/nzbbrowse.php?b=2&st=2&k=%tt%',
+      'loggedOutRegex': /Cloudflare|Ray ID|You need cookies enabled|Forgotten Password/,
+      'matchRegex': /Try again with a refined/,
+      'both': true},
+  {   'name': 'MIAtrix',
+      'searchUrl': 'https://www.miatrix.com/search/%search_string% %year%?t=2000',
+      'loggedOutRegex': /Cloudflare|Ray ID|Forgotten your password/,
+      'matchRegex': /did not match any/,
+      'spaceEncode': ' '},
+  {   'name': 'MIAtrix',
+      'searchUrl': 'https://www.miatrix.com/search/%search_string%?t=5000',
+      'loggedOutRegex': /Cloudflare|Ray ID|Forgotten your password/,
+      'matchRegex': /did not match any/,
+      'spaceEncode': ' ',
+      'TV': true},
+  {   'name': 'NinjaCentral',
+      'searchUrl': 'https://ninjacentral.co.za/search/%search_string% %year%?t=2000',
+      'loggedOutRegex': /Cloudflare|Ray ID|Forgotten your password/,
+      'matchRegex': /did not match any/},
+  {   'name': 'NinjaCentral',
+      'searchUrl': 'https://ninjacentral.co.za/search/%search_string%?t=5000',
+      'loggedOutRegex': /Cloudflare|Ray ID|Forgotten your password/,
+      'matchRegex': /did not match any/,
+      'TV': true},
   {   'name': 'NZBfinder',
       'icon': 'https://nzbfinder.ws/assets/nzbfinder-theme/images/appicons/favicon-32x32.png',
       'searchUrl': 'https://nzbfinder.ws/search?id=%search_string% %year%&t=2000',
@@ -1547,6 +1606,11 @@ var usenet_sites = [
       'loggedOutRegex': /Cloudflare|Ray ID|Forgot password/,
       'matchRegex': /No result!/,
       'TV': true},
+  {   'name': 'nzbforyou',
+      'searchUrl': 'https://www.nzbforyou.com/search.php?keywords=%tt%',
+      'loggedOutRegex': /Cloudflare|Ray ID|Remember me/,
+      'matchRegex': /No suitable matches were found/,
+      'both': true},
   {   'name': 'NZBgeek',
       'searchUrl': 'https://nzbgeek.info/geekseek.php?moviesgeekseek=1&browsecategory=2000&browseincludewords=%search_string% %year%',
       'loggedOutRegex': /Cloudflare|Ray ID|forgot password/,
@@ -1562,6 +1626,17 @@ var usenet_sites = [
       'loggedOutRegex': /Cloudflare|Ray ID|You are not logged in/,
       'matchRegex': /There are no posts/,
       'both': true},
+  {   'name': 'NzbNdx',
+      'icon': 'https://www.nzbndx.com/templates/bookstrap/images/icons/favicon.ico',
+      'searchUrl': 'https://www.nzbndx.com/search/%search_string% %year%?t=2000',
+      'loggedOutRegex': /Cloudflare|Ray ID|Forgotten your password/,
+      'matchRegex': /did not match any/},
+  {   'name': 'NzbNdx',
+      'icon': 'https://www.nzbndx.com/templates/bookstrap/images/icons/favicon.ico',
+      'searchUrl': 'https://www.nzbndx.com/search/%search_string%?t=5000',
+      'loggedOutRegex': /Cloudflare|Ray ID|Forgotten your password/,
+      'matchRegex': /did not match any/,
+      'TV': true},
   {   'name': 'NZBnoob',
       'icon': 'https://nzbnoob.com/templates/bookstrap/images/icons/favicon.ico',
       'searchUrl': 'https://nzbnoob.com/search/%search_string% %year%?t=2000',
@@ -1597,7 +1672,18 @@ var usenet_sites = [
       'searchUrl': 'https://omgwtfnzbs.me/browse?search=%tt%&cat=default',
       'loggedOutRegex': /Cloudflare|Ray ID|Forgot your username/,
       'matchRegex': /returned no results/,
-      'both': true}
+      'both': true},
+  {   'name': 'SceneNZB',
+      'icon': 'https://scenenzb.com/themes/shared/img/favicon.ico',
+      'searchUrl': 'https://scenenzb.com/search/%search_string% %year%?t=2000',
+      'loggedOutRegex': /Cloudflare|Ray ID|Forgotten your password|Too many requests/,
+      'matchRegex': /search did not match/},
+  {   'name': 'SceneNZB',
+      'icon': 'https://scenenzb.com/themes/shared/img/favicon.ico',
+      'searchUrl': 'https://scenenzb.com/search/%search_string%?t=5000',
+      'loggedOutRegex': /Cloudflare|Ray ID|Forgotten your password|Too many requests/,
+      'matchRegex': /search did not match/,
+      'TV': true}
 ];
 
 var subs_sites = [
@@ -1859,6 +1945,10 @@ var icon_sites = [
       'showByDefault': false},
   {   'name': 'FilmAffinity',
       'searchUrl': 'https://www.filmaffinity.com/en/advsearch.php?stext=%search_string%&stype[]=title&fromyear=%year%&toyear=%year%',
+      'showByDefault': false},
+  {   'name': 'FindAnyFilm',
+      'icon': 'https://www.findanyfilm.com/server-assets/favicon.png',
+      'searchUrl': 'https://www.findanyfilm.com/search?all=%search_string%&sort=product_release_date&type=ALL',
       'showByDefault': false},
   {   'name': 'Google',
       'searchUrl': 'https://www.google.com/search?q=%search_string%'},
@@ -2319,7 +2409,7 @@ function addIconBar(movie_id, movie_title, movie_title_orig) {
         html = $('<span />').append("&nbsp;").attr('style', 'font-size: 11px;').append($('<a />').attr('href', placebo_url).attr('onclick', "$('#" + form_name + "').submit(); return false;").attr('target', '_blank').addClass('iconbar_icon').append(image));
 
         site['mPOST'] = replaceSearchUrlParams({'searchUrl': site['mPOST']}, movie_id, movie_title, movie_title_orig);
-        var data = '{"' + site['mPOST'].replace(/&/g, '","').replace(/=/g, '":"').replace(/\+/g, ' ') + '"}',
+        var data = (site['mPOST'].match('{')) ? site['mPOST'] : '{"' + site['mPOST'].replace(/&/g, '","').replace(/=/g, '":"').replace(/\+/g, ' ') + '"}';
             data = JSON.parse(data);
         var addform = $('<form></form>');
             addform.attr('id', form_name);
