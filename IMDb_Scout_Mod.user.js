@@ -1,6 +1,6 @@
 ﻿// ==UserScript==
 // @name           IMDb Scout Mod
-// @version        7.5
+// @version        7.6
 // @namespace      https://github.com/Purfview/IMDb-Scout-Mod
 // @description    Adds links to IMDb pages from the torrent, ddl, subtitles, streaming, usenet and other sites.
 // @icon           https://i.imgur.com/u17jjYj.png
@@ -540,6 +540,10 @@
                    HDA, FindAnyFilm, xThor.
         -   New feature: 'mPOST' can be formed as json (atm only for icon sites).
 
+7.6     -   Added: DOGnzb, Sharewood, MovieBuff, ONLYscene, HD-F, E-T, SolidTor, MVG, BTDB, BD-film.
+        -   Tweaks: eThor, YGG (tv separated), TSeeds, RareFilm, M-T, TVCK.
+        -   Fixed: Iframes of the ads are interfering with Settings/GM_Config (script will remove ads).
+
 
 //==============================================================================
 //    A list of all the sites.
@@ -637,6 +641,17 @@ var public_sites = [
       'searchUrl': 'https://1337x.unblocker.cc/category-search/%search_string%/TV/1/',
       'matchRegex': /No results were returned/,
       'TV': true},
+  {   'name': 'BD-film',
+      'searchUrl': 'https://www.bd-film.cc/search.jspx?q=%tt%',
+      'loggedOutRegex': /Cloudflare|Ray ID/,
+      'matchRegex': />0 条</,
+      'both': true},
+  {   'name': 'BTDB',
+      'icon': 'https://i.imgur.com/IGG1XX3.png',
+      'searchUrl': 'https://btdb.eu/search/%search_string_orig%+%year%/0/',
+      'loggedOutRegex': /Cloudflare|Ray ID/,
+      'matchRegex': /About 0 results/,
+      'both': true},
   {   'name': 'CineCalidad',
       'searchUrl': 'https://www.cinecalidad.is/?s=%tt%',
       'loggedOutRegex': /Cloudflare|Ray ID/,
@@ -673,6 +688,11 @@ var public_sites = [
       'loggedOutRegex': /Not logged in/,
       'matchRegex': /nijedan torent/,
       'both': true},
+  {   'name': 'ilCorSaRoNeRo',
+      'searchUrl': 'https://ilcorsaronero.link/argh.php?search=%search_string_orig%+%year%',
+      'loggedOutRegex': /Cloudflare|Ray ID/,
+      'matchRegex': /Nessun torrent trovato/,
+      'both': true},
   {   'name': 'ixIRC',
       'icon': 'https://ixirc.com/favicon.png',
       'searchUrl': 'https://ixirc.com/?q=%search_string_orig%+%year%',
@@ -699,6 +719,18 @@ var public_sites = [
       'searchUrl': 'https://limetorrents.unblockit.win/search/movies/%search_string%+%year%/seeds/1/',
       'matchRegex': /csprite_dl14/,
       'positiveMatch': true},
+  {   'name': 'MVG',
+      'searchUrl': 'https://forums.mvgroup.org/maintracker.php?filter=%search_string%',
+      'loggedOutRegex': /Cloudflare|Ray ID|forgotten my password/,
+      'matchRegex': /btsmall.gif/,
+      'positiveMatch': true,
+      'TV': true},
+  {   'name': 'MVG-F',
+      'searchUrl': 'https://forums.mvgroup.org/forumtracker.php?filter=%search_string%',
+      'loggedOutRegex': /Cloudflare|Ray ID|forgotten my password/,
+      'matchRegex': /btsmall.gif/,
+      'positiveMatch': true,
+      'TV': true},
   {   'name': 'NNM',
       'searchUrl': 'https://nnm-club.me/forum/tracker.php?nm=%search_string%+%year%',
       'matchRegex': 'Не найдено',
@@ -722,8 +754,9 @@ var public_sites = [
       'rateLimit': 250,
       'both': true},
   {   'name': 'RareFilm',
-      'icon': 'http://rarefilm.net/wp-content/themes/sahifa/favicon.ico',
+      'icon': 'https://i.imgur.com/WmDYJjv.png',
       'searchUrl': 'https://rarefilm.net/?s=%tt%',
+      'loggedOutRegex': /Cloudflare|Ray ID/,
       'matchRegex': /Nothing Found/,
       'both': true},
   {   'name': 'Rarelust',
@@ -759,6 +792,12 @@ var public_sites = [
       'searchUrl': 'http://rutor.info/search/0/0/010/0/%tt%',
       'loggedOutRegex': /Connection refused|Gateway Time-out/,
       'matchRegex': 'Результатов поиска 0',
+      'both': true},
+  {   'name': 'SolidTor',
+      'icon': 'https://solidtorrents.net/favicon.png',
+      'searchUrl': 'https://solidtorrents.net/search?q=%search_string_orig%+%year%',
+      'loggedOutRegex': /Cloudflare|Ray ID/,
+      'matchRegex': /Not Found!/,
       'both': true},
   {   'name': 'T2K',
       'searchUrl': 'https://torrentz2k.xyz/search/',
@@ -817,10 +856,14 @@ var public_sites = [
       'matchRegex': /No result found/,
       'TV': true},
   {   'name': 'YGG',
+      'searchUrl': 'https://www2.yggtorrent.si/engine/search?name=%search_string_orig%+%year%&category=2145&sub_category=all&do=search',
+      'loggedOutRegex': /Ray ID|security check to access/,
+      'matchRegex': 'Aucun résultat !'},
+  {   'name': 'YGG',
       'searchUrl': 'https://www2.yggtorrent.si/engine/search?name=%search_string_orig%&category=2145&sub_category=all&do=search',
       'loggedOutRegex': /Ray ID|security check to access/,
       'matchRegex': 'Aucun résultat !',
-      'both': true},
+      'TV': true},
   {   'name': 'Zooqle',
       'icon': 'https://i.imgur.com/jqKceYP.png',
       'searchUrl': 'https://zooqle.com/search?q=%tt%',
@@ -864,7 +907,7 @@ var private_sites = [
       'matchRegex': /Nothing found!|Error 404/,
       'both': true},
   {   'name': 'Aither',
-      'searchUrl': 'https://aither.cc/torrents/filter?&imdb=%tt%',
+      'searchUrl': 'https://aither.cc/torrents/filter?imdb=%tt%',
       'loggedOutRegex': /Cloudflare|Ray ID|Forgot Your Password/,
       'matchRegex': /<tbody>\s*<\/tbody>/,
       'both': true},
@@ -1048,10 +1091,15 @@ var private_sites = [
       'searchUrl': 'https://www.dvdseed.eu/browse2.php?search=%tt%&wheresearch=2&incldead=1&polish=0&nuke=0&rodzaj=0',
       'loggedOutRegex': /Nie masz konta|Nie zalogowany!/,
       'matchRegex': /Nic tutaj nie ma!/},
+  {   'name': 'E-T',
+      'searchUrl': 'https://elite-tracker.net/browse.php?do=search&keywords=%tt%&search_type=t_genre&category=0&include_dead_torrents=no',
+      'loggedOutRegex': /Cloudflare|Ray ID|Récupérer votre mot de passe/,
+      'matchRegex': /Aucun résultat/,
+      'both': true},
   {   'name': 'eThor',
       'searchUrl': 'https://ethor.net/browse.php?stype=b&c23=1&c20=1&c42=1&c5=1&c19=1&c25=1&c6=1&c37=1&c43=1&c7=1&c9=1&advcat=0&incldead=0&includedesc=1&search=%tt%',
       'loggedOutRegex': /Vous avez perdu votre mot de passe/,
-      'matchRegex': /Try again with a refined search string./},
+      'matchRegex': /Try again with|Veuillez réessayer/},
   {   'name': 'FE',
       'searchUrl': 'https://finelite.org/selaa.php?search=%tt%',
       'loggedOutRegex': /Se ainoa oikea!/,
@@ -1076,7 +1124,11 @@ var private_sites = [
       'loggedOutRegex': /Retrieve Password/,
       'matchRegex': /No data found/,
       'both': true},
- {   'name': 'HDA',
+  {   'name': 'HD-F',
+      'searchUrl': 'https://hdf.world/torrents.php?searchstr=%search_string_orig%+%year%&order_by=time&order_way=desc&group_results=1&action=basic&searchsubmit=1',
+      'loggedOutRegex': /Cloudflare|Ray ID|Mot de passe perdu/,
+      'matchRegex': /Aucun fichier trouvé/},
+  {  'name': 'HDA',
       'icon': 'http://www.hdarea.co/favicon.ico',
       'searchUrl': 'https://www.hdarea.co/torrents.php?incldead=1&search=%tt%&search_area=4',
       'loggedOutRegex': /Cloudflare|Ray ID|recover.php/,
@@ -1196,7 +1248,7 @@ var private_sites = [
       'matchRegex': /Torrentų nėra./,
       'both': true},
   {   'name': 'M-T',
-      'searchUrl': 'https://pt.m-team.cc/torrents.php?incldead=1&spstate=0&inclbookmarked=0&search=%tt%&search_area=4&search_mode=0',
+      'searchUrl': 'https://pt.m-team.cc/torrents.php?incldead=0&spstate=0&inclbookmarked=0&search=%tt%&search_area=4&search_mode=0',
       'loggedOutRegex': /type="password" name="password"|An error occurred|Please input the 6-digit code/,
       'matchRegex': /Nothing here!|Try again with a refined search string./,
       'both': true},
@@ -1225,6 +1277,11 @@ var private_sites = [
       'loggedOutRegex': /have cookies disabled./,
       'matchRegex': /Your search did not match anything/,
       'TV': true},
+  {   'name': 'ONLYscene',
+      'searchUrl': 'https://www.onlyscene.org/torrents/filter?imdb=%tt%',
+      'loggedOutRegex': /Cloudflare|Ray ID|mot de passe oublie/,
+      'matchRegex': /<tbody>\s*<\/tbody>/,
+      'both': true},
   {   'name': 'OurBits',
       'searchUrl': 'https://ourbits.club/torrents.php?search_area=4&search=%tt%',
       'loggedOutRegex': /SSL \(HTTPS\)/,
@@ -1332,6 +1389,17 @@ var private_sites = [
       'searchUrl': 'https://sdbits.org/browse.php?incldead=1&imdb=%tt%',
       'loggedOutRegex': /Not logged in!|Technical Difficulties/,
       'matchRegex': /Nothing here!|Nothing found!/},
+  {   'name': 'Sharewood',
+      'searchUrl': 'https://www.sharewood.tv/filterTorrents?search=%search_string_orig%+%year%&categories[]=1',
+      'loggedOutRegex': /Cloudflare|Ray ID|Mot de passe oublié/,
+      'matchRegex': /table-responsive-line/,
+      'positiveMatch': true},
+  {   'name': 'Sharewood',
+      'searchUrl': 'https://www.sharewood.tv/filterTorrents?search=%search_string_orig%&categories[]=1',
+      'loggedOutRegex': /Cloudflare|Ray ID|Mot de passe oublié/,
+      'matchRegex': /table-responsive-line/,
+      'positiveMatch': true,
+      'TV': true},
   {   'name': 'sHD',
       'searchUrl': 'https://scenehd.org/browse.php?search=%tt%',
       'loggedOutRegex': /If you have forgotten your password/,
@@ -1476,7 +1544,7 @@ var private_sites = [
   {   'name': 'TSeeds',
       'searchUrl': 'https://torrentseeds.org/browse_elastic.php?cat[61]=1&cat[11]=1&cat[23]=1&cat[24]=1&cat[18]=1&cat[67]=1&cat[26]=1&cat[65]=1&cat[64]=1&query=%search_string_orig%&search_in=title',
       'loggedOutRegex': /Not logged in!/,
-      'matchRegex': />Genres<\/div>\s*<\/div>/,
+      'matchRegex': />Genres<\/div>\s*<\/div>|We are sorry/,
       'TV': true},
   {   'name': 'TT',
       'icon': 'https://torrenting.com/T-favicon.ico',
@@ -1489,9 +1557,10 @@ var private_sites = [
       'loggedOutRegex': /Ray ID|Forget your password/,
       'matchRegex': /Didn't match any titles/},
   {   'name': 'TVCK',
-      'searchUrl': 'https://www.tvchaosuk.com/browse.php?do=search&search_type=t_name&keywords=%search_string%',
-      'loggedOutRegex': /404 Not Found/,
-      'matchRegex': /<b>Nothing Found<\/b>/},
+      'searchUrl': 'https://tvchaosuk.com/torrents/filter?imdb=%tt%',
+      'loggedOutRegex': /Forgot Your Password/,
+      'matchRegex': /<tbody>\s*<\/tbody>/,
+      'both': true},
   {   'name': 'TVV',
       'searchUrl': 'https://tv-vault.me/torrents.php?action=advanced&imdbid=%tt%&order_by=s3&order_way=desc',
       'loggedOutRegex': /Lost your password\?|Browse quota exceeded|Cloudflare Ray ID/,
@@ -1559,6 +1628,15 @@ var usenet_sites = [
       'matchRegex': /download.gif/,
       'positiveMatch': true,
       'both': true},
+  {   'name': 'DOGnzb',
+      'searchUrl': 'https://dognzb.cr/search/%search_string% %year%?t=2000',
+      'loggedOutRegex': /Cloudflare|Ray ID|Keep me logged/,
+      'matchRegex': /did not match|No result/},
+  {   'name': 'DOGnzb',
+      'searchUrl': 'https://dognzb.cr/search/%search_string%?t=5000',
+      'loggedOutRegex': /Cloudflare|Ray ID|Keep me logged/,
+      'matchRegex': /did not match|No result/,
+      'TV': true},
   {   'name': 'DrunkenSlug',
       'icon': 'https://drunkenslug.com/themes/shared/img/favicon.ico',
       'searchUrl': 'https://drunkenslug.com/search/%search_string% %year%?t=2000',
@@ -1969,6 +2047,9 @@ var icon_sites = [
   {   'name': 'Movie-Censorship',
       'icon': 'https://i.imgur.com/4gF8xKW.png',
       'searchUrl': 'https://www.movie-censorship.com/list.php?s=%search_string%',
+      'showByDefault': false},
+  {   'name': 'MovieBuff',
+      'searchUrl': 'https://www.moviebuff.com/search?q=%search_string_orig%',
       'showByDefault': false},
   {   'name': 'MovieChat',
       'icon': 'https://moviechat.org/favicons/favicon-32x32.png',
@@ -3231,6 +3312,15 @@ var valid_states = [
 var onSearchPage = Boolean(location.href.match('/search/'))
                 || Boolean(location.href.match('/list/'))
                 || Boolean(location.href.match('watchlist'));
+
+//==============================================================================
+//    Remove ads from IMDb
+//==============================================================================
+
+$('#top_ad_wrapper').remove();
+$('#top_rhs_wrapper').remove();
+$('.ab_widget').remove();
+$('.pro_logo_main_title').remove();
 
 //==============================================================================
 //    Start: Display 'Load' button or add links to sites
