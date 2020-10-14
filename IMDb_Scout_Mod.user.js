@@ -1,6 +1,6 @@
 ﻿// ==UserScript==
 // @name           IMDb Scout Mod
-// @version        7.6.1
+// @version        7.7
 // @namespace      https://github.com/Purfview/IMDb-Scout-Mod
 // @description    Adds links to IMDb pages from the torrent, ddl, subtitles, streaming, usenet and other sites.
 // @icon           https://i.imgur.com/u17jjYj.png
@@ -545,6 +545,8 @@
         -   Fixed: Iframes of the ads are interfering with Settings/GM_Config (script will remove ads).
 
 7.6.1   -   Added: ExiTor, SI, Team-HuSh, G-Free.
+
+7.7     -   New feature: HTTP status above 399 will produce an error (red border).
 
 
 //==============================================================================
@@ -2350,7 +2352,7 @@ function maybeAddLink(elem, site_name, search_url, site, scout_tick, movie_id, m
       data: data,
       headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
       onload: function(response) {
-        if (response.responseHeaders.indexOf('efresh: 0; url') > -1) {
+        if (response.responseHeaders.indexOf('efresh: 0; url') > -1 || response.status > 399) {
         addLink(elem, site_name, target, site, 'logged_out', scout_tick);
         } else if (site['positiveMatch'] && site['loggedOutRegex'] && String(response.responseText).match(site['loggedOutRegex'])) {
           addLink(elem, site_name, target, site, 'logged_out', scout_tick);
@@ -2385,7 +2387,7 @@ function maybeAddLink(elem, site_name, search_url, site, scout_tick, movie_id, m
     method: 'GET',
     url: search_url,
     onload: function(response) {
-      if (response.responseHeaders.indexOf('efresh: 0; url') > -1) {
+      if (response.responseHeaders.indexOf('efresh: 0; url') > -1 || response.status > 399) {
       addLink(elem, site_name, target, site, 'logged_out', scout_tick);
       } else if (site['positiveMatch'] && site['loggedOutRegex'] && String(response.responseText).match(site['loggedOutRegex'])) {
         addLink(elem, site_name, target, site, 'logged_out', scout_tick);
