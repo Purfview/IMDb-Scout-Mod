@@ -1,6 +1,6 @@
 ﻿// ==UserScript==
 // @name           IMDb Scout Mod
-// @version        7.7
+// @version        7.7.1
 // @namespace      https://github.com/Purfview/IMDb-Scout-Mod
 // @description    Adds links to IMDb pages from the torrent, ddl, subtitles, streaming, usenet and other sites.
 // @icon           https://i.imgur.com/u17jjYj.png
@@ -548,6 +548,8 @@
 
 7.7     -   New feature: HTTP status above 399 will produce an error (red border).
 
+7.7.1   -   Tweak: BDC.
+
 
 //==============================================================================
 //    A list of all the sites.
@@ -964,9 +966,9 @@ var private_sites = [
       'both': true},
   {   'name': 'BDC',
       'icon': 'https://i.imgur.com/zO6inRw.png',
-      'searchUrl': 'https://broadcity.in/browse.php?do=search&search_type=t_both&keywords=%tt%',
-      'loggedOutRegex': /Recover Password|Şifre Sıfırlama|BunnyGuard|>Fatal Error</,
-      'matchRegex': /Click to Download|Bu Torrenti İndirmek/,
+      'searchUrl': 'https://broadcity.in/browse.php?do=search&search_type=t_genre&keywords=%tt%',
+      'loggedOutRegex': /Recover Password|Şifre Sıfırlama|BunnyGuard|CloudBunny|>Fatal Error</,
+      'matchRegex': /dl.png/,
       'positiveMatch': true,
       'both': true},
   {   'name': 'BHD',
