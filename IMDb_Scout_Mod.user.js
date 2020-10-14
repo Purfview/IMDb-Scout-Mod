@@ -1,6 +1,6 @@
 ﻿// ==UserScript==
 // @name           IMDb Scout Mod
-// @version        7.6
+// @version        7.6.1
 // @namespace      https://github.com/Purfview/IMDb-Scout-Mod
 // @description    Adds links to IMDb pages from the torrent, ddl, subtitles, streaming, usenet and other sites.
 // @icon           https://i.imgur.com/u17jjYj.png
@@ -543,6 +543,8 @@
 7.6     -   Added: DOGnzb, Sharewood, MovieBuff, ONLYscene, HD-F, E-T, SolidTor, MVG, BTDB, BD-film.
         -   Tweaks: eThor, YGG (tv separated), TSeeds, RareFilm, M-T, TVCK.
         -   Fixed: Iframes of the ads are interfering with Settings/GM_Config (script will remove ads).
+
+7.6.1   -   Added: ExiTor, SI, Team-HuSh, G-Free.
 
 
 //==============================================================================
@@ -1100,6 +1102,12 @@ var private_sites = [
       'searchUrl': 'https://ethor.net/browse.php?stype=b&c23=1&c20=1&c42=1&c5=1&c19=1&c25=1&c6=1&c37=1&c43=1&c7=1&c9=1&advcat=0&incldead=0&includedesc=1&search=%tt%',
       'loggedOutRegex': /Vous avez perdu votre mot de passe/,
       'matchRegex': /Try again with|Veuillez réessayer/},
+  {   'name': 'ExiTor',
+      'icon': 'https://exitorrent.org/favicon.ico',
+      'searchUrl': 'https://exitorrent.org/browse.php?search=%tt%&blah=1&incldead=0&polish=0',
+      'loggedOutRegex': /Cloudflare|Ray ID|Aby odzyskać hasło/,
+      'matchRegex': /Nic tutaj nie ma/,
+      'both': true},
   {   'name': 'FE',
       'searchUrl': 'https://finelite.org/selaa.php?search=%tt%',
       'loggedOutRegex': /Se ainoa oikea!/,
@@ -1119,6 +1127,15 @@ var private_sites = [
       'searchUrl': 'https://finvip.org/index.php?page=torrents&search=%tt%&options=1',
       'loggedOutRegex': /Sinulla ei ole oikeuksia sivulle/,
       'matchRegex': /<td colspan="2" align="center"> <\/td>/},
+  {   'name': 'G-Free',
+      'searchUrl': 'https://generation-free.biz/torrents-search.php?search=%search_string_orig%+%year%&cat=0&genre=&incldead=1&freeleech=0&lang=0',
+      'loggedOutRegex': /Cloudflare|Ray ID|Les cookies doivent/,
+      'matchRegex': /a été trouvé/},
+  {   'name': 'G-Free',
+      'searchUrl': 'https://generation-free.biz/torrents-search.php?search=%search_string_orig%&cat=0&genre=&incldead=1&freeleech=0&lang=0',
+      'loggedOutRegex': /Cloudflare|Ray ID|Les cookies doivent/,
+      'matchRegex': /a été trouvé/,
+      'TV': true},
   {   'name': 'GT',
       'searchUrl': 'https://greek-team.cc/browse.php?incldead=0&search=%search_string_orig%&blah=0',
       'loggedOutRegex': /Retrieve Password/,
@@ -1404,6 +1421,11 @@ var private_sites = [
       'searchUrl': 'https://scenehd.org/browse.php?search=%tt%',
       'loggedOutRegex': /If you have forgotten your password/,
       'matchRegex': /No torrents found!/},
+  {   'name': 'SI',
+      'searchUrl': 'https://shareisland.org/torrents/filter?imdb=%tt%',
+      'loggedOutRegex': /Cloudflare|Ray ID|Accedi con le tue credenziali/,
+      'matchRegex': /<tbody>\s*<\/tbody>/,
+      'both': true},
   {   'name': 'Snahp',
       'searchUrl': 'https://forum.snahp.it/search.php?keywords=%search_string%&amp;sf=titleonly',
       'loggedOutRegex': /register" role/,
@@ -1457,6 +1479,11 @@ var private_sites = [
       'loggedOutRegex': /404 - Not Found|You need cookies enabled/,
       'matchRegex': /Try again with a refined search string/,
       'TV': true},
+  {   'name': 'Team-HuSh',
+      'searchUrl': 'https://team-hush.org/filterTorrents?imdb=%tt%',
+      'loggedOutRegex': /Cloudflare|Ray ID|Mot de passe oublié/,
+      'matchRegex': /<tbody>\s*<\/tbody>/,
+      'both': true},
   {   'name': 'TG',
       'searchUrl': 'https://thegeeks.click/browse.php?incldead=0&country=&nonboolean=1&search=%tt%',
       'loggedOutRegex': /404 - Not Found|You need cookies enabled/,
