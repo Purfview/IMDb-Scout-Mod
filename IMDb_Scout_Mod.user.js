@@ -550,6 +550,8 @@
 
 7.7.1   -   Tweak: BDC.
 
+7.7.2   -   Added: ArenaBG.
+
 
 //==============================================================================
 //    A list of all the sites.
@@ -646,6 +648,19 @@ var public_sites = [
   {   'name': '1337x-Proxy',
       'searchUrl': 'https://1337x.unblocker.cc/category-search/%search_string%/TV/1/',
       'matchRegex': /No results were returned/,
+      'TV': true},
+  {   'name': 'ArenaBG',
+      'icon': 'https://cdn.arenabg.com/share/images/favicon.png',
+      'searchUrl': 'https://arenabg.ch/torrents/',
+      'loggedOutRegex': /Cloudflare|Ray ID/,
+      'matchRegex': /no results found/,
+      'mPOST': 'action=search&text=%search_string_orig%+%year%&text_mobile=%search_string_orig%+%year%&type=movies&subtitles=0&audio=0'},
+  {   'name': 'ArenaBG',
+      'icon': 'https://cdn.arenabg.com/share/images/favicon.png',
+      'searchUrl': 'https://arenabg.ch/torrents/',
+      'loggedOutRegex': /Cloudflare|Ray ID/,
+      'matchRegex': /no results found/,
+      'mPOST': 'action=search&text=%search_string_orig%&text_mobile=%search_string_orig%&type=series&subtitles=0&audio=0',
       'TV': true},
   {   'name': 'BD-film',
       'searchUrl': 'https://www.bd-film.cc/search.jspx?q=%tt%',
