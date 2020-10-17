@@ -1,22 +1,24 @@
 ﻿// ==UserScript==
-// @name           IMDb Scout Mod
-// @version        7.7.2
-// @namespace      https://github.com/Purfview/IMDb-Scout-Mod
-// @description    Adds links to IMDb pages from the torrent, ddl, subtitles, streaming, usenet and other sites.
-// @icon           https://i.imgur.com/u17jjYj.png
 //
-// @require     https://openuserjs.org/src/libs/sizzle/GM_config.js
-// @require     https://code.jquery.com/jquery-3.5.1.min.js
-// @require     https://greasemonkey.github.io/gm4-polyfill/gm4-polyfill.js
+// @name         IMDb Scout Mod
+// @version      7.8
+// @namespace    https://github.com/Purfview/IMDb-Scout-Mod
+// @description  Adds links to IMDb pages from the torrent, ddl, subtitles, streaming, usenet and other sites.
+// @icon         https://i.imgur.com/u17jjYj.png
+// @license      The Unlicense
 //
-// @include        http*://*.imdb.tld/title/tt*
-// @include        http*://*.imdb.tld/search/title*
-// @include        http*://*.imdb.tld/user/*/watchlist*
-// @include        http*://*.imdb.tld/list/*
-// @include        http*://*.imdb.com/title/tt*
-// @include        http*://*.imdb.com/search/title*
-// @include        http*://*.imdb.com/user/*/watchlist*
-// @include        http*://*.imdb.com/list/*
+// @require      https://openuserjs.org/src/libs/sizzle/GM_config.js
+// @require      https://code.jquery.com/jquery-3.5.1.min.js
+// @require      https://greasemonkey.github.io/gm4-polyfill/gm4-polyfill.js
+//
+// @include      http*://*.imdb.tld/title/tt*
+// @include      http*://*.imdb.tld/search/title*
+// @include      http*://*.imdb.tld/user/*/watchlist*
+// @include      http*://*.imdb.tld/list/*
+// @include      http*://*.imdb.com/title/tt*
+// @include      http*://*.imdb.com/search/title*
+// @include      http*://*.imdb.com/user/*/watchlist*
+// @include      http*://*.imdb.com/list/*
 //
 // @connect      *
 // @grant        GM_log
@@ -552,6 +554,11 @@
 
 7.7.2   -   Added: ArenaBG.
 
+7.8     -   Added:  LimeTor (tv), TorDL-Proxy, RMZ.
+        -   Tweaks: LimeTor-Proxy, 1337x-Proxy, TPB-Proxy, Demonoid, Classix (icon), TT.
+        -   Tweaks: Icons of some blocked sites moved to Imgur.
+        -   New feature: Streamlined the layout of Settings.
+
 
 //==============================================================================
 //    A list of all the sites.
@@ -627,6 +634,7 @@ The movie year (e.g. 1961).
 
 var custom_sites = [
   {   'name': 'Dummy',
+      'icon': 'https://i.imgur.com/C1Ux7Tv.png',
       'searchUrl': 'https://dummy.dummy',
       'loggedOutRegex': /dummy/,
       'matchRegex': /dummy/,
@@ -636,17 +644,21 @@ var custom_sites = [
 
 var public_sites = [
   {   'name': '1337x',
+      'icon': 'https://i.imgur.com/3PI1RlA.png',
       'searchUrl': 'https://1337x.to/category-search/%search_string%+%year%/Movies/1/',
       'matchRegex': /No results were returned/},
   {   'name': '1337x',
+      'icon': 'https://i.imgur.com/3PI1RlA.png',
       'searchUrl': 'https://1337x.to/category-search/%search_string%/TV/1/',
       'matchRegex': /No results were returned/,
       'TV': true},
   {   'name': '1337x-Proxy',
-      'searchUrl': 'https://1337x.unblocker.cc/category-search/%search_string%+%year%/Movies/1/',
+      'icon': 'https://i.imgur.com/3PI1RlA.png',
+      'searchUrl': 'https://1337x.unblockit.lat/category-search/%search_string%+%year%/Movies/1/',
       'matchRegex': /No results were returned/},
   {   'name': '1337x-Proxy',
-      'searchUrl': 'https://1337x.unblocker.cc/category-search/%search_string%/TV/1/',
+      'icon': 'https://i.imgur.com/3PI1RlA.png',
+      'searchUrl': 'https://1337x.unblockit.lat/category-search/%search_string%/TV/1/',
       'matchRegex': /No results were returned/,
       'TV': true},
   {   'name': 'ArenaBG',
@@ -690,7 +702,8 @@ var public_sites = [
       'matchRegex': /Ekkert fannst!/,
       'both': true},
   {   'name': 'Demonoid',
-      'searchUrl': 'https://www.demonoid.is/files/?query=%tt%',
+      'icon': 'https://i.imgur.com/XwIR7Yx.png',
+      'searchUrl': 'https://www.dnoid.pw/files/?query=%tt%',
       'loggedOutRegex': /Ray ID|security check to access|daily site maintenance|page is not available/,
       'matchRegex': /No torrents found/,
       'both': true},
@@ -731,15 +744,31 @@ var public_sites = [
       'matchRegex': 'Нет активных раздач, приносим извинения. Пожалуйста, уточните параметры поиска',
       'TV': true},
   {   'name': 'LimeTor',
+      'icon': 'https://i.imgur.com/cLRWNQK.png',
       'loggedOutRegex': /Ray ID|security check to access|Please turn JavaScript/,
       'searchUrl': 'https://www.limetorrents.info/search/movies/%search_string%+%year%/seeds/1/',
       'matchRegex': /csprite_dl14/,
       'positiveMatch': true},
-  {   'name': 'LimeTor-Proxy',
+  {   'name': 'LimeTor',
+      'icon': 'https://i.imgur.com/cLRWNQK.png',
       'loggedOutRegex': /Ray ID|security check to access|Please turn JavaScript/,
-      'searchUrl': 'https://limetorrents.unblockit.win/search/movies/%search_string%+%year%/seeds/1/',
+      'searchUrl': 'https://www.limetorrents.info/search/tv/%search_string%/seeds/1/',
+      'matchRegex': /csprite_dl14/,
+      'positiveMatch': true,
+      'TV': true},
+  {   'name': 'LimeTor-Proxy',
+      'icon': 'https://i.imgur.com/cLRWNQK.png',
+      'loggedOutRegex': /Ray ID|security check to access|Please turn JavaScript/,
+      'searchUrl': 'https://limetorrents.unblockit.lat/search/movies/%search_string%+%year%/seeds/1/',
       'matchRegex': /csprite_dl14/,
       'positiveMatch': true},
+  {   'name': 'LimeTor-Proxy',
+      'icon': 'https://i.imgur.com/cLRWNQK.png',
+      'loggedOutRegex': /Ray ID|security check to access|Please turn JavaScript/,
+      'searchUrl': 'https://limetorrents.unblockit.lat/search/tv/%search_string%/seeds/1/',
+      'matchRegex': /csprite_dl14/,
+      'positiveMatch': true,
+      'TV': true},
   {   'name': 'MVG',
       'searchUrl': 'https://forums.mvgroup.org/maintracker.php?filter=%search_string%',
       'loggedOutRegex': /Cloudflare|Ray ID|forgotten my password/,
@@ -757,12 +786,12 @@ var public_sites = [
       'matchRegex': 'Не найдено',
       'both': true},
   {   'name': 'ProStyleX',
-      'icon': 'https://prostylex.org/themes/default/images/favicon.ico',
+      'icon': 'https://i.imgur.com/IlikrfD.png',
       'searchUrl': 'https://prostylex.org/search.php?c1=1&c2=1&c3=1&c4=1&c5=1&c6=1&c7=1&c8=1&c9=1&c10=1&c65=1&c68=1&search=%search_string%&cat=0&lang=0',
       'loggedOutRegex': /Cloudflare|Ray ID/,
       'matchRegex': /No torrents were found/},
   {   'name': 'ProStyleX',
-      'icon': 'https://prostylex.org/themes/default/images/favicon.ico',
+      'icon': 'https://i.imgur.com/IlikrfD.png',
       'searchUrl': 'https://prostylex.org/search.php?c12=1&c13=1&c14=1&c15=1&c17=1&c65=1&c68=1&search=%search_string%&cat=0&lang=0',
       'loggedOutRegex': /Cloudflare|Ray ID/,
       'matchRegex': /No torrents were found/,
@@ -800,6 +829,17 @@ var public_sites = [
       'matchRegex': /"results":\[\]|Not Found/,
       'rateLimit': 250,
       'both': true},
+  {   'name': 'RMZ',
+      'icon': 'https://i.imgur.com/gEZae9b.png',
+      'searchUrl': 'https://rmz.cr/search/%search_string%/titles/exact/m',
+      'loggedOutRegex': /Cloudflare|Ray ID/,
+      'matchRegex': /No movy available/},
+  {   'name': 'RMZ',
+      'icon': 'https://i.imgur.com/gEZae9b.png',
+      'searchUrl': 'https://rmz.cr/search/%search_string%/titles/exact/s',
+      'loggedOutRegex': /Cloudflare|Ray ID/,
+      'matchRegex': /No tv show available/,
+      'TV': true},
   {   'name': 'RuT',
       'searchUrl': 'https://rutracker.org/forum/tracker.php?f=100,101,103,1105,1114,1213,1235,124,1247,1278,1280,1281,1327,1363,1389,1391,140,1453,1457,1467,1468,1469,1475,1543,1576,1577,1666,1670,187,1900,1908,1936,194,1950,2076,208,2082,209,2090,2091,2092,2093,2107,2109,2110,2112,212,2123,2139,2159,2160,2163,2164,2166,2168,2169,2176,2177,2178,2198,2199,22,2200,2201,2220,2221,2258,2323,2339,2343,2365,2380,2459,249,2491,251,2535,2538,2540,294,312,313,33,352,376,4,484,500,505,511,521,539,549,552,56,572,599,656,671,672,7,709,752,821,822,851,863,876,877,893,905,921,93,930,934,941,97,979,98&nm=%search_string_orig%',
       'loggedOutRegex': /Введите ваше имя/,
@@ -836,7 +876,14 @@ var public_sites = [
       'searchUrl': 'https://torrentgalaxy.org/torrents.php?search=%tt%',
       'matchRegex': /No results found/},
   {   'name': 'TorDL',
+      'icon': 'https://i.imgur.com/N0pLxiZ.png',
       'searchUrl': 'https://www.torrentdownloads.me/search/?new=1&s_cat=0&search=%search_string%',
+      'loggedOutRegex': /Cloudflare|Ray ID/,
+      'matchRegex': /No results found/,
+      'both': true},
+  {   'name': 'TorDL-Proxy',
+      'icon': 'https://i.imgur.com/N0pLxiZ.png',
+      'searchUrl': 'https://torrentdownloads.unblockit.lat/search/?new=1&s_cat=0&search=%search_string%',
       'loggedOutRegex': /Cloudflare|Ray ID/,
       'matchRegex': /No results found/,
       'both': true},
@@ -852,11 +899,16 @@ var public_sites = [
       'matchRegex': /No results/,
       'TV': true},
   {   'name': 'TPB-Proxy',
-      'searchUrl': 'https://apibay.org/q.php?q=%search_string%&cat=201,202,207,209,205,208',
-      'goToUrl': 'https://tpbmirror.website/search/%search_string%',
+      'searchUrl': 'https://apibay.org/q.php?q=%search_string%&cat=201,202,207,209',
+      'goToUrl': 'https://pirateproxy.dev/search.php?q=%search_string%&cat=201,202,207,209',
+      'loggedOutRegex': /Ray ID/,
+      'matchRegex': /No results/},
+  {   'name': 'TPB-Proxy',
+      'searchUrl': 'https://apibay.org/q.php?q=%search_string%&cat=205,208',
+      'goToUrl': 'https://pirateproxy.dev/search.php?q=%search_string%&cat=205,208',
       'loggedOutRegex': /Ray ID/,
       'matchRegex': /No results/,
-      'both': true},
+      'TV': true},
   {   'name': 'TVU',
       'searchUrl': 'https://tvunderground.org.ru/index.php?show=search&search=%search_string_orig%+%year%',
       'matchRegex': /no results|aucun résultat|keine Ergebnisse|encontrado resultados|ha dato risultati|leverde niks|ingen resultat|Nie Znaleziono|sonuç getirmedi/},
@@ -947,7 +999,7 @@ var private_sites = [
       'matchRegex': /Your search did not match anything/,
       'TV': true},
   {   'name': 'AS',
-      'icon': 'https://i.imgur.com/ZWjDAtD.png',
+      'icon': 'https://i.imgur.com/Hik3s88.png',
       'searchUrl': 'https://asylumshare.net/torrents-search.php?c120=1&c4=1&c47=1&c114=1&c23=1&c24=1&c25=1&c26=1&c27=1&c33=1&c117=1&c34=1&c35=1&c36=1&c37=1&c124=1&c42=1&c7=1&c39=1&c5=1&c41=1&c40=1&c6=1&c95=1&c110=1&c49=1&search=%search_string%',
       'loggedOutRegex': /Cookies MUST|Cookies DEVEM|max_user_connections/,
       'matchRegex': /Nada encontrado/,
@@ -1060,10 +1112,12 @@ var private_sites = [
       'loggedOutRegex': /SSL \(HTTPS\)/,
       'matchRegex': /Nothing found/},
   {   'name': 'Classix',
+      'icon': 'http://classix-unlimited.co.uk/themes/default/images/favicon.ico',
       'searchUrl': 'http://classix-unlimited.co.uk/torrents-search.php?search="%search_string%"&parent_cat=Movies',
       'loggedOutRegex': /Sorry this is a private site/,
       'matchRegex': /Database Error/},
   {   'name': 'Classix',
+      'icon': 'http://classix-unlimited.co.uk/themes/default/images/favicon.ico',
       'searchUrl': 'http://classix-unlimited.co.uk/torrents-search.php?search="%search_string%"&parent_cat=TV',
       'loggedOutRegex': /Sorry this is a private site/,
       'matchRegex': /Database Error/,
@@ -1593,14 +1647,14 @@ var private_sites = [
       'matchRegex': />Genres<\/div>\s*<\/div>|We are sorry/,
       'TV': true},
   {   'name': 'TT',
-      'icon': 'https://torrenting.com/T-favicon.ico',
-      'searchUrl': 'https://torrenting.com/t?q=%tt%',
-      'loggedOutRegex': /Ray ID|security check to access|Reset Password/,
+      'icon': 'https://i.imgur.com/xRE0UGn.png',
+      'searchUrl': 'https://tt.smallfoot.me/t?q=%tt%',
+      'loggedOutRegex': /Cloudflare|Ray ID|Reset Password/,
       'matchRegex': /No Torrents Found!/,
       'both': true},
   {   'name': 'TTG',
       'searchUrl': 'https://totheglory.im/browse.php?c=M&search_field=imdb%nott%',
-      'loggedOutRegex': /Ray ID|Forget your password/,
+      'loggedOutRegex': /Cloudflare|Ray ID|Forget your password/,
       'matchRegex': /Didn't match any titles/},
   {   'name': 'TVCK',
       'searchUrl': 'https://tvchaosuk.com/torrents/filter?imdb=%tt%',
@@ -3027,19 +3081,19 @@ function countSites(task) {
 var config_fields = {
   'aftertitle': {
     'section': ' ',
-    'label': ' ',
+    'label': ' &nbsp',
     'type': 'hidden'
     },
   'imdbtotalstats': {
-    'label': 'Total sites: &nbsp &nbsp '.bold().fontsize(3) + countSites(1).toString().bold().fontsize(3).fontcolor("Blue"),
+    'label': 'Total sites:&nbsp'.bold().fontsize(3) + countSites(1).toString().bold().fontsize(3).fontcolor("Blue"),
     'type': 'hidden'
   },
   'imdbselectedstats': {
-    'label': 'Selected sites: '.bold().fontsize(3) + countSites(2).toString().bold().fontsize(3).fontcolor("Blue"),
+    'label': 'Selected sites:&nbsp'.bold().fontsize(3) + countSites(2).toString().bold().fontsize(3).fontcolor("Blue"),
     'type': 'hidden'
   },
   'imdbscoutmod_header_text': {
-    'label': 'Header text for the 1st bar: ',
+    'label': 'Header text for the 1st bar:&nbsp',
     'type': 'text',
     'default': ''
   },
@@ -3049,7 +3103,7 @@ var config_fields = {
     'default': ''
   },
   'imdbscoutthirdbar_header_text': {
-    'label': 'Header text for the 3rd bar: ',
+    'label': 'Header text for the 3rd bar:&nbsp',
     'type': 'text',
     'default': ''
   },
@@ -3246,7 +3300,22 @@ GM_config.init({
              padding-left:     0px !important; \
              text-align:    middle !important;}\
           .field_label { \
+             display:         flex !important; \
+             align-items:   center !important; \
              font-weight:   normal !important;}\
+          .config_var { \
+             margin-top:       2px !important; \
+             margin-bottom:    2px !important; \
+             display:         flex !important; \
+             align-items:   center !important;}\
+          #imdb_scout_aftertitle_var { \
+             margin-top:       0px !important; \
+             margin-bottom:    0px !important;}\
+          input { \
+             margin-top:       0px !important; \
+             margin-bottom:    0px !important;}\
+          .grey_link { \
+             margin-left:      4px !important;}\
           #imdb_scout_section_header_0 { \
              font-weight:     bold !important; \
              border:           0px !important; \
@@ -3324,6 +3393,8 @@ GM_config.init({
                         + (/www./.test(url.hostname) ? url.hostname.match(/www.(.*)/)[1] : url.hostname) + '</a>');
         $(label).prepend(getFavicon(icon_sites[index], true));
       });
+
+      $('#imdb_scout').contents().find("img").css({"margin-right": "4px"});
     }
   }
 });
