@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      7.8
+// @version      7.8.1
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Adds links to IMDb pages from the torrent, ddl, subtitles, streaming, usenet and other sites.
 // @icon         https://i.imgur.com/u17jjYj.png
@@ -559,6 +559,8 @@
         -   Tweaks: Icons of some blocked sites moved to Imgur.
         -   New feature: Streamlined the layout of Settings.
 
+7.8.1   -   Added: HEVCBay
+
 
 //==============================================================================
 //    A list of all the sites.
@@ -722,6 +724,11 @@ var public_sites = [
       'loggedOutRegex': /Not logged in/,
       'matchRegex': /nijedan torent/,
       'both': true},
+  {   'name': 'HEVCBay',
+      'icon': 'https://hevcbay.com/wp-content/uploads/fbrfg/favicon-32x32.png',
+      'searchUrl': 'https://hevcbay.com/?s="%search_string%"',
+      'loggedOutRegex': /Cloudflare|Ray ID/,
+      'matchRegex': /nothing matched/},
   {   'name': 'ilCorSaRoNeRo',
       'searchUrl': 'https://ilcorsaronero.link/argh.php?search=%search_string_orig%+%year%',
       'loggedOutRegex': /Cloudflare|Ray ID/,
