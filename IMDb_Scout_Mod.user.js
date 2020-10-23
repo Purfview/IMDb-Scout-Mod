@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      7.8.1
+// @version      7.8.2
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Adds links to IMDb pages from the torrent, ddl, subtitles, streaming, usenet and other sites.
 // @icon         https://i.imgur.com/u17jjYj.png
@@ -561,6 +561,10 @@
 
 7.8.1   -   Added: HEVCBay
 
+7.8.2   -   Added: GloTor, Unlimitz, HDenc, SB, Zamunda, Milkie.
+        -   Removed: SceneNZB, DB.
+        -   Tweaked: YGG, PTP, KG, U2.
+
 
 //==============================================================================
 //    A list of all the sites.
@@ -723,6 +727,23 @@ var public_sites = [
       'searchUrl': 'https://eliteunitedcrew.org/browse.php?search=%tt%&cat=0&incldead=1&btn=Search',
       'loggedOutRegex': /Not logged in/,
       'matchRegex': /nijedan torent/,
+      'both': true},
+  {   'name': 'GloTor',
+      'icon': 'https://glodls.to/themes/NB-GloSite/images/favicon.ico',
+      'searchUrl': 'https://glodls.to/search_results.php?search=%search_string%+%year%&cat=1&incldead=1&inclexternal=0',
+      'loggedOutRegex': /Cloudflare|Ray ID/,
+      'matchRegex': /Nothing Found/},
+  {   'name': 'GloTor',
+      'icon': 'https://glodls.to/themes/NB-GloSite/images/favicon.ico',
+      'searchUrl': 'https://glodls.to/search_results.php?search=%search_string%&cat=41&incldead=1&inclexternal=0',
+      'loggedOutRegex': /Cloudflare|Ray ID/,
+      'matchRegex': /Nothing Found/,
+      'TV': true},
+  {   'name': 'HDenc',
+      'icon': 'https://hdencode.com/wp-content/uploads/2016/03/413.ico',
+      'searchUrl': 'https://hdencode.com/?s=%tt%',
+      'loggedOutRegex': /Cloudflare|Ray ID/,
+      'matchRegex': /No content available/,
       'both': true},
   {   'name': 'HEVCBay',
       'icon': 'https://hevcbay.com/wp-content/uploads/fbrfg/favicon-32x32.png',
@@ -936,14 +957,10 @@ var public_sites = [
       'matchRegex': /No result found/,
       'TV': true},
   {   'name': 'YGG',
-      'searchUrl': 'https://www2.yggtorrent.si/engine/search?name=%search_string_orig%+%year%&category=2145&sub_category=all&do=search',
-      'loggedOutRegex': /Ray ID|security check to access/,
-      'matchRegex': 'Aucun résultat !'},
-  {   'name': 'YGG',
       'searchUrl': 'https://www2.yggtorrent.si/engine/search?name=%search_string_orig%&category=2145&sub_category=all&do=search',
       'loggedOutRegex': /Ray ID|security check to access/,
-      'matchRegex': 'Aucun résultat !',
-      'TV': true},
+      'matchRegex': 'Aucun résultat',
+      'both': true},
   {   'name': 'Zooqle',
       'icon': 'https://i.imgur.com/jqKceYP.png',
       'searchUrl': 'https://zooqle.com/search?q=%tt%',
@@ -1144,11 +1161,6 @@ var private_sites = [
       'matchRegex': /class="overlay-container"/,
       'positiveMatch': true,
       'TV': true},
-  {   'name': 'DB',
-      'searchUrl': 'https://danishbits.org/torrents.php?&pre_type=s_imdb&search=%tt%',
-      'loggedOutRegex': /Glemt din kode\?/,
-      'matchRegex': /Your search did not match/,
-      'both': true},
   {   'name': 'DC',
       'searchUrl': 'https://digitalcore.club/api/v1/torrents?categories[]=1&categories[]=2&categories[]=3&categories[]=4&categories[]=5&categories[]=6&categories[]=7&dead=false&limit=1&page=search&searchText=%search_string%+%year%',
       'goToUrl': 'https://digitalcore.club/search?search=%search_string%+%year%&cats=1,2,5,6,3,4,7&fc=true',
@@ -1317,15 +1329,15 @@ var private_sites = [
       'both': true},
   {   'name': 'KG',
       'icon': 'https://i.imgur.com/0JFxPY5.png',
-      'searchUrl': 'https://www.karagarga.in/browse.php?search_type=imdb&search=%nott%',
-      'loggedOutRegex': /Not logged in!/,
+      'searchUrl': 'https://karagarga.in/browse.php?sort=added&search=%nott%&search_type=imdb&d=DESC',
+      'loggedOutRegex': /Cloudflare|Ray ID|Not logged in!/,
       'matchRegex': /No torrents found/,
       'rateLimit': 125,
       'both': true},
   {   'name': 'KG-Req',
       'icon': 'https://i.imgur.com/ZQgliKg.png',
       'searchUrl': 'https://karagarga.in/viewrequests.php?search=%nott%&filter=true',
-      'loggedOutRegex': /Not logged in!/,
+      'loggedOutRegex': /Cloudflare|Ray ID|Not logged in!/,
       'matchRegex': /1&nbsp;-/,
       'positiveMatch': true,
       'rateLimit': 125,
@@ -1441,13 +1453,13 @@ var private_sites = [
   {   'name': 'PTP',
       'icon': 'https://passthepopcorn.me/static/common/touch-icon-iphone.png',
       'searchUrl': 'https://passthepopcorn.me/torrents.php?imdb=%tt%',
-      'loggedOutRegex': /Keep me logged in|Your popcorn quota/,
+      'loggedOutRegex': /Cloudflare|Ray ID|Keep me logged in|Your popcorn quota/,
       'matchRegex': /Your search did not match anything/,
       'rateLimit': 250},
   {   'name': 'PTP-Req',
       'icon': 'https://i.imgur.com/EFCRrc9.png',
       'searchUrl': 'https://passthepopcorn.me/requests.php?submit=true&search=%tt%',
-      'loggedOutRegex': /Keep me logged in|Your popcorn quota/,
+      'loggedOutRegex': /Cloudflare|Ray ID|Keep me logged in|Your popcorn quota/,
       'matchRegex': /Your search did not match anything/,
       'rateLimit': 250},
   {   'name': 'PxHD',
@@ -1468,6 +1480,13 @@ var private_sites = [
       'searchUrl': 'https://retroflix.club/torrents.php?incldead=0&spstate=0&inclbookmarked=0&search=%tt%&search_area=4&search_mode=0',
       'loggedOutRegex': /Restrict session to my IP|Ray ID/,
       'matchRegex': /Nothing found!/,
+      'both': true},
+  {   'name': 'SB',
+      'searchUrl': 'https://superbits.org/api/v1/torrents?searchText=%tt%',
+      'goToUrl': 'https://superbits.org/search?search=%tt%',
+      'loggedOutRegex': /Cloudflare|Ray ID|inloggningscookie/,
+      'matchRegex': /seeder/,
+      'positiveMatch': true,
       'both': true},
   {   'name': 'SC',
       'searchUrl': 'https://secret-cinema.pw/torrents.php?action=advanced&searchsubmit=1&filter_cat=1&cataloguenumber=%tt%&order_by=time&order_way=desc&tags_type=0',
@@ -1683,12 +1702,17 @@ var private_sites = [
       'TV': true},
   {   'name': 'U2',
       'searchUrl': 'https://u2.dmhy.org/torrents.php?incldead=0&spstate=0&inclbookmarked=0&search=%tt%&search_area=1&search_mode=0',
-      'loggedOutRegex': /<title>Access Point :: U2<|Cloudflare Ray ID/,
+      'loggedOutRegex': /Cloudflare|Ray ID|<title>Access Point :: U2<|under heavy load/,
       'matchRegex': /Nothing found/},
   {   'name': 'UHDB',
       'searchUrl': 'https://uhdbits.org/torrents.php?action=advanced&groupname=%tt%',
       'loggedOutRegex': /Lost your password/,
       'matchRegex': /Your search did not match anything./},
+  {   'name': 'Unlimitz',
+      'searchUrl': 'https://www.unlimitz.biz/browse.php?search=%search_string%&cat=0&blah=0',
+      'loggedOutRegex': /Cloudflare|Ray ID|Recover Password/,
+      'matchRegex': /Nothing found/,
+      'both': true},
   {   'name': 'XS',
       'searchUrl': 'https://www.xspeeds.eu/browse.php?do=search&keywords=%search_string%&search_type=t_name&category=0&include_dead_torrents=yes',
       'loggedOutRegex': /Forget your password/,
@@ -1701,6 +1725,17 @@ var private_sites = [
       'searchUrl': 'https://xthor.tk/browse.php?c104=1&c13=1&c15=1&c14=1&c98=1&c17=1&c16=1&c101=1&c32=1&c110=1&c123=1&c109=1&c30=1&searchin=title&incldead=0&group=0&state=0&accent=0&price=0&gang=0&mqr=0&staff=0&sch=%search_string_orig%',
       'loggedOutRegex': /Cloudflare|Ray ID|Vous devez autoriser les cookies/,
       'matchRegex': 'Aucun résultat',
+      'TV': true},
+  {   'name': 'Zamunda',
+      'icon': 'http://img.zamunda.se/pic/favicon.png',
+      'searchUrl': 'http://zelka.org/browse.php?search=%search_string_orig%+%year%&c42=1&c25=1&c51=1&c53=1&c46=1&c5=1&c20=1&c54=1&c35=1&c19=1&c24=1&c31=1&c28=1&incldead=1',
+      'loggedOutRegex': /Cloudflare|Ray ID|cookies enabled|активирани Бисквитки/,
+      'matchRegex': /Нищо не е намерено/},
+  {   'name': 'Zamunda',
+      'icon': 'http://img.zamunda.se/pic/favicon.png',
+      'searchUrl': 'http://zelka.org/browse.php?search=%search_string_orig%&c42=1&c50=1&c25=1&c51=1&c7=1&c33=1&incldead=1',
+      'loggedOutRegex': /Cloudflare|Ray ID|cookies enabled|активирани Бисквитки/,
+      'matchRegex': /Нищо не е намерено/,
       'TV': true}
 ];
 
@@ -1857,18 +1892,7 @@ var usenet_sites = [
       'searchUrl': 'https://omgwtfnzbs.me/browse?search=%tt%&cat=default',
       'loggedOutRegex': /Cloudflare|Ray ID|Forgot your username/,
       'matchRegex': /returned no results/,
-      'both': true},
-  {   'name': 'SceneNZB',
-      'icon': 'https://scenenzb.com/themes/shared/img/favicon.ico',
-      'searchUrl': 'https://scenenzb.com/search/%search_string% %year%?t=2000',
-      'loggedOutRegex': /Cloudflare|Ray ID|Forgotten your password|Too many requests/,
-      'matchRegex': /search did not match/},
-  {   'name': 'SceneNZB',
-      'icon': 'https://scenenzb.com/themes/shared/img/favicon.ico',
-      'searchUrl': 'https://scenenzb.com/search/%search_string%?t=5000',
-      'loggedOutRegex': /Cloudflare|Ray ID|Forgotten your password|Too many requests/,
-      'matchRegex': /search did not match/,
-      'TV': true}
+      'both': true}
 ];
 
 var subs_sites = [
