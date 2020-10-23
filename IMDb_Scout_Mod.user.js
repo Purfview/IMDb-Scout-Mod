@@ -561,7 +561,7 @@
 
 7.8.1   -   Added: HEVCBay
 
-7.8.2   -   Added: GloTor, Unlimitz, HDenc, SB, Zamunda, Milkie.
+7.8.2   -   Added: GloTor, Unlimitz, HDenc, SB, Zamunda.
         -   Removed: SceneNZB, DB.
         -   Tweaked: YGG, PTP, KG, U2.
 
