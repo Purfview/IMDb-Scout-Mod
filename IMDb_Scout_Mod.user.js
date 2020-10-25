@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      7.8.2
+// @version      7.8.3
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Adds links to IMDb pages from the torrent, ddl, subtitles, streaming, usenet and other sites.
 // @icon         https://i.imgur.com/u17jjYj.png
@@ -565,6 +565,8 @@
         -   Removed: SceneNZB, DB.
         -   Tweaked: YGG, PTP, KG, U2.
 
+7.8.3   -   Tweaked: Zooqle
+
 
 //==============================================================================
 //    A list of all the sites.
@@ -964,8 +966,8 @@ var public_sites = [
   {   'name': 'Zooqle',
       'icon': 'https://i.imgur.com/jqKceYP.png',
       'searchUrl': 'https://zooqle.com/search?q=%tt%',
-      'loggedOutRegex': /Ray ID|security check to access/,
-      'matchRegex': 'Sorry, no torrents match',
+      'loggedOutRegex': /Cloudflare|Ray ID|security check to access/,
+      'matchRegex': /no torrents match|Come back later/,
       'both': true}
 ];
 
