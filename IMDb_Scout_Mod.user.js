@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      7.8.3
+// @version      7.8.4
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Adds links to IMDb pages from the torrent, ddl, subtitles, streaming, usenet and other sites.
 // @icon         https://i.imgur.com/u17jjYj.png
@@ -559,13 +559,15 @@
         -   Tweaks: Icons of some blocked sites moved to Imgur.
         -   New feature: Streamlined the layout of Settings.
 
-7.8.1   -   Added: HEVCBay
+7.8.1   -   Added: HEVCBay.
 
 7.8.2   -   Added: GloTor, Unlimitz, HDenc, SB, Zamunda.
         -   Removed: SceneNZB, DB.
         -   Tweaked: YGG, PTP, KG, U2.
 
-7.8.3   -   Tweaked: Zooqle
+7.8.3   -   Tweaked: Zooqle.
+
+7.8.4   -   Added: Yubraca.
 
 
 //==============================================================================
@@ -1728,6 +1730,12 @@ var private_sites = [
       'loggedOutRegex': /Cloudflare|Ray ID|Vous devez autoriser les cookies/,
       'matchRegex': 'Aucun résultat',
       'TV': true},
+  {   'name': 'Yubraca',
+      'searchUrl': 'http://yubraca.net/browse.php',
+      'mPOST': 'do=search&keywords=%tt%&search_type=t_genre&category=0&include_dead_torrents=yes',
+      'loggedOutRegex': /Cloudflare|Ray ID|Forget your password|Zaboravili ste password/,
+      'matchRegex': />Nista nije pronadjeno<|>Nothing Found</,
+      'both': true},
   {   'name': 'Zamunda',
       'icon': 'http://img.zamunda.se/pic/favicon.png',
       'searchUrl': 'http://zelka.org/browse.php?search=%search_string_orig%+%year%&c42=1&c25=1&c51=1&c53=1&c46=1&c5=1&c20=1&c54=1&c35=1&c19=1&c24=1&c31=1&c28=1&incldead=1',
