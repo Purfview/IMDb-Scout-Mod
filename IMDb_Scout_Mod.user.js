@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      7.8.5
+// @version      7.8.6
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Adds links to IMDb pages from the torrent, ddl, subtitles, streaming, usenet and other sites.
 // @icon         https://i.imgur.com/u17jjYj.png
@@ -574,6 +574,8 @@
         -   Removed: eThor.
         -   Tweaked: ArenaBG, TGx, NNM (split to movies/tv), Bit-Titan, updated proxy sites.
 
+7.8.6   -   Added: SpeedApp, CMS, BJS.
+
 
 //==============================================================================
 //    A list of all the sites.
@@ -1094,6 +1096,11 @@ var private_sites = [
       'searchUrl': 'https://www.bit-hdtv.com/torrents.php?search=%tt%&options=4',
       'loggedOutRegex': /Forgot your password/,
       'matchRegex': /No match!/},
+  {   'name': 'BJS',
+      'searchUrl': 'https://bj-share.info/torrents.php?searchstr=%tt%',
+      'loggedOutRegex': /Cloudflare|Ray ID|Recuperar senha/,
+      'matchRegex': /Sem resultados/,
+      'both': true},
   {   'name': 'Blu',
       'searchUrl': 'https://blutopia.xyz/torrents/filter?imdb=%tt%',
       'loggedOutRegex': /Forgot Your Password|Service Unavailable/,
@@ -1164,6 +1171,11 @@ var private_sites = [
       'loggedOutRegex': /Sorry this is a private site/,
       'matchRegex': /Database Error/,
       'TV': true},
+  {   'name': 'CMS',
+      'searchUrl': 'https://cinemamovies.pl/browse.php?incldead=1&blah=1&gatunek=0&quality=none&search=%tt%',
+      'loggedOutRegex': /Cloudflare|Ray ID|Zapomniałeś hasła/,
+      'matchRegex': /was not found|nie został odnaleziony/,
+      'both': true},
   {   'name': 'CZ',
       'icon': 'https://i.imgur.com/HYNMAuJ.png',
       'configName': 'ET',
@@ -1584,6 +1596,11 @@ var private_sites = [
       'searchUrl':  'https://www.spacetorrent.cloud/recherche?advanced_search=true&asbd=%tt%&cat=0',
       'loggedOutRegex': /Ray ID|security check to access|Pas encore inscrit/,
       'matchRegex': /no_result/,
+      'both': true},
+  {   'name': 'SpeedApp',
+      'searchUrl': 'https://speedapp.io/browse?search=%tt%',
+      'loggedOutRegex': /Cloudflare|Ray ID|Forget Password/,
+      'matchRegex': /text-emphasis text-hover-primary/,
       'both': true},
   {   'name': 'SU',
       'searchUrl': 'https://shareuniversity.org/filterTorrents?&imdb=%nott%',
