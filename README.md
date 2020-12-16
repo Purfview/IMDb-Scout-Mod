@@ -1,4 +1,4 @@
-![alt text](https://i.imgur.com/scanaxX.png)
+![alt text](https://i.imgur.com/8IZMkRY.png)
 
 # IMDb Scout Mod:
 
