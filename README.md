@@ -21,6 +21,7 @@ Contributions are welcome.
 Inside the script, there is a list of dictionaries that contains of all the sites, and the data necessary to check IMDb against them.
 Each site is a dictionary with the following attributes:
   - `name`: The site name, abbreviated.
+  - `icon` (optional): Icon for the site.
   - `searchUrl`: The URL to perform the search against, see below for how to tailor the string to a site.
   - `matchRegex`: The string which appears if the searchUrl *doesn't* return a result.
   - `postiveMatch` (optional): Changes the test to return true if the searchUrl *does* return a result that matches matchRegex
