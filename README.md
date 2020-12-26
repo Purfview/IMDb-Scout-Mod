@@ -12,6 +12,10 @@ Meanings of the color borders around the icons:
 ![#ff0000](https://via.placeholder.com/15/ff0000/000000?text=+) - `No access to search`  
 ![#0000ff](https://via.placeholder.com/15/0000ff/000000?text=+) - `Search completed. Request found.` 
 
+## Installing:
+
+[Press here to install](https://greasyfork.org/scripts/407284-imdb-scout-mod/code/IMDb%20Scout%20Mod.user.js)
+
 ## Contributing:
 
 Contributions are welcome.
