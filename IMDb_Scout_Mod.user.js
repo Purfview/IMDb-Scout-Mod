@@ -3615,6 +3615,7 @@ $('.pro_logo_main_title').remove();
 
 $('title').ready(function() {
   if (window.top == window.self) {
+    displaySortButton();
     if (!onSearchPage && GM_config.get('loadmod_on_start_movie')) {
       performPage();
     } else if (onSearchPage && GM_config.get('loadmod_on_start_search')) {
@@ -3624,3 +3625,20 @@ $('title').ready(function() {
     }
   }
 });
+
+//==============================================================================
+//    Testing stuff
+//==============================================================================
+
+function displaySortButton() {
+  var p = $('<p />').attr('id', 'imdbscout_sortbutton');
+  p.append($('<button>Sort Icons</button>').click(function() {
+    $('#imdbscout_sortbutton').remove();
+    iconSorter()
+  }));
+    $('#quicklinksMainSection').append(p);
+}
+
+function iconSorter() {
+  // Hello World.
+}
