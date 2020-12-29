@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      7.8.8
+// @version      7.9
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Adds links to IMDb pages from the torrent, ddl, subtitles, streaming, usenet and other sites.
 // @icon         https://i.imgur.com/u17jjYj.png
@@ -579,7 +579,10 @@
 7.8.7   -   Added: Milkie (no search), HQS, TSH, DWR, BigBBS, CT, ST, PS, TM, MP, LS, NZBcat.
         -   Removed: DKBits, SU, AG, ONLYscene, SpaceTor, Thor-Island.
         
-7.8.8   -   New feature: icons sorting (on click)
+7.9     -   New feature: Icons sorting (on button click, beta testing).
+                         For "found" icons only. Behaviour:
+                         Highlighted > Others > Requests (in alphabetical order),
+                         except order of highlighted is taken from Settings.
 
 
 //==============================================================================
