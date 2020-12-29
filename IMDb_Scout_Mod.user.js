@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      7.8.7
+// @version      7.9
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Adds links to IMDb pages from the torrent, ddl, subtitles, streaming, usenet and other sites.
 // @icon         https://i.imgur.com/u17jjYj.png
@@ -578,6 +578,11 @@
 
 7.8.7   -   Added: Milkie (no search), HQS, TSH, DWR, BigBBS, CT, ST, PS, TM, MP, LS, NZBcat.
         -   Removed: DKBits, SU, AG, ONLYscene, SpaceTor, Thor-Island.
+
+7.9     -   New feature: Icons sorting (on button click, beta testing) by Sapphire.
+                         For "found" icons only. Behaviour:
+                         Highlighted > Others > Requests (in alphabetical order),
+                         except order of highlighted is taken from Settings.
 
 
 //==============================================================================
@@ -1183,8 +1188,8 @@ var private_sites = [
       'matchRegex': /was not found|nie został odnaleziony/,
       'both': true},
   {   'name': 'CT',
-      'icon': 'http://central-torrent.eu/favicon.gif',
-      'searchUrl': 'http://central-torrent.eu/browse.php?search=%search_string_orig%+%year%',
+      'icon': 'https://central-torrent.eu/favicon.gif',
+      'searchUrl': 'https://central-torrent.eu/browse.php?search=%search_string_orig%+%year%',
       'loggedOutRegex': /Cloudflare|Ray ID|inputlogowanie/,
       'matchRegex': /Nic tutaj nie ma/},
   {   'name': 'CZ',
@@ -2113,13 +2118,13 @@ var subs_sites = [
       'inSecondSearchBar': true,
       'both': true},
   {   'name': 'Subs4free (GR|EN)',
-      'icon': 'https://www.subs4free.info/images/icons/favicon-32x32.png',
-      'searchUrl': 'https://www.subs4free.info/search_report.php?search=%search_string%&searchType=1',
+      'icon': 'https://www.subs4free.club/images/icons/favicon-32x32.png',
+      'searchUrl': 'https://www.subs4free.club/search_report.php?search=%search_string%&searchType=1',
       'matchRegex': /any subtitles using your criteria|There is no subtitle/,
       'inSecondSearchBar': true},
   {   'name': 'Subs4free (GR|EN)',
-      'icon': 'https://www.subs4free.info/images/icons/favicon-32x32.png',
-      'searchUrl': 'https://www.subs4free.info/search_report.php?search=%search_string%&searchType=2',
+      'icon': 'https://www.subs4free.club/images/icons/favicon-32x32.png',
+      'searchUrl': 'https://www.subs4free.club/search_report.php?search=%search_string%&searchType=2',
       'matchRegex': /any subtitles using your criteria|There is no subtitle/,
       'inSecondSearchBar': true,
       'TV': true},
@@ -3198,6 +3203,7 @@ function countSites(task) {
       'load_second_bar': {'type': 'checkbox'},
       'load_third_bar_movie': {'type': 'checkbox'},
       'switch_bars': {'type': 'checkbox'},
+      'icons_sorting': {'type': 'checkbox'},
       'use_new_layout': {'type': 'checkbox'},
       'new_layout_dark': {'type': 'checkbox'},
       'call_http_mod_movie': {'type': 'checkbox'},
@@ -3301,6 +3307,11 @@ var config_fields = {
   'switch_bars': {
     'type': 'checkbox',
     'label': 'Swap 2nd and 3rd bars?',
+    'default': false
+  },
+  'icons_sorting': {
+    'type': 'checkbox',
+    'label': 'Enable alphabetical icons sorting? (beta)',
     'default': false
   },
   'use_new_layout': {
@@ -3615,6 +3626,9 @@ $('.pro_logo_main_title').remove();
 
 $('title').ready(function() {
   if (window.top == window.self) {
+    if (GM_config.get('icons_sorting')) {
+    displaySortButton();
+    }
     if (!onSearchPage && GM_config.get('loadmod_on_start_movie')) {
       performPage();
     } else if (onSearchPage && GM_config.get('loadmod_on_start_search')) {
@@ -3624,3 +3638,72 @@ $('title').ready(function() {
     }
   }
 });
+
+//==============================================================================
+//    Icons sorting
+//==============================================================================
+
+function displaySortButton() {
+  var p = $('<p />').attr('id', 'imdbscout_sortbutton');
+  p.append($('<button>Sort Icons</button>').click(function() {
+    $('#imdbscout_sortbutton').remove();
+    iconSorter()
+  }));
+    $('#quicklinksMainSection').append(p);
+}
+
+function iconSorter() { // catsouce: requestsOnNewLine variable should probably be added to the settings
+  const requestsOnNewLine = false // set this to true if requests must be on a new line, otherwise false
+  const imdbscout_found = document.querySelector("#imdbscout_found")
+
+  const sorta = (list) => { // sort alphabetically
+    return list.sort((a, b) => {
+      if (a.href.replace("www.", "").replace("http://", "").replace("https://", "") < b.href.replace("www.", "").replace("http://", "").replace("https://", "")) {
+        return -1
+      } else if (a.href.replace("www.", "").replace("http://", "").replace("https://", "") > b.href.replace("www.", "").replace("http://", "").replace("https://", "")) {
+        return 1
+      } else {
+        return 0
+      }
+    })
+  }
+
+  let highlighted = [], requests = [], others = []
+  const textioi = !GM_config.get("use_mod_icons_movie") // text instead of icons
+
+  for (const child of imdbscout_found.children) {
+    if (child.href.includes("requests")) {
+      requests.push(child)
+    } else {
+      textioi ? child.querySelector("b") ? highlighted.push(child) : others.push(child) : child.children[0].style.border === "3px solid rgb(0, 220, 0)" ? highlighted.push(child) : others.push(child)
+    }
+  }
+
+  let sorted
+  if (GM_config.get("highlight_sites_movie").includes(",")) {
+    const highlighted_sites = GM_config.get("highlight_sites_movie").split(",")
+    let hl_temp = []
+    for (const hl of highlighted_sites) {
+      for (const hl_node of highlighted) {
+        if (hl === (textioi ? hl_node.textContent : hl_node.children[0].getAttribute("alt"))) {
+          hl_temp.push(hl_node)
+        }
+      }
+    }
+    sorted = [...hl_temp, ...sorta(others)]
+  } else {
+    sorted = [...sorta(highlighted), ...sorta(others)]
+  }
+
+  for (const node of sorted) {
+    node.remove()
+    imdbscout_found.insertAdjacentHTML("beforeend", node.outerHTML + "&nbsp;")
+  }
+
+  requestsOnNewLine && requests.length > 0 ? imdbscout_found.insertAdjacentHTML("beforeend", "</br>") : false
+  for (const node of requests) {
+    node.remove()
+    imdbscout_found.insertAdjacentHTML("beforeend", node.outerHTML + "&nbsp;")
+  }
+  requestsOnNewLine && requests.length > 0 ? imdbscout_found.insertAdjacentHTML("beforeend", "</br>") : false
+}
