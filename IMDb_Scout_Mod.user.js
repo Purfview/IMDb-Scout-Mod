@@ -583,6 +583,7 @@
                          For "found" icons only. Behaviour:
                          Highlighted > Others > Requests (in alphabetical order),
                          except order of highlighted is taken from Settings.
+            Tweaked: CT, Subs4Free.
 
 
 //==============================================================================
