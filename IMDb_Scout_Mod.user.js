@@ -578,7 +578,7 @@
 
 7.8.7   -   Added: Milkie (no search), HQS, TSH, DWR, BigBBS, CT, ST, PS, TM, MP, LS, NZBcat.
         -   Removed: DKBits, SU, AG, ONLYscene, SpaceTor, Thor-Island.
-        
+
 7.9     -   New feature: Icons sorting (on button click, beta testing) by Sapphire.
                          For "found" icons only. Behaviour:
                          Highlighted > Others > Requests (in alphabetical order),
@@ -1188,8 +1188,8 @@ var private_sites = [
       'matchRegex': /was not found|nie został odnaleziony/,
       'both': true},
   {   'name': 'CT',
-      'icon': 'http://central-torrent.eu/favicon.gif',
-      'searchUrl': 'http://central-torrent.eu/browse.php?search=%search_string_orig%+%year%',
+      'icon': 'https://central-torrent.eu/favicon.gif',
+      'searchUrl': 'https://central-torrent.eu/browse.php?search=%search_string_orig%+%year%',
       'loggedOutRegex': /Cloudflare|Ray ID|inputlogowanie/,
       'matchRegex': /Nic tutaj nie ma/},
   {   'name': 'CZ',
@@ -2118,13 +2118,13 @@ var subs_sites = [
       'inSecondSearchBar': true,
       'both': true},
   {   'name': 'Subs4free (GR|EN)',
-      'icon': 'https://www.subs4free.info/images/icons/favicon-32x32.png',
-      'searchUrl': 'https://www.subs4free.info/search_report.php?search=%search_string%&searchType=1',
+      'icon': 'https://www.subs4free.club/images/icons/favicon-32x32.png',
+      'searchUrl': 'https://www.subs4free.club/search_report.php?search=%search_string%&searchType=1',
       'matchRegex': /any subtitles using your criteria|There is no subtitle/,
       'inSecondSearchBar': true},
   {   'name': 'Subs4free (GR|EN)',
-      'icon': 'https://www.subs4free.info/images/icons/favicon-32x32.png',
-      'searchUrl': 'https://www.subs4free.info/search_report.php?search=%search_string%&searchType=2',
+      'icon': 'https://www.subs4free.club/images/icons/favicon-32x32.png',
+      'searchUrl': 'https://www.subs4free.club/search_report.php?search=%search_string%&searchType=2',
       'matchRegex': /any subtitles using your criteria|There is no subtitle/,
       'inSecondSearchBar': true,
       'TV': true},
@@ -3625,7 +3625,7 @@ $('.pro_logo_main_title').remove();
 //==============================================================================
 
 $('title').ready(function() {
-  if (window.top == window.self) { 
+  if (window.top == window.self) {
     if (GM_config.get('icons_sorting')) {
     displaySortButton();
     }
