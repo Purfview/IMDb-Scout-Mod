@@ -579,7 +579,7 @@
 7.8.7   -   Added: Milkie (no search), HQS, TSH, DWR, BigBBS, CT, ST, PS, TM, MP, LS, NZBcat.
         -   Removed: DKBits, SU, AG, ONLYscene, SpaceTor, Thor-Island.
         
-7.9     -   New feature: Icons sorting (on button click, beta testing).
+7.9     -   New feature: Icons sorting (on button click, beta testing) by Sapphire.
                          For "found" icons only. Behaviour:
                          Highlighted > Others > Requests (in alphabetical order),
                          except order of highlighted is taken from Settings.
@@ -659,9 +659,6 @@ The original movie title (e.g. Yôjinbô). Reverts to %search_string% if origina
 The movie year (e.g. 1961).
 
 */
-
-/* globals $:false */
-/* globals GM_config:false */
 
 var custom_sites = [
   {   'name': 'Dummy',
@@ -3206,6 +3203,7 @@ function countSites(task) {
       'load_second_bar': {'type': 'checkbox'},
       'load_third_bar_movie': {'type': 'checkbox'},
       'switch_bars': {'type': 'checkbox'},
+      'icons_sorting': {'type': 'checkbox'},
       'use_new_layout': {'type': 'checkbox'},
       'new_layout_dark': {'type': 'checkbox'},
       'call_http_mod_movie': {'type': 'checkbox'},
@@ -3309,6 +3307,11 @@ var config_fields = {
   'switch_bars': {
     'type': 'checkbox',
     'label': 'Swap 2nd and 3rd bars?',
+    'default': false
+  },
+  'icons_sorting': {
+    'type': 'checkbox',
+    'label': 'Enable alphabetical icons sorting? (beta)',
     'default': false
   },
   'use_new_layout': {
@@ -3622,8 +3625,10 @@ $('.pro_logo_main_title').remove();
 //==============================================================================
 
 $('title').ready(function() {
-  if (window.top == window.self) {
+  if (window.top == window.self) { 
+    if (GM_config.get('icons_sorting')) {
     displaySortButton();
+    }
     if (!onSearchPage && GM_config.get('loadmod_on_start_movie')) {
       performPage();
     } else if (onSearchPage && GM_config.get('loadmod_on_start_search')) {
@@ -3635,7 +3640,7 @@ $('title').ready(function() {
 });
 
 //==============================================================================
-//    Testing stuff
+//    Icons sorting
 //==============================================================================
 
 function displaySortButton() {
