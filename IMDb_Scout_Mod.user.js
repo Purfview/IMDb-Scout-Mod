@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      7.9
+// @version      7.10
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Adds links to IMDb pages from the torrent, ddl, subtitles, streaming, usenet and other sites.
 // @icon         https://i.imgur.com/u17jjYj.png
@@ -585,6 +585,9 @@
                          except order of highlighted is taken from Settings.
             Tweaked: CT, Subs4Free.
 
+7.10    -   Added: BWT.
+            Fixed: Watchlist.
+
 
 //==============================================================================
 //    A list of all the sites.
@@ -1143,6 +1146,11 @@ var private_sites = [
       'matchRegex': /Nothing found/,
       'rateLimit': 125,
       'TV': true},
+  {   'name': 'BWT',
+      'searchUrl': 'https://bwtorrents.tv/index.php?search=%search_string_orig%+%year%&blah=0&cat=0&incldead=0',
+      'loggedOutRegex': /Cloudflare|Ray ID|FORGOT PASSWORD/,
+      'matchRegex': /Nothing found/,
+      'both': true},
   {   'name': 'CaCh',
       'searchUrl': 'http://www.cartoonchaos.org/index.php?page=torrents&search=%search_string%&category=0&options=0&active=0',
       'loggedOutRegex': /not authorized to view the Torrents/,
@@ -3618,7 +3626,6 @@ var onSearchPage = Boolean(location.href.match('/search/'))
 
 $('#top_ad_wrapper').remove();
 $('#top_rhs_wrapper').remove();
-$('.ab_widget').remove();
 $('.pro_logo_main_title').remove();
 
 //==============================================================================
