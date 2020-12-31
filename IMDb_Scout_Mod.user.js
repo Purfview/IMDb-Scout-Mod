@@ -1,4 +1,4 @@
-﻿// ==UserScript==
+// ==UserScript==
 //
 // @name         IMDb Scout Mod
 // @version      7.10
@@ -3654,10 +3654,13 @@ $('title').ready(function() {
 function displaySortButton() {
   var p = $('<p />').attr('id', 'imdbscout_sortbutton');
   p.append($('<button>Sort Icons</button>').click(function() {
-    $('#imdbscout_sortbutton').remove();
     iconSorter()
   }));
+  if (window.location.href.includes("/reference")) {
+    $('h3[itemprop="name"]').parent().append(p)
+  } else {
     $('#quicklinksMainSection').append(p);
+  }
 }
 
 function iconSorter() { // catsouce: requestsOnNewLine variable should probably be added to the settings
