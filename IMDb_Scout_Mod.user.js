@@ -1,7 +1,7 @@
 // ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      7.10
+// @version      7.11
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Adds links to IMDb pages from the torrent, ddl, subtitles, streaming, usenet and other sites.
 // @icon         https://i.imgur.com/u17jjYj.png
@@ -586,7 +586,9 @@
             Tweaked: CT, Subs4Free.
 
 7.10    -   Added: BWT.
-            Fixed: Watchlist.
+            Fixed: Watchlist
+            
+7.11    -   New feature: Icons sorting when "Show results on one line" is off.
 
 
 //==============================================================================
