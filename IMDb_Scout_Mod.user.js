@@ -1,4 +1,4 @@
-﻿// ==UserScript==
+// ==UserScript==
 //
 // @name         IMDb Scout Mod
 // @version      7.10
@@ -3654,10 +3654,14 @@ $('title').ready(function() {
 function displaySortButton() {
   var p = $('<p />').attr('id', 'imdbscout_sortbutton');
   p.append($('<button>Sort Icons</button>').click(function() {
-    $('#imdbscout_sortbutton').remove();
+    p.remove()
     iconSorter()
   }));
+  if (window.location.href.includes("/reference")) {
+    $('h3[itemprop="name"]').parent().append(p)
+  } else {
     $('#quicklinksMainSection').append(p);
+  }
 }
 
 function iconSorter() { // catsouce: requestsOnNewLine variable should probably be added to the settings
@@ -3679,11 +3683,16 @@ function iconSorter() { // catsouce: requestsOnNewLine variable should probably 
   let highlighted = [], requests = [], others = []
   const textioi = !GM_config.get("use_mod_icons_movie") // text instead of icons
 
-  for (const child of imdbscout_found.children) {
+  let children = imdbscout_found.children
+  if (!GM_config.get('one_line')) {
+    let [removed, ...children2] = children
+    children = children2
+  }
+  for (const child of children) {
     if (child.href.includes("requests")) {
       requests.push(child)
     } else {
-      textioi ? child.querySelector("b") ? highlighted.push(child) : others.push(child) : child.children[0].style.border === "3px solid rgb(0, 220, 0)" ? highlighted.push(child) : others.push(child)
+      textioi ? child.querySelector("b") ? highlighted.push(child) : others.push(child) : child.children[0].style.border.includes("solid rgb(0, 220, 0)") ? highlighted.push(child) : others.push(child)
     }
   }
 
