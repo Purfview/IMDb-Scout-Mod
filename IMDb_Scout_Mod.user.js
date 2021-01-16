@@ -11,12 +11,12 @@
 // @require      https://code.jquery.com/jquery-3.5.1.min.js
 // @require      https://greasemonkey.github.io/gm4-polyfill/gm4-polyfill.js
 //
-// @include      http*://*.imdb.tld/title/tt*
+// @include      http*://*.imdb.tld/title/tt*/
+// @include      http*://*.imdb.tld/title/tt*/?ref*
+// @include      http*://*.imdb.tld/title/tt*/reference*
 // @include      http*://*.imdb.tld/search/title*
 // @include      http*://*.imdb.tld/user/*/watchlist*
 // @include      http*://*.imdb.tld/list/*
-//
-// @exclude      http*://*.imdb.tld/title/*/fullcredits*
 //
 // @connect      *
 // @grant        GM_log
@@ -593,9 +593,9 @@
         -   New feature: Added the sites sorting function for the missing.
         -   Fixed: Misalignment of the icons after sorting.
         -   Fixed: Sorting is done by a site's name instead of url.
+        -   Fixed: Script was loading on trivia, credits, reviews & ect pages.
         -   Fixed: NBL.
         -   Tweak: Removed redundant @include.
-        -   Tweak: Excluded credits page. 
 
 
 //==============================================================================
