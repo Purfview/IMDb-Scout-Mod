@@ -587,9 +587,15 @@
 
 7.10    -   Added: BWT.
             Fixed: Watchlist
-            
-7.11    -   New feature: Icons sorting when "Show results on one line" is off.
+
+7.11    -   Merged code from Sapphire:
+               New feature: Sites sorting when "Show results on one line" is off.
+               New feature: Sorting button on the reference page.
+        -   New feature: The request sites on the new line when sorting (Option).
+        -   New feature: Added the sites sorting function for the missing.
         -   Fixed: Misalignment of the icons after sorting.
+        -   Fixed: Sorting is done by a site's name instead of url.
+        -   Fixed: NBL.
 
 
 //==============================================================================
@@ -1489,7 +1495,7 @@ var private_sites = [
   {   'name': 'NBL',
       'searchUrl': 'https://nebulance.io/torrents.php?order_by=time&order_way=desc&searchtext=%search_string%&search_type=0&taglist=&tags_type=0',
       'loggedOutRegex': /have cookies disabled./,
-      'matchRegex': /Your search did not match anything/,
+      'matchRegex': /search did not match|are Cylons aboard/,
       'TV': true},
   {   'name': 'nCore',
       'searchUrl': 'https://ncore.cc/torrents.php?mire=%tt%&miben=imdb&tipus=all_own',
@@ -3216,6 +3222,7 @@ function countSites(task) {
       'load_third_bar_movie': {'type': 'checkbox'},
       'switch_bars': {'type': 'checkbox'},
       'icons_sorting': {'type': 'checkbox'},
+      'sortReqOnNewLine': {'type': 'checkbox'},
       'use_new_layout': {'type': 'checkbox'},
       'new_layout_dark': {'type': 'checkbox'},
       'call_http_mod_movie': {'type': 'checkbox'},
@@ -3323,8 +3330,13 @@ var config_fields = {
   },
   'icons_sorting': {
     'type': 'checkbox',
-    'label': 'Enable alphabetical icons sorting? (beta)',
+    'label': 'Enable alphabetical sorting of the sites? (beta)',
     'default': false
+  },
+  'sortReqOnNewLine': {
+    'type': 'checkbox',
+    'label': 'The request sites on the new line when sorting?',
+    'default': true
   },
   'use_new_layout': {
     'type': 'checkbox',
@@ -3364,7 +3376,7 @@ var config_fields = {
   'highlight_sites_movie': {
     'label': 'Highlight sites: &nbsp &nbsp &nbsp',
     'type': 'text',
-    'default': 'PTP,KG,BTN,SC'
+    'default': 'PTP,KG,BTN,BTN-Title,SC,CG,TVV,Tik,MTV'
   },
   'highlight_missing_movie': {
     'label': 'Mark when not on:',
@@ -3651,14 +3663,16 @@ $('title').ready(function() {
 });
 
 //==============================================================================
-//    Icons sorting
+//    Icons/sites sorting
 //==============================================================================
 
+// Sort button (temp, for beta)
 function displaySortButton() {
   var p = $('<p />').attr('id', 'imdbscout_sortbutton');
   p.append($('<button>Sort Icons</button>').click(function() {
     p.remove()
     iconSorter()
+    iconSorterMissing()
   }));
   if (window.location.href.includes("/reference")) {
     $('h3[itemprop="name"]').parent().append(p)
@@ -3667,24 +3681,33 @@ function displaySortButton() {
   }
 }
 
-function iconSorter() { // catsouce: requestsOnNewLine variable should probably be added to the settings
-  const requestsOnNewLine = false // set this to true if requests must be on a new line, otherwise false
+// Sorting of the found sites
+function iconSorter() {
   const imdbscout_found = document.querySelector("#imdbscout_found")
 
   const sorta = (list) => { // sort alphabetically
     return list.sort((a, b) => {
-      if (a.href.replace("www.", "").replace("http://", "").replace("https://", "") < b.href.replace("www.", "").replace("http://", "").replace("https://", "")) {
-        return -1
-      } else if (a.href.replace("www.", "").replace("http://", "").replace("https://", "") > b.href.replace("www.", "").replace("http://", "").replace("https://", "")) {
-        return 1
+      if (GM_config.get("use_mod_icons_movie")) {
+        if (a.firstChild.getAttribute("alt").toLowerCase() < b.firstChild.getAttribute("alt").toLowerCase()) {
+          return -1
+        } else if (a.firstChild.getAttribute("alt").toLowerCase() > b.firstChild.getAttribute("alt").toLowerCase()) {
+          return 1
+        } else {
+          return 0
+        }
       } else {
-        return 0
+        if (a.textContent.toLowerCase() < b.textContent.toLowerCase()) {
+          return -1
+        } else if (a.textContent.toLowerCase() > b.textContent.toLowerCase()) {
+          return 1
+        } else {
+          return 0
+        }
       }
     })
   }
 
   let highlighted = [], requests = [], others = []
-  const textioi = !GM_config.get("use_mod_icons_movie") // text instead of icons
 
   let children = imdbscout_found.children
   if (!GM_config.get('one_line')) {
@@ -3692,10 +3715,18 @@ function iconSorter() { // catsouce: requestsOnNewLine variable should probably 
     children = children2
   }
   for (const child of children) {
-    if (child.href.includes("requests")) {
-      requests.push(child)
-    } else {
-      textioi ? child.querySelector("b") ? highlighted.push(child) : others.push(child) : child.children[0].style.border.includes("solid rgb(0, 220, 0)") ? highlighted.push(child) : others.push(child)
+    if (GM_config.get("use_mod_icons_movie")) {
+      if (child.firstChild.getAttribute("alt").includes("-Req")) {
+        requests.push(child)
+      } else {
+        child.children[0].style.border.includes("solid rgb(0, 220, 0)") ? highlighted.push(child) : others.push(child)
+      }
+    }else{
+      if (child.textContent.includes("-Req")) {
+        requests.push(child)
+      } else {
+        child.querySelector("b") ? highlighted.push(child) : others.push(child)
+      }
     }
   }
 
@@ -3705,7 +3736,7 @@ function iconSorter() { // catsouce: requestsOnNewLine variable should probably 
     let hl_temp = []
     for (const hl of highlighted_sites) {
       for (const hl_node of highlighted) {
-        if (hl === (textioi ? hl_node.textContent : hl_node.children[0].getAttribute("alt"))) {
+        if (hl === (!GM_config.get("use_mod_icons_movie") ? hl_node.textContent : hl_node.children[0].getAttribute("alt"))) {
           hl_temp.push(hl_node)
         }
       }
@@ -3720,10 +3751,58 @@ function iconSorter() { // catsouce: requestsOnNewLine variable should probably 
     imdbscout_found.insertAdjacentHTML("beforeend", node.outerHTML + " ")
   }
 
-  requestsOnNewLine && requests.length > 0 ? imdbscout_found.insertAdjacentHTML("beforeend", "</br>") : false
+  GM_config.get("sortReqOnNewLine") && requests.length > 0 ? imdbscout_found.insertAdjacentHTML("beforeend", "</br>") : false
   for (const node of requests) {
     node.remove()
     imdbscout_found.insertAdjacentHTML("beforeend", node.outerHTML + " ")
   }
-  requestsOnNewLine && requests.length > 0 ? imdbscout_found.insertAdjacentHTML("beforeend", "</br>") : false
+  GM_config.get("sortReqOnNewLine") && requests.length > 0 ? imdbscout_found.insertAdjacentHTML("beforeend", "</br>") : false
+}
+
+// Sorting of the missing sites
+function iconSorterMissing() {
+  if (GM_config.get("hide_missing_movie")) {
+  return
+  }
+  const imdbscout_missing = document.querySelector("#imdbscout_missing")
+
+  const sorta = (list) => {
+    return list.sort((a, b) => { // sort alphabetically
+      if (GM_config.get("use_mod_icons_movie")) {
+        if (a.firstChild.getAttribute("alt").toLowerCase() < b.firstChild.getAttribute("alt").toLowerCase()) {
+          return -1
+        } else if (a.firstChild.getAttribute("alt").toLowerCase() > b.firstChild.getAttribute("alt").toLowerCase()) {
+          return 1
+        } else {
+          return 0
+        }
+      } else {
+        if (a.textContent.toLowerCase() < b.textContent.toLowerCase()) {
+          return -1
+        } else if (a.textContent.toLowerCase() > b.textContent.toLowerCase()) {
+          return 1
+        } else {
+          return 0
+        }
+      }
+    })
+  }
+
+  let all = []
+
+  let children = imdbscout_missing.children
+  if (!GM_config.get('one_line')) {
+    let [removed, ...children2] = children
+    children = children2
+  }
+  for (const child of children) {
+    all.push(child)
+  }
+
+  let sorted = [...sorta(all)]
+
+  for (const node of sorted) {
+    node.remove()
+    imdbscout_missing.insertAdjacentHTML("beforeend", node.outerHTML + " ")
+  }
 }
