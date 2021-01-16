@@ -16,6 +16,8 @@
 // @include      http*://*.imdb.tld/user/*/watchlist*
 // @include      http*://*.imdb.tld/list/*
 //
+// @exclude      http*://*.imdb.tld/title/*/fullcredits*
+//
 // @connect      *
 // @grant        GM_log
 // @grant        GM_getValue
@@ -592,7 +594,8 @@
         -   Fixed: Misalignment of the icons after sorting.
         -   Fixed: Sorting is done by a site's name instead of url.
         -   Fixed: NBL.
-        -   Removed: Redundant @include
+        -   Tweak: Removed redundant @include.
+        -   Tweak: Excluded credits page. 
 
 
 //==============================================================================
