@@ -15,10 +15,6 @@
 // @include      http*://*.imdb.tld/search/title*
 // @include      http*://*.imdb.tld/user/*/watchlist*
 // @include      http*://*.imdb.tld/list/*
-// @include      http*://*.imdb.com/title/tt*
-// @include      http*://*.imdb.com/search/title*
-// @include      http*://*.imdb.com/user/*/watchlist*
-// @include      http*://*.imdb.com/list/*
 //
 // @connect      *
 // @grant        GM_log
@@ -596,6 +592,7 @@
         -   Fixed: Misalignment of the icons after sorting.
         -   Fixed: Sorting is done by a site's name instead of url.
         -   Fixed: NBL.
+        -   Removed: Redundant @include
 
 
 //==============================================================================
