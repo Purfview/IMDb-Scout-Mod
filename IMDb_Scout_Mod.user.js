@@ -589,6 +589,7 @@
             Fixed: Watchlist
             
 7.11    -   New feature: Icons sorting when "Show results on one line" is off.
+        -   Fixed: Misalignment of the icons after sorting.
 
 
 //==============================================================================
@@ -3716,13 +3717,13 @@ function iconSorter() { // catsouce: requestsOnNewLine variable should probably 
 
   for (const node of sorted) {
     node.remove()
-    imdbscout_found.insertAdjacentHTML("beforeend", node.outerHTML + "&nbsp;")
+    imdbscout_found.insertAdjacentHTML("beforeend", node.outerHTML + " ")
   }
 
   requestsOnNewLine && requests.length > 0 ? imdbscout_found.insertAdjacentHTML("beforeend", "</br>") : false
   for (const node of requests) {
     node.remove()
-    imdbscout_found.insertAdjacentHTML("beforeend", node.outerHTML + "&nbsp;")
+    imdbscout_found.insertAdjacentHTML("beforeend", node.outerHTML + " ")
   }
   requestsOnNewLine && requests.length > 0 ? imdbscout_found.insertAdjacentHTML("beforeend", "</br>") : false
 }
