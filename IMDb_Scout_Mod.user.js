@@ -1,7 +1,7 @@
 // ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      7.11
+// @version      7.12
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Adds links to IMDb pages from the torrent, ddl, subtitles, streaming, usenet and other sites.
 // @icon         https://i.imgur.com/u17jjYj.png
@@ -596,6 +596,8 @@
         -   Fixed: Script was loading on trivia, credits, reviews & ect pages.
         -   Fixed: NBL.
         -   Tweak: Removed redundant @include.
+        
+7.12    -   
 
 
 //==============================================================================
@@ -3671,7 +3673,7 @@ function displaySortButton() {
   var p = $('<p />').attr('id', 'imdbscout_sortbutton');
   p.append($('<button>Sort Icons</button>').click(function() {
     p.remove()
-    iconSorter()
+    iconSorterFound()
     iconSorterMissing()
   }));
   if (window.location.href.includes("/reference")) {
@@ -3682,7 +3684,7 @@ function displaySortButton() {
 }
 
 // Sorting of the found sites
-function iconSorter() {
+function iconSorterFound() {
   const imdbscout_found = document.querySelector("#imdbscout_found")
 
   const sorta = (list) => { // sort alphabetically
@@ -3758,10 +3760,10 @@ function iconSorter() {
   }
   GM_config.get("sortReqOnNewLine") && requests.length > 0 ? imdbscout_found.insertAdjacentHTML("beforeend", "</br>") : false
 }
-
+      
 // Sorting of the missing sites
 function iconSorterMissing() {
-  if (GM_config.get("hide_missing_movie")) {
+  if (GM_config.get("hide_missing_movie") || !GM_config.get("call_http_mod_movie")) {
   return
   }
   const imdbscout_missing = document.querySelector("#imdbscout_missing")
