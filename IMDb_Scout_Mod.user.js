@@ -596,8 +596,9 @@
         -   Fixed: Script was loading on trivia, credits, reviews & ect pages.
         -   Fixed: NBL.
         -   Tweak: Removed redundant @include.
-        
-7.12    -   
+
+7.12    -   Added: SPD.
+        -   Tweak: Sorting.
 
 
 //==============================================================================
@@ -1652,6 +1653,12 @@ var private_sites = [
       'searchUrl': 'https://www.scenepalace.info/browse.php?search=%nott%&cat=0&incldead=1',
       'loggedOutRegex': /Not logged in!/,
       'matchRegex': /Nothing found!/,
+      'both': true},
+  {   'name': 'SPD',
+      'icon': 'https://i.imgur.com/dFROSZu.png',
+      'searchUrl': 'https://speed.click/browse/deep/q/%tt%',
+      'loggedOutRegex': /Cloudflare|Ray ID|Forgot Username/,
+      'matchRegex': /Nothing found/,
       'both': true},
   {   'name': 'SpeedApp',
       'searchUrl': 'https://speedapp.io/browse?search=%tt%',
@@ -3760,7 +3767,7 @@ function iconSorterFound() {
   }
   GM_config.get("sortReqOnNewLine") && requests.length > 0 ? imdbscout_found.insertAdjacentHTML("beforeend", "</br>") : false
 }
-      
+
 // Sorting of the missing sites
 function iconSorterMissing() {
   if (GM_config.get("hide_missing_movie") || !GM_config.get("call_http_mod_movie")) {
