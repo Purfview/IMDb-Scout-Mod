@@ -598,7 +598,7 @@
         -   Tweak: Removed redundant @include.
 
 7.12    -   Added: SPD.
-        -   Tweak: Sorting.
+        -   Tweaks: Sorting, Ads.
 
 
 //==============================================================================
@@ -3651,6 +3651,7 @@ var onSearchPage = Boolean(location.href.match('/search/'))
 $('#top_ad_wrapper').remove();
 $('#top_rhs_wrapper').remove();
 $('.pro_logo_main_title').remove();
+$('#promoted-partner-bar').remove();
 
 //==============================================================================
 //    Start: Display 'Load' button or add links to sites
