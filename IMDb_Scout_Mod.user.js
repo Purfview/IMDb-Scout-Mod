@@ -597,7 +597,7 @@
         -   Fixed: NBL.
         -   Tweak: Removed redundant @include.
 
-7.12    -   Added: SPD.
+7.12    -   Added: SPD, HT.
         -   Tweaks: Sorting, Ads.
 
 
@@ -1390,6 +1390,11 @@ var private_sites = [
       'searchUrl': 'https://hqsource.org/browse.php?c36=1&c3=1&c2=1&c49=1&c1=1&c8=1&c4=1&c7=1&c45=1&c9=1&c5=1&search=%search_string_orig%+%year%&blah=1&incldead=1&polish=0',
       'loggedOutRegex': /Cloudflare|Ray ID|Zapomniałes hasła/,
       'matchRegex': /Nic nie znaleziono/},
+  {   'name': 'HT',
+      'searchUrl': 'https://huntorrent.net/browse.php?search=%tt%',
+      'loggedOutRegex': /Cloudflare|Ray ID|Elfelejtett jelszó/,
+      'matchRegex': /Az általad megadott/,
+      'both': true},
   {   'name': 'IPT',
       'searchUrl': 'https://ip.findnemo.net/t?q=%tt%',
       'loggedOutRegex': /Ray ID|security check to access|Forgot your password/,
