@@ -1,7 +1,7 @@
 // ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      7.11
+// @version      7.12
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Adds links to IMDb pages from the torrent, ddl, subtitles, streaming, usenet and other sites.
 // @icon         https://i.imgur.com/u17jjYj.png
@@ -596,6 +596,9 @@
         -   Fixed: Script was loading on trivia, credits, reviews & ect pages.
         -   Fixed: NBL.
         -   Tweak: Removed redundant @include.
+
+7.12    -   Added: SPD, HT.
+        -   Tweaks: Sorting, Ads.
 
 
 //==============================================================================
@@ -1387,6 +1390,11 @@ var private_sites = [
       'searchUrl': 'https://hqsource.org/browse.php?c36=1&c3=1&c2=1&c49=1&c1=1&c8=1&c4=1&c7=1&c45=1&c9=1&c5=1&search=%search_string_orig%+%year%&blah=1&incldead=1&polish=0',
       'loggedOutRegex': /Cloudflare|Ray ID|Zapomniałes hasła/,
       'matchRegex': /Nic nie znaleziono/},
+  {   'name': 'HT',
+      'searchUrl': 'https://huntorrent.net/browse.php?search=%tt%',
+      'loggedOutRegex': /Cloudflare|Ray ID|Elfelejtett jelszó/,
+      'matchRegex': /Az általad megadott/,
+      'both': true},
   {   'name': 'IPT',
       'searchUrl': 'https://ip.findnemo.net/t?q=%tt%',
       'loggedOutRegex': /Ray ID|security check to access|Forgot your password/,
@@ -1650,6 +1658,12 @@ var private_sites = [
       'searchUrl': 'https://www.scenepalace.info/browse.php?search=%nott%&cat=0&incldead=1',
       'loggedOutRegex': /Not logged in!/,
       'matchRegex': /Nothing found!/,
+      'both': true},
+  {   'name': 'SPD',
+      'icon': 'https://i.imgur.com/dFROSZu.png',
+      'searchUrl': 'https://speed.click/browse/deep/q/%tt%',
+      'loggedOutRegex': /Cloudflare|Ray ID|Forgot Username/,
+      'matchRegex': /Nothing found/,
       'both': true},
   {   'name': 'SpeedApp',
       'searchUrl': 'https://speedapp.io/browse?search=%tt%',
@@ -3642,6 +3656,7 @@ var onSearchPage = Boolean(location.href.match('/search/'))
 $('#top_ad_wrapper').remove();
 $('#top_rhs_wrapper').remove();
 $('.pro_logo_main_title').remove();
+$('#promoted-partner-bar').remove();
 
 //==============================================================================
 //    Start: Display 'Load' button or add links to sites
@@ -3671,7 +3686,7 @@ function displaySortButton() {
   var p = $('<p />').attr('id', 'imdbscout_sortbutton');
   p.append($('<button>Sort Icons</button>').click(function() {
     p.remove()
-    iconSorter()
+    iconSorterFound()
     iconSorterMissing()
   }));
   if (window.location.href.includes("/reference")) {
@@ -3682,7 +3697,7 @@ function displaySortButton() {
 }
 
 // Sorting of the found sites
-function iconSorter() {
+function iconSorterFound() {
   const imdbscout_found = document.querySelector("#imdbscout_found")
 
   const sorta = (list) => { // sort alphabetically
@@ -3761,7 +3776,7 @@ function iconSorter() {
 
 // Sorting of the missing sites
 function iconSorterMissing() {
-  if (GM_config.get("hide_missing_movie")) {
+  if (GM_config.get("hide_missing_movie") || !GM_config.get("call_http_mod_movie")) {
   return
   }
   const imdbscout_missing = document.querySelector("#imdbscout_missing")
