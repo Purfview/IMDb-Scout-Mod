@@ -1,7 +1,7 @@
 // ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      7.12
+// @version      8.0
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Adds links to IMDb pages from the torrent, ddl, subtitles, streaming, usenet and other sites.
 // @icon         https://i.imgur.com/u17jjYj.png
@@ -600,6 +600,15 @@
 7.12    -   Added: SPD, HT.
         -   Tweaks: Sorting, Ads.
 
+8.0     -   New feature: Automatic alphabetical icons/sites sorting on Title page.
+                Only for Public, Private, Usenet sites on the 1st searchable bar.
+                "Found" sites are sorted as Highlighted > Others > Requests,
+                order of the highlighted is taken from Settings.
+                "Missing" sites are sorted only alphabetically, "LoggedOut" & "Error" sites are not sorted.
+                Sorting starts when less than 5 sites are left to add.
+                Found request sites are split only after all sites are added (Optional).
+            Custom sites must be set to the 3rd/2nd search bar or sorting wont be working properly!
+
 
 //==============================================================================
 //    A list of all the sites.
@@ -676,6 +685,7 @@ The movie year (e.g. 1961).
 
 */
 
+// Custom sites must be set to the 3rd/2nd search bar.
 var custom_sites = [
   {   'name': 'Dummy',
       'icon': 'https://i.imgur.com/C1Ux7Tv.png',
@@ -2574,6 +2584,11 @@ function addLink(elem, site_name, target, site, state, scout_tick) {
   } else {
     $('#imdbscout3_' + state + scout_tick).append(link);
   }
+
+  // Call to the sorting launcher.
+  if (!onSearchPage && !in_element_two && !in_element_three) {
+    iconSorterLauncher(site);
+  }
 }
 
 //==============================================================================
@@ -2976,7 +2991,11 @@ function performPage() {
     is_tv    = false;
     is_movie = false;
   }
-  //Create areas to put links in
+
+  // Call to iconSorterCount() for the icons/sites sorting.
+  iconSorterCount(is_tv, is_movie);
+
+  // Create areas to put links in
   if (GM_config.get('load_second_bar') && !GM_config.get('load_third_bar_movie')) {
     getLinkAreaSecond();
   } else if (!GM_config.get('load_second_bar') && GM_config.get('load_third_bar_movie')) {
@@ -3235,7 +3254,6 @@ function countSites(task) {
       'load_second_bar': {'type': 'checkbox'},
       'load_third_bar_movie': {'type': 'checkbox'},
       'switch_bars': {'type': 'checkbox'},
-      'icons_sorting': {'type': 'checkbox'},
       'sortReqOnNewLine': {'type': 'checkbox'},
       'use_new_layout': {'type': 'checkbox'},
       'new_layout_dark': {'type': 'checkbox'},
@@ -3342,14 +3360,9 @@ var config_fields = {
     'label': 'Swap 2nd and 3rd bars?',
     'default': false
   },
-  'icons_sorting': {
-    'type': 'checkbox',
-    'label': 'Enable alphabetical sorting of the sites? (beta)',
-    'default': false
-  },
   'sortReqOnNewLine': {
     'type': 'checkbox',
-    'label': 'The request sites on the new line when sorting?',
+    'label': 'The request sites on the new line if found?',
     'default': true
   },
   'use_new_layout': {
@@ -3649,6 +3662,10 @@ var onSearchPage = Boolean(location.href.match('/search/'))
                 || Boolean(location.href.match('/list/'))
                 || Boolean(location.href.match('watchlist'));
 
+// Globals for the sorting launcher.
+var showSitezFirstBar = 0;
+var sortReqOnNewLineTemp = false;
+
 //==============================================================================
 //    Remove ads from IMDb
 //==============================================================================
@@ -3664,9 +3681,6 @@ $('#promoted-partner-bar').remove();
 
 $('title').ready(function() {
   if (window.top == window.self) {
-    if (GM_config.get('icons_sorting')) {
-    displaySortButton();
-    }
     if (!onSearchPage && GM_config.get('loadmod_on_start_movie')) {
       performPage();
     } else if (onSearchPage && GM_config.get('loadmod_on_start_search')) {
@@ -3681,22 +3695,43 @@ $('title').ready(function() {
 //    Icons/sites sorting
 //==============================================================================
 
-// Sort button (temp, for beta)
-function displaySortButton() {
-  var p = $('<p />').attr('id', 'imdbscout_sortbutton');
-  p.append($('<button>Sort Icons</button>').click(function() {
-    p.remove()
-    iconSorterFound()
-    iconSorterMissing()
-  }));
-  if (window.location.href.includes("/reference")) {
-    $('h3[itemprop="name"]').parent().append(p)
-  } else {
-    $('#quicklinksMainSection').append(p);
+// Count selected sites for the sorting launcher (showSitezFirstBar).
+function iconSorterCount(is_tv, is_movie) {
+  sitestosort = public_sites.concat(private_sites, usenet_sites)
+  if (!is_tv && !is_movie || getPageSetting('ignore_type')) {
+    showSitezFirstBar = sitestosort.reduce(function (n, site) {
+      return n + (site['show'] == true); }, 0);
+  } else if (is_tv && !getPageSetting('ignore_type')) {
+    showtvsitez = public_sites.concat(private_sites, usenet_sites).reduce(function (n, site) {
+      return n + (site['TV'] == true && site['show'] == true); }, 0);
+    showbothsitez = public_sites.concat(private_sites, usenet_sites).reduce(function (n, site) {
+      return n + (site['both'] == true && site['show'] == true); }, 0);
+    showSitezFirstBar = showtvsitez + showbothsitez;
+  } else if (is_movie && !getPageSetting('ignore_type')) {
+    showallsitez = sitestosort.reduce(function (n, site) {
+      return n + (site['show'] == true); }, 0);
+    showtvsitez = public_sites.concat(private_sites, usenet_sites).reduce(function (n, site) {
+      return n + (site['TV'] == true && site['show'] == true); }, 0);
+    showSitezFirstBar = showallsitez - showtvsitez;
   }
 }
 
-// Sorting of the found sites
+// Sorting launcher.
+function iconSorterLauncher(site) {
+  showSitezFirstBar = showSitezFirstBar - 1;
+
+  if (GM_config.get("sortReqOnNewLine") && showSitezFirstBar == 0) {
+    sortReqOnNewLineTemp = true;
+  }
+  //console.log('Sites left: ' + showSitezFirstBar + ", Added: " + site['name']);
+  if (showSitezFirstBar < 4) {
+    iconSorterFound();
+    iconSorterMissing();
+    //console.log('SORTING!');
+  }
+}
+
+// Sorting of the found sites.
 function iconSorterFound() {
   const imdbscout_found = document.querySelector("#imdbscout_found")
 
@@ -3766,15 +3801,15 @@ function iconSorterFound() {
     imdbscout_found.insertAdjacentHTML("beforeend", node.outerHTML + " ")
   }
 
-  GM_config.get("sortReqOnNewLine") && requests.length > 0 ? imdbscout_found.insertAdjacentHTML("beforeend", "</br>") : false
+  sortReqOnNewLineTemp && requests.length > 0 ? imdbscout_found.insertAdjacentHTML("beforeend", "</br>") : false
   for (const node of requests) {
     node.remove()
     imdbscout_found.insertAdjacentHTML("beforeend", node.outerHTML + " ")
   }
-  GM_config.get("sortReqOnNewLine") && requests.length > 0 ? imdbscout_found.insertAdjacentHTML("beforeend", "</br>") : false
+  sortReqOnNewLineTemp && requests.length > 0 ? imdbscout_found.insertAdjacentHTML("beforeend", "</br>") : false
 }
 
-// Sorting of the missing sites
+// Sorting of the missing sites.
 function iconSorterMissing() {
   if (GM_config.get("hide_missing_movie") || !GM_config.get("call_http_mod_movie")) {
   return
