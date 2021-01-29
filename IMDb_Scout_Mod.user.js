@@ -5,7 +5,10 @@
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Adds links to IMDb pages from the torrent, ddl, subtitles, streaming, usenet and other sites.
 // @icon         https://i.imgur.com/u17jjYj.png
-// @license      The Unlicense
+// @license      MIT
+//
+// @updateURL    https://greasyfork.org/scripts/407284-imdb-scout-mod/code/IMDb%20Scout%20Mod.meta.js
+// @downloadURL  https://greasyfork.org/scripts/407284-imdb-scout-mod/code/IMDb%20Scout%20Mod.user.js
 //
 // @require      https://openuserjs.org/src/libs/sizzle/GM_config.js
 // @require      https://code.jquery.com/jquery-3.5.1.min.js
