@@ -1,7 +1,7 @@
 // ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      8.2
+// @version      8.3
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Adds links to IMDb pages from the torrent, ddl, subtitles, streaming, usenet and other sites.
 // @icon         https://i.imgur.com/u17jjYj.png
@@ -619,8 +619,10 @@
         -   Fixed: AHD.
         -   Removed: OpenSubsOnline
         -   Bugfix: Firefox + GM4 combination wasn't working. New fixed GM_config lib.
-        
+
 8.2     -   Tweak: Updated GM_config link (fix was merged into mainline).
+
+8.3     -   Bugfix: Page reload on Settings close wasn't working on Chrome and Opera.
 
 
 //==============================================================================
@@ -3766,7 +3768,6 @@ GM_config.init({
        'text-decoration': 'none',
        'color': '#cb0000'
       });
-      document.getElementById('imdb_scout').contentWindow.document.getElementById('imdb_scout_closeBtn').onclick = function () {window.location.reload(false)};
 
       $('#imdb_scout').contents().find('#imdb_scout_section_3').find('.field_label').each(function(index, label) {
         var url = new URL(custom_sites[index].searchUrl);
@@ -3812,6 +3813,10 @@ GM_config.init({
       });
 
       $('#imdb_scout').contents().find("img").css({"margin-right": "4px"});
+    },
+
+    'close': function() {
+      location.reload();
     }
   }
 });
