@@ -1,13 +1,13 @@
 // ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      8.1
+// @version      8.2
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Adds links to IMDb pages from the torrent, ddl, subtitles, streaming, usenet and other sites.
 // @icon         https://i.imgur.com/u17jjYj.png
 // @license      The Unlicense
 //
-// @require      https://openuserjs.org/src/libs/Martii/GM_config2.js
+// @require      https://openuserjs.org/src/libs/sizzle/GM_config.js
 // @require      https://code.jquery.com/jquery-3.5.1.min.js
 // @require      https://greasemonkey.github.io/gm4-polyfill/gm4-polyfill.js
 //
@@ -619,6 +619,8 @@
         -   Fixed: AHD.
         -   Removed: OpenSubsOnline
         -   Bugfix: Firefox + GM4 combination wasn't working. New fixed GM_config lib.
+        
+8.2     -   Tweak: Updated GM_config link (fix was merged into mainline).
 
 
 //==============================================================================
