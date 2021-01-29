@@ -1,13 +1,13 @@
 // ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      8.0.2
+// @version      8.1
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Adds links to IMDb pages from the torrent, ddl, subtitles, streaming, usenet and other sites.
 // @icon         https://i.imgur.com/u17jjYj.png
 // @license      The Unlicense
 //
-// @require      https://openuserjs.org/src/libs/sizzle/GM_config.js
+// @require      https://openuserjs.org/src/libs/Martii/GM_config2.js
 // @require      https://code.jquery.com/jquery-3.5.1.min.js
 // @require      https://greasemonkey.github.io/gm4-polyfill/gm4-polyfill.js
 //
@@ -615,6 +615,11 @@
 8.0.2   -   Added: WF, CrazyHD, PTM.
         -   Removed: DT.
 
+8.1     -   Added: SkT.
+        -   Fixed: AHD.
+        -   Removed: OpenSubsOnline
+        -   Bugfix: Firefox + GM4 combination wasn't working. New fixed GM_config lib.
+
 
 //==============================================================================
 //    A list of all the sites.
@@ -937,6 +942,11 @@ var public_sites = [
       'loggedOutRegex': /Connection refused|Gateway Time-out/,
       'matchRegex': 'Результатов поиска 0',
       'both': true},
+  {   'name': 'SkT',
+      'searchUrl': 'https://sktorrent.eu/torrent/torrents.php?search=%search_string_orig%+%year%',
+      'loggedOutRegex': /Cloudflare|Ray ID/,
+      'matchRegex': /Nenasli ste co ste/,
+      'both': true},
   {   'name': 'SolidTor',
       'icon': 'https://solidtorrents.net/favicon.png',
       'searchUrl': 'https://solidtorrents.net/search?q=%search_string_orig%+%year%',
@@ -1049,13 +1059,13 @@ var private_sites = [
       'matchRegex': /<tbody>\s*<\/tbody>/,
       'both': true},
   {   'name': 'AHD',
-      'searchUrl': 'https://awesome-hd.me/torrents.php?id=%tt%',
+      'searchUrl': 'https://awesome-hd.club/torrents.php?id=%tt%',
       'loggedOutRegex': /Keep me logged in.|Gateway Time-out|Password Reset/,
       'matchRegex': /Your search did not match anything.|Error 404/,
       'both': true},
   {   'name': 'AHD-Req',
       'icon': 'https://i.imgur.com/wEs3QZL.png',
-      'searchUrl': 'https://awesome-hd.me/requests.php?submit=true&search=%tt%',
+      'searchUrl': 'https://awesome-hd.club/requests.php?submit=true&search=%tt%',
       'loggedOutRegex': /Keep me logged in.|Gateway Time-out|Password Reset/,
       'matchRegex': /Nothing found!|Error 404/,
       'both': true},
@@ -2129,18 +2139,6 @@ var subs_sites = [
       'matchRegex': /Znalezione Napisy \(0\)/,
       'inSecondSearchBar': true,
       'TV': true},
-  {   'name': 'OpenSubsOnline',
-      'icon': 'https://opensubtitles.online/images/favicon.ico',
-      'searchUrl': 'https://opensubtitles.online/subtitles/search/?SubtitleSearch[stext]=%search_string_orig%&SubtitleSearch[lang_id]=0&SubtitleSearch[myear]=%year%',
-      'matchRegex': /No results found/,
-      'inSecondSearchBar': true,
-      'both': true},
-  {   'name': 'OpenSubsOnline (EN)',
-      'icon': 'https://opensubtitles.online/images/favicon.ico',
-      'searchUrl': 'https://opensubtitles.online/subtitles/search/?SubtitleSearch[stext]=%search_string_orig%&SubtitleSearch[lang_id]=124&SubtitleSearch[myear]=%year%',
-      'matchRegex': /No results found/,
-      'inSecondSearchBar': true,
-      'both': true},
   {   'name': 'OpenSubtitles',
       'searchUrl': 'https://www.opensubtitles.org/en/search/imdbid-%tt%',
       'loggedOutRegex': /Guru Meditation/,
@@ -2761,7 +2759,7 @@ function perform(elem, movie_id, movie_title, movie_title_orig, is_tv, is_movie,
     }
   });
   if (!site_shown) {
-    $(elem).append('<pre>No sites enabled!\nSettings are at the right click menu for Greasemonkey.\nFor other Monkeys look at plugins icon.\nFor now you can press this temporary button:');
+    $(elem).append('<pre>No sites enabled!\nFor Settings look at plugins icon.\nFor now you can press this temporary button:');
     var p = $('<p />').attr('id', 'imdbscout_settings_button');
         p.append($('<button>Load Settings</button>').click(function() {
           GM_config.open();
@@ -3835,7 +3833,7 @@ $.each(icon_sites, function(index, icon_site) {
 //==============================================================================
 
 // For internal use (order matters).
-var valid_states = [
+const valid_states = [
   'found',
   'missing',
   'logged_out',
@@ -3843,9 +3841,9 @@ var valid_states = [
 ];
 
 // Are we on a search/list page?
-var onSearchPage = Boolean(location.href.match('/search/'))
-                || Boolean(location.href.match('/list/'))
-                || Boolean(location.href.match('watchlist'));
+const onSearchPage = Boolean(location.href.match('/search/'))
+                  || Boolean(location.href.match('/list/'))
+                  || Boolean(location.href.match('watchlist'));
 
 // Globals for the sorting launcher.
 var showSitezFirstBar = 0;
