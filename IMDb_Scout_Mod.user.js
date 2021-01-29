@@ -2759,7 +2759,7 @@ function perform(elem, movie_id, movie_title, movie_title_orig, is_tv, is_movie,
     }
   });
   if (!site_shown) {
-    $(elem).append('<pre>No sites enabled!\nFor Settings look at plugins icon.\nFor now you can press this temporary button:');
+    $(elem).append('<pre>No sites enabled!\nFor Settings look at Monkey's icon.\nFor now you can press this temporary button:');
     var p = $('<p />').attr('id', 'imdbscout_settings_button');
         p.append($('<button>Load Settings</button>').click(function() {
           GM_config.open();
