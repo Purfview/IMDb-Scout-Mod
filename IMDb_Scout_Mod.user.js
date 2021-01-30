@@ -1,7 +1,7 @@
 // ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      8.3
+// @version      8.4
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Adds links to IMDb pages from the torrent, ddl, subtitles, streaming, usenet and other sites.
 // @icon         https://i.imgur.com/u17jjYj.png
@@ -626,6 +626,9 @@
 8.2     -   Tweak: Updated GM_config link (fix was merged into mainline).
 
 8.3     -   Bugfix: Page reload on Settings close wasn't working on Chrome and Opera.
+
+8.4     -   Bugfix: No vertical spacing between icons.
+        -   Bugfix: Non-square icons.
 
 
 //==============================================================================
@@ -2503,8 +2506,9 @@ function getFavicon(site, hide_on_err) {
   }
   var iconsize = ('matchRegex' in site) ? GM_config.get('cfg_icons_size') : GM_config.get('cfg_icons_size') - 2;
   var title = (site['TV']) ? site['name'] + ' (TV)' : site['name'];
-  var img = $('<img />').attr({'style': '-moz-opacity: 0.4; border: 0; vertical-align: text-top',
+  var img = $('<img />').attr({'style': '-moz-opacity: 0.4; border: 0',
                                'width': iconsize,
+                               'height': iconsize,
                                'src': favicon,
                                'title': title,
                                'alt': site['name']});
@@ -2548,8 +2552,8 @@ function addLink(elem, site_name, target, site, state, scout_tick) {
   // Icon/Text appearance.
   if (getPageSetting('use_mod_icons')) {
     var icon = getFavicon(site);
-    (!GM_config.get('one_line') && !onSearchPage) ? icon.css({'border-width': '0px', 'border-style': 'solid', 'border-radius': '2px'})
-                                                  : icon.css({'border-width': '3px', 'border-style': 'solid', 'border-radius': '2px'});
+    (!GM_config.get('one_line') && !onSearchPage) ? icon.css({'border-width': '0px', 'border-style': 'solid', 'border-radius': '2px', 'margin': '2px 0px'})
+                                                  : icon.css({'border-width': '3px', 'border-style': 'solid', 'border-radius': '2px', 'margin': '2px 0px'});
     if (state == 'error' || state == 'logged_out') {
       (getPageSetting('highlight_sites').split(',').includes(site['name'])) ? icon.css('border-color', 'rgb(255,0,0)')
                                                                             : icon.css('border-color', 'rgb(180,0,0)');
