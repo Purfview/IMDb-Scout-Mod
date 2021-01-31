@@ -1,7 +1,7 @@
 // ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      8.4
+// @version      8.4.1
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Adds links to IMDb pages from the torrent, ddl, subtitles, streaming, usenet and other sites.
 // @icon         https://i.imgur.com/u17jjYj.png
@@ -630,6 +630,8 @@
 8.4     -   Bugfix: No vertical spacing between icons.
         -   Bugfix: Non-square icons.
 
+8.4.1   -   Added: BP.
+
 
 //==============================================================================
 //    A list of all the sites.
@@ -1167,6 +1169,12 @@ var private_sites = [
       'searchUrl': 'https://blutopia.xyz/torrents/filter?imdb=%tt%',
       'loggedOutRegex': /Forgot Your Password|Service Unavailable/,
       'matchRegex': /<tbody>\s*<\/tbody>/,
+      'both': true},
+  {   'name': 'BP',
+      'icon': 'https://i.imgur.com/63nSiK7.png',
+      'searchUrl': 'https://blackpearl.biz/search/1/?q=%tt%&o=date',
+      'loggedOutRegex': /Cloudflare|Ray ID|Forgot your password/,
+      'matchRegex': /No results found/,
       'both': true},
   {   'name': 'BRT',
       'icon': 'https://i.imgur.com/KVaHMKi.png',
@@ -1913,12 +1921,6 @@ var private_sites = [
       'loggedOutRegex': /Cloudflare|Ray ID|You are not logged/,
       'matchRegex': /no results were returned/,
       'both': true},
-  {   'name': 'BP',
-      'icon': 'https://i.imgur.com/63nSiK7.png',
-      'searchUrl': 'https://blackpearl.biz/search/1/?q=%tt%&o=date',
-      'loggedOutRegex': /Cloudflare|Ray ID|You are not logged/,
-      'matchRegex': /no results were returned/,
-      'both': true},      
   {   'name': 'XS',
       'searchUrl': 'https://www.xspeeds.eu/browse.php?do=search&keywords=%search_string%&search_type=t_name&category=0&include_dead_torrents=yes',
       'loggedOutRegex': /Forget your password/,
