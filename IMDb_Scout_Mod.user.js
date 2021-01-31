@@ -1701,7 +1701,7 @@ var private_sites = [
       'matchRegex': /<tbody>\s*<\/tbody>/,
       'both': true},
   {   'name': 'Snahp',
-      'searchUrl': 'https://forum.snahp.it/search.php?keywords=%search_string%&amp;sf=titleonly',
+      'searchUrl': 'https://forum.snahp.it/search.php?keywords=%tt%',
       'loggedOutRegex': /register" role/,
       'matchRegex': '/Search found 0 matches/',
       'both': true},
