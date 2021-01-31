@@ -1703,7 +1703,7 @@ var private_sites = [
   {   'name': 'Snahp',
       'searchUrl': 'https://forum.snahp.it/search.php?keywords=%tt%',
       'loggedOutRegex': /register" role/,
-      'matchRegex': '/Search found 0 matches/',
+      'matchRegex': /Search found 0 matches|No suitable matches were found/,
       'both': true},
   {   'name': 'SP',
       'searchUrl': 'https://www.scenepalace.info/browse.php?search=%nott%&cat=0&incldead=1',
