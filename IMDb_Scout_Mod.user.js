@@ -1,7 +1,7 @@
 // ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      8.4.1
+// @version      8.5
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Adds links to IMDb pages from the torrent, ddl, subtitles, streaming, usenet and other sites.
 // @icon         https://i.imgur.com/u17jjYj.png
@@ -632,6 +632,10 @@
 
 8.4.1   -   Added: BP.
 
+8.5     -   Added: W-v3.
+        -   Fixed: BigBBS, RetroFlix, Zamunda, E-T, RARBG, WF, Snahp.
+        -   New feature: If rateLimit>1000 then when on List it won't increase.
+
 
 //==============================================================================
 //    A list of all the sites.
@@ -682,7 +686,7 @@ Extra bars can be enabled/disabled/swapped at the Settings.
 
 #  'rateLimit' (optional):
 Connection rate limit in milliseconds. Default is 200.
-On the Search/List pages it will be increased by a factor of 4.
+On the Search/List pages if rateLimit<=1000 then it will be increased by a factor of 4.
 
 #  'mPOST':
 HTTP request by POST method. For the sites that doesn't support GET.
@@ -901,7 +905,7 @@ var public_sites = [
       'loggedOutRegex': /something wrong|Please wait|enter the captcha|too many requests/,
       'matchRegex': '//dyncdn.me/static/20/images/imdb_thumb.gif',
       'positiveMatch': true,
-      'rateLimit': 250,
+      'rateLimit': 4000,
       'both': true},
   {   'name': 'RareFilm',
       'icon': 'https://i.imgur.com/WmDYJjv.png',
@@ -1028,6 +1032,12 @@ var public_sites = [
       'loggedOutRegex': /Cloudflare|Ray ID/,
       'matchRegex': /no results found|Nič ni najdeno/,
       'both': true},
+  {   'name': 'W-v3',
+      'icon': 'https://i.imgur.com/C1Ux7Tv.png',
+      'searchUrl': 'https://warez-v3.org/search.php?keywords=%tt%&sr=topics',
+      'loggedOutRegex': /Cloudflare|Ray ID|you are not permitted/,
+      'matchRegex': /Search found 0/,
+      'both': true},
   {   'name': 'WC',
       'icon': 'https://i.imgur.com/ojFZp6N.png',
       'searchUrl': 'https://worldscinema.org/?s=%tt%',
@@ -1148,7 +1158,7 @@ var private_sites = [
   {   'name': 'BigBBS',
       'searchUrl': 'http://bigbbs.eu/?p=torrents&pid=10&keywords=%tt%&search_type=description',
       'loggedOutRegex': /Cloudflare|Ray ID|Odzyskaj hasło/,
-      'matchRegex': /no results found|Nic nie znaleziono/,
+      'matchRegex': /Wystąpił błąd|An error has occured/,
       'both': true},
   {   'name': 'Bit-Titan',
       'searchUrl': 'https://bit-titan.net/moviebase.php?text=%tt%',
@@ -1310,7 +1320,8 @@ var private_sites = [
   {   'name': 'E-T',
       'searchUrl': 'https://elite-tracker.net/browse.php?do=search&keywords=%tt%&search_type=t_genre&category=0&include_dead_torrents=no',
       'loggedOutRegex': /Cloudflare|Ray ID|Récupérer votre mot de passe/,
-      'matchRegex': /Aucun résultat/,
+      'matchRegex': /dl.png/,
+      'positiveMatch': true,
       'both': true},
   {   'name': 'ExiTor',
       'icon': 'https://exitorrent.org/favicon.ico',
@@ -1653,7 +1664,7 @@ var private_sites = [
       'TV': true},
   {   'name': 'Retroflix',
       'searchUrl': 'https://retroflix.club/torrents.php?incldead=0&spstate=0&inclbookmarked=0&search=%tt%&search_area=4&search_mode=0',
-      'loggedOutRegex': /Restrict session to my IP|Ray ID/,
+      'loggedOutRegex': /Cloudflare|Ray ID|Forget your password/,
       'matchRegex': /Nothing found!/,
       'both': true},
   {   'name': 'SB',
@@ -1702,8 +1713,9 @@ var private_sites = [
       'both': true},
   {   'name': 'Snahp',
       'searchUrl': 'https://forum.snahp.it/search.php?keywords=%tt%',
-      'loggedOutRegex': /register" role/,
-      'matchRegex': /Search found 0 matches|No suitable matches were found/,
+      'loggedOutRegex': />Register<|you cannot use search at this time/,
+      'matchRegex': /Search found 0|No suitable matches/,
+      'rateLimit': 20100,
       'both': true},
   {   'name': 'SP',
       'searchUrl': 'https://www.scenepalace.info/browse.php?search=%nott%&cat=0&incldead=1',
@@ -1920,6 +1932,7 @@ var private_sites = [
       'searchUrl': 'https://warezforums.com/search.php?action=do_search&keywords=%tt%&postthread=imdbid',
       'loggedOutRegex': /Cloudflare|Ray ID|You are not logged/,
       'matchRegex': /no results were returned/,
+      'rateLimit': 5100,
       'both': true},
   {   'name': 'XS',
       'searchUrl': 'https://www.xspeeds.eu/browse.php?do=search&keywords=%search_string%&search_type=t_name&category=0&include_dead_torrents=yes',
@@ -1944,12 +1957,12 @@ var private_sites = [
       'icon': 'http://img.zamunda.se/pic/favicon.png',
       'searchUrl': 'http://zelka.org/browse.php?search=%search_string_orig%+%year%&c42=1&c25=1&c51=1&c53=1&c46=1&c5=1&c20=1&c54=1&c35=1&c19=1&c24=1&c31=1&c28=1&incldead=1',
       'loggedOutRegex': /Cloudflare|Ray ID|cookies enabled|активирани Бисквитки/,
-      'matchRegex': /Нищо не е намерено/},
+      'matchRegex': /Нищо не е намерено|No Results/},
   {   'name': 'Zamunda',
       'icon': 'http://img.zamunda.se/pic/favicon.png',
       'searchUrl': 'http://zelka.org/browse.php?search=%search_string_orig%&c42=1&c50=1&c25=1&c51=1&c7=1&c33=1&incldead=1',
       'loggedOutRegex': /Cloudflare|Ray ID|cookies enabled|активирани Бисквитки/,
-      'matchRegex': /Нищо не е намерено/,
+      'matchRegex': /Нищо не е намерено|No Results/,
       'TV': true}
 ];
 
@@ -2651,7 +2664,7 @@ function maybeAddLink(elem, site_name, search_url, site, scout_tick, movie_id, m
   }
   // Connection rate limiter per domain.
   var set_rate = ('rateLimit' in site) ? site['rateLimit'] : 200;
-  var rate     = (onSearchPage) ? set_rate * 4 : set_rate;
+  var rate     = (!onSearchPage) ? set_rate : (set_rate > 1000) ? set_rate : set_rate * 4;
   var domain   = search_url.split('/')[2];
   var now      = (new Date())*1;
   var lastLoaded = window.localStorage[domain+'_lastLoaded'];
