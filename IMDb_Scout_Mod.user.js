@@ -1,7 +1,7 @@
 // ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      8.5
+// @version      8.5.1
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Adds links to IMDb pages from the torrent, ddl, subtitles, streaming, usenet and other sites.
 // @icon         https://i.imgur.com/u17jjYj.png
@@ -636,6 +636,9 @@
         -   Fixed: BigBBS, RetroFlix, Zamunda, E-T, RARBG, WF, Snahp.
         -   New feature: If rateLimit>1000 then when on List it won't increase.
 
+8.5.1   -   Added: DW, ADC.
+        -   Fixed: nCore.
+
 
 //==============================================================================
 //    A list of all the sites.
@@ -791,6 +794,11 @@ var public_sites = [
       'searchUrl': 'https://dontorrent.io/buscar/%search_string%',
       'loggedOutRegex': /Cloudflare|Ray ID/,
       'matchRegex': /encontrado <b>0</,
+      'both': true},
+  {   'name': 'DW',
+      'searchUrl': 'https://forum.dirtywarez.com/search/search?keywords=%tt%',
+      'loggedOutRegex': /Cloudflare|Ray ID|You must be logged/,
+      'matchRegex': /No results found/,
       'both': true},
   {   'name': 'ETTV',
       'searchUrl': 'https://www.ettvcentral.com/torrents-search.php?search=%search_string%+%year%',
@@ -1079,6 +1087,12 @@ var private_sites = [
       'searchUrl': 'https://asiancinema.me/torrents/filter?imdb=%tt%',
       'loggedOutRegex': /Forgot Your Password|Ray ID/,
       'matchRegex': /<tbody>\s*<\/tbody>/,
+      'both': true},
+  {   'name': 'ADC',
+      'icon': 'https://asiandvdclub.org/images/favicon/favicon.ico',
+      'searchUrl': 'https://asiandvdclub.org/torrents/?searchbox=%tt%&search_desc=1&search=Search',
+      'matchRegex': /No torrents found/,
+      'loggedOutRegex': /Forgotten your password/,
       'both': true},
   {   'name': 'AHD',
       'searchUrl': 'https://awesome-hd.club/torrents.php?id=%tt%',
@@ -1562,7 +1576,7 @@ var private_sites = [
       'matchRegex': /search did not match|are Cylons aboard/,
       'TV': true},
   {   'name': 'nCore',
-      'searchUrl': 'https://ncore.cc/torrents.php?mire=%tt%&miben=imdb&tipus=all_own',
+      'searchUrl': 'https://ncore.pro/torrents.php?mire=%tt%&miben=imdb&tipus=all_own',
       'loggedOutRegex': /Cloudflare|Ray ID|Jelszó-emlékeztető|Password recovery/,
       'matchRegex': /Nincs találat/,
       'both': true},
