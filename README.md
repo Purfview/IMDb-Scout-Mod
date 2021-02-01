@@ -37,7 +37,7 @@ Each site is a dictionary with the following attributes:
   - `configName` (optional): Use this to allow changing names without breaking existing users.
   - `inSecondSearchBar` (optional): Places site at the second searchable bar.
   - `inThirdSearchBar` (optional): Places site at the third searchable bar.
-  - `rateLimit` (optional): Connection rate limit in milliseconds. Default is 200. On the Search/List pages it will be increased by a factor of 4.
+  - `rateLimit` (optional): Connection rate limit in milliseconds. Default is 200. On the Search/List pages if rateLimit<=1000 then it will be increased by a factor of 4.
   - `mPOST`: HTTP request by POST method. For the sites that doesn't support GET.
   
 
