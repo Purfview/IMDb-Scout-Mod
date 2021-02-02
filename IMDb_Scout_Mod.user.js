@@ -1,7 +1,7 @@
 // ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      8.5.1
+// @version      8.6
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Adds links to IMDb pages from the torrent, ddl, subtitles, streaming, usenet and other sites.
 // @icon         https://i.imgur.com/u17jjYj.png
@@ -639,6 +639,10 @@
 8.5.1   -   Added: DW, ADC.
         -   Fixed: nCore.
 
+8.6     -   Added: PREcBurns, PREovh, preFYP.
+        -   Removed: MTV.
+        -   New feature: Other sites are split to Pre databases and Streaming sites.
+
 
 //==============================================================================
 //    A list of all the sites.
@@ -1096,13 +1100,13 @@ var private_sites = [
       'both': true},
   {   'name': 'AHD',
       'searchUrl': 'https://awesome-hd.club/torrents.php?id=%tt%',
-      'loggedOutRegex': /Keep me logged in.|Gateway Time-out|Password Reset/,
+      'loggedOutRegex': /Keep me logged in.|Gateway Time-out|Password Reset|Unexpected Error|Site Down/,
       'matchRegex': /Your search did not match anything.|Error 404/,
       'both': true},
   {   'name': 'AHD-Req',
       'icon': 'https://i.imgur.com/wEs3QZL.png',
       'searchUrl': 'https://awesome-hd.club/requests.php?submit=true&search=%tt%',
-      'loggedOutRegex': /Keep me logged in.|Gateway Time-out|Password Reset/,
+      'loggedOutRegex': /Keep me logged in.|Gateway Time-out|Password Reset|Unexpected Error|Site Down/,
       'matchRegex': /Nothing found!|Error 404/,
       'both': true},
   {   'name': 'Aither',
@@ -1555,15 +1559,6 @@ var private_sites = [
       'loggedOutRegex': /<title>MySpleen :: Login<\/title>/,
       'matchRegex': /<strong>Nothing found!<\/strong>/,
       'both': true},
-  {   'name': 'MTV',
-      'searchUrl': 'https://www.morethan.tv/torrents.php?searchstr=%search_string%+%year%&tags_type=1&order_by=time&order_way=desc&group_results=1&filter_cat%5B1%5D=1&action=basic&searchsubmit=1',
-      'loggedOutRegex': /<title>Login :: morethan.tv/,
-      'matchRegex': /<h2>Your search did not match anything.<\/h2>/},
-  {   'name': 'MTV',
-      'searchUrl': 'https://www.morethan.tv/torrents.php?searchstr=%search_string%&tags_type=1&order_by=time&order_way=desc&group_results=1&filter_cat%5B2%5D=1&action=basic&searchsubmit=1',
-      'loggedOutRegex': /<title>Login :: morethan.tv/,
-      'matchRegex': /<h2>Your search did not match anything.<\/h2>/,
-      'TV': true},
   {   'name': 'NB',
       'icon': 'https://i.imgur.com/OH7fBY4.png',
       'searchUrl': 'https://norbits.net/browse.php?incldead=1&fullsearch=0&scenerelease=0&imdbsearch=%tt%&imdb_from=0&imdb_to=0&search=',
@@ -2311,7 +2306,20 @@ var subs_sites = [
       'TV': true}
 ];
 
-var other_searchable_sites = [
+var pre_databases = [
+  {   'name': 'PREcBurns',
+      'icon': 'https://i.imgur.com/C1Ux7Tv.png',
+      'searchUrl': 'http://pre.c-burns.co.uk/pre.php?searchtext=%search_string%+%year%',
+      'loggedOutRegex': /Cloudflare|Ray ID/,
+      'matchRegex': />: 0</,
+      'inSecondSearchBar': true},
+  {   'name': 'PREcBurns',
+      'icon': 'https://i.imgur.com/C1Ux7Tv.png',
+      'searchUrl': 'http://pre.c-burns.co.uk/pre.php?searchtext=%search_string%',
+      'loggedOutRegex': /Cloudflare|Ray ID/,
+      'matchRegex': />: 0</,
+      'inSecondSearchBar': true,
+      'TV': true},
   {   'name': 'PreDB',
       'loggedOutRegex': /Ray ID|security check to access|seconds to search again/,
       'searchUrl': 'https://predb.me/?search=%search_string%+%year%&cats=movies',
@@ -2334,14 +2342,30 @@ var other_searchable_sites = [
       'matchRegex': /Nothing found.../,
       'inSecondSearchBar': true,
       'TV': true},
+  {   'name': 'preFYP',
+      'icon': 'https://i.imgur.com/SMQLxgG.png',
+      'searchUrl': 'https://pre.fyp.nl/search.html',
+      'loggedOutRegex': /Cloudflare|Ray ID/,
+      'matchRegex': /Sorry, no results/,
+      'mPOST': 'input-Search=%search_string%&submit-Search=',
+      'inSecondSearchBar': true,
+      'both': true},
+  {   'name': 'PREovh',
+      'searchUrl': 'https://predb.ovh/api/v1/?q=%search_string%+%year%',
+      'goToUrl': 'https://predb.ovh/?q=%search_string%+%year%',
+      'loggedOutRegex': /Cloudflare|Ray ID/,
+      'matchRegex': /total": 0/,
+      'inSecondSearchBar': true},
+  {   'name': 'PREovh',
+      'searchUrl': 'https://predb.ovh/api/v1/?q=%search_string%',
+      'goToUrl': 'https://predb.ovh/?q=%search_string%',
+      'loggedOutRegex': /Cloudflare|Ray ID/,
+      'matchRegex': /total": 0/,
+      'inSecondSearchBar': true,
+      'TV': true},
   {   'name': 'srrDB',
       'searchUrl': 'https://www.srrdb.com/browse/imdb:%nott%',
       'matchRegex': />0 results</,
-      'inSecondSearchBar': true,
-      'both': true},
-  {   'name': 'Ulož',
-      'searchUrl': 'https://uloz.to/hledej?type=videos&q=%search_string_orig%',
-      'matchRegex': /nebylo nic nalezeno/,
       'inSecondSearchBar': true,
       'both': true},
   {   'name': 'xREL',
@@ -2351,7 +2375,15 @@ var other_searchable_sites = [
       'both': true}
 ];
 
-var sites = public_sites.concat(private_sites, usenet_sites, custom_sites, subs_sites, other_searchable_sites);
+var streaming_sites = [
+  {   'name': 'Ulož',
+      'searchUrl': 'https://uloz.to/hledej?type=videos&q=%search_string_orig%',
+      'matchRegex': /nebylo nic nalezeno/,
+      'inThirdSearchBar': true,
+      'both': true}
+];
+
+var sites = public_sites.concat(private_sites, usenet_sites, custom_sites, subs_sites, pre_databases, streaming_sites);
 
 var icon_sites = [
   {   'name': 'AllMovie',
@@ -2587,8 +2619,8 @@ function addLink(elem, site_name, target, site, state, scout_tick) {
   // Icon/Text appearance.
   if (getPageSetting('use_mod_icons')) {
     var icon = getFavicon(site);
-    (!GM_config.get('one_line') && !onSearchPage) ? icon.css({'border-width': '0px', 'border-style': 'solid', 'border-radius': '2px', 'margin': '2px 0px'})
-                                                  : icon.css({'border-width': '3px', 'border-style': 'solid', 'border-radius': '2px', 'margin': '2px 0px'});
+    (!GM_config.get('one_line') && !onSearchPage) ? icon.css({'border-width': '0px', 'border-style': 'solid', 'border-radius': '2px', 'margin': '1px 0px 2px'})
+                                                  : icon.css({'border-width': '3px', 'border-style': 'solid', 'border-radius': '2px', 'margin': '1px 0px 2px'});
     if (state == 'error' || state == 'logged_out') {
       (getPageSetting('highlight_sites').split(',').includes(site['name'])) ? icon.css('border-color', 'rgb(255,0,0)')
                                                                             : icon.css('border-color', 'rgb(180,0,0)');
@@ -3507,7 +3539,8 @@ function countSites(task) {
     $.each(private_sites, function(index, site) {config_fields[configName(site)] = {'type': 'checkbox'};});
     $.each(usenet_sites, function(index, site) {config_fields[configName(site)] = {'type': 'checkbox'};});
     $.each(subs_sites, function(index, site) {config_fields[configName(site)] = {'type': 'checkbox'};});
-    $.each(other_searchable_sites, function(index, site) {config_fields[configName(site)] = {'type': 'checkbox'};});
+    $.each(pre_databases, function(index, site) {config_fields[configName(site)] = {'type': 'checkbox'};});
+    $.each(streaming_sites, function(index, site) {config_fields[configName(site)] = {'type': 'checkbox'};});
     $.each(icon_sites, function(index, icon_site) {config_fields['show_icon_' + icon_site['name']] = {'type': 'checkbox'};});
 
     GM_config.init({'id': 'imdb_scout', 'fields': config_fields});
@@ -3632,7 +3665,7 @@ var config_fields = {
   'highlight_sites_movie': {
     'label': 'Highlight sites: &nbsp &nbsp &nbsp',
     'type': 'text',
-    'default': 'PTP,KG,BTN,BTN-Title,SC,CG,TVV,Tik,MTV'
+    'default': 'PTP,KG,BTN,BTN-Title,SC,CG,TVV,Tik'
   },
   'highlight_missing_movie': {
     'label': 'Mark when not on:',
@@ -3726,9 +3759,17 @@ $.each(subs_sites, function(index, site) {
   };
 });
 
-$.each(other_searchable_sites, function(index, site) {
+$.each(pre_databases, function(index, site) {
   config_fields[configName(site)] = {
-    'section': (index == 0) ? ['Other searchable sites (in 2nd bar):'] : '',
+    'section': (index == 0) ? ['Pre databases (in 2nd bar):'] : '',
+    'type': 'checkbox',
+    'label': ' ' + site['name'] + (site['TV'] ? ' (TV)' : '')
+  };
+});
+
+$.each(streaming_sites, function(index, site) {
+  config_fields[configName(site)] = {
+    'section': (index == 0) ? ['Streaming sites (in 3rd bar):'] : '',
     'type': 'checkbox',
     'label': ' ' + site['name'] + (site['TV'] ? ' (TV)' : '')
   };
@@ -3753,7 +3794,8 @@ GM_config.init({
   'fields': config_fields,
   'css': '#imdb_scout_section_header_1, #imdb_scout_section_header_2, #imdb_scout_section_header_3, \
           #imdb_scout_section_header_4, #imdb_scout_section_header_5, #imdb_scout_section_header_6, \
-          #imdb_scout_section_header_7, #imdb_scout_section_header_8, #imdb_scout_section_header_9 { \
+          #imdb_scout_section_header_7, #imdb_scout_section_header_8, #imdb_scout_section_header_9, \
+          #imdb_scout_section_header_10 { \
              background:   #00ab00 !important; \
              color:          black !important; \
              font-weight:     bold !important; \
@@ -3842,12 +3884,18 @@ GM_config.init({
         $(label).prepend(getFavicon(subs_sites[index], true));
       });
       $('#imdb_scout').contents().find('#imdb_scout_section_8').find('.field_label').each(function(index, label) {
-        var url = new URL(other_searchable_sites[index].searchUrl);
+        var url = new URL(pre_databases[index].searchUrl);
         $(label).append(' ' + '<a class="grey_link" target="_blank" style="color: gray; text-decoration : none" href="' + url.origin + '">'
                         + (/www./.test(url.hostname) ? url.hostname.match(/www.(.*)/)[1] : url.hostname) + '</a>');
-        $(label).prepend(getFavicon(other_searchable_sites[index], true));
+        $(label).prepend(getFavicon(pre_databases[index], true));
       });
       $('#imdb_scout').contents().find('#imdb_scout_section_9').find('.field_label').each(function(index, label) {
+        var url = new URL(streaming_sites[index].searchUrl);
+        $(label).append(' ' + '<a class="grey_link" target="_blank" style="color: gray; text-decoration : none" href="' + url.origin + '">'
+                        + (/www./.test(url.hostname) ? url.hostname.match(/www.(.*)/)[1] : url.hostname) + '</a>');
+        $(label).prepend(getFavicon(streaming_sites[index], true));
+      });
+      $('#imdb_scout').contents().find('#imdb_scout_section_10').find('.field_label').each(function(index, label) {
         var url = new URL(icon_sites[index].searchUrl);
         $(label).append(' ' + '<a class="grey_link" target="_blank" style="color: gray; text-decoration : none" href="' + url.origin + '">'
                         + (/www./.test(url.hostname) ? url.hostname.match(/www.(.*)/)[1] : url.hostname) + '</a>');
