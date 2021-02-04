@@ -1,7 +1,7 @@
 // ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      8.6
+// @version      8.7
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Adds links to IMDb pages from the torrent, ddl, subtitles, streaming, usenet and other sites.
 // @icon         https://i.imgur.com/u17jjYj.png
@@ -490,7 +490,7 @@
 6.2     -   Added: TVU, Bit-Titan, SU, Tasmanites, BDC, FE, PTMSG.
         -   Tweaks: AHD, AHD-Req, CPS, HDB. Some rate tweaks.
         -   Fixed: Disabling 'Show results on one line?' removed icon borders on Search/List pages.
-        -   New feature: Sites are grouped by the result states on Search/List pages (same as on Title pages).
+        -   New feature: Sites are grouped by the result states on Search/List pages (same as on Title pages) (scout_tick).
         -   New feature: Option to highlight preferred sites (brighter border of icon or bold text).
         -   New feature: All icons of request sites ('-Req') are highlighted with a blue border if 'found'.
         -   New feature: 3rd bar supported on Search/List pages.
@@ -642,6 +642,10 @@
 8.6     -   Added: PREcBurns, PREovh, preFYP.
         -   Removed: MTV.
         -   New feature: Other sites are split to Pre databases and Streaming sites.
+        
+8.7     -   Tweak: Milkie moved to the icon sites. 
+        -   Tweak: Some ratelimits added.
+        -   Tweak: Small tweak to code for ratelimit to IMDb site on List/Search pages.
 
 
 //==============================================================================
@@ -1538,17 +1542,6 @@ var private_sites = [
       'loggedOutRegex': /type="password" name="password"|An error occurred|Please input the 6-digit code/,
       'matchRegex': /Nothing here!|Try again with a refined search string./,
       'both': true},
-  {   'name': 'Milkie',
-      'icon': 'https://milkie.cc/favicon.png',
-      'searchUrl': 'https://milkie.cc/browse?query=%search_string%+%year%&categories=1',
-      'loggedOutRegex': /Cloudflare|Ray ID/,
-      'matchRegex': /hits: 0/},
-  {   'name': 'Milkie',
-      'icon': 'https://milkie.cc/favicon.png',
-      'searchUrl': 'https://milkie.cc/browse?query=%search_string%&categories=2',
-      'loggedOutRegex': /Cloudflare|Ray ID/,
-      'matchRegex': /hits: 0/,
-      'TV': true},
   {   'name': 'MP',
       'searchUrl': 'https://majomparade.eu/letoltes.php?tipus=1&k=yes&name=https://www.imdb.com/title/%tt%&category[]=&tipuska=0&imdb_search=yes',
       'loggedOutRegex': /Cloudflare|Ray ID|Az oldal használatához/,
@@ -1633,6 +1626,7 @@ var private_sites = [
       'searchUrl': 'https://pretome.info/browse.php?search=%tt%&st=1&sd=1',
       'loggedOutRegex': /Cloudflare|Ray ID|Joke of the day/,
       'matchRegex': /this filter criteria/,
+      'rateLimit': 6100,
       'both': true},
   {   'name': 'PTMSG',
       'searchUrl': 'https://pt.msg.vg/torrents.php?incldead=1&search=%tt%&search_area=1',
@@ -1780,6 +1774,7 @@ var private_sites = [
       'searchUrl': 'https://torrentdb.net/filter/torrents?&search=%nott%',
       'loggedOutRegex': /Forgot Your Password|Service Unavailable|Ray ID/,
       'matchRegex': /<tbody>\s*<\/tbody>/,
+      'rateLimit': 5100,
       'both': true},
   {   'name': 'TE',
       'searchUrl': 'https://theempire.click/browse.php?incldead=0&country=&nonboolean=1&search=%tt%',
@@ -2452,6 +2447,10 @@ var icon_sites = [
   {   'name': 'Metacritic',
       'searchUrl': 'https://www.metacritic.com/search/all/%search_string%/results?cats[movie]=1&cats[tv]=1&search_type=advanced&sort=relevancy',
       'showByDefault': false},
+  {   'name': 'Milkie',
+      'icon': 'https://milkie.cc/favicon.png',
+      'searchUrl': 'https://milkie.cc/browse?query=%search_string%+%year%',
+      'showByDefault': false},
   {   'name': 'Movie-Censorship',
       'icon': 'https://i.imgur.com/4gF8xKW.png',
       'searchUrl': 'https://www.movie-censorship.com/list.php?s=%search_string%',
@@ -2984,7 +2983,7 @@ function performSearch() {
         styles3 += '.maindetails_center {margin-left: 5px; width: 1001px;} ';
     GM.addStyle(styles3);
   }
-  var showsites = sites.reduce(function (n, site) {
+  var showsites = public_sites.concat(private_sites, usenet_sites).reduce(function (n, site) {
       return n + (site['show'] == true); }, 0);
 
   var search_page = (Boolean(location.href.match('/search/'))) ? true : false;
@@ -3025,7 +3024,7 @@ function performSearchSecondPart(elem, link, movie_id, showsites, scout_tick) {
   } else if (showsites > 10) {
     rate = 1500;
   } else {
-    rate = 1000;
+    rate = 800;
   }
   var domain = "https://www.imdb.com";
   var now    = (new Date())*1;
