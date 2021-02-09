@@ -1,7 +1,7 @@
 // ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      8.7
+// @version      8.7.1
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Adds links to IMDb pages from the torrent, ddl, subtitles, streaming, usenet and other sites.
 // @icon         https://i.imgur.com/u17jjYj.png
@@ -642,10 +642,12 @@
 8.6     -   Added: PREcBurns, PREovh, preFYP.
         -   Removed: MTV.
         -   New feature: Other sites are split to Pre databases and Streaming sites.
-        
-8.7     -   Tweak: Milkie moved to the icon sites. 
+
+8.7     -   Tweak: Milkie moved to the icon sites.
         -   Tweak: Some ratelimits added.
         -   Tweak: Small tweak to code for ratelimit to IMDb site on List/Search pages.
+
+8.7.1   -   Added: PD.
 
 
 //==============================================================================
@@ -1572,6 +1574,12 @@ var private_sites = [
       'searchUrl': 'https://ourbits.club/torrents.php?search_area=4&search=%tt%',
       'loggedOutRegex': /SSL \(HTTPS\)/,
       'matchRegex': /Nothing found! Try again with a refined search string/},
+  {   'name': 'PD',
+      'icon': 'https://i.imgur.com/0d25joJ.png',
+      'searchUrl': 'https://pirata.digital/torrents/filter?imdb=%tt%',
+      'loggedOutRegex': /Esqueceu sua senha|Service Unavailable/,
+      'matchRegex': /<tbody>\s*<\/tbody>/,
+      'both': true},
   {   'name': 'PHD',
       'icon': 'https://i.imgur.com/MJJGioU.png',
       'searchUrl': 'https://privatehd.to/movies?search=&imdb=%tt%',
