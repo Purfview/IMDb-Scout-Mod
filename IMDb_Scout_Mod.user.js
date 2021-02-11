@@ -1,7 +1,7 @@
 // ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      8.7.1
+// @version      8.7.2
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Adds links to IMDb pages from the torrent, ddl, subtitles, streaming, usenet and other sites.
 // @icon         https://i.imgur.com/u17jjYj.png
@@ -648,6 +648,8 @@
         -   Tweak: Small tweak to code for ratelimit to IMDb site on List/Search pages.
 
 8.7.1   -   Added: PD.
+
+8.7.2   -   Added: HDZ.
 
 
 //==============================================================================
@@ -1397,9 +1399,9 @@ var private_sites = [
       'matchRegex': /Aucun fichier trouvé/},
   {   'name': 'HDA',
       'icon': 'https://i.imgur.com/VUVLqMA.png',
-      'searchUrl': 'https://www.hdarea.co/torrents.php?incldead=1&search=%tt%&search_area=4',
+      'searchUrl': 'https://www.hdarea.co/torrents.php?incldead=1&search=%tt%&search_area=1',
       'loggedOutRegex': /Cloudflare|Ray ID|recover.php/,
-      'matchRegex': /Nothing found!|没有种子/,
+      'matchRegex': /Nothing found|没有种子|沒有種子/,
       'both': true},
   {   'name': 'HDAtmos',
       'searchUrl': 'https://hdatmos.club/torrents.php?incldead=1&spstate=0&search=%tt%&search_area=1&search_mode=0',
@@ -1466,6 +1468,11 @@ var private_sites = [
       'searchUrl': 'https://pt.upxin.net/torrents.php?search_area=4&search=%tt%',
       'loggedOutRegex': /SSL \(HTTPS\)/,
       'matchRegex': /Nothing found!/},
+  {   'name': 'HDZ',
+      'searchUrl': 'https://hdzone.me/torrents.php?search=%tt%&search_area=1',
+      'loggedOutRegex': /Cloudflare|Ray ID|SSL \(HTTPS\)/,
+      'matchRegex': /Nothing found|没有种子|沒有種子/,
+      'both': true},
   {   'name': 'HQS',
       'searchUrl': 'https://hqsource.org/browse.php?c36=1&c3=1&c2=1&c49=1&c1=1&c8=1&c4=1&c7=1&c45=1&c9=1&c5=1&search=%search_string_orig%+%year%&blah=1&incldead=1&polish=0',
       'loggedOutRegex': /Cloudflare|Ray ID|Zapomniałes hasła/,
