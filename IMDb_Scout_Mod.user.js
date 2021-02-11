@@ -1399,7 +1399,7 @@ var private_sites = [
       'matchRegex': /Aucun fichier trouvé/},
   {   'name': 'HDA',
       'icon': 'https://i.imgur.com/VUVLqMA.png',
-      'searchUrl': 'https://www.hdarea.co/torrents.php?incldead=1&search=%tt%&search_area=1',
+      'searchUrl': 'https://www.hdarea.co/torrents.php?incldead=1&search=%tt%&search_area=4',
       'loggedOutRegex': /Cloudflare|Ray ID|recover.php/,
       'matchRegex': /Nothing found|没有种子|沒有種子/,
       'both': true},
