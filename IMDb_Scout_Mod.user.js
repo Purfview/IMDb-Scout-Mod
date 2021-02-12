@@ -1,7 +1,7 @@
 // ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      8.7.3
+// @version      8.7.4
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Adds links to IMDb pages from the torrent, ddl, subtitles, streaming, usenet and other sites.
 // @icon         https://i.imgur.com/u17jjYj.png
@@ -651,7 +651,9 @@
 
 8.7.2   -   Added: HDZ.
 
-8.7.2   -   Added: PTTime.
+8.7.3   -   Added: PTTime.
+
+8.7.4   -   Added: RARBG.
 
 
 //==============================================================================
@@ -925,7 +927,7 @@ var public_sites = [
   {   'name': 'RARBG',
       'searchUrl': 'https://rarbgweb.org/torrents.php?imdb=%tt%',
       'loggedOutRegex': /something wrong|Please wait|enter the captcha|too many requests/,
-      'matchRegex': '//dyncdn.me/static/20/images/imdb_thumb.gif',
+      'matchRegex': /imdb_thumb.gif/,
       'positiveMatch': true,
       'rateLimit': 4000,
       'both': true},
