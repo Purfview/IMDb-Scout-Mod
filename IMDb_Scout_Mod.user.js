@@ -1,7 +1,7 @@
 // ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      8.7.2
+// @version      8.7.3
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Adds links to IMDb pages from the torrent, ddl, subtitles, streaming, usenet and other sites.
 // @icon         https://i.imgur.com/u17jjYj.png
@@ -650,6 +650,8 @@
 8.7.1   -   Added: PD.
 
 8.7.2   -   Added: HDZ.
+
+8.7.2   -   Added: PTTime.
 
 
 //==============================================================================
@@ -1666,6 +1668,12 @@ var private_sites = [
       'loggedOutRegex': /Cloudflare|Ray ID|Keep me logged in|Your popcorn quota/,
       'matchRegex': /Your search did not match anything/,
       'rateLimit': 250},
+  {   'name': 'PTTime',
+      'icon': 'https://i.imgur.com/smcSbFB.png',
+      'searchUrl': 'https://www.pttime.org/torrents.php?search=%tt%&search_area=1',
+      'loggedOutRegex': /Cloudflare|Ray ID|wechat.jpg|SSL \(HTTPS\)/,
+      'matchRegex': /Nothing found|没有种子|沒有種子/,
+      'both': true},
   {   'name': 'PxHD',
       'icon': 'https://i.imgur.com/OA7JJ6x.png',
       'searchUrl': 'https://pixelhd.me/torrents.php?groupname=&year=&tmdbover=&tmdbunder=&tmdbid=&imdbover=&imdbunder=&imdbid=%tt%&order_by=time&order_way=desc&taglist=&tags_type=1&filterTorrentsButton=Filter+Torrents',
