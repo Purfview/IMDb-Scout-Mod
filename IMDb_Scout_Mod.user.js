@@ -2161,7 +2161,13 @@ var usenet_sites = [
       'searchUrl': 'https://omgwtfnzbs.me/browse?search=%tt%&cat=default&sort=3',
       'loggedOutRegex': /Cloudflare|Ray ID|Forgot your username/,
       'matchRegex': /returned no results/,
-      'both': true}
+      'both': true},
+  {   'name': 'WtF[nZb]',
+      'searchUrl': 'https://0ccec98d8962a17294688363537bfe2e.wtfnzb.pw/movies/?imdb=%nott%',
+      'icon': 'https://0ccec98d8962a17294688363537bfe2e.wtfnzb.pw/templates/bookstrap/images/icons/favicon.ico',
+      'matchRegex': /Director/,
+      'positiveMatch': true,
+      'loggedOutRegex': /Remember Me/}
 ];
 
 var subs_sites = [
