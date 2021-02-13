@@ -1,7 +1,7 @@
 // ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      8.7.4
+// @version      8.7.5
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Adds links to IMDb pages from the torrent, ddl, subtitles, streaming, usenet and other sites.
 // @icon         https://i.imgur.com/u17jjYj.png
@@ -655,6 +655,9 @@
 
 8.7.4   -   Tweaked: RARBG.
 
+8.7.5   -   Added: Reelgood, WtFnzb(no tv), DDLW.
+        -   Tweaked: OmgWtf(sort by size). DrunkenSlug & NZBfinder movie search by imdb id.
+
 
 //==============================================================================
 //    A list of all the sites.
@@ -794,7 +797,7 @@ var public_sites = [
       'loggedOutRegex': /Nem vagy bejelentkezve!/,
       'matchRegex': /Nincs itt semmi|Nem található/,
       'both': true},
-  {   'name': 'DDL-Warez',
+  {   'name': 'DDLW',
       'icon': 'https://ddl-warez.to/images/favicon.ico',
       'searchUrl': 'https://ddl-warez.to/?search=%tt%',
       'loggedOutRegex': /Cloudflare|Ray ID/,
@@ -2170,9 +2173,9 @@ var usenet_sites = [
       'loggedOutRegex': /Cloudflare|Ray ID|Forgot your username/,
       'matchRegex': /returned no results/,
       'both': true},
-  {   'name': 'WtF[nZb]',
-      'searchUrl': 'https://0ccec98d8962a17294688363537bfe2e.wtfnzb.pw/movies/?imdb=%nott%',
+  {   'name': 'WtFnZb',
       'icon': 'https://0ccec98d8962a17294688363537bfe2e.wtfnzb.pw/templates/bookstrap/images/icons/favicon.ico',
+      'searchUrl': 'https://0ccec98d8962a17294688363537bfe2e.wtfnzb.pw/movies/?imdb=%nott%',
       'matchRegex': /Director/,
       'positiveMatch': true,
       'loggedOutRegex': /Remember Me/}
@@ -2442,10 +2445,6 @@ var icon_sites = [
       'showByDefault': false},
   {   'name': 'Criticker',
       'searchUrl': 'https://www.criticker.com/?search=%search_string%&type=films'},
-  {   'name': 'DDL-Warez',
-      'icon': 'https://ddl-warez.to/images/favicon.ico',
-      'searchUrl': 'https://ddl-warez.to/?search=%tt%',
-      'showByDefault': false},
   {   'name': 'DVD-Basen',
       'icon': 'https://i.imgur.com/H4PYPdf.png',
       'searchUrl': 'http://www.dvd-basen.dk/uk/home.php3?search=%search_string%&mvis=ok&region=z&land=z&ok=go',
