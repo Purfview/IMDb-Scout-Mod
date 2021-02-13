@@ -2158,7 +2158,7 @@ var usenet_sites = [
       'matchRegex': /did not match any/,
       'TV': true},
   {   'name': 'OmgWtf',
-      'searchUrl': 'https://omgwtfnzbs.me/browse?search=%tt%&cat=default',
+      'searchUrl': 'https://omgwtfnzbs.me/browse?search=%tt%&cat=default&sort=3',
       'loggedOutRegex': /Cloudflare|Ray ID|Forgot your username/,
       'matchRegex': /returned no results/,
       'both': true}
