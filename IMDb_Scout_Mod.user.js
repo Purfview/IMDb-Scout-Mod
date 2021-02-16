@@ -2319,7 +2319,7 @@ var subs_sites = [
       'inSecondSearchBar': true,
       'both': true},
   {   'name': 'Subtitry (RU)',
-      'searchUrl': 'https://subtitry.ru/subtitles/?film=%search_string_orig%',
+      'searchUrl': 'https://subtitry.ru/subtitles/?film=%nott%',
       'matchRegex': />0</,
       'inSecondSearchBar': true,
       'both': true},
