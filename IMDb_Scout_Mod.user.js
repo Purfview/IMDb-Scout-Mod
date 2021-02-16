@@ -934,7 +934,7 @@ var public_sites = [
       'matchRegex': /No torrents were found/,
       'TV': true},
   {   'name': 'RARBG',
-      'searchUrl': 'https://rarbgweb.org/torrents.php?imdb=%tt%',
+      'searchUrl': 'https://rarbgweb.org/torrents.php?imdb=%tt%&order=size&by=DESC',
       'loggedOutRegex': /something wrong|Please wait|enter the captcha|too many requests/,
       'matchRegex': /imdb_thumb.gif/,
       'positiveMatch': true,
