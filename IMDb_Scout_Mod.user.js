@@ -1,7 +1,7 @@
 // ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      8.7.5
+// @version      8.8
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Adds links to IMDb pages from the torrent, ddl, subtitles, streaming, usenet and other sites.
 // @icon         https://i.imgur.com/u17jjYj.png
@@ -38,6 +38,9 @@
 // @grant        GM.xmlHttpRequest
 // @grant        GM.registerMenuCommand
 // @grant        GM.info
+//
+// @run-at       document-start
+// @noframes
 //
 // ==/UserScript==
 //
@@ -657,6 +660,10 @@
 
 8.7.5   -   Added: Reelgood, WtFnzb(no tv), DDLW.
         -   Tweaked: OmgWtf(sort by size). DrunkenSlug & NZBfinder movie search by imdb id.
+
+8.8     -   Tweaked: RARBG, Subtitry (RU).
+        -   New feature: @noframes (probably proper fix for the bug "fixed" in v7.6).
+        -   New feature: Changed how script starts, should be faster now.
 
 
 //==============================================================================
@@ -2523,7 +2530,7 @@ var icon_sites = [
       'searchUrl': 'https://www.opensubtitles.org/en/search/imdbid-%tt%'},
   {   'name': 'Reelgood',
       'searchUrl': 'https://reelgood.com/search?q=%search_string%',
-      'showByDefault': false},      
+      'showByDefault': false},
   {   'name': 'Rotten Tomatoes',
       'searchUrl': 'https://www.rottentomatoes.com/search/?search=%search_string%'},
   {   'name': 'ScreenAnarchy',
@@ -4003,14 +4010,14 @@ $('#promoted-partner-bar').remove();
 //    Start: Display 'Load' button or add links to sites
 //==============================================================================
 
-$('title').ready(function() {
-  if (window.top == window.self) {
-    if (!onSearchPage && GM_config.get('loadmod_on_start_movie')) {
-      performPage();
-    } else if (onSearchPage && GM_config.get('loadmod_on_start_search')) {
-      performSearch();
-    } else {
-      displayButton();
-    }
+function startIMDbScout() {
+  if (!onSearchPage && GM_config.get('loadmod_on_start_movie')) {
+    performPage();
+  } else if (onSearchPage && GM_config.get('loadmod_on_start_search')) {
+    performSearch();
+  } else {
+    displayButton();
   }
-});
+}
+
+window.addEventListener('DOMContentLoaded', startIMDbScout);
