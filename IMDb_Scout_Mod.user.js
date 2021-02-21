@@ -2448,6 +2448,7 @@ var icon_sites = [
       'searchUrl': 'https://www.blu-ray.com/search/?quicksearch=1&quicksearch_country=all&quicksearch_keyword=%search_string%+&section=bluraymovies',
       'showByDefault': false},
   {   'name': 'Criterion',
+      'icon': 'https://www.criterion.com/assets/img/icons/favicon-32x32.png',
       'searchUrl': 'https://www.criterion.com/search#stq=%search_string%',
       'showByDefault': false},
   {   'name': 'Box Office Mojo',
