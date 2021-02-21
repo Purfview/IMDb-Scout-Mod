@@ -1,7 +1,7 @@
 // ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      8.8
+// @version      8.9
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Adds links to IMDb pages from the torrent, ddl, subtitles, streaming, usenet and other sites.
 // @icon         https://i.imgur.com/u17jjYj.png
@@ -664,6 +664,9 @@
 8.8     -   Tweaked: RARBG, Subtitry (RU).
         -   New feature: @noframes (probably proper fix for the bug "fixed" in v7.6).
         -   New feature: Changed how script starts, should be faster now.
+
+8.9     -   Added: Fist of B-List, Criterion, Criterion Channel.
+        -   New feature: New "Other sites" category in Settings.
 
 
 //==============================================================================
@@ -2419,6 +2422,13 @@ var pre_databases = [
       'both': true}
 ];
 
+var other_sites = [
+  {   'name': 'Fist of B-List',
+      'searchUrl': 'http://www.fistofblist.com/search?q=%search_string%+%year%',
+      'matchRegex': /No posts matching/,
+      'inSecondSearchBar': true}
+]
+
 var streaming_sites = [
   {   'name': 'Ulož',
       'searchUrl': 'https://uloz.to/hledej?type=videos&q=%search_string_orig%',
@@ -2427,7 +2437,7 @@ var streaming_sites = [
       'both': true}
 ];
 
-var sites = public_sites.concat(private_sites, usenet_sites, custom_sites, subs_sites, pre_databases, streaming_sites);
+var sites = public_sites.concat(private_sites, usenet_sites, custom_sites, subs_sites, pre_databases, other_sites, streaming_sites);
 
 var icon_sites = [
   {   'name': 'AllMovie',
@@ -2447,12 +2457,16 @@ var icon_sites = [
   {   'name': 'Blu-ray',
       'searchUrl': 'https://www.blu-ray.com/search/?quicksearch=1&quicksearch_country=all&quicksearch_keyword=%search_string%+&section=bluraymovies',
       'showByDefault': false},
+  {   'name': 'Box Office Mojo',
+      'searchUrl': 'https://www.boxofficemojo.com/title/%tt%',
+      'showByDefault': false},
   {   'name': 'Criterion',
       'icon': 'https://www.criterion.com/assets/img/icons/favicon-32x32.png',
       'searchUrl': 'https://www.criterion.com/search#stq=%search_string%',
       'showByDefault': false},
-  {   'name': 'Box Office Mojo',
-      'searchUrl': 'https://www.boxofficemojo.com/title/%tt%',
+  {   'name': 'Criterion Channel',
+      'icon': 'https://vhx.imgix.net/criterionchannelchartersu/assets/15749e13-43d7-4c08-88bf-f634ca8756b3.png',
+      'searchUrl': 'https://www.criterionchannel.com/search?q=%search_string%',
       'showByDefault': false},
   {   'name': 'Criticker',
       'searchUrl': 'https://www.criticker.com/?search=%search_string%&type=films'},
@@ -3595,6 +3609,7 @@ function countSites(task) {
     $.each(usenet_sites, function(index, site) {config_fields[configName(site)] = {'type': 'checkbox'};});
     $.each(subs_sites, function(index, site) {config_fields[configName(site)] = {'type': 'checkbox'};});
     $.each(pre_databases, function(index, site) {config_fields[configName(site)] = {'type': 'checkbox'};});
+    $.each(other_sites, function(index, site) {config_fields[configName(site)] = {'type': 'checkbox'};});
     $.each(streaming_sites, function(index, site) {config_fields[configName(site)] = {'type': 'checkbox'};});
     $.each(icon_sites, function(index, icon_site) {config_fields['show_icon_' + icon_site['name']] = {'type': 'checkbox'};});
 
@@ -3822,6 +3837,14 @@ $.each(pre_databases, function(index, site) {
   };
 });
 
+$.each(other_sites, function(index, site) {
+  config_fields[configName(site)] = {
+    'section': (index == 0) ? ['Other sites (in 2nd bar):'] : '',
+    'type': 'checkbox',
+    'label': ' ' + site['name'] + (site['TV'] ? ' (TV)' : '')
+  };
+});
+
 $.each(streaming_sites, function(index, site) {
   config_fields[configName(site)] = {
     'section': (index == 0) ? ['Streaming sites (in 3rd bar):'] : '',
@@ -3850,7 +3873,7 @@ GM_config.init({
   'css': '#imdb_scout_section_header_1, #imdb_scout_section_header_2, #imdb_scout_section_header_3, \
           #imdb_scout_section_header_4, #imdb_scout_section_header_5, #imdb_scout_section_header_6, \
           #imdb_scout_section_header_7, #imdb_scout_section_header_8, #imdb_scout_section_header_9, \
-          #imdb_scout_section_header_10 { \
+          #imdb_scout_section_header_10, #imdb_scout_section_header_11 { \
              background:   #00ab00 !important; \
              color:          black !important; \
              font-weight:     bold !important; \
@@ -3945,12 +3968,18 @@ GM_config.init({
         $(label).prepend(getFavicon(pre_databases[index], true));
       });
       $('#imdb_scout').contents().find('#imdb_scout_section_9').find('.field_label').each(function(index, label) {
+        var url = new URL(other_sites[index].searchUrl);
+        $(label).append(' ' + '<a class="grey_link" target="_blank" style="color: gray; text-decoration : none" href="' + url.origin + '">'
+                        + (/www./.test(url.hostname) ? url.hostname.match(/www.(.*)/)[1] : url.hostname) + '</a>');
+        $(label).prepend(getFavicon(other_sites[index], true));
+      });
+      $('#imdb_scout').contents().find('#imdb_scout_section_10').find('.field_label').each(function(index, label) {
         var url = new URL(streaming_sites[index].searchUrl);
         $(label).append(' ' + '<a class="grey_link" target="_blank" style="color: gray; text-decoration : none" href="' + url.origin + '">'
                         + (/www./.test(url.hostname) ? url.hostname.match(/www.(.*)/)[1] : url.hostname) + '</a>');
         $(label).prepend(getFavicon(streaming_sites[index], true));
       });
-      $('#imdb_scout').contents().find('#imdb_scout_section_10').find('.field_label').each(function(index, label) {
+      $('#imdb_scout').contents().find('#imdb_scout_section_11').find('.field_label').each(function(index, label) {
         var url = new URL(icon_sites[index].searchUrl);
         $(label).append(' ' + '<a class="grey_link" target="_blank" style="color: gray; text-decoration : none" href="' + url.origin + '">'
                         + (/www./.test(url.hostname) ? url.hostname.match(/www.(.*)/)[1] : url.hostname) + '</a>');
