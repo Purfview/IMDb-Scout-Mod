@@ -1,7 +1,7 @@
 // ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      8.9
+// @version      8.9.1
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Adds links to IMDb pages from the torrent, ddl, subtitles, streaming, usenet and other sites.
 // @icon         https://i.imgur.com/u17jjYj.png
@@ -668,6 +668,8 @@
 8.9     -   Added: Fist of B-List, Criterion, Criterion Channel.
         -   New feature: New "Other sites" category in Settings.
 
+8.9.1   -   Removed: AHD, AHD-Req.
+
 
 //==============================================================================
 //    A list of all the sites.
@@ -1128,17 +1130,6 @@ var private_sites = [
       'searchUrl': 'https://asiandvdclub.org/torrents/?searchbox=%tt%&search_desc=1&search=Search',
       'matchRegex': /No torrents found/,
       'loggedOutRegex': /Forgotten your password/,
-      'both': true},
-  {   'name': 'AHD',
-      'searchUrl': 'https://awesome-hd.club/torrents.php?id=%tt%',
-      'loggedOutRegex': /Keep me logged in.|Gateway Time-out|Password Reset|Unexpected Error|Site Down/,
-      'matchRegex': /Your search did not match anything.|Error 404/,
-      'both': true},
-  {   'name': 'AHD-Req',
-      'icon': 'https://i.imgur.com/wEs3QZL.png',
-      'searchUrl': 'https://awesome-hd.club/requests.php?submit=true&search=%tt%',
-      'loggedOutRegex': /Keep me logged in.|Gateway Time-out|Password Reset|Unexpected Error|Site Down/,
-      'matchRegex': /Nothing found!|Error 404/,
       'both': true},
   {   'name': 'Aither',
       'searchUrl': 'https://aither.cc/torrents/filter?imdb=%tt%',
