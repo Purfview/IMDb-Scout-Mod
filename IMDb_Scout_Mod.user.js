@@ -658,7 +658,7 @@
 
 8.7.4   -   Tweaked: RARBG.
 
-8.7.5   -   Added: Reelgood, WtFnzb(no tv), DDLW.
+8.7.5   -   Added: Reelgood, WtFnzb(no tv), DDLW (for ~German IPs).
         -   Tweaked: OmgWtf(sort by size). DrunkenSlug & NZBfinder movie search by imdb id.
 
 8.8     -   Tweaked: RARBG, Subtitry (RU).
@@ -810,7 +810,7 @@ var public_sites = [
       'matchRegex': /Nincs itt semmi|Nem található/,
       'both': true},
   {   'name': 'DDLW',
-      'icon': 'https://ddl-warez.to/images/favicon.ico',
+      'icon': 'https://i.imgur.com/tFEa0Ng.png',
       'searchUrl': 'https://ddl-warez.to/?search=%tt%',
       'loggedOutRegex': /Cloudflare|Ray ID/,
       'matchRegex': /Keine Ergebnisse/,
