@@ -1,7 +1,7 @@
 // ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      8.9.1
+// @version      8.9.2
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Adds links to IMDb pages from the torrent, ddl, subtitles, streaming, usenet and other sites.
 // @icon         https://i.imgur.com/u17jjYj.png
@@ -669,6 +669,8 @@
         -   New feature: New "Other sites" category in Settings.
 
 8.9.1   -   Removed: AHD, AHD-Req.
+
+8.9.2   -   Added: MTV.
 
 
 //==============================================================================
@@ -1575,6 +1577,15 @@ var private_sites = [
       'loggedOutRegex': /<title>MySpleen :: Login<\/title>/,
       'matchRegex': /<strong>Nothing found!<\/strong>/,
       'both': true},
+  {   'name': 'MTV',
+      'searchUrl': 'https://www.morethantv.me/torrents.php?filter_cat[1]=1&filter_cat[2]=1&title=%search_string%+%year%',
+      'loggedOutRegex': /Cloudflare|Ray ID|forgotten password/,
+      'matchRegex': /search did not match/},
+  {   'name': 'MTV',
+      'searchUrl': 'https://www.morethantv.me/torrents.php?filter_cat[3]=1&filter_cat[5]=1&filter_cat[4]=1&filter_cat[6]=1&title=%search_string%',
+      'loggedOutRegex': /Cloudflare|Ray ID|forgotten password/,
+      'matchRegex': /search did not match/,
+      'TV': true},
   {   'name': 'NB',
       'icon': 'https://i.imgur.com/OH7fBY4.png',
       'searchUrl': 'https://norbits.net/browse.php?incldead=1&fullsearch=0&scenerelease=0&imdbsearch=%tt%&imdb_from=0&imdb_to=0&search=',
