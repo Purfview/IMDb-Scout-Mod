@@ -1,7 +1,7 @@
 // ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      8.9.2
+// @version      8.9.3
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Adds links to IMDb pages from the torrent, ddl, subtitles, streaming, usenet and other sites.
 // @icon         https://i.imgur.com/u17jjYj.png
@@ -672,6 +672,8 @@
 
 8.9.2   -   Added: MTV.
 
+8.9.3   -   Tweaks: Proxy updates.
+
 
 //==============================================================================
 //    A list of all the sites.
@@ -771,11 +773,11 @@ var public_sites = [
       'TV': true},
   {   'name': '1337x-Proxy',
       'icon': 'https://i.imgur.com/3PI1RlA.png',
-      'searchUrl': 'https://1337x.unblockit.dev/category-search/%search_string%+%year%/Movies/1/',
+      'searchUrl': 'https://1337x.unblockit.link/category-search/%search_string%+%year%/Movies/1/',
       'matchRegex': /No results were returned/},
   {   'name': '1337x-Proxy',
       'icon': 'https://i.imgur.com/3PI1RlA.png',
-      'searchUrl': 'https://1337x.unblockit.dev/category-search/%search_string%/TV/1/',
+      'searchUrl': 'https://1337x.unblockit.link/category-search/%search_string%/TV/1/',
       'matchRegex': /No results were returned/,
       'TV': true},
   {   'name': 'ArenaBG',
@@ -907,13 +909,13 @@ var public_sites = [
   {   'name': 'LimeTor-Proxy',
       'icon': 'https://i.imgur.com/cLRWNQK.png',
       'loggedOutRegex': /Ray ID|security check to access|Please turn JavaScript/,
-      'searchUrl': 'https://limetorrents.unblockit.dev/search/movies/%search_string%+%year%/seeds/1/',
+      'searchUrl': 'https://limetorrents.unblockit.link/search/movies/%search_string%+%year%/seeds/1/',
       'matchRegex': /csprite_dl14/,
       'positiveMatch': true},
   {   'name': 'LimeTor-Proxy',
       'icon': 'https://i.imgur.com/cLRWNQK.png',
       'loggedOutRegex': /Ray ID|security check to access|Please turn JavaScript/,
-      'searchUrl': 'https://limetorrents.unblockit.dev/search/tv/%search_string%/seeds/1/',
+      'searchUrl': 'https://limetorrents.unblockit.link/search/tv/%search_string%/seeds/1/',
       'matchRegex': /csprite_dl14/,
       'positiveMatch': true,
       'TV': true},
@@ -1040,7 +1042,7 @@ var public_sites = [
       'both': true},
   {   'name': 'TorDL-Proxy',
       'icon': 'https://i.imgur.com/N0pLxiZ.png',
-      'searchUrl': 'https://torrentdownloads.unblockit.dev/search/?new=1&s_cat=0&search=%search_string%',
+      'searchUrl': 'https://torrentdownloads.unblockit.link/search/?new=1&s_cat=0&search=%search_string%',
       'loggedOutRegex': /Cloudflare|Ray ID/,
       'matchRegex': /No results found/,
       'both': true},
@@ -1057,12 +1059,12 @@ var public_sites = [
       'TV': true},
   {   'name': 'TPB-Proxy',
       'searchUrl': 'https://apibay.org/q.php?q=%search_string%&cat=201,202,207,209',
-      'goToUrl': 'https://pirateproxy.tube/search.php?q=%search_string%&cat=201,202,207,209',
+      'goToUrl': 'https://tpb.cnp.cx/search.php?q=%search_string%&cat=201,202,207,209',
       'loggedOutRegex': /Ray ID/,
       'matchRegex': /No results/},
   {   'name': 'TPB-Proxy',
       'searchUrl': 'https://apibay.org/q.php?q=%search_string%&cat=205,208',
-      'goToUrl': 'https://pirateproxy.tube/search.php?q=%search_string%&cat=205,208',
+      'goToUrl': 'https://tpb.cnp.cx/search.php?q=%search_string%&cat=205,208',
       'loggedOutRegex': /Ray ID/,
       'matchRegex': /No results/,
       'TV': true},
