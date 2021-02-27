@@ -1,7 +1,7 @@
 // ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      8.9.3
+// @version      9.0
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Adds links to IMDb pages from the torrent, ddl, subtitles, streaming, usenet and other sites.
 // @icon         https://i.imgur.com/u17jjYj.png
@@ -674,6 +674,13 @@
 
 8.9.3   -   Tweaks: Proxy updates.
 
+9.0     -   Added: DOGnzb (movie search is by IMDb id, tv search by TVDb id) .
+        -   New feature:  Support search by TVDb ID and TMDb ID
+                         with new search URL parameters: %tvdbid% and %tmdbid%.
+                          If matching id is not found then it will be set to "000000",
+                         if it's "undefined" then response didn't came in time,
+                         timeout is set to wait for 2 seconds.
+
 
 //==============================================================================
 //    A list of all the sites.
@@ -738,6 +745,12 @@ The IMDb id with the tt prefix (e.g. tt0055630).
 
 #  %nott%:
 The IMDb id without the tt prefix (e.g. 0055630).
+
+#  %tvdbid%:
+The TVDb id.
+
+#  %tmdbid%:
+The TMDb id.
 
 #  %search_string%:
 The movie title (e.g. Yojimbo). Depends on your preferences at www.imdb.com/preferences/general.
@@ -2050,13 +2063,14 @@ var usenet_sites = [
       'positiveMatch': true,
       'both': true},
   {   'name': 'DOGnzb',
-      'searchUrl': 'https://dognzb.cr/search/%search_string% %year%?t=2000',
+      'searchUrl': 'https://dognzb.cr/movies/%tt%',
       'loggedOutRegex': /Cloudflare|Ray ID|Keep me logged/,
-      'matchRegex': /did not match|No result/},
+      'matchRegex': />available</,
+      'positiveMatch': true},
   {   'name': 'DOGnzb',
-      'searchUrl': 'https://dognzb.cr/search/%search_string%?t=5000',
+      'searchUrl': 'https://dognzb.cr/series/%tvdbid%',
       'loggedOutRegex': /Cloudflare|Ray ID|Keep me logged/,
-      'matchRegex': /did not match|No result/,
+      'matchRegex': /NO NZBS FOUND/,
       'TV': true},
   {   'name': 'DrunkenSlug',
       'icon': 'https://drunkenslug.com/themes/shared/img/favicon.ico',
@@ -2601,7 +2615,7 @@ var icon_sites = [
 //    Replace Search URL parameters
 //==============================================================================
 
-function replaceSearchUrlParams(site, movie_id, movie_title, movie_title_orig, movie_year) {
+async function replaceSearchUrlParams(site, movie_id, movie_title, movie_title_orig, movie_year) {
   var search_url = site['searchUrl'];
   // If an array, do a little bit of recursion
   if ($.isArray(search_url)) {
@@ -2611,16 +2625,66 @@ function replaceSearchUrlParams(site, movie_id, movie_title, movie_title_orig, m
     });
     return search_array;
   }
+
+  if (search_url.match("tvdbid")) {
+    movie_id = await getTVDbID(movie_id);
+  } else if (search_url.match("tmdbid")) {
+    movie_id = await getTMDbID(movie_id);
+  }
+
   var space_replace      = ('spaceEncode' in site) ? site['spaceEncode'] : '+';
   var search_string      = movie_title.trim().replace(/ +\(.*|&/g, '').replace(/\s+/g, space_replace);
   var search_string_orig = movie_title_orig.trim().replace(/ +\(.*|&/g, '').replace(/\s+/g, space_replace);
   var movie_year         = (onSearchPage) ? movie_year : document.title.replace(/^(.+) \((\D*|)(\d{4})(.*)$/gi, '$3');
   var s = search_url.replace(/%tt%/g, 'tt' + movie_id)
                     .replace(/%nott%/g, movie_id)
+                    .replace(/%tvdbid%/g, movie_id)
+                    .replace(/%tmdbid%/g, movie_id)
                     .replace(/%search_string%/g, search_string)
                     .replace(/%search_string_orig%/g, search_string_orig)
                     .replace(/%year%/g, movie_year);
   return s;
+}
+
+//==============================================================================
+//    Convert IMDb ID to TVDb/TMDb ID
+//==============================================================================
+
+function getTVDbID(movie_id) {
+  var tvdb_id;
+  GM.xmlHttpRequest({
+    method: "GET",
+    url:    "https://thetvdb.com/api/GetSeriesByRemoteID.php?imdbid=tt" + movie_id,
+    onload: function(response) {
+      if (String(response.responseText).match("seriesid")) {
+        response.responseXML = new DOMParser().parseFromString(response.responseText, "application/xml");
+        const xmldata = response.responseXML;
+        tvdb_id = xmldata.getElementsByTagName("seriesid")[0].childNodes[0].nodeValue;
+      } else {
+        tvdb_id = "000000";
+      }
+    }
+  });
+  return new Promise(resolve => { setTimeout(() => { resolve(tvdb_id); }, 2000); });
+}
+
+function getTMDbID(movie_id) {
+  var tmdb_id;
+  GM.xmlHttpRequest({
+    method: "GET",
+    url:    "http://api.themoviedb.org/3/find/tt" + movie_id + "?api_key=d12b33d3f4fb8736dc06f22560c4f8d4&external_source=imdb_id",
+    onload: function(response) {
+      result = JSON.parse(response.responseText);
+      if (String(response.responseText).match('movie_results":\\[{')) {
+        tmdb_id = result.movie_results[0].id;
+      } else if (String(response.responseText).match('tv_results":\\[{')) {
+        tmdb_id = result.tv_results[0].id;
+      } else {
+        tmdb_id = "000000";
+      }
+    }
+  });
+  return new Promise(resolve => { setTimeout(() => { resolve(tmdb_id); }, 2000); });
 }
 
 //==============================================================================
@@ -2763,7 +2827,7 @@ function addLink(elem, site_name, target, site, state, scout_tick) {
 //    Determine whether a site should be displayed
 //==============================================================================
 
-function maybeAddLink(elem, site_name, search_url, site, scout_tick, movie_id, movie_title, movie_title_orig, movie_year) {
+async function maybeAddLink(elem, site_name, search_url, site, scout_tick, movie_id, movie_title, movie_title_orig, movie_year) {
   // If the search URL is an array, recurse briefly on the elements.
   if ($.isArray(search_url)) {
     $.each(search_url, function(index, url) {
@@ -2802,7 +2866,7 @@ function maybeAddLink(elem, site_name, search_url, site, scout_tick, movie_id, m
   var success_match = ('positiveMatch' in site) ? site['positiveMatch'] : false;
   var target = search_url;
   if ('goToUrl' in site) {
-    target = replaceSearchUrlParams({'searchUrl': site['goToUrl'], 'spaceEncode': ('spaceEncode' in site) ? site['spaceEncode'] : '+'}, movie_id, movie_title, movie_title_orig, movie_year);
+    target = await replaceSearchUrlParams({'searchUrl': site['goToUrl'], 'spaceEncode': ('spaceEncode' in site) ? site['spaceEncode'] : '+'}, movie_id, movie_title, movie_title_orig, movie_year);
   }
   // Check for results with POST method.
   if ('mPOST' in site) {
@@ -2884,20 +2948,20 @@ function maybeAddLink(elem, site_name, search_url, site, scout_tick, movie_id, m
 
 function perform(elem, movie_id, movie_title, movie_title_orig, is_tv, is_movie, movie_year, scout_tick) {
   var site_shown = false;
-  $.each(sites, function(index, site) {
+  $.each(sites, async function(index, site) {
     if (site['show']) {
       site_shown = true;
       // For TV Series show only TV links. TV Special, TV Movie, Episode & Documentary are treated as TV and Movie.
       if ((Boolean(site['TV']) == is_tv || Boolean(site['both'])) || (!is_tv && !is_movie) || getPageSetting('ignore_type')) {
-        var searchUrl = replaceSearchUrlParams(site, movie_id, movie_title, movie_title_orig, movie_year);
+        var searchUrl = await replaceSearchUrlParams(site, movie_id, movie_title, movie_title_orig, movie_year);
         if ('mPOST' in site) {
-          site['mPOST'] = replaceSearchUrlParams({'searchUrl': site['mPOST']}, movie_id, movie_title, movie_title_orig, movie_year);
+          site['mPOST'] = await replaceSearchUrlParams({'searchUrl': site['mPOST']}, movie_id, movie_title, movie_title_orig, movie_year);
         }
         if ('goToUrl' in site && getPageSetting('call_http_mod')) {
           maybeAddLink(elem, site['name'], searchUrl, site, scout_tick, movie_id, movie_title, movie_title_orig, movie_year);
         }
         if ('goToUrl' in site && !getPageSetting('call_http_mod')) {
-          searchUrl = replaceSearchUrlParams({'searchUrl': site['goToUrl'], 'spaceEncode': ('spaceEncode' in site) ? site['spaceEncode'] : '+'}, movie_id, movie_title, movie_title_orig, movie_year);
+          searchUrl = await replaceSearchUrlParams({'searchUrl': site['goToUrl'], 'spaceEncode': ('spaceEncode' in site) ? site['spaceEncode'] : '+'}, movie_id, movie_title, movie_title_orig, movie_year);
           addLink(elem, site['name'], searchUrl, site, 'found', scout_tick);
         }
         if (!('goToUrl' in site) && getPageSetting('call_http_mod')) {
@@ -2968,9 +3032,9 @@ function addIconBar(movie_id, movie_title, movie_title_orig) {
   } else {
     iconbar = $('#tn15title .title-extra');
   }
-  $.each(icon_sites, function(index, site) {
+  $.each(icon_sites, async function(index, site) {
     if (site['show']) {
-      var search_url = replaceSearchUrlParams(site, movie_id, movie_title, movie_title_orig);
+      var search_url = await replaceSearchUrlParams(site, movie_id, movie_title, movie_title_orig);
       var image = getFavicon(site);
       var html = $('<span />').append("&nbsp;").attr('style', 'font-size: 11px;').append($('<a />').attr('href', search_url).attr('target', '_blank').addClass('iconbar_icon').append(image));
       // Link and add Form element for POST method.
@@ -2979,7 +3043,7 @@ function addIconBar(movie_id, movie_title, movie_title_orig) {
         var placebo_url = new URL(search_url).origin;
         html = $('<span />').append("&nbsp;").attr('style', 'font-size: 11px;').append($('<a />').attr('href', placebo_url).attr('onclick', "$('#" + form_name + "').submit(); return false;").attr('target', '_blank').addClass('iconbar_icon').append(image));
 
-        site['mPOST'] = replaceSearchUrlParams({'searchUrl': site['mPOST']}, movie_id, movie_title, movie_title_orig);
+        site['mPOST'] = await replaceSearchUrlParams({'searchUrl': site['mPOST']}, movie_id, movie_title, movie_title_orig);
         var data = (site['mPOST'].match('{')) ? site['mPOST'] : '{"' + site['mPOST'].replace(/&/g, '","').replace(/=/g, '":"').replace(/\+/g, ' ') + '"}';
             data = JSON.parse(data);
         var addform = $('<form></form>');
@@ -3000,15 +3064,18 @@ function addIconBar(movie_id, movie_title, movie_title_orig) {
       iconbar.append(html).append();
     }
   });
-  //If we have access to the openInTab function, add an Open All feature
+  // If we have access to the openInTab function, add an Open All feature.
   if (GM.openInTab) {
-    var aopenall = $('<a />').text('Open All').prepend("&nbsp;").attr('href', 'javascript:;').attr('style', 'font-weight:bold;font-size:11px;font-family: Calibri, Verdana, Arial, Helvetica, sans-serif;');
-        aopenall.click(function() {
-          $('.iconbar_icon').each(function() {
-          GM.openInTab($(this).attr('href'));
-        });
-    });
-    iconbar.append(aopenall);
+    // Wrapped in timeout because the button lands in front of icons (async function above).
+    setTimeout(() => {
+      var aopenall = $('<a />').text('Open All').prepend("&nbsp;").attr('href', 'javascript:;').attr('style', 'font-weight:bold;font-size:11px;font-family: Calibri, Verdana, Arial, Helvetica, sans-serif;');
+          aopenall.click(function() {
+            $('.iconbar_icon').each(function() {
+            GM.openInTab($(this).attr('href'));
+          });
+      });
+      iconbar.append(aopenall);
+    }, 300);
   }
 }
 
