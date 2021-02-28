@@ -2679,6 +2679,8 @@ function getTMDbID(movie_id) {
         tmdb_id = result.movie_results[0].id;
       } else if (String(response.responseText).match('tv_results":\\[{')) {
         tmdb_id = result.tv_results[0].id;
+      } else if (String(response.responseText).match('tv__episode_results":\\[{')) {
+        tmdb_id = result.tv__episode_results[0].id;
       } else {
         tmdb_id = "000000";
       }
