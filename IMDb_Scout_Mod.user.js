@@ -680,7 +680,7 @@
                           If matching id is not found then it will be set to "000000",
                          if it's "undefined" then response didn't came in time,
                          timeout is set to wait for 2 seconds.
-                         Some funtions are async now.
+                         Some functions are async now.
 
 9.1     -   New feature:  All icons from Imgur and the problematic sites are stored in the script as Base64 string.
 
