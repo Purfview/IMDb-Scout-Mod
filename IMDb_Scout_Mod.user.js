@@ -1,7 +1,7 @@
 // ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      9.1
+// @version      9.1.1
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Adds links to IMDb pages from the torrent, ddl, subtitles, streaming, usenet and other sites.
 // @icon         https://i.imgur.com/u17jjYj.png
@@ -684,6 +684,8 @@
 
 9.1     -   New feature:  All icons from Imgur and the problematic sites are stored in the script as Base64 string.
 
+9.1.1   -   Fixed: YGG.
+
 
 //==============================================================================
 //    A list of all the sites.
@@ -1120,7 +1122,8 @@ var public_sites = [
       'matchRegex': /No result found/,
       'TV': true},
   {   'name': 'YGG',
-      'searchUrl': 'https://www2.yggtorrent.si/engine/search?name=%search_string_orig%&category=2145&sub_category=all&do=search',
+      'icon': 'data:image/png;base64,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',
+      'searchUrl': 'https://www4.yggtorrent.li/engine/search?name=%search_string_orig%&category=2145&sub_category=all&do=search',
       'loggedOutRegex': /Ray ID|security check to access/,
       'matchRegex': 'Aucun résultat',
       'both': true},
