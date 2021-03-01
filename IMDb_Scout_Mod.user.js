@@ -688,7 +688,7 @@
 
 9.2     -   Added: FZ, Portugas.
         -   New feature: Ads removal moved to func.
-        
+
 
 //==============================================================================
 //    A list of all the sites.
@@ -1990,8 +1990,7 @@ var private_sites = [
       'loggedOutRegex': /Cloudflare|Ray ID|Forget your password/,
       'matchRegex': /Didn't match any titles/},
   {   'name': 'TVCK',
-      'searchUrl': 'https://tvchaosuk.com
-/torrents/filter?imdb=%tt%',
+      'searchUrl': 'https://tvchaosuk.com/torrents/filter?imdb=%tt%',
       'loggedOutRegex': /Forgot Your Password/,
       'matchRegex': /<tbody>\s*<\/tbody>/,
       'both': true},
