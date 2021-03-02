@@ -677,7 +677,7 @@
 9.0     -   Added: DOGnzb (movie search is by IMDb id, tv search by TVDb id) .
         -   New feature:  Support search by TVDb ID and TMDb ID
                          with new search URL parameters: %tvdbid% and %tmdbid%.
-                          If matching id is not found then it will be set to "000000",
+                          If matching id is not found then it will be set to "0",
                          if it's "undefined" then response didn't came in time,
                          timeout is set to wait for 2 seconds.
                          Some functions are async now.
@@ -2708,7 +2708,7 @@ function getTVDbID(movie_id) {
         const xmldata = response.responseXML;
         tvdb_id = xmldata.getElementsByTagName("seriesid")[0].childNodes[0].nodeValue;
       } else {
-        tvdb_id = "000000";
+        tvdb_id = "0";
       }
     }
   });
@@ -2729,7 +2729,7 @@ function getTMDbID(movie_id) {
       } else if (String(response.responseText).match('tv__episode_results":\\[{')) {
         tmdb_id = result.tv__episode_results[0].id;
       } else {
-        tmdb_id = "000000";
+        tmdb_id = "0";
       }
     }
   });
