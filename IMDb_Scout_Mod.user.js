@@ -692,7 +692,7 @@
 9.2.1   -   Added: HDFans, BTN-TVDb (should be more reliable than by imdb id).
 
 9.3     -   Tweaked: BHD.
-        -   New feature:  On list/Watchlist page the "Load IMDb Scout" button moved to the top.
+        -   New feature: On list/Watchlist page the "Load IMDb Scout" button moved to the top.
 
 
 //==============================================================================
