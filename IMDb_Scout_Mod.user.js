@@ -694,6 +694,8 @@
 9.3     -   Tweaked: BHD.
         -   New feature: On list/Watchlist page the "Load IMDb Scout" button moved to the top.
 
+9.3.1   -   Added: Simply Scripts, Scripts On Screen, IMSDb.
+
 
 //==============================================================================
 //    A list of all the sites.
@@ -1227,7 +1229,7 @@ var private_sites = [
       'both': true},
   {   'name': 'BHD',
       'searchUrl': 'https://beyond-hd.me/torrents/all?search=&doSearch=Search&imdb=%nott%',
-      'loggedOutRegex': /FORGET PASSWORD|A Upload Now/,
+      'loggedOutRegex': /FORGET PASSWORD/,
       'matchRegex': /<h5 class="text-bold text-danger">N\/A<\/h5>/,
       'rateLimit': 625,
       'both': true},
@@ -2495,7 +2497,25 @@ var other_sites = [
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAACRElEQVQoz42SvU/bUBTFz/uIyWCRxGkSjJWSFqkMURgqUCu1U4qExEC7MLLyDzBUdOvHWjpkQYgl3VgZWok5U4UEEkNKqQIqcqDEFeHFke1n49chDBSWXt3hDudcnZ/uBQAAUQSl8D/F36wgkPz8HJp27b0rWl5eppT2+/39/X0yWEyIBsi70vn5+ZmZGSGEUsp1Xdu26e8zXFzwdx/weoUD/KZ6dHR0enp6c3MzCIJsNut5npSSDIIpFQEghN+MtLi4uLe3NzU1Va1WLy8vGWOO4/ClJfgBDn9yjUe3AAzDmJubW1hY2Nracl23UqmYpnnN8PARjg55oTDieUIIMTDU6/WJiYnj42Pf923bzmQytm3zk19wvbExs/igmNQ0zjnvdDqWZZVKpXK53Gg0hBC6rhuGEYZhr9fj98cAaLr+I5/XU6lUEASe53W73Z2dHSFEqVRqNpuWZRFCcrmcUorVarXh4XB391sikej1emEY+r4vpZRShmGYz+cBtNttSqnjOGtra9QwjNnZWQBSSs55EARKKUopY6zVajHGdF0fHx8HsLGxAYBKKRuNxoDS9wNKKSEkjhHHJI7jg4ODoaHk6enZ+vr6PxdNI43rzgH5VMoERoDi5OTj278EJD+tDlVfyNYRvZfF9jZ9/ix0/iSePvHfvs98rjvN72jbaaX8L1/V6seAAsl+X0VXMEcolLKKKpslnQ5jPCoUrl6+wlU8nEgq01SUKgAknU53uwRgQARQgAAU4IMhqRFfEkABJwAHor/pPAicVESz8wAAAABJRU5ErkJggg==',
       'searchUrl': 'http://www.fistofblist.com/search?q=%search_string%+%year%',
       'matchRegex': /No posts matching/,
-      'inSecondSearchBar': true}
+      'inSecondSearchBar': true},
+  {   'name': 'IMSDb',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAQAAAD9CzEMAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAAQZSURBVFjDvZh/aJVVGMe/W+rCma61cb0Etc1qW62ICBYstB9sMUobSCUIM6FIwdEv8q8tolqGEThjWCaRQf7hwFrJasooFOeiX942ldANLeYqtl237jburPvtj/c97znnfc9573sHds5/z6/POec+532ec0Fc3Yn/BZB1VKIZ76IL33lzH9rQgGXhblEAMWzDMcxblncBe/EI8hYKqMAuTEQ4hQE8gfzcAa9iOoejPoHKXABxHDSFibGMZSzjEhMiia1RAbU4qzvfyS08wASTTDPNNM/xGHdzHRf5IZ1YnB3QiFnVqYof8l+ax0/czhIdcUhFmACb1PAN/ISzDB+jbGWxiuhFuR3QiCvCsIDvaIGG+DrrWc1qVnM9O/mnojvPBhVx3AZYjjFhlM9uJcAcX2GB77xXcrdiMclbVe0GM+BFafKW4jzPxyzJ+bliNawixhAPAm7GlDBo0Q7nY2v2F/AHxW6EcanbGwS8J5S1nFPckrzRC/ccjzPBTq7xAq1lRrHtYb7QZHCfDqhAylFdwx+19R/wgh1UpC2urJCjmnWL3EOXDnhTKJ73peF6V75Rk6ZY7sqPavJLvEEAprFKAgpxwRFfz0s+wBp3XwM++SY3ULtP3iH30C4Bjbb1kw8QBIs46ZOvdT12+uRj8toNSUA7jBsmyYfdrJ/yXbvlrsc3AY+NAnBZAg47omL+FTAfYTe7OajJZlnrBinheMDjIwGYkIAhR1SnJZ19bPHOuc2g7WdeAHDZ9guYhkzFe42fwjNcHAC4hfGNCOG3eeGX8KzR4rQd8FrW8N75spifWWxOL3wHf3jXqIT9VisTIOm4vZAFsIvic9IbYmX6DS46jg9mATS5gNZQq5OGLOpzHG9iKsQxwzqC4HUcCwXsN9yDDlHH+kMcJ1nqNi9ToYBmw01uErnxcojjOIsIgqtDr+M0VwrArxIQE3lUHrK6JFcQBOtD179Pfk33qPVgD7L+gBkOsIOdvBgSfoa3iPDzqFQB9yAjKsJvVvc5zjAVmghtcv1f6RUtD18L1Tprfse5lEsZ5xmLxRCXyZpc5y/6NZiDpYg4o9dbnfmaTbBGW3+wL3pbNiSHDAH6PG2fQXvFq94gUrjDBIjhb9moB4/hiBfgiAHwpNoxvWTrTZ+WRiu05pEkT7HQrc/nfZpZPquG/wWL7N31ZqSl6aO+ijvCQQ5yxBd8B29Xww+jIvx90KQiwKf4rTUpJ7ifd+nt5Dnclv2F8zhm9B60nh38nuPeJyLD39nHrYz5u9UvURrtjXY3EsFWt5RVrGUza1gl813Of7AT10Z/ZRahK6cH/TBW5/5Ofgg9kYKPohUlC33p34/35bsnMNM4ie3m4FEBznE1Ygc+xWEcRQIJ/IwefIEP8AxWRfyv4mrO/wAQ7383ho5+SAAAAABJRU5ErkJggg==',
+      'searchUrl': 'https://imsdb.com/search.php',
+      'mPOST': 'search_query=%search_string_orig%',
+      'matchRegex': /h1><p><a/,
+      'positiveMatch': true,
+      'inSecondSearchBar': true,
+      'both': true},
+  {   'name': 'Scripts On Screen',
+      'searchUrl': 'https://scripts-onscreen.com/?s=%tt%',
+      'matchRegex': /nothing matched/,
+      'inSecondSearchBar': true,
+      'both': true},
+  {   'name': 'Simply Scripts',
+      'searchUrl': 'https://www.simplyscripts.com/cgi-bin/search.pl?search=%search_string_orig%&method=exact',
+      'matchRegex': /there were no records/,
+      'inSecondSearchBar': true,
+      'both': true}
 ]
 
 var streaming_sites = [
