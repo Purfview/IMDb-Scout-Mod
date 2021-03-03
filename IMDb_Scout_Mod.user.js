@@ -1,7 +1,7 @@
 // ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      9.3
+// @version      9.3.1
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Adds links to IMDb pages from the torrent, ddl, subtitles, streaming, usenet and other sites.
 // @icon         https://i.imgur.com/u17jjYj.png
