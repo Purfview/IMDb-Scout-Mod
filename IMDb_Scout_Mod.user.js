@@ -1,7 +1,7 @@
 // ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      9.3.2
+// @version      9.3.3
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Adds links to IMDb pages from the torrent, ddl, subtitles, streaming, usenet and other sites.
 // @icon         https://i.imgur.com/u17jjYj.png
@@ -699,6 +699,8 @@
 9.3.2   -   Added: HDAI.
         -   Fixed: PxHD, CG-Req.
         -   Removed: IMSDb.
+
+9.3.3   -   Added: HB.
 
 
 //==============================================================================
@@ -1462,6 +1464,15 @@ var private_sites = [
       'loggedOutRegex': /Cloudflare|Ray ID|Retrieve Password/,
       'matchRegex': /No data found/,
       'both': true},
+  {   'name': 'HB',
+      'searchUrl': 'https://hebits.net/browse.php?c27=1&c36=1&c20=1&c19=1&c25=1&search=%search_string_orig%+%year%',
+      'loggedOutRegex': /Cloudflare|Ray ID|register.png/,
+      'matchRegex': /לא נמצא דבר/},
+  {   'name': 'HB',
+      'searchUrl': 'https://hebits.net/browse.php?c1=1&c24=1&c37=1&c7=1&search=%search_string_orig%',
+      'loggedOutRegex': /Cloudflare|Ray ID|register.png/,
+      'matchRegex': /לא נמצא דבר/,
+      'TV': true},
   {   'name': 'HD-F',
       'searchUrl': 'https://hdf.world/torrents.php?searchstr=%search_string_orig%+%year%&order_by=time&order_way=desc&group_results=1&action=basic&searchsubmit=1',
       'loggedOutRegex': /Cloudflare|Ray ID|Mot de passe perdu/,
