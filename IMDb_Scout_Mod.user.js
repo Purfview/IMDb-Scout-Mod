@@ -1,7 +1,7 @@
 // ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      9.3.3
+// @version      9.3.4
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Adds links to IMDb pages from the torrent, ddl, subtitles, streaming, usenet and other sites.
 // @icon         https://i.imgur.com/u17jjYj.png
@@ -702,6 +702,8 @@
 
 9.3.3   -   Added: HB.
 
+9.3.4   -   Fixed: BD-film. 
+
 
 //==============================================================================
 //    A list of all the sites.
@@ -827,7 +829,8 @@ var public_sites = [
       'matchRegex': /no results found|Не са намерени резултати/,
       'TV': true},
   {   'name': 'BD-film',
-      'searchUrl': 'https://www.bd-film.cc/search.jspx?q=%tt%',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAAABnRSTlMAAAAAAABupgeRAAACXklEQVQoz22SXUgUcRTFz8zOrou7s7vK+kUu2gpq6lqGH0WIZqTSk4lRiUgISmaEVkIJQZpkZC4+hNajJPqQBkZRgYEWCAVaaGyuVKBmYePX7KwzOzgz/x5WWDPP071cftx7D0eH/0RRVHFZSaordZVblURp93Rn82biI63Hs6f9h4qyIyIiFaiaABNlPX2iMAS43e5glZdfsPTr97Io2R2277Oe4qPHZVGChtU/3AK3eaXmbGgDIaSmrkHUqJuN9Qcz0ls6u3le0FSlt6P1VnvH2Ojo+7G3wVMB0EFuPaBLyynoGXgO4G5z49dpD9HbAMzMLmgMe+5iC4DpL94QYLRFhpkTYxJzgu34y6HHd64CkCSl6ExTXFL2jGfOlZ4cAvxSgFsL/PDOA7j/cLCubaT6Wj+AyXcvAopZo6MePBoBAJqG0RxBdsjtdhdXbdtACGFZtr7Tm33ycm5JEyEkzpnLGAxWAM6schMbC4rMjPdWrvhi+5sBNchwK6I56rCw8ROAskVo39oCAIs9Iz6zPjq5svDUpRi7Ja9iwJFZBcBqP7DB03S4y24CAG5xigE0AJJs8IlhINGbW04AH4aCrj+JTDrP+/Wynxu8Vw0AUJntp32ytjhnsCaXHnMCSMjvU2QOAMWofpFWJSEtJaGrZzjkkivFKvj40sz5rtvlI6+mVMohyeEA4u1UVrzH+7oMwPWGin+iQRv3B9Tw1u4Jhj2iM8a11cpEXQfFLC0LfcOTy5/a9wifLuYGs6/WYmF5YVPbEqDyAGXSf+M/X9g7rdtiEqBzUIxEZD8U767hX6fGAYw5d8C1AAAAAElFTkSuQmCC',
+      'searchUrl': 'https://www.bd2020.com/search.jspx?q=%tt%',
       'loggedOutRegex': /Cloudflare|Ray ID/,
       'matchRegex': />0 条</,
       'both': true},
