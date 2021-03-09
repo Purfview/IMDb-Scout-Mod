@@ -1,7 +1,7 @@
 // ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      9.3.4
+// @version      9.3.5
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Adds links to IMDb pages from the torrent, ddl, subtitles, streaming, usenet and other sites.
 // @icon         https://i.imgur.com/u17jjYj.png
@@ -702,7 +702,9 @@
 
 9.3.3   -   Added: HB.
 
-9.3.4   -   Fixed: BD-film. 
+9.3.4   -   Fixed: BD-film.
+
+9.3.5   -   Added: T (The Myth).
 
 
 //==============================================================================
@@ -1880,6 +1882,17 @@ var private_sites = [
       'matchRegex': /Nothing found/,
       'rateLimit': 6000,
       'TV': true},
+  {   'name': 'T',
+      'icon': 'https://openlook.me/favicon_t.ico',
+      'searchUrl': 'https://openlook.me/torrents.php?searchstr=%search_string%+%year%&filter_cat[2]=1',
+      'loggedOutRegex': /Cloudflare|Ray ID|Remember me/,
+      'matchRegex': /did not match/},
+  {   'name': 'T',
+      'icon': 'https://openlook.me/favicon_t.ico',
+      'searchUrl': 'https://openlook.me/torrents.php?searchstr=%search_string%&filter_cat[3]=1',
+      'loggedOutRegex': /Cloudflare|Ray ID|Remember me/,
+      'matchRegex': /did not match/,
+      'TV': true},
   {   'name': 'Tasmanites',
       'searchUrl': 'https://tasmanit.es/browse.php?do=search&search_type=t_name&keywords=%search_string%',
       'loggedOutRegex': /Recover Password/,
@@ -1920,7 +1933,7 @@ var private_sites = [
       'matchRegex': /<tbody>\s*<\/tbody>/,
       'both': true},
   {   'name': 'Telly',
-      'searchUrl': 'https://telly.cc/torrents/filter?imdb=%tt%',
+      'searchUrl': 'https://telly.wtf/torrents/filter?imdb=%tt%',
       'loggedOutRegex': /Cloudflare|Ray ID|Forgot Your Password/,
       'matchRegex': /<tbody>\s*<\/tbody>/,
       'both': true},
