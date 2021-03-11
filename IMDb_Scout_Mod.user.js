@@ -1,7 +1,7 @@
 // ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      9.3.5
+// @version      9.3.6
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Adds links to IMDb pages from the torrent, ddl, subtitles, streaming, usenet and other sites.
 // @icon         https://i.imgur.com/u17jjYj.png
@@ -706,6 +706,9 @@
 
 9.3.5   -   Added: T (The Myth).
 
+9.3.6   -   Added: VidSrc, DbGDP, FZN, M-TB, ETpl.
+        -   Tweak: Ulož moved to the icon sites.
+
 
 //==============================================================================
 //    A list of all the sites.
@@ -880,6 +883,11 @@ var public_sites = [
       'searchUrl': 'https://forum.dirtywarez.com/search/search?keywords=%tt%',
       'loggedOutRegex': /Cloudflare|Ray ID|You must be logged/,
       'matchRegex': /No results found/,
+      'both': true},
+  {   'name': 'ETpl',
+      'searchUrl': 'https://elitetorrent.pl/torrents.php?search=%search_string_orig%+%year%&category=0',
+      'loggedOutRegex': /Cloudflare|Ray ID|Connect Error/,
+      'matchRegex': /Nie ma torrentów/,
       'both': true},
   {   'name': 'ETTV',
       'searchUrl': 'https://www.ettvcentral.com/torrents-search.php?search=%search_string%+%year%',
@@ -1450,6 +1458,12 @@ var private_sites = [
       'loggedOutRegex': /Cloudflare|Ray ID|Lost Password/,
       'matchRegex': /לא נמצאו תוצאות/,
       'both': true},
+  {   'name': 'FZN',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAIAAAD8GO2jAAADyklEQVRIx7WWu4udVRTFf2ufc2fuzOQdIZJCAwoBGcl/kEYLrYLBR2MqGwUbCxFF09n4SpnCIkEsJBDRJlhHiDaiQrCxEoJFJo+Jk8zjft85y+Lem3tnnBtvEnL4yv3ts89ea6+9BMAiPAtBWqMGIR74VBOVMgcV/oDfExyCI6QGCkroIbIDEgQ0RIMPwFXB66RVSFPn8LRRaih7MzIOBPZ05et/o2yDcUZkYhUHpQWNVaftSs4ACbdAszlmS/EJOkQhljPOkKAc/f7baZ5+8fgra5evTBM5t/gkyZGcicojORs5Rwyhv4+TO94WbgUKxootsnNJlVLu64K20X+BAlwBYuxGS0GY6kfTolnbGQuJfTu3gnniNRyDKlfWNqP3+ChHp621XTxcLp1biXBITfFfV9InX+5CKqXmSWTTPz2nDkbY6gzCqklQ+n1OhHu1Q21OfXAtwkAktxvKSWfO7ya1WHnisCiQEB6gqX5OQCkBFmCXdPz59cXDxSZCbevrN+PEu/uI2u9NnjyOhRoYCMJQh6B6yCFDdFJ75pNbOTslJC/fist/5p9/mye1EODJFxzcgwObIm6uU3tDNmuQXVD0xcmba+vev9+lEXh2hjfef4woWMgw+QVHT5/dhPmxV0m++whkiGee7r384tqeXS4tueOl6+ns+e7VG4nw3VLigURUIIq+O720MMfMLIJew445f3hqr2LUxfu6YOwmG/P2iZWcPT9XmkYK1lbjrZM7SwnTV2WNCeRUm8R90LBQPbhfH7+zrKgKhd00LN3QNxcWCA3p0I+cDPLFYy9ABwyBZoi+mAtZxFefXc2ZbpfSqlaXEm9+tKttZ8itCNwn9j1BVuwg5QEfB1pibMLHn9t46ol2vVe7XdmO4Kdf04+/zCpVF9mGdohAzpM2oGtFdXxLIaFKSV9/vnR7VXt3u9fDFvDep12x4bJFFWYjlf7K9ATaeKSYElhSP+OOeW9sjAhy6dzt7RbOgYiZTBUhrq9sKxeblcp2wDrQWXC7Ss4CUsekYSWF9Tt3/6nYWa3czay325ucpM307z8LQ7EoAKWoj1F/uqtHxkoDmmrKfWApTAbaO4rhhtliFMZsW7IUVqHRtLNgQ2f6hdO2VaSXcFALBKOF2oGGSCi2OB6AmqCBMsG5jNkWtZk6jzZIHWw07u862/wpgUlFSvcwg7b75om6J2MRFcdAjcf9nbeUOBIAe9L4eKTqaqgkWMaHiB5VSJsszDYN6BNXE7++zFUThbIAPyS4BX/jIzBLrFLjoQx2NWqpu3EXLsC1fwHfqshpPMqZmAAAAABJRU5ErkJggg==',
+      'searchUrl': 'http://fluxzone.org/browse.php?search=%tt%&blah=2&cat=0&incldead=1',
+      'loggedOutRegex': /Cloudflare|Ray ID|.Login</,
+      'matchRegex': /sit nimic!</,
+      'both': true},
   {   'name': 'G-Free',
       'searchUrl': 'https://generation-free.biz/torrents-search.php?search=%search_string_orig%+%year%&cat=0&genre=&incldead=1&freeleech=0&lang=0',
       'loggedOutRegex': /Cloudflare|Ray ID|Les cookies doivent/,
@@ -1649,6 +1663,12 @@ var private_sites = [
       'searchUrl': 'https://pt.m-team.cc/torrents.php?incldead=0&spstate=0&inclbookmarked=0&search=%tt%&search_area=4&search_mode=0',
       'loggedOutRegex': /type="password" name="password"|An error occurred|Please input the 6-digit code/,
       'matchRegex': /Nothing here!|Try again with a refined search string./,
+      'both': true},
+  {   'name': 'M-TB',
+      'searchUrl': 'https://masters-tb.com/browse.php?search=%tt%&cat=0&incldead=1&searchrs=1',
+      'loggedOutRegex': /Cloudflare|Ray ID|Трябва да влезеш в акаунта/,
+      'matchRegex': /Открити торенти - 0/,
+      'rateLimit': 3000,
       'both': true},
   {   'name': 'MP',
       'searchUrl': 'https://majomparade.eu/letoltes.php?tipus=1&k=yes&name=https://www.imdb.com/title/%tt%&category[]=&tipuska=0&imdb_search=yes',
@@ -2549,11 +2569,17 @@ var other_sites = [
 ]
 
 var streaming_sites = [
-  {   'name': 'Ulož',
-      'searchUrl': 'https://uloz.to/hledej?type=videos&q=%search_string_orig%',
-      'matchRegex': /nebylo nic nalezeno/,
-      'inThirdSearchBar': true,
-      'both': true}
+  {   'name': 'DbGDP',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAA3XAAAN1wFCKJt4AAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAAROSURBVFjDzZdbTBRnGIZJ0/te9aKJFhWwi6Fgu6wHPLR40bTaRm1CUamFptWmrYZUW4IcTCTW0gZDLyBBjFi4wGoitnsAi2Bokap00yJW2YXCnoGZ7bK7YGFhd3n7/bOMYfYgyyHqxZOZ7E7+95nv/+bLTAyAmCdJzFMjwG1dK/IMsY/4hTATjki4Nq51nCpL4rZfS3S8q4mInegl6ojNRAwjksBzhIpANJAASAAkAFo0GvxEcSSBZwm1JGRLCvgNMvCp8eDlcXSU4k6Ow4lTsd70q8uwXSnlLeG4HDvV8eFEcsMJZErCNyUJ4YM5e2EuOw3jmXMwVUmxVp6DsuWsv/JuNc50SanuqkLp7SLkNL+OHcoXsVsjmy3AhxNofhielgRumwKGC1egt09DN4aIDIwAZjtgCkL87e6gE991luBt1QoKfijhDCdgDgiwsifCcEkN3QSgJ1f98MLp5wIiJ2/lC5WYEXCEE+CZAL/+JdgOZENHl+g56WK93MIkBugmbposyGhMxi716jkEqLlMldVCeYMX6hmaholK/o99fgK9RB/J57Zl4h1hKx4loEiAsfZH6Eali7DgKo0VBTU6dFu8sLrmVxEDVeFY+0HqhdgoBH64ECJgocDTl414flcD0o+0oabZhn57QCzabchvP7A4ge+vmLBirwrxWRqs2qfGeyW3odE6hf8G/n2MAmtympBIrKTzxOwmHK7oxs3ecdjc1B/8YxIQkWU3IjZTCcWnLSi92I/7Np9wbXB/zCnwIC2eJzD+yguw1dShJ0oBkdX7NYLIG3ntqGsdxv1Bn0SCCXzx28dIp1nwploWKlCWXTFEeEv3lHuvNnT7B1zzExBZlvEzlmcoUaE0wzirQftIoLHzkK++ZY334nU5FyKQVOLjCawq8qG8dRrWkfkJJLxPFdijwo6CDtS3cdAN+yUV0NH5+J0vgQ4FTaWtoRVYf9zFE0jOd6Li2iQsUQrIPmgUgjd83kqPqYGu9cPiDO0BJuDsOorJG6nw/L5l8QKs+1fOnB+tugdtvwdWd6DU4Z6CJRWIy1ILcyDrmz/Q3OWOag4siYAwCXc2BDr9+pAQaoxyEs5LoLIlVICN3OomG47X9uJehGd9SQReJoGTP03A6gyzCGF2Rp52j2Yao9oPMdmxLqIAxwReLXBhd/kodEOhQQt9H+ihdQwmPQVvniG8QB8TYKQcc+JblQeDrLnsi3sj6hFuYgquv3Kp/AoWHlHgvCigKKZKFDpxomECWqMfRtZsjlBMRB8J9lBldLwUFsz2fcCsp/AjmLohF8MZo+EE5IRflFhXHGjIbV+78dHZBzhc+x8OBXHw/BR+bav3jf2dh5E7xUEUwv3nJxT2mth4s+kOJ8DIEwVEUosCW5JCMsJxFglfeaC6ROP1lky4w2AmO1jJNwWHjxEbIwkwPiNMhGMukgs9Ds3lQg6dcgfb1yjQEmnEU/hx+qT4Hxx8JuUJoU43AAAAAElFTkSuQmCC',
+      'searchUrl': 'https://databasegdriveplayer.co/player.php?imdb=%tt%',
+      'matchRegex': />HLS Mode</,
+      'positiveMatch': true,
+      'inThirdSearchBar': true},
+  {   'name': 'VidSrc',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABD0lEQVQ4ja2TvUoEMRSFv3sns7nbC4KtheAKNhZbW4mlpY0P4FYWgiLoFgpa2/kYvpwussciM+P+2TiekHCS+3cuSUwSfWDjoF+GcSBJSPoT917V2xZyDPj8mC0ZcgzWnBd9Wru9P08E8DWb8fL0xt30EgyaZQFCgsf7V24fJt1pAjArM4Y1XhlgG8INSUTUuIPmICC5gzUZIhLu/psAhJGjxt1RM5K7YWZFQdS0+02QROSEuyEaBWaOexEduWRvW1quDtJPEQFzWWmhDcqRqKoSuaqi3L2RGwVzwCXs+uTo/17i1fFux29O9zo+PTvYyM/3t+Sj0U6XbJCrjg+H6w9pFSlV2MXhdq8WrO93/gaUmJF4CshtQwAAAABJRU5ErkJggg==',
+      'searchUrl': 'https://v2.vidsrc.me/embed/%tt%/',
+      'matchRegex': /Not Found!/,
+      'inThirdSearchBar': true}
 ];
 
 var sites = public_sites.concat(private_sites, usenet_sites, custom_sites, subs_sites, pre_databases, other_sites, streaming_sites);
@@ -2699,6 +2725,9 @@ var icon_sites = [
   {   'name': 'TVmaze',
       'icon': 'https://static.tvmaze.com/images/favico/favicon.ico',
       'searchUrl': 'https://www.tvmaze.com/search?q=%search_string%',
+      'showByDefault': false},
+  {   'name': 'Ulož',
+      'searchUrl': 'https://ulozto.net/hledej?type=videos&q=%search_string_orig%',
       'showByDefault': false},
   {   'name': 'uNoGS',
       'searchUrl': 'https://unogs.com/?q=%search_string%',
