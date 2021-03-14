@@ -1,7 +1,7 @@
 // ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      9.3.6
+// @version      9.4
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Adds links to IMDb pages from the torrent, ddl, subtitles, streaming, usenet and other sites.
 // @icon         https://i.imgur.com/u17jjYj.png
@@ -708,6 +708,8 @@
 
 9.3.6   -   Added: VidSrc, DbGDP, FZN, M-TB, ETpl.
         -   Tweak: Ulož moved to the icon sites.
+
+9.4     -   Fixed: A typo in %tmdbid% code.
 
 
 //==============================================================================
@@ -2802,15 +2804,15 @@ function getTMDbID(movie_id) {
   var tmdb_id;
   GM.xmlHttpRequest({
     method: "GET",
-    url:    "http://api.themoviedb.org/3/find/tt" + movie_id + "?api_key=d12b33d3f4fb8736dc06f22560c4f8d4&external_source=imdb_id",
+    url:    "https://api.themoviedb.org/3/find/tt" + movie_id + "?api_key=d12b33d3f4fb8736dc06f22560c4f8d4&external_source=imdb_id",
     onload: function(response) {
       result = JSON.parse(response.responseText);
       if (String(response.responseText).match('movie_results":\\[{')) {
         tmdb_id = result.movie_results[0].id;
       } else if (String(response.responseText).match('tv_results":\\[{')) {
         tmdb_id = result.tv_results[0].id;
-      } else if (String(response.responseText).match('tv__episode_results":\\[{')) {
-        tmdb_id = result.tv__episode_results[0].id;
+      } else if (String(response.responseText).match('tv_episode_results":\\[{')) {
+        tmdb_id = result.tv_episode_results[0].id;
       } else {
         tmdb_id = "0";
       }
