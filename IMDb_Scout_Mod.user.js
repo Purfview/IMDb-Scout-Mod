@@ -1,7 +1,7 @@
 // ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      9.4
+// @version      9.4.1
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Adds links to IMDb pages from the torrent, ddl, subtitles, streaming, usenet and other sites.
 // @icon         https://i.imgur.com/u17jjYj.png
@@ -710,6 +710,8 @@
         -   Tweak: Ulož moved to the icon sites.
 
 9.4     -   Fixed: A typo in %tmdbid% code.
+
+9.4.1   -   Added: NTELogo, MOJBLiNK, MovieTorrentz.
 
 
 //==============================================================================
@@ -1672,6 +1674,20 @@ var private_sites = [
       'matchRegex': /Открити торенти - 0/,
       'rateLimit': 3000,
       'both': true},
+  {   'name': 'MOJBLiNK',
+      'searchUrl': 'http://www.mojblink.si/brskanje?cat=0&search=%tt%&searchin=descr&incldead=0',
+      'loggedOutRegex': /Cloudflare|Ray ID|Niste prijavljeni/,
+      'matchRegex': /ni vrnilo rezultatov/,
+      'both': true},
+  {   'name': 'MovieTorrentz',
+      'searchUrl': 'https://m2g.link/torrents-search.php?c112=1&c127=1&c113=1&c108=1&c110=1&c109=1&c126=1&c107=1&search=%search_string%+%year%',
+      'loggedOutRegex': /Cloudflare|Ray ID|Recover Account/,
+      'matchRegex': /Nothing Found/},
+  {   'name': 'MovieTorrentz',
+      'searchUrl': 'https://m2g.link/torrents-search.php?c116=1&c115=1&c128=1&c114=1&search=%search_string%',
+      'loggedOutRegex': /Cloudflare|Ray ID|Recover Account/,
+      'matchRegex': /Nothing Found/,
+      'TV': true},
   {   'name': 'MP',
       'searchUrl': 'https://majomparade.eu/letoltes.php?tipus=1&k=yes&name=https://www.imdb.com/title/%tt%&category[]=&tipuska=0&imdb_search=yes',
       'loggedOutRegex': /Cloudflare|Ray ID|Az oldal használatához/,
@@ -1706,6 +1722,11 @@ var private_sites = [
       'searchUrl': 'https://ncore.pro/torrents.php?mire=%tt%&miben=imdb&tipus=all_own',
       'loggedOutRegex': /Cloudflare|Ray ID|Jelszó-emlékeztető|Password recovery/,
       'matchRegex': /Nincs találat/,
+      'both': true},
+  {   'name': 'NTELogo',
+      'searchUrl': 'https://ntelogo.org/torrents/filter?imdb=%tt%',
+      'loggedOutRegex': /Cloudflare|Ray ID|Forgot Your Password/,
+      'matchRegex': /<tbody>\s*<\/tbody>/,
       'both': true},
   {   'name': 'OurBits',
       'searchUrl': 'https://ourbits.club/torrents.php?search_area=4&search=%tt%',
