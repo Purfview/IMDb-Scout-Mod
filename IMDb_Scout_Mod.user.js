@@ -1,9 +1,9 @@
 // ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      9.4.1
+// @version      9.5
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
-// @description  Adds links to IMDb pages from the torrent, ddl, subtitles, streaming, usenet and other sites.
+// @description  Adds links to IMDb pages from the torrent, ddl, subtitles, streaming, usenet and other sites. Adds movies to Radarr.
 // @icon         https://i.imgur.com/u17jjYj.png
 // @license      MIT
 //
@@ -22,7 +22,6 @@
 // @include      http*://*.imdb.tld/list/*
 //
 // @connect      *
-// @grant        GM_log
 // @grant        GM_getValue
 // @grant        GM_setValue
 // @grant        GM_addStyle
@@ -30,7 +29,6 @@
 // @grant        GM_xmlhttpRequest
 // @grant        GM_registerMenuCommand
 // @grant        GM_info
-// @grant        GM.log
 // @grant        GM.getValue
 // @grant        GM.setValue
 // @grant        GM.addStyle
@@ -38,6 +36,7 @@
 // @grant        GM.xmlHttpRequest
 // @grant        GM.registerMenuCommand
 // @grant        GM.info
+// @grant        GM.notification
 //
 // @run-at       document-start
 // @noframes
@@ -712,6 +711,8 @@
 9.4     -   Fixed: A typo in %tmdbid% code.
 
 9.4.1   -   Added: NTELogo, MOJBLiNK, MovieTorrentz.
+
+9.5     -   New feature: Add movies to Radarr (based on dirtycajunrice's code).
 
 
 //==============================================================================
@@ -1675,7 +1676,7 @@ var private_sites = [
       'rateLimit': 3000,
       'both': true},
   {   'name': 'MOJBLiNK',
-      'searchUrl': 'http://www.mojblink.si/brskanje?cat=0&search=%tt%&searchin=descr&incldead=0',
+      'searchUrl': 'https://www.mojblink.si/brskanje?cat=0&search=%tt%&searchin=descr&incldead=0',
       'loggedOutRegex': /Cloudflare|Ray ID|Niste prijavljeni/,
       'matchRegex': /ni vrnilo rezultatov/,
       'both': true},
@@ -2714,6 +2715,10 @@ var icon_sites = [
       'showByDefault': false},
   {   'name': 'OpenSubtitles',
       'searchUrl': 'https://www.opensubtitles.org/en/search/imdbid-%tt%'},
+  {   'name': 'Radarr',
+      'icon': 'data:image/png;base64,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',
+      'searchUrl': 'https://radarr.video',
+      'showByDefault': false},
   {   'name': 'Reelgood',
       'searchUrl': 'https://reelgood.com/search?q=%search_string%',
       'showByDefault': false},
@@ -3217,6 +3222,10 @@ function addIconBar(movie_id, movie_title, movie_title_orig) {
         }
       }
       iconbar.append(html).append();
+      // Call to Radarr funcs.
+      if (site['name'] == "Radarr"){
+      get_radarr_movies(movie_id);
+      }
     }
   });
   // If we have access to the openInTab function, add an Open All feature.
@@ -3775,6 +3784,189 @@ function iconSorterMissing() {
 }
 
 //==============================================================================
+//    Radarr
+//==============================================================================
+
+function get_radarr_movies(movie_id) {
+  let imdbid = "tt" + movie_id;
+  let radarr_url = GM_config.get("radarr_url").replace(/\/$/, "");
+  let radarr_apikey = GM_config.get("radarr_apikey");
+  const error_icon = "data:image/png;base64,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";
+  GM.xmlHttpRequest({
+    method: "GET",
+    url: radarr_url + "/api/movie",
+    headers: {
+      "X-Api-Key": radarr_apikey,
+      "Accept": "text/json"
+    },
+    onload: function(response) {
+      let responseJSON = null;
+      if (!response.responseJSON) {
+        try {
+          responseJSON = JSON.parse(response.responseText);
+          if (responseJSON.error == "Unauthorized") {
+            throw "creds";
+          }
+          GM.setValue("IMDb_Scout_Mod_Radarr_movies", JSON.stringify(responseJSON));
+          console.log("IMDb Scout Mod(Radarr): Sync movies complete!");
+          buttonBuilder(imdbid, radarr_url, radarr_apikey);
+        }
+        catch (e) {
+          $('a[href="https://radarr.video"]').find('img').prop("src", error_icon);
+          if (e instanceof SyntaxError) {
+            errorNotificationHandler(e, true, "No JSON in response. \nPlease check your Radarr URL.");
+          } else if (e == "creds") {
+            errorNotificationHandler(e, true, "Invalid Radarr API Key.");
+          } else {
+            errorNotificationHandler(e, false);
+          }
+        }
+      }
+    },
+    onerror: function() {
+      $('a[href="https://radarr.video"]').find('img').prop("src", error_icon);
+      console.log("IMDb Scout Mod(Radarr): No response. Check that Radarr is running or your Radarr URL.");
+    },
+    onabort: function() {
+      $('a[href="https://radarr.video"]').find('img').prop("src", error_icon);
+      console.log("IMDb Scout Mod(Radarr): Request is aborted.");
+    }
+  });
+}
+
+async function buttonBuilder (imdbid, radarr_url, radarr_apikey) {
+  let exists = await check_exists(imdbid);
+  const exists_icon = "data:image/png;base64,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";
+  let button = $('a[href="https://radarr.video"]');
+      button.prop("href", "javascript: void(0)");
+      button.removeAttr("target");
+  if (exists) {
+    button.find('img').prop("src", exists_icon);
+    $(button).click(function() {
+      GM.openInTab(radarr_url + "/movie/" + exists[0].titleSlug);
+    });
+  } else {
+    $(button).click(function() {
+      new_movie_lookup(imdbid, radarr_url, radarr_apikey, exists_icon);
+    });
+  }
+}
+
+async function check_exists (imdbid) {
+  let movieliststr = await GM.getValue("IMDb_Scout_Mod_Radarr_movies", "{}");
+  let movie_list = JSON.parse(movieliststr);
+  let filter = null;
+  try {
+    filter = movie_list.filter(movie => movie.imdbId == imdbid);
+  }
+  catch (e) {
+    if (e instanceof TypeError) {
+      return false;
+    } else {
+      errorNotificationHandler(e, false);
+      return false;
+    }
+  }
+  if (!filter.length) {
+    return false;
+  } else {
+    return filter;
+  }
+}
+
+function new_movie_lookup (imdbid, radarr_url, radarr_apikey, exists_icon) {
+  GM.xmlHttpRequest({
+    method: "GET",
+    url: radarr_url + "/api/movie/lookup/imdb?imdbId=" + imdbid,
+    headers: {
+      "X-Api-Key": radarr_apikey,
+      "Accept": "text/json"
+    },
+    onload: function(response) {
+      let responseJSON = null;
+      if (!response.responseJSON) {
+        if (!response.responseText) {
+          if (GM.notification) {
+            GM.notification("No results found.", "IMDb Scout Mod");
+          } else {
+            console.log("IMDb Scout Mod(Radarr): No results found.");
+          }
+          return;
+        }
+        responseJSON = JSON.parse(response.responseText);
+        add_movie(responseJSON, imdbid, radarr_url, radarr_apikey, exists_icon);
+      }
+    }
+  });
+}
+
+function add_movie (movie, imdbid, radarr_url, radarr_apikey, exists_icon) {
+  movie.ProfileId = GM_config.get("radarr_profileid");
+  movie.RootFolderPath = GM_config.get("radarr_rootfolderpath");
+  movie.monitored = true;
+  movie.minimumAvailability = GM_config.get("radarr_minimumavailability");
+  if (GM_config.get("radarr_searchformovie")) {
+    movie.addOptions = {searchForMovie: true};
+  }
+  GM.xmlHttpRequest({
+    method: "POST",
+    url: radarr_url + "/api/movie",
+    headers: {
+      "X-Api-Key": radarr_apikey,
+      "Accept": "text/json",
+      "Content-Type": "application/json"
+    },
+    data: JSON.stringify(movie),
+    onload: function(response) {
+      let responseJSON = null;
+      if (!response.responseJSON) {
+        responseJSON = JSON.parse(response.responseText);
+        try {
+          if (!responseJSON.title && responseJSON[Object.keys(responseJSON)[0]].errorMessage == "This movie has already been added") {
+            throw "exists";
+          }
+          let button = $('img[title="Radarr"]');
+              button.prop("src", exists_icon);
+              button.parent().off("click");
+          $(button).click(function() {
+            GM.openInTab(radarr_url + "/movie/" + responseJSON.titleSlug);
+          });
+          if (GM.notification) {
+            GM.notification(responseJSON.title + " Sucessfully sent to Radarr.", "IMDb Scout Mod");
+          } else {
+            console.log("IMDb Scout Mod(Radarr): " + responseJSON.title + " Sucessfully sent to Radarr.");
+          }
+        }
+        catch (e) {
+          if (e == "exists") {
+            errorNotificationHandler(e, true, "Movie already exists in Radarr.", "IMDb Scout Mod");
+          } else {
+            errorNotificationHandler(e, false);
+          }
+        }
+      }
+    }
+  });
+}
+
+function errorNotificationHandler (error, expected, errormsg) {
+  let prestring = "IMDb Scout Mod(Radarr): ";
+  if (expected) {
+    if (GM.notification) {
+      GM.notification("Error: " + errormsg, "IMDb Scout Mod");
+    } else {
+      console.log(prestring + "Error: " + errormsg + " Actual Error: " + error);
+    }
+  } else {
+      if (GM.notification) {
+        GM.notification("Unexpected Error, please report it. \nActual Error: " + error, "IMDb Scout Mod");
+      } else {
+        console.log(prestring + "Unexpected Error, please report it. Actual Error: " + error);
+      }
+  }
+}
+
+//==============================================================================
 //    Create the config name (GM_config)
 //==============================================================================
 
@@ -3827,7 +4019,13 @@ function countSites(task) {
       'use_mod_icons_search': {'type': 'checkbox'},
       'ignore_type_search': {'type': 'checkbox'},
       'highlight_sites_search': {'type': 'text'},
-      'highlight_missing_search': {'type': 'text'}
+      'highlight_missing_search': {'type': 'text'},
+      'radarr_searchformovie': {'type': 'checkbox'},
+      'radarr_url': {'type': 'text'},
+      'radarr_apikey': {'type': 'text'},
+      'radarr_rootfolderpath': {'type': 'text'},
+      'radarr_profileid': {'type': 'text'},
+      'radarr_minimumavailability': {'type': 'select', 'options': ['preDB', 'announced', 'inCinemas', 'released']}
     };
     $.each(custom_sites, function(index, site) {config_fields[configName(site)] = {'type': 'checkbox'};});
     $.each(public_sites, function(index, site) {config_fields[configName(site)] = {'type': 'checkbox'};});
@@ -3863,12 +4061,22 @@ function countSites(task) {
 //    Settings Menu (GM_config)
 //==============================================================================
 
+// To have consistent spacing in different browsers.
+var radarr_url_spacing = "&nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp";
+var radarr_apikey_spacing = "&nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp";
+var radarr_rootfolderpath_spacing = "&nbsp";
+if (navigator.userAgent.toLowerCase().indexOf('firefox') > -1) {
+  radarr_url_spacing = " &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp";
+  radarr_apikey_spacing = "&nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp";
+  radarr_rootfolderpath_spacing = "";
+}
+
 var config_fields = {
   'aftertitle': {
     'section': ' ',
     'label': ' &nbsp',
     'type': 'hidden'
-    },
+  },
   'imdbtotalstats': {
     'label': 'Total sites:&nbsp'.bold().fontsize(3) + countSites(1).toString().bold().fontsize(3).fontcolor("Blue"),
     'type': 'hidden'
@@ -4008,6 +4216,38 @@ var config_fields = {
     'label': 'Mark when not on:',
     'type': 'text',
     'default': ''
+  },
+  'radarr_searchformovie': {
+    'section': 'Radarr settings:',
+    'type': 'checkbox',
+    'label': 'Search for movie on add?',
+    'default': false
+  },
+  'radarr_url': {
+    'label': 'Radarr URL:' + radarr_url_spacing,
+    'type': 'text',
+    'default': 'http://localhost:7878'
+  },
+  'radarr_apikey': {
+    'label': 'Radarr API Key:' + radarr_apikey_spacing,
+    'type': 'text',
+    'default': ''
+  },
+  'radarr_rootfolderpath': {
+    'label': 'Radarr Root Folder Path:' + radarr_rootfolderpath_spacing,
+    'type': 'text',
+    'default': 'D:\\Movies'
+  },
+  'radarr_profileid': {
+    'label': 'Radarr Quality Profile ID:&nbsp',
+    'type': 'text',
+    'default': '1'
+  },
+  'radarr_minimumavailability': {
+    'label': 'Minimum Availability: &nbsp &nbsp &nbsp &nbsp',
+    'type': 'select',
+    'options': ['preDB', 'announced', 'inCinemas', 'released'],
+    'default': 'released'
   }
 };
 
@@ -4099,7 +4339,7 @@ GM_config.init({
   'css': '#imdb_scout_section_header_1, #imdb_scout_section_header_2, #imdb_scout_section_header_3, \
           #imdb_scout_section_header_4, #imdb_scout_section_header_5, #imdb_scout_section_header_6, \
           #imdb_scout_section_header_7, #imdb_scout_section_header_8, #imdb_scout_section_header_9, \
-          #imdb_scout_section_header_10, #imdb_scout_section_header_11 { \
+          #imdb_scout_section_header_10, #imdb_scout_section_header_11, #imdb_scout_section_header_12 { \
              background:   #00ab00 !important; \
              color:          black !important; \
              font-weight:     bold !important; \
@@ -4157,55 +4397,55 @@ GM_config.init({
        'color': '#cb0000'
       });
 
-      $('#imdb_scout').contents().find('#imdb_scout_section_3').find('.field_label').each(function(index, label) {
+      $('#imdb_scout').contents().find('#imdb_scout_section_4').find('.field_label').each(function(index, label) {
         var url = new URL(custom_sites[index].searchUrl);
         $(label).append(' ' + '<a class="grey_link" target="_blank" style="color: gray; text-decoration : none" href="' + url.origin + '">'
                         + (/www./.test(url.hostname) ? url.hostname.match(/www.(.*)/)[1] : url.hostname) + '</a>');
         $(label).prepend(getFavicon(custom_sites[index], true));
       });
-      $('#imdb_scout').contents().find('#imdb_scout_section_4').find('.field_label').each(function(index, label) {
+      $('#imdb_scout').contents().find('#imdb_scout_section_5').find('.field_label').each(function(index, label) {
         var url = new URL(public_sites[index].searchUrl);
         $(label).append(' ' + '<a class="grey_link" target="_blank" style="color: gray; text-decoration : none" href="' + url.origin + '">'
                         + (/www./.test(url.hostname) ? url.hostname.match(/www.(.*)/)[1] : url.hostname) + '</a>');
         $(label).prepend(getFavicon(public_sites[index], true));
       });
-      $('#imdb_scout').contents().find('#imdb_scout_section_5').find('.field_label').each(function(index, label) {
+      $('#imdb_scout').contents().find('#imdb_scout_section_6').find('.field_label').each(function(index, label) {
         var url = new URL(private_sites[index].searchUrl);
         $(label).append(' ' + '<a class="grey_link" target="_blank" style="color: gray; text-decoration : none" href="' + url.origin + '">'
                         + (/www./.test(url.hostname) ? url.hostname.match(/www.(.*)/)[1] : url.hostname) + '</a>');
         $(label).prepend(getFavicon(private_sites[index], true));
       });
-      $('#imdb_scout').contents().find('#imdb_scout_section_6').find('.field_label').each(function(index, label) {
+      $('#imdb_scout').contents().find('#imdb_scout_section_7').find('.field_label').each(function(index, label) {
         var url = new URL(usenet_sites[index].searchUrl);
         $(label).append(' ' + '<a class="grey_link" target="_blank" style="color: gray; text-decoration : none" href="' + url.origin + '">'
                         + (/www./.test(url.hostname) ? url.hostname.match(/www.(.*)/)[1] : url.hostname) + '</a>');
         $(label).prepend(getFavicon(usenet_sites[index], true));
       });
-      $('#imdb_scout').contents().find('#imdb_scout_section_7').find('.field_label').each(function(index, label) {
+      $('#imdb_scout').contents().find('#imdb_scout_section_8').find('.field_label').each(function(index, label) {
         var url = new URL(subs_sites[index].searchUrl);
         $(label).append(' ' + '<a class="grey_link" target="_blank" style="color: gray; text-decoration : none" href="' + url.origin + '">'
                         + (/www./.test(url.hostname) ? url.hostname.match(/www.(.*)/)[1] : url.hostname) + '</a>');
         $(label).prepend(getFavicon(subs_sites[index], true));
       });
-      $('#imdb_scout').contents().find('#imdb_scout_section_8').find('.field_label').each(function(index, label) {
+      $('#imdb_scout').contents().find('#imdb_scout_section_9').find('.field_label').each(function(index, label) {
         var url = new URL(pre_databases[index].searchUrl);
         $(label).append(' ' + '<a class="grey_link" target="_blank" style="color: gray; text-decoration : none" href="' + url.origin + '">'
                         + (/www./.test(url.hostname) ? url.hostname.match(/www.(.*)/)[1] : url.hostname) + '</a>');
         $(label).prepend(getFavicon(pre_databases[index], true));
       });
-      $('#imdb_scout').contents().find('#imdb_scout_section_9').find('.field_label').each(function(index, label) {
+      $('#imdb_scout').contents().find('#imdb_scout_section_10').find('.field_label').each(function(index, label) {
         var url = new URL(other_sites[index].searchUrl);
         $(label).append(' ' + '<a class="grey_link" target="_blank" style="color: gray; text-decoration : none" href="' + url.origin + '">'
                         + (/www./.test(url.hostname) ? url.hostname.match(/www.(.*)/)[1] : url.hostname) + '</a>');
         $(label).prepend(getFavicon(other_sites[index], true));
       });
-      $('#imdb_scout').contents().find('#imdb_scout_section_10').find('.field_label').each(function(index, label) {
+      $('#imdb_scout').contents().find('#imdb_scout_section_11').find('.field_label').each(function(index, label) {
         var url = new URL(streaming_sites[index].searchUrl);
         $(label).append(' ' + '<a class="grey_link" target="_blank" style="color: gray; text-decoration : none" href="' + url.origin + '">'
                         + (/www./.test(url.hostname) ? url.hostname.match(/www.(.*)/)[1] : url.hostname) + '</a>');
         $(label).prepend(getFavicon(streaming_sites[index], true));
       });
-      $('#imdb_scout').contents().find('#imdb_scout_section_11').find('.field_label').each(function(index, label) {
+      $('#imdb_scout').contents().find('#imdb_scout_section_12').find('.field_label').each(function(index, label) {
         var url = new URL(icon_sites[index].searchUrl);
         $(label).append(' ' + '<a class="grey_link" target="_blank" style="color: gray; text-decoration : none" href="' + url.origin + '">'
                         + (/www./.test(url.hostname) ? url.hostname.match(/www.(.*)/)[1] : url.hostname) + '</a>');
