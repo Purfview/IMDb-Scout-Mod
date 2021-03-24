@@ -1,7 +1,7 @@
 // ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      9.5
+// @version      9.6
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Adds links to IMDb pages from the torrent, ddl, subtitles, streaming, usenet and other sites. Adds movies to Radarr.
 // @icon         https://i.imgur.com/u17jjYj.png
@@ -713,6 +713,8 @@
 9.4.1   -   Added: NTELogo, MOJBLiNK, MovieTorrentz.
 
 9.5     -   New feature: Add movies to Radarr (based on dirtycajunrice's code).
+
+9.6     -   New feature: Refined Radarr settings.
 
 
 //==============================================================================
@@ -3901,12 +3903,27 @@ function new_movie_lookup (imdbid, radarr_url, radarr_apikey, exists_icon) {
 }
 
 function add_movie (movie, imdbid, radarr_url, radarr_apikey, exists_icon) {
-  movie.ProfileId = GM_config.get("radarr_profileid");
   movie.RootFolderPath = GM_config.get("radarr_rootfolderpath");
-  movie.monitored = true;
+  movie.monitored = GM_config.get("radarr_monitored");
   movie.minimumAvailability = GM_config.get("radarr_minimumavailability");
   if (GM_config.get("radarr_searchformovie")) {
     movie.addOptions = {searchForMovie: true};
+  }
+  const qProID = GM_config.get("radarr_profileid");
+  if (qProID == "Any") {
+    movie.ProfileId = 1;
+  } else if (qProID == "HD - 720p/1080p") {
+    movie.ProfileId = 6;
+  } else if (qProID == "HD-1080p") {
+    movie.ProfileId = 4;
+  } else if (qProID == "HD-720p") {
+    movie.ProfileId = 3;
+  } else if (qProID == "SD") {
+    movie.ProfileId = 2;
+  } else if (qProID == "Ultra-HD") {
+    movie.ProfileId = 5;
+  } else if (qProID == "Custom") {
+    movie.ProfileId = GM_config.get("radarr_customprofileid");
   }
   GM.xmlHttpRequest({
     method: "POST",
@@ -4021,11 +4038,13 @@ function countSites(task) {
       'highlight_sites_search': {'type': 'text'},
       'highlight_missing_search': {'type': 'text'},
       'radarr_searchformovie': {'type': 'checkbox'},
+      'radarr_monitored': {'type': 'checkbox'},
       'radarr_url': {'type': 'text'},
       'radarr_apikey': {'type': 'text'},
       'radarr_rootfolderpath': {'type': 'text'},
-      'radarr_profileid': {'type': 'text'},
-      'radarr_minimumavailability': {'type': 'select', 'options': ['preDB', 'announced', 'inCinemas', 'released']}
+      'radarr_profileid': {'type': 'select', 'options': ['Any', 'HD - 720p/1080p', 'HD-1080p', 'HD-720p', 'SD', 'Ultra-HD', 'Custom']},
+      'radarr_customprofileid': {'type': 'text'},
+      'radarr_minimumavailability': {'type': 'select', 'options': ['announced', 'inCinemas', 'released', 'preDB']}
     };
     $.each(custom_sites, function(index, site) {config_fields[configName(site)] = {'type': 'checkbox'};});
     $.each(public_sites, function(index, site) {config_fields[configName(site)] = {'type': 'checkbox'};});
@@ -4065,10 +4084,12 @@ function countSites(task) {
 var radarr_url_spacing = "&nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp";
 var radarr_apikey_spacing = "&nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp";
 var radarr_rootfolderpath_spacing = "&nbsp";
+var radarr_customprofileid_spacing = "&nbsp";
 if (navigator.userAgent.toLowerCase().indexOf('firefox') > -1) {
   radarr_url_spacing = " &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp";
   radarr_apikey_spacing = "&nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp";
   radarr_rootfolderpath_spacing = "";
+  radarr_customprofileid_spacing = "";
 }
 
 var config_fields = {
@@ -4221,7 +4242,12 @@ var config_fields = {
     'section': 'Radarr settings:',
     'type': 'checkbox',
     'label': 'Search for movie on add?',
-    'default': false
+    'default': true
+  },
+  'radarr_monitored': {
+    'type': 'checkbox',
+    'label': 'Add monitored?',
+    'default': true
   },
   'radarr_url': {
     'label': 'Radarr URL:' + radarr_url_spacing,
@@ -4239,15 +4265,21 @@ var config_fields = {
     'default': 'D:\\Movies'
   },
   'radarr_profileid': {
-    'label': 'Radarr Quality Profile ID:&nbsp',
+    'label': 'Radarr Quality Profile: &nbsp &nbsp &nbsp',
+    'type': 'select',
+    'options': ['Any', 'HD - 720p/1080p', 'HD-1080p', 'HD-720p', 'SD', 'Ultra-HD', 'Custom'],
+    'default': 'Any'
+  },
+  'radarr_customprofileid': {
+    'label': 'Custom Quality ProfileID:' + radarr_customprofileid_spacing,
     'type': 'text',
     'default': '1'
   },
   'radarr_minimumavailability': {
     'label': 'Minimum Availability: &nbsp &nbsp &nbsp &nbsp',
     'type': 'select',
-    'options': ['preDB', 'announced', 'inCinemas', 'released'],
-    'default': 'released'
+    'options': ['announced', 'inCinemas', 'released', 'preDB'],
+    'default': 'inCinemas'
   }
 };
 
@@ -4388,6 +4420,7 @@ GM_config.init({
       $('#imdb_scout').contents().find('input#imdb_scout_field_highlight_sites_search').attr('size', '35');
       $('#imdb_scout').contents().find('input#imdb_scout_field_highlight_missing_search').attr('size', '35');
       $('#imdb_scout').contents().find('input#imdb_scout_field_cfg_icons_size').attr('size', '1');
+      $('#imdb_scout').contents().find('input#imdb_scout_field_radarr_customprofileid').attr('size', '1');
 
       const modVersion = 'IMDb Scout Mod v' + GM.info.script.version;
       const modUrl = 'https://greasyfork.org/en/scripts/407284-imdb-scout-mod';
