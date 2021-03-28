@@ -2,9 +2,9 @@
 
 # IMDb Scout Mod:
 
-New additions, features, tweaks and bugfixes.   
-Adds links to IMDb pages from the torrent, ddl, subtitles, streaming, usenet and other sites.   
-Adds movies to Radarr.   
+Auto search for movie/series on torrent, usenet, ddl, subtitle, streaming, predb and other sites.   
+Adds links to IMDb pages from various sites.   
+Adds movies/series to Radarr/Sonarr.      
 Supports [Greasemonkey](https://www.greasespot.net/), [Violentmonkey](https://violentmonkey.github.io/) & [Tampermonkey](https://www.tampermonkey.net/).  
 
 Meanings of the color borders around the icons:  
