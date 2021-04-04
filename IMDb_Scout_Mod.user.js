@@ -1,14 +1,16 @@
 // ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      9.7.2
+// @version      9.8
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
-// @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from various sites. Adds movies/series to Radarr/Sonarr.
+// @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from various sites. Adds movies/series to Radarr/Sonarr. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         https://i.imgur.com/u17jjYj.png
 // @license      MIT
 //
 // @updateURL    https://greasyfork.org/scripts/407284-imdb-scout-mod/code/IMDb%20Scout%20Mod.meta.js
 // @downloadURL  https://greasyfork.org/scripts/407284-imdb-scout-mod/code/IMDb%20Scout%20Mod.user.js
+// @homepage     https://github.com/Purfview/IMDb-Scout-Mod
+// @supportURL   https://github.com/Purfview/IMDb-Scout-Mod/issues
 //
 // @require      https://openuserjs.org/src/libs/sizzle/GM_config.js
 // @require      https://code.jquery.com/jquery-3.5.1.min.js
@@ -725,6 +727,10 @@
                    Nekur (LV), Titrari (RO), WizdomSubs (IL), Yavka (BG), Zimuku (CN), Feliratok (HU).
 
 9.7.2   -   Added: seleZen, Blu-Req, ACM-Req.
+
+9.8     -   Added: DesiTor, Caps-A-Holic.
+        -   New feature: Add/Remove movies/series/episodes to/from Trakt's watchlist.
+        -   Note: Current Tampermonkey ver. has bug with notifications, affected: Sonarr/Radarr/Trakt-Watchlist.
 
 
 //==============================================================================
@@ -1460,6 +1466,19 @@ var private_sites = [
       'positiveMatch': true,
       'matchRegex': /td style/,
       'both': true},
+  {   'name': 'DesiTor',
+      'searchUrl': 'https://desitorrents.tv/ajax.php?action=search_torrent_cats',
+      'loggedOutRegex': /Cloudflare|Ray ID|Recover Password/,
+      'matchRegex': /orange-download.png/,
+      'mPOST': 'selected_group=&search_username=&selected_sorting=relevance&selected_sub%5B%5D=47&selected_sub%5B%5D=48&selected_sub%5B%5D=49&selected_sub%5B%5D=51&selected_sub%5B%5D=52&selected_sub%5B%5D=53&selected_sub%5B%5D=54&selected_sub%5B%5D=55&selected_sub%5B%5D=56&selected_sub%5B%5D=57&selected_sub%5B%5D=58&selected_sub%5B%5D=103&selected_sub%5B%5D=104&selected_sub%5B%5D=110&selected_sub%5B%5D=117&selected_sub%5B%5D=124&selected_sub%5B%5D=128&selected_sub%5B%5D=129&selected_sub%5B%5D=140&search_string=%search_string_orig%',
+      'positiveMatch': true},
+  {   'name': 'DesiTor',
+      'searchUrl': 'https://desitorrents.tv/ajax.php?action=search_torrent_cats',
+      'loggedOutRegex': /Cloudflare|Ray ID|Recover Password/,
+      'matchRegex': /orange-download.png/,
+      'mPOST': 'selected_group=&search_username=&selected_sorting=relevance&selected_sub%5B%5D=59&selected_sub%5B%5D=60&selected_sub%5B%5D=61&selected_sub%5B%5D=62&selected_sub%5B%5D=63&selected_sub%5B%5D=97&selected_sub%5B%5D=98&selected_sub%5B%5D=101&selected_sub%5B%5D=102&selected_sub%5B%5D=113&selected_sub%5B%5D=125&selected_sub%5B%5D=130&selected_sub%5B%5D=132&selected_sub%5B%5D=139&search_string=%search_string_orig%',
+      'positiveMatch': true,
+      'TV': true},
   {   'name': 'DVDSeed',
       'searchUrl': 'https://www.dvdseed.eu/browse2.php?search=%tt%&wheresearch=2&incldead=1&polish=0&nuke=0&rodzaj=0',
       'loggedOutRegex': /Nie masz konta|Nie zalogowany!/,
@@ -2849,6 +2868,10 @@ var icon_sites = [
   {   'name': 'Box Office Mojo',
       'searchUrl': 'https://www.boxofficemojo.com/title/%tt%',
       'showByDefault': false},
+  {   'name': 'Caps-A-Holic',
+      'icon': 'https://caps-a-holic.com/image/favicon.png',
+      'searchUrl': 'https://caps-a-holic.com/index.php?s=%search_string%',
+      'showByDefault': false},
   {   'name': 'Criterion',
       'icon': 'https://www.criterion.com/assets/img/icons/favicon-32x32.png',
       'searchUrl': 'https://www.criterion.com/search#stq=%search_string%',
@@ -2966,6 +2989,10 @@ var icon_sites = [
   {   'name': 'Trakt',
       'icon': 'https://walter.trakt.tv/hotlink-ok/public/favicon.ico',
       'searchUrl': 'https://trakt.tv/search/imdb?query=%tt%',
+      'showByDefault': false},
+  {   'name': 'Trakt-Watchlist',
+      'icon': 'data:image/png;base64,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',
+      'searchUrl': 'https://trakt.tv/oauth/authorize?client_id=325c09f8f8d6e3466c7ced12c11cc32d4af00e1af1f6310da4f6dfb702c7b8c2&redirect_uri=https://www.imdb.com/title/tt0052077/&response_type=code',
       'showByDefault': false},
   {   'name': 'TVDB',
       'icon': 'https://www.thetvdb.com/images/icon.png',
@@ -3449,6 +3476,10 @@ function addIconBar(movie_id, movie_title, movie_title_orig) {
       // Call to Sonarr funcs.
       if (site['name'] == "Sonarr"){
       get_sonarr_tvseries(movie_id);
+      }
+      // Call to Trakt-Watchlist funcs.
+      if (site['name'] == "Trakt-Watchlist"){
+      start_trakt(movie_id, movie_title);
       }
     }
   });
@@ -4111,7 +4142,7 @@ function new_movie_lookup(imdbid, radarr_url, radarr_apikey, exists_icon) {
       if (!response.responseJSON) {
         if (!response.responseText) {
           if (GM.notification) {
-            GM.notification("No results found.", "IMDb Scout Mod");
+            GM.notification("No results found.", "IMDb Scout Mod(Radarr)");
           } else {
             console.log("IMDb Scout Mod(Radarr): No results found.");
           }
@@ -4171,14 +4202,14 @@ function add_movie(movie, imdbid, radarr_url, radarr_apikey, exists_icon) {
             GM.openInTab(radarr_url + "/movie/" + responseJSON.titleSlug);
           });
           if (GM.notification) {
-            GM.notification(responseJSON.title + " Sucessfully sent to Radarr.", "IMDb Scout Mod");
+            GM.notification('"' + responseJSON.title + '"' + " \nSuccessfully sent to Radarr.", "IMDb Scout Mod(Radarr)");
           } else {
-            console.log("IMDb Scout Mod(Radarr): " + responseJSON.title + " Sucessfully sent to Radarr.");
+            console.log("IMDb Scout Mod(Radarr): " + responseJSON.title + " Successfully sent to Radarr.");
           }
         }
         catch (e) {
           if (e == "exists") {
-            errorNotificationHandler(e, true, "Movie already exists in Radarr.", "IMDb Scout Mod");
+            errorNotificationHandler(e, true, "Movie already exists in Radarr.", "IMDb Scout Mod(Radarr)");
           } else {
             errorNotificationHandler(e, false);
           }
@@ -4192,13 +4223,13 @@ function errorNotificationHandler(error, expected, errormsg) {
   let prestring = "IMDb Scout Mod(Radarr): ";
   if (expected) {
     if (GM.notification) {
-      GM.notification("Error: " + errormsg, "IMDb Scout Mod");
+      GM.notification("Error: " + errormsg, "IMDb Scout Mod(Radarr)");
     } else {
       console.log(prestring + "Error: " + errormsg + " Actual Error: " + error);
     }
   } else {
       if (GM.notification) {
-        GM.notification("Unexpected Radarr Error, please report it. \nActual Error: " + error, "IMDb Scout Mod");
+        GM.notification("Unexpected Radarr Error, please report it. \nActual Error: " + error, "IMDb Scout Mod(Radarr)");
       } else {
         console.log(prestring + "Unexpected Radarr Error, please report it. Actual Error: " + error);
       }
@@ -4318,7 +4349,7 @@ function new_tvseries_lookup(tvdbid, sonarr_url, sonarr_apikey, exists_icon) {
       if (!response.responseJSON) {
         if (!response.responseText) {
           if (GM.notification) {
-            GM.notification("No results found.", "IMDb Scout Mod");
+            GM.notification("No results found.", "IMDb Scout Mod(Sonarr)");
           } else {
             console.log("IMDb Scout Mod(Sonarr): No results found.");
           }
@@ -4420,14 +4451,14 @@ function add_tvseries(tvseries, tvdbid, sonarr_url, sonarr_apikey, exists_icon) 
             GM.openInTab(sonarr_url + "/series/" + responseJSON.titleSlug);
           });
           if (GM.notification) {
-            GM.notification(responseJSON.title + " Sucessfully sent to Sonarr.", "IMDb Scout Mod");
+            GM.notification('"' + responseJSON.title + '"' + " \nSuccessfully sent to Sonarr.", "IMDb Scout Mod(Sonarr)");
           } else {
-            console.log("IMDb Scout Mod(Sonarr): " + responseJSON.title + " Sucessfully sent to Sonarr.");
+            console.log("IMDb Scout Mod(Sonarr): " + responseJSON.title + " Successfully sent to Sonarr.");
           }
         }
         catch (e) {
           if (e == "exists") {
-            sonarrErrorNotificationHandler(e, true, "Series already exists in Sonarr.", "IMDb Scout Mod");
+            sonarrErrorNotificationHandler(e, true, "Series already exists in Sonarr.", "IMDb Scout Mod(Sonarr)");
           } else {
             sonarrErrorNotificationHandler(e, false);
           }
@@ -4441,17 +4472,391 @@ function sonarrErrorNotificationHandler(error, expected, errormsg) {
   let prestring = "IMDb Scout Mod(Sonarr): ";
   if (expected) {
     if (GM.notification) {
-      GM.notification("Error: " + errormsg, "IMDb Scout Mod");
+      GM.notification("Error: " + errormsg, "IMDb Scout Mod(Sonarr)");
     } else {
       console.log(prestring + "Error: " + errormsg + " Actual Error: " + error);
     }
   } else {
       if (GM.notification) {
-        GM.notification("Unexpected Sonarr Error, please report it. \nActual Error: " + error, "IMDb Scout Mod");
+        GM.notification("Unexpected Sonarr Error, please report it. \nActual Error: " + error, "IMDb Scout Mod(Sonarr)");
       } else {
         console.log(prestring + "Unexpected Sonarr Error, please report it. Actual Error: " + error);
       }
   }
+}
+
+//==============================================================================
+//    Trakt-Watchlist
+//==============================================================================
+
+async function start_trakt(movie_id, movie_title) {
+  const imdbid = "tt" + movie_id;
+  const title = movie_title.trim();
+  let button = $('a[href="https://trakt.tv/oauth/authorize?client_id=325c09f8f8d6e3466c7ced12c11cc32d4af00e1af1f6310da4f6dfb702c7b8c2&redirect_uri=https://www.imdb.com/title/tt0052077/&response_type=code"]');
+  const access_token = await GM.getValue("IMDb_Scout_Mod_Trakt_access_token", "none");
+
+  if (access_token == 'none') {
+    $(button).click(function() {
+      button.remove();
+    });
+    if (GM.notification) {
+      GM.notification("Trakt's access token not found. \nPress icon to authorize with Trakt. \nRefresh page after authorization is completed.", "IMDb Scout Mod(Trakt)");
+    } else {
+      console.log("IMDb Scout Mod(Trakt): Trakt's access token not found. Press icon to authorize with Trakt. Refresh page after authorization is completed.");
+    }
+    return;
+  }
+  const created_at = await GM.getValue("IMDb_Scout_Mod_Trakt_created_at", 9999999999);
+  const current_time = Math.round(new Date().getTime() / 1000);
+  if (current_time - created_at > 5184000) {
+    trakt_refresh_token();
+    return;
+  }
+  const exists_icon = "data:image/png;base64,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";
+  const missing_icon = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMwAAADMAgMAAABCTKRhAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAAAJUExURfDCAP////DCAJG7xr0AAAACdFJOUwAAdpPNOAAABhFJREFUaN6Nmk2O7SYQRktIkSJWkTGrySCdQVaDMswqmDwJeZW5Bgrq5ytf9+y2fYADGOMq6IJ/v37uv3/wRUL/7PTbYP6k10ynzVB5x3yQwyCIICIYesOQYdJ3plmG8jdmtEwzTskyFTDpmZktM4ytiEAHbAcuIT0xfJMtozww1SAMpZjpDmGohEwFDem+InJlZjjIEdOCqWJLcr4FT9qEmY6rWZoFMk1fIl1YhoysppL9la6otKKnEPlLimmnMCIDVdU4PbWyRVbxTTWOVNPkpFM16Ykrm5bFpCP1WKjGkRyE4qvJ844uG0dSRz5CW6dl2zgSOtl1wH1fT1xUMQz/z1ST7v8UWaZg6qq7ug6oU0QI0dHJoNPKuFJEoYfp4orRoT9GaUKIjg7ogaHT96WsmDpb2/x41nTtJiTFrEIq0MmrF5phWIeATrnvXvdYBjRt6Iyrq8AimFVvhTo3s65mwayfBHW4U7fQfjyKH9Clw1O+OybW4Sd4dwKJLoh1Zg3cCSS64EGHy8ybqbvuSGcU0AxTnnW40LSZ7zrjbu4EMSsedfgOwaQHnbSF6ppEF7uFOrmZTlhMedApnX8LpkJm6yzTM1mPWqjDxY17FNNDHTGqi+QaW6gj9hVVMKDbhE4X6+P4P/dGjXWaaO1hCl7ZlM7quDyYihivQ6QZvFBrnVVyihmvoxjU1UCHe+ow9buOYDrqaqSzO5uZFzqCQcMDdYiX7sX0Fzp7gGi+KfoLnVX2zaDhgTrLYTPtjc7sqzQYN6SBzmHAkAY688aACXTWjYOxQxrpLAnIRDqrsy4CUyfSkYydBpHOYgpgQp11J2JiHWb8dNvNQqvEYZrZUN/3A5014TyTrtkutFDmgJmv5ox0mHHTem7ME9I5jJlua6OFdCLmvvXCixFPbMfctw4ToBMxhScA0ImY+9a7fUhHMe4R+YBAh5kRLTIfCKOBxesQQWboDDL3t8yYN2NsUoPMr58fw8z5POfAW2Y+O3CuhcwaHTgJIiZeCkKGlwI4qQNmLQWxEGCWTix0mG50YiHPsE4s5BnWiYU8wwt1LOT7gEcnHiHHyIU6EHLMXqhTKOSY84EQCjlmT7Z4ylnm6NRQyDLnvdNCIcuc12gPhe7Lcj0Qz04oZNYQ9RoNhOyaKF+jkZBde8WuIBSyjNAJhQwjdUIhw0idUMgwUicUMu9tubKFQppRo1MiIc2oTU6OhFw95/FMkdDcYBNv49VCHQmZvViRe7ZIyDBZ7tkiIcncG2ZZcCR09pZrDysFAiG3V5blBkKKqaQXNSwk9vF7kp5isZBjdPOhUOZvjEoJrJ1QSHz/8OSRrYdCmun2XQCF9rfZmnC28UioiO/GsuIipkwntL81OzOu7c0HENS3cy3+47r7QIVmsp1cXiiZWMCnHWYSeyEbP7hDwfph8UKCqRxy1nPYC4F4SPLfQVroOkzbA2wXGSMkYjUcfgOLmRJKHHKi8w1iF00rJGNPfRfpvkaVkIxxTbEOgy9SSMbSVswuo5iVFLpEzG7RGb2lpZCKJ85W/od2A0JIxyBnD/7rdx1KKNv46NhREj0J6Tjsit3+jj6rjtClmCBAqoVMjPgiGIjVQiYWHcS8lVAvJ1nA8fgMt7lHqF0mth7E8KVQOl3wmCuQQtnmCi76LmRzElHuQwgVly8JcixbqCeZaFK5nBYJ9SwTWipn1COhVk4uSuazCmzcFKoitSbzZvkKvpI+QhnlzSrHdaAQtyG/yekRie2zzQNy2hKHM3Du8KKwcWfu07tc6F34TtSmIOfqK8qkUswmt5twRVmlmFEOuaPexjnkKFe9am8wv33S6wTy6LJpJl9/+Qx31ol5zZz0erUti3L8e+96mZ2hPjMQn1moGmn6tAfpoxZJnSQp385G2DMY15szGM9nPYIzJRVX1B7OlICTLfh4ij8jk+AJpfBcTQMnXpo/bIPO/JRvx4DQ2aJikYezRTI4BH/Ds1LVnST5elbqPKX3kay/6NWZrF2RZNK3c2mAeXmWTTJfz7Jx6w7z4szcat1h3p0bVMzb84mCeX2m8eM0mfT+HOTn72b+Dq79D3ssEFf2/KqWAAAAAElFTkSuQmCC";
+  const error_icon = "data:image/png;base64,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";
+  const synctime = await GM.getValue("IMDb_Scout_Mod_Trakt_watchlist_synctime", "none");
+  button.prop("href", "javascript: void(0)");
+  button.removeAttr("target");
+
+  if (synctime !== 'none') {
+    if (current_time - synctime < GM_config.get('trakt_synclimiter')) {
+      GM.setValue("IMDb_Scout_Mod_Trakt_watchlist_synctime", current_time);
+      const trakt_watchlist = await GM.getValue("IMDb_Scout_Mod_Trakt_watchlist", "none");
+
+      if (Boolean(trakt_watchlist.match(imdbid))) {
+        button.find('img').prop("src", exists_icon);
+        $(button).click(function() {
+          trakt_watchlist_remove(imdbid, title, access_token, button, error_icon, missing_icon, exists_icon);
+        });
+      } else {
+        button.find('img').prop("src", missing_icon);
+        $(button).click(function() {
+          trakt_watchlist_add(imdbid, title, access_token, button, error_icon, missing_icon, exists_icon);
+        });
+      }
+    } else {
+      get_trakt_watchlist(imdbid, title, access_token, button, error_icon, missing_icon, exists_icon);
+    }
+  } else {
+    get_trakt_watchlist(imdbid, title, access_token, button, error_icon, missing_icon, exists_icon);
+  }
+}
+
+function get_trakt_watchlist(imdbid, title, access_token, button, error_icon, missing_icon, exists_icon) {
+  GM.xmlHttpRequest({
+    method: "GET",
+    url: "https://api.trakt.tv/sync/watchlist",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer " + access_token,
+      "trakt-api-version": "2",
+      'trakt-api-key': '325c09f8f8d6e3466c7ced12c11cc32d4af00e1af1f6310da4f6dfb702c7b8c2'
+    },
+    onload: function(response) {
+      if (response.status == 200) {
+        let responseJSON = JSON.parse(response.responseText);
+        const set_synctime = Math.round(new Date().getTime() / 1000);
+        const trakt_watchlist = JSON.stringify(responseJSON);
+
+        GM.setValue("IMDb_Scout_Mod_Trakt_watchlist", trakt_watchlist);
+        GM.setValue("IMDb_Scout_Mod_Trakt_watchlist_synctime", set_synctime);
+        console.log("IMDb Scout Mod(Trakt): Sync watchlist complete!");
+
+        if (Boolean(trakt_watchlist.match(imdbid))) {
+          button.find('img').prop("src", exists_icon);
+          $(button).click(function() {
+            trakt_watchlist_remove(imdbid, title, access_token, button, error_icon, missing_icon, exists_icon);
+          });
+        } else {
+          button.find('img').prop("src", missing_icon);
+          $(button).click(function() {
+            trakt_watchlist_add(imdbid, title, access_token, button, error_icon, missing_icon, exists_icon);
+          });
+        }
+      } else if (response.status == 401) {
+        GM.setValue("IMDb_Scout_Mod_Trakt_access_token", "none");
+        location.reload();
+      } else if (response.status > 499) {
+        button.find('img').prop("src", error_icon);
+        button.off("click");
+        if (GM.notification) {
+          GM.notification("Server/CF Error or Overloaded.", "IMDb Scout Mod(Trakt)");
+        } else {
+          console.log("IMDb Scout Mod(Trakt): Server/CF Error or Overloaded.");
+        }
+      } else if (response.status > 399) {
+        button.find('img').prop("src", error_icon);
+        button.off("click");
+        if (GM.notification) {
+          GM.notification("Sync Error " + response.status + ", please report it.", "IMDb Scout Mod(Trakt)");
+        } else {
+            console.log("IMDb Scout Mod(Trakt): Sync Error " + response.status + ", please report it.");
+        }
+      } else {
+        button.find('img').prop("src", error_icon);
+        button.off("click");
+        console.log("IMDb Scout Mod(Trakt Sync status): " + response.status);
+        console.log("IMDb Scout Mod(Trakt Sync response): " + response.responseText);
+      }
+    }
+  });
+}
+
+function trakt_watchlist_add(imdbid, title, access_token, button, error_icon, missing_icon, exists_icon) {
+  const body = {'movies': [{'ids': {'imdb': imdbid}}], 'shows': [{'ids': {'imdb': imdbid}}], 'episodes': [{'ids': {'imdb': imdbid}}]};
+
+  GM.xmlHttpRequest({
+    method: "POST",
+    url: "https://api.trakt.tv/sync/watchlist",
+    data: JSON.stringify(body),
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer " + access_token,
+      "trakt-api-version": "2",
+      'trakt-api-key': '325c09f8f8d6e3466c7ced12c11cc32d4af00e1af1f6310da4f6dfb702c7b8c2'
+    },
+    onload: function(response) {
+      if (response.status == 201) {
+        const responseJSON   = JSON.parse(response.responseText);
+        const resultAdded    = JSON.stringify(responseJSON["added"]);
+        const resultExisting = JSON.stringify(responseJSON["existing"]);
+        const countAdded     = (resultAdded.match(/1/g) || []).length;
+        const countExisting  = (resultExisting.match(/1/g) || []).length;
+
+        if (countAdded == 0 && countExisting == 0) {
+          button.find('img').prop("src", error_icon);
+          button.off("click");
+          if (GM.notification) {
+            GM.notification('"' + title + '"' + " \nNot Found on Trakt.", "IMDb Scout Mod(Trakt)");
+          } else {
+              console.log("IMDb Scout Mod(Trakt): " + title + " Not Found on Trakt.");
+          }
+        } else if (countAdded == 0 && countExisting !== 0) {
+          button.find('img').prop("src", exists_icon);
+          button.off("click");
+          $(button).click(function() {
+            trakt_watchlist_remove(imdbid, title, access_token, button, error_icon, missing_icon, exists_icon);
+          });
+          if (GM.notification) {
+            GM.notification('"' + title + '"' + " \nAlready exists in Trakt's watchlist!", "IMDb Scout Mod(Trakt)");
+          } else {
+              console.log("IMDb Scout Mod(Trakt): " + title + "Already exists in Trakt's watchlist!");
+          }
+        } else if (countAdded > 1) {
+          button.find('img').prop("src", exists_icon);
+          button.off("click");
+          $(button).click(function() {
+            trakt_watchlist_remove(imdbid, title, access_token, button, error_icon, missing_icon, exists_icon);
+          });
+          if (GM.notification) {
+            GM.notification('"' + title + '"' + " \nAdded to Trakt's watchlist. \nDetected incorrect data on Trakt!", "IMDb Scout Mod(Trakt)");
+          } else {
+              console.log("IMDb Scout Mod(Trakt): " + title + "Added to Trakt's watchlist. Detected incorrect data on Trakt!");
+          }
+        } else {
+          button.find('img').prop("src", exists_icon);
+          button.off("click");
+          $(button).click(function() {
+            trakt_watchlist_remove(imdbid, title, access_token, button, error_icon, missing_icon, exists_icon);
+          });
+          if (GM.notification) {
+            GM.notification('"' + title + '"' + " \nAdded to Trakt's watchlist.", "IMDb Scout Mod(Trakt)");
+          } else {
+              console.log("IMDb Scout Mod(Trakt): " + title + " Added to Trakt's watchlist.");
+          }
+        }
+      } else if (response.status == 401) {
+        GM.setValue("IMDb_Scout_Mod_Trakt_access_token", "none");
+        location.reload();
+      } else if (response.status == 429) {
+          button.find('img').prop("src", error_icon);
+          button.off("click");
+          if (GM.notification) {
+            GM.notification("API rate limit exceeded.", "IMDb Scout Mod(Trakt)");
+          } else {
+            console.log("IMDb Scout Mod(Trakt): API rate limit exceeded.");
+          }
+      } else if (response.status > 499) {
+        button.find('img').prop("src", error_icon);
+        button.off("click");
+        if (GM.notification) {
+          GM.notification("Server/CF Error or Overloaded.", "IMDb Scout Mod(Trakt)");
+        } else {
+          console.log("IMDb Scout Mod(Trakt): Server/CF Error or Overloaded.");
+        }
+      } else if (response.status > 399) {
+        button.find('img').prop("src", error_icon);
+        button.off("click");
+        if (GM.notification) {
+          GM.notification("Add Error " + response.status + ", please report it.", "IMDb Scout Mod(Trakt)");
+        } else {
+            console.log("IMDb Scout Mod(Trakt): Add Error " + response.status + ", please report it.");
+        }
+      } else {
+        button.find('img').prop("src", error_icon);
+        button.off("click");
+        console.log("IMDb Scout Mod(Trakt Add status): " + response.status);
+        console.log("IMDb Scout Mod(Trakt Add response): " + response.responseText);
+      }
+    },
+    onerror: function() {
+      button.find('img').prop("src", error_icon);
+      button.off("click");
+      console.log("IMDb Scout Mod(Trakt): Add Request Error.");
+    },
+    onabort: function() {
+      button.find('img').prop("src", error_icon);
+      button.off("click");
+      console.log("IMDb Scout Mod(Trakt): Add Request is aborted.");
+    }
+  });
+}
+
+function trakt_watchlist_remove(imdbid, title, access_token, button, error_icon, missing_icon, exists_icon) {
+  const body = {'movies': [{'ids': {'imdb': imdbid}}], 'shows': [{'ids': {'imdb': imdbid}}], 'episodes': [{'ids': {'imdb': imdbid}}]};
+  GM.xmlHttpRequest({
+    method: "POST",
+    url: "https://api.trakt.tv/sync/watchlist/remove",
+    data: JSON.stringify(body),
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer " + access_token,
+      "trakt-api-version": "2",
+      'trakt-api-key': '325c09f8f8d6e3466c7ced12c11cc32d4af00e1af1f6310da4f6dfb702c7b8c2'
+    },
+    onload: function(response) {
+      if (response.status == 200) {
+        button.find('img').prop("src", missing_icon);
+        button.off("click");
+        $(button).click(function() {
+          trakt_watchlist_add(imdbid, title, access_token, button, error_icon, missing_icon, exists_icon);
+        });
+        if (GM.notification) {
+          GM.notification('"' + title + '"' + " \nRemoved from Trakt's watchlist.", "IMDb Scout Mod(Trakt)");
+        } else {
+            console.log("IMDb Scout Mod(Trakt): " + title + " Removed from Trakt's watchlist.");
+        }
+      } else if (response.status == 401) {
+        GM.setValue("IMDb_Scout_Mod_Trakt_access_token", "none");
+        location.reload();
+      } else if (response.status == 429) {
+          button.find('img').prop("src", error_icon);
+          button.off("click");
+          if (GM.notification) {
+            GM.notification("API rate limit exceeded.", "IMDb Scout Mod(Trakt)");
+          } else {
+            console.log("IMDb Scout Mod(Trakt): API rate limit exceeded.");
+          }
+      } else if (response.status > 499) {
+        button.find('img').prop("src", error_icon);
+        button.off("click");
+        if (GM.notification) {
+          GM.notification("Server/CF Error or Overloaded.", "IMDb Scout Mod(Trakt)");
+        } else {
+          console.log("IMDb Scout Mod(Trakt): Server/CF Error or Overloaded.");
+        }
+      } else if (response.status > 399) {
+        button.find('img').prop("src", error_icon);
+        button.off("click");
+        if (GM.notification) {
+          GM.notification("Remove Error " + response.status + ", please report it.", "IMDb Scout Mod(Trakt)");
+        } else {
+            console.log("IMDb Scout Mod(Trakt): Remove Error " + response.status + ", please report it.");
+        }
+      } else {
+        button.find('img').prop("src", error_icon);
+        button.off("click");
+        console.log("IMDb Scout Mod(Trakt Remove status): " + response.status);
+        console.log("IMDb Scout Mod(Trakt Remove response): " + response.responseText);
+      }
+    },
+    onerror: function() {
+      button.find('img').prop("src", error_icon);
+      button.off("click");
+      console.log("IMDb Scout Mod(Trakt): Remove Request Error.");
+    },
+    onabort: function() {
+      button.find('img').prop("src", error_icon);
+      button.off("click");
+      console.log("IMDb Scout Mod(Trakt): Remove Request is aborted.");
+    }
+  });
+}
+
+function traktCatchToken() {
+  const code = location.href.replace('https://www.imdb.com/title/tt0052077/?code=','');
+  var body = {
+    'code': code,
+    'client_id': '325c09f8f8d6e3466c7ced12c11cc32d4af00e1af1f6310da4f6dfb702c7b8c2',
+    'client_secret': 'ee4204782a908e201ae22da35fbd19f08362e99ba158b04f1931caf8eea55fe4',
+    'redirect_uri': 'https://www.imdb.com/title/tt0052077/',
+    'grant_type': 'authorization_code'
+  };
+  GM.xmlHttpRequest({
+    method: "POST",
+    url: "https://api.trakt.tv/oauth/token",
+    data: JSON.stringify(body),
+    headers: {
+      "Content-Type": "application/json"
+    },
+    onload: function(response) {
+      if (response.status == 200) {
+        let responseJSON = JSON.parse(response.responseText);
+        const access_token  = responseJSON.access_token;
+        const refresh_token = responseJSON.refresh_token;
+        const created_at    = responseJSON.created_at;
+        GM.setValue("IMDb_Scout_Mod_Trakt_access_token", access_token);
+        GM.setValue("IMDb_Scout_Mod_Trakt_refresh_token", refresh_token);
+        GM.setValue("IMDb_Scout_Mod_Trakt_created_at", created_at);
+        window.close();
+      } else {
+        console.log("IMDb Scout Mod(Trakt Get Token status): " + response.status);
+        console.log("IMDb Scout Mod(Trakt Get Token response): " + response.responseText);
+      }
+    }
+  });
+}
+
+async function trakt_refresh_token() {
+  const refresh_token = await GM.getValue("IMDb_Scout_Mod_Trakt_refresh_token", "none");
+  var body = {
+    'refresh_token': refresh_token,
+    'client_id': '325c09f8f8d6e3466c7ced12c11cc32d4af00e1af1f6310da4f6dfb702c7b8c2',
+    'client_secret': 'ee4204782a908e201ae22da35fbd19f08362e99ba158b04f1931caf8eea55fe4',
+    'redirect_uri': 'https://www.imdb.com/title/tt0052077/',
+    'grant_type': 'refresh_token'
+  };
+  GM.xmlHttpRequest({
+    method: "POST",
+    url: "https://api.trakt.tv/oauth/token",
+    data: JSON.stringify(body),
+    headers: {
+      "Content-Type": "application/json"
+    },
+    onload: function(response) {
+      if (response.status == 200) {
+        let responseJSON = JSON.parse(response.responseText);
+        const access_token  = responseJSON.access_token;
+        const refresh_token = responseJSON.refresh_token;
+        const created_at    = responseJSON.created_at;
+        GM.setValue("IMDb_Scout_Mod_Trakt_access_token", access_token);
+        GM.setValue("IMDb_Scout_Mod_Trakt_refresh_token", refresh_token);
+        GM.setValue("IMDb_Scout_Mod_Trakt_created_at", created_at);
+        console.log("IMDb Scout Mod(Trakt): Successfully Refresh Access Token!");
+        if (GM.notification) {
+          GM.notification("Trakt's access token is refreshed. \nNext refresh after 2 months.", "IMDb Scout Mod(Trakt)");
+        } else {
+          console.log("IMDb Scout Mod(Trakt): Trakt's access token refreshed. Next refresh after 2 months.");
+        }
+        location.reload();
+      } else {
+        GM.setValue("IMDb_Scout_Mod_Trakt_access_token", "none");
+        console.log("IMDb Scout Mod(Trakt Refresh Token status): " + response.status);
+        console.log("IMDb Scout Mod(Trakt Refresh Token response): " + response.responseText);
+      }
+    }
+  });
 }
 
 //==============================================================================
@@ -4529,7 +4934,8 @@ function countSites(task) {
       'sonarr_profileid': {'type': 'select', 'options': ['Any', 'HD - 720p/1080p', 'HD-1080p', 'HD-720p', 'SD', 'Ultra-HD', 'Custom']},
       'sonarr_customprofileid': {'type': 'text'},
       'sonarr_languageprofileid': {'type': 'text'},
-      'sonarr_seriestype': {'type': 'select', 'options': ['standard', 'daily', 'anime']}
+      'sonarr_seriestype': {'type': 'select', 'options': ['standard', 'daily', 'anime']},
+      'trakt_synclimiter': {'type': 'select', 'options': ['15', '30', '60', '300']}
     };
     $.each(custom_sites, function(index, site) {config_fields[configName(site)] = {'type': 'checkbox'};});
     $.each(public_sites, function(index, site) {config_fields[configName(site)] = {'type': 'checkbox'};});
@@ -4848,6 +5254,13 @@ var config_fields = {
     'type': 'select',
     'options': ['standard', 'daily', 'anime'],
     'default': 'standard'
+  },
+  'trakt_synclimiter': {
+    'label': 'Watchlist sync limiter (seconds):',
+    'section': 'Trakt-Watchlist settings:',
+    'type': 'select',
+    'options': ['15', '30', '60', '300'],
+    'default': '15'
   }
 };
 
@@ -4940,7 +5353,7 @@ GM_config.init({
           #imdb_scout_section_header_4, #imdb_scout_section_header_5, #imdb_scout_section_header_6, \
           #imdb_scout_section_header_7, #imdb_scout_section_header_8, #imdb_scout_section_header_9, \
           #imdb_scout_section_header_10, #imdb_scout_section_header_11, #imdb_scout_section_header_12, \
-          #imdb_scout_section_header_13 { \
+          #imdb_scout_section_header_13, #imdb_scout_section_header_14 { \
              background:   #00ab00 !important; \
              color:          black !important; \
              font-weight:     bold !important; \
@@ -5001,55 +5414,55 @@ GM_config.init({
        'color': '#cb0000'
       });
 
-      $('#imdb_scout').contents().find('#imdb_scout_section_5').find('.field_label').each(function(index, label) {
+      $('#imdb_scout').contents().find('#imdb_scout_section_6').find('.field_label').each(function(index, label) {
         var url = new URL(custom_sites[index].searchUrl);
         $(label).append(' ' + '<a class="grey_link" target="_blank" style="color: gray; text-decoration : none" href="' + url.origin + '">'
                         + (/www./.test(url.hostname) ? url.hostname.match(/www.(.*)/)[1] : url.hostname) + '</a>');
         $(label).prepend(getFavicon(custom_sites[index], true));
       });
-      $('#imdb_scout').contents().find('#imdb_scout_section_6').find('.field_label').each(function(index, label) {
+      $('#imdb_scout').contents().find('#imdb_scout_section_7').find('.field_label').each(function(index, label) {
         var url = new URL(public_sites[index].searchUrl);
         $(label).append(' ' + '<a class="grey_link" target="_blank" style="color: gray; text-decoration : none" href="' + url.origin + '">'
                         + (/www./.test(url.hostname) ? url.hostname.match(/www.(.*)/)[1] : url.hostname) + '</a>');
         $(label).prepend(getFavicon(public_sites[index], true));
       });
-      $('#imdb_scout').contents().find('#imdb_scout_section_7').find('.field_label').each(function(index, label) {
+      $('#imdb_scout').contents().find('#imdb_scout_section_8').find('.field_label').each(function(index, label) {
         var url = new URL(private_sites[index].searchUrl);
         $(label).append(' ' + '<a class="grey_link" target="_blank" style="color: gray; text-decoration : none" href="' + url.origin + '">'
                         + (/www./.test(url.hostname) ? url.hostname.match(/www.(.*)/)[1] : url.hostname) + '</a>');
         $(label).prepend(getFavicon(private_sites[index], true));
       });
-      $('#imdb_scout').contents().find('#imdb_scout_section_8').find('.field_label').each(function(index, label) {
+      $('#imdb_scout').contents().find('#imdb_scout_section_9').find('.field_label').each(function(index, label) {
         var url = new URL(usenet_sites[index].searchUrl);
         $(label).append(' ' + '<a class="grey_link" target="_blank" style="color: gray; text-decoration : none" href="' + url.origin + '">'
                         + (/www./.test(url.hostname) ? url.hostname.match(/www.(.*)/)[1] : url.hostname) + '</a>');
         $(label).prepend(getFavicon(usenet_sites[index], true));
       });
-      $('#imdb_scout').contents().find('#imdb_scout_section_9').find('.field_label').each(function(index, label) {
+      $('#imdb_scout').contents().find('#imdb_scout_section_10').find('.field_label').each(function(index, label) {
         var url = new URL(subs_sites[index].searchUrl);
         $(label).append(' ' + '<a class="grey_link" target="_blank" style="color: gray; text-decoration : none" href="' + url.origin + '">'
                         + (/www./.test(url.hostname) ? url.hostname.match(/www.(.*)/)[1] : url.hostname) + '</a>');
         $(label).prepend(getFavicon(subs_sites[index], true));
       });
-      $('#imdb_scout').contents().find('#imdb_scout_section_10').find('.field_label').each(function(index, label) {
+      $('#imdb_scout').contents().find('#imdb_scout_section_11').find('.field_label').each(function(index, label) {
         var url = new URL(pre_databases[index].searchUrl);
         $(label).append(' ' + '<a class="grey_link" target="_blank" style="color: gray; text-decoration : none" href="' + url.origin + '">'
                         + (/www./.test(url.hostname) ? url.hostname.match(/www.(.*)/)[1] : url.hostname) + '</a>');
         $(label).prepend(getFavicon(pre_databases[index], true));
       });
-      $('#imdb_scout').contents().find('#imdb_scout_section_11').find('.field_label').each(function(index, label) {
+      $('#imdb_scout').contents().find('#imdb_scout_section_12').find('.field_label').each(function(index, label) {
         var url = new URL(other_sites[index].searchUrl);
         $(label).append(' ' + '<a class="grey_link" target="_blank" style="color: gray; text-decoration : none" href="' + url.origin + '">'
                         + (/www./.test(url.hostname) ? url.hostname.match(/www.(.*)/)[1] : url.hostname) + '</a>');
         $(label).prepend(getFavicon(other_sites[index], true));
       });
-      $('#imdb_scout').contents().find('#imdb_scout_section_12').find('.field_label').each(function(index, label) {
+      $('#imdb_scout').contents().find('#imdb_scout_section_13').find('.field_label').each(function(index, label) {
         var url = new URL(streaming_sites[index].searchUrl);
         $(label).append(' ' + '<a class="grey_link" target="_blank" style="color: gray; text-decoration : none" href="' + url.origin + '">'
                         + (/www./.test(url.hostname) ? url.hostname.match(/www.(.*)/)[1] : url.hostname) + '</a>');
         $(label).prepend(getFavicon(streaming_sites[index], true));
       });
-      $('#imdb_scout').contents().find('#imdb_scout_section_13').find('.field_label').each(function(index, label) {
+      $('#imdb_scout').contents().find('#imdb_scout_section_14').find('.field_label').each(function(index, label) {
         var url = new URL(icon_sites[index].searchUrl);
         $(label).append(' ' + '<a class="grey_link" target="_blank" style="color: gray; text-decoration : none" href="' + url.origin + '">'
                         + (/www./.test(url.hostname) ? url.hostname.match(/www.(.*)/)[1] : url.hostname) + '</a>');
@@ -5100,6 +5513,9 @@ const onSearchPage = Boolean(location.href.match('/search/'))
 var showSitezFirstBar = 0;
 var sortReqOnNewLineTemp = false;
 
+// Trakt auth code?
+const traktCodePage = Boolean(location.href.match(/tt0052077\/\?code=/));
+
 //==============================================================================
 //    Remove ads from IMDb
 //==============================================================================
@@ -5117,6 +5533,10 @@ function adsRemoval() {
 
 function startIMDbScout() {
   adsRemoval();
+  if (traktCodePage) {
+    traktCatchToken();
+    return;
+  }
   if (!onSearchPage && GM_config.get('loadmod_on_start_movie')) {
     performPage();
   } else if (onSearchPage && GM_config.get('loadmod_on_start_search')) {
