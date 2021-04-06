@@ -1,7 +1,7 @@
 // ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      9.8
+// @version      9.9
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from various sites. Adds movies/series to Radarr/Sonarr. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         https://i.imgur.com/u17jjYj.png
@@ -731,12 +731,28 @@
 9.8     -   Added: DesiTor, Caps-A-Holic.
         -   New feature: Add/Remove movies/series/episodes to/from Trakt's watchlist.
         -   Note: Current Tampermonkey ver. has bug with notifications, affected: Sonarr/Radarr/Trakt-Watchlist.
+        
+9.9     -   Some code syntax and other tweaks. 
 
+*/
+//==============================================================================
+//    JSHint directives.
+//==============================================================================
+
+/*jshint esversion: 8 */
+/*jshint sub:true */
+/*jshint multistr: true */
+/*jshint scripturl:true*/
+/*globals GM, GM_config, $ */
+/*jshint shadow:true */
+/*jshint -W089 */
+/*jshint expr: true */
+/*jshint laxbreak: true */
 
 //==============================================================================
 //    A list of all the sites.
 //==============================================================================
-
+/*
     -= Each site is a dictionary with the following attributes: =-
 
 #  'name':
@@ -958,11 +974,11 @@ var public_sites = [
       'matchRegex': /No results/,
       'TV': true},
   {   'name': 'KZ',
-      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAABCFBMVEUAAAByjf92jf93jv9+k/+NoP+Upf//AACntP//Ew7/KST/Lyn/Fw//GhP/Hxf/HhamvP+vwv+vxP+wxP//Jxq1xv+6y/+8y///Jx7/Kx7G0///YVP/LB7/bF//PS3/eGe/0//F1v/I2f/M3f/P3f/S4P/m7v//RS7/Tzv/X0b/Vz7/d2D/XEb/oov/qpLw+f/x+v/z+v//sZjz+///tZv+//f+//X7/v//bk//hG3+//b+//7/wqf/lHn/xKn/dlr/+un/lnP//O7/qYb/tY3/9+D/+Ob//+//9dv/++3/9dr/++f/5MT/9Nj/9Nf/9Nb/477/89b/5sL/89X/8tT/8M7/8dD/8dFlCx+3AAAAWHRSTlMAJoCBgoaIiY6VlZeZnZ6foaOjpKSlpqeoqKmpqqyxsri6urq7vL/AwsTFxcfLy87Ozs7S0tXW2NjY2dnZ29vc4eTk6Orq6u3w8PHx8vb3+Pn5+vr7/P39ue6qsAAAAMpJREFUGBlFwdciA1EABNCZUdZV1iUJokXvRI8aLYsgCDH5/z+xnpwDSgQlEZQI6Ki53D9++Vpb7Zt+uRCgZrvTca778f70LIAr3yFn38xutCIBqF0vh7rPR4fmWgLA3q7LwVfrx7YHCMQluxjOhmecW4yAanYxJHv+UxWgR7scpgavnbsVEO/tNNxtJZtv9n4EOGmnwZ/zyfaPJwhAbqRpww8jyY4FgCWHnL92K8lhJKDM/04EaCEr9BQOsmpJY6drAigRjIoEJeIXhxkmCrKY0SoAAAAASUVORK5CYII=',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAABCFBMVEUAAAARFSY7R4A8SIFAS4JKVIZPWIhdZI5pd6FwfKNwfaNxfqR1gKV5hKZ7haeDjKmJAACKmLiQnLqSnrqVCwiVGBWVobqXHBiYoruZDgmbpbydEAyeEw6fEw6kGRGoGhSoHBSpQDeqHRSsSUCssr+xKh+yVEjANCPCPC3Cyc7Dys7ESTbEys7FQzDFXErHSDfIz9LLgW/Lh3TOj3vSlYDU1c7V1s7V19jYXUPYcFzY2dHY2djZpY7bf2jbqJHcZk7h3c7khmfk4dXomnrqpoHq487q5NPt7d7w587w7N/x6M7x7dry2Lr269D37ND47dD53rr57dH64b767tH77tH87cz9787978+9KzODAAAAAXRSTlMAQObYZgAAAMlJREFUGBlFwdciA1EABNCZ0S4JFldfyeqi96jREgRBiMn//4n15BxQIiiJoERA+82p/qHL1+pc3+jLhQA1252Oc92P96dnAZz5jjn7ZmmjFQhA7VoWaz5fmF5uCQB7u86ir9aPbQ8QCBN2KZ7NLjo3HgBV7VJMDv2nIkCPdhbLk9fO3QoI93Ya73aSrTd7MwAcsdPoz9Vk98fDBCDX07Tuh/lkzwLAomPOXwdryVEgoIb/nQjQWKPQU9huVIoaPF0RQIlgUCAoEb/q0ya7wj1izQAAAABJRU5ErkJggg==',
       'searchUrl': 'http://kinozal.tv/browse.php?s=%search_string%+%year%&g=0&c=1002&v=0&d=0&w=0&t=0&f=0',
       'matchRegex': 'Нет активных раздач, приносим извинения. Пожалуйста, уточните параметры поиска'},
   {   'name': 'KZ',
-      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAABCFBMVEUAAAByjf92jf93jv9+k/+NoP+Upf//AACntP//Ew7/KST/Lyn/Fw//GhP/Hxf/HhamvP+vwv+vxP+wxP//Jxq1xv+6y/+8y///Jx7/Kx7G0///YVP/LB7/bF//PS3/eGe/0//F1v/I2f/M3f/P3f/S4P/m7v//RS7/Tzv/X0b/Vz7/d2D/XEb/oov/qpLw+f/x+v/z+v//sZjz+///tZv+//f+//X7/v//bk//hG3+//b+//7/wqf/lHn/xKn/dlr/+un/lnP//O7/qYb/tY3/9+D/+Ob//+//9dv/++3/9dr/++f/5MT/9Nj/9Nf/9Nb/477/89b/5sL/89X/8tT/8M7/8dD/8dFlCx+3AAAAWHRSTlMAJoCBgoaIiY6VlZeZnZ6foaOjpKSlpqeoqKmpqqyxsri6urq7vL/AwsTFxcfLy87Ozs7S0tXW2NjY2dnZ29vc4eTk6Orq6u3w8PHx8vb3+Pn5+vr7/P39ue6qsAAAAMpJREFUGBlFwdciA1EABNCZUdZV1iUJokXvRI8aLYsgCDH5/z+xnpwDSgQlEZQI6Ki53D9++Vpb7Zt+uRCgZrvTca778f70LIAr3yFn38xutCIBqF0vh7rPR4fmWgLA3q7LwVfrx7YHCMQluxjOhmecW4yAanYxJHv+UxWgR7scpgavnbsVEO/tNNxtJZtv9n4EOGmnwZ/zyfaPJwhAbqRpww8jyY4FgCWHnL92K8lhJKDM/04EaCEr9BQOsmpJY6drAigRjIoEJeIXhxkmCrKY0SoAAAAASUVORK5CYII=',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAABCFBMVEUAAAARFSY7R4A8SIFAS4JKVIZPWIhdZI5pd6FwfKNwfaNxfqR1gKV5hKZ7haeDjKmJAACKmLiQnLqSnrqVCwiVGBWVobqXHBiYoruZDgmbpbydEAyeEw6fEw6kGRGoGhSoHBSpQDeqHRSsSUCssr+xKh+yVEjANCPCPC3Cyc7Dys7ESTbEys7FQzDFXErHSDfIz9LLgW/Lh3TOj3vSlYDU1c7V1s7V19jYXUPYcFzY2dHY2djZpY7bf2jbqJHcZk7h3c7khmfk4dXomnrqpoHq487q5NPt7d7w587w7N/x6M7x7dry2Lr269D37ND47dD53rr57dH64b767tH77tH87cz9787978+9KzODAAAAAXRSTlMAQObYZgAAAMlJREFUGBlFwdciA1EABNCZ0S4JFldfyeqi96jREgRBiMn//4n15BxQIiiJoERA+82p/qHL1+pc3+jLhQA1252Oc92P96dnAZz5jjn7ZmmjFQhA7VoWaz5fmF5uCQB7u86ir9aPbQ8QCBN2KZ7NLjo3HgBV7VJMDv2nIkCPdhbLk9fO3QoI93Ya73aSrTd7MwAcsdPoz9Vk98fDBCDX07Tuh/lkzwLAomPOXwdryVEgoIb/nQjQWKPQU9huVIoaPF0RQIlgUCAoEb/q0ya7wj1izQAAAABJRU5ErkJggg==',
       'searchUrl': 'http://kinozal.tv/browse.php?s=%search_string%+%year%&g=0&c=1001&v=0&d=0&w=0&t=0&f=0',
       'matchRegex': 'Нет активных раздач, приносим извинения. Пожалуйста, уточните параметры поиска',
       'TV': true},
@@ -1727,7 +1743,8 @@ var private_sites = [
   {   'name': 'M-T',
       'searchUrl': 'https://kp.m-team.cc/torrents.php?incldead=0&spstate=0&inclbookmarked=0&search=%tt%&search_area=4&search_mode=0',
       'loggedOutRegex': /Cloudflare|Ray ID|type="password" name="password"|An error occurred|Please input the 6-digit code/,
-      'matchRegex': /Nothing here!|Try again with a refined search string./,
+      'matchRegex': /download.php/,
+      'positiveMatch': true,
       'both': true},
   {   'name': 'M-TB',
       'searchUrl': 'https://masters-tb.com/browse.php?search=%tt%&cat=0&incldead=1&searchrs=1',
@@ -2736,8 +2753,8 @@ var subs_sites = [
       'inSecondSearchBar': true,
       'both': true},
   {   'name': 'Zimuku (CN)',
-      'icon': 'https://zmk.pw/images/v2/favicon.png',
-      'searchUrl': 'https://zmk.pw/search?q=%tt%',
+      'icon': 'data:image/png;base64,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',
+      'searchUrl': 'http://zmk.pw/search?q=%tt%',
       'loggedOutRegex': /Cloudflare|Ray ID/,
       'matchRegex': /搜索不到相关字幕/,
       'inSecondSearchBar': true,
@@ -2829,7 +2846,7 @@ var other_sites = [
       'matchRegex': /There are 0 results/,
       'inSecondSearchBar': true,
       'both': true}
-]
+];
 
 var streaming_sites = [
   {   'name': 'DbGDP',
@@ -3070,7 +3087,7 @@ function getTVDbID(movie_id) {
       }
     }
   });
-  return new Promise(resolve => { setTimeout(() => { resolve(tvdb_id); }, 2000); });
+  return new Promise(resolve => { setTimeout(() => { resolve(tvdb_id); }, 2200); });
 }
 
 function getTMDbID(movie_id) {
@@ -3079,7 +3096,7 @@ function getTMDbID(movie_id) {
     method: "GET",
     url:    "https://api.themoviedb.org/3/find/tt" + movie_id + "?api_key=d12b33d3f4fb8736dc06f22560c4f8d4&external_source=imdb_id",
     onload: function(response) {
-      result = JSON.parse(response.responseText);
+      const result = JSON.parse(response.responseText);
       if (String(response.responseText).match('movie_results":\\[{')) {
         tmdb_id = result.movie_results[0].id;
       } else if (String(response.responseText).match('tv_results":\\[{')) {
@@ -3091,7 +3108,7 @@ function getTMDbID(movie_id) {
       }
     }
   });
-  return new Promise(resolve => { setTimeout(() => { resolve(tmdb_id); }, 2000); });
+  return new Promise(resolve => { setTimeout(() => { resolve(tmdb_id); }, 2200); });
 }
 
 //==============================================================================
@@ -3108,7 +3125,7 @@ function getPageSetting(key) {
 
 function getFavicon(site, hide_on_err) {
   var favicon;
-  if (typeof(hide_on_err) === 'undefined') { hide_on_err = false }
+  if (typeof(hide_on_err) === 'undefined') { hide_on_err = false; }
   if ('icon' in site) {
     favicon = site['icon'];
   } else {
@@ -3123,7 +3140,7 @@ function getFavicon(site, hide_on_err) {
                                'src': favicon,
                                'title': title,
                                'alt': site['name']});
-  if (hide_on_err) { img.attr('onerror', "this.style.display='none';") }
+  if (hide_on_err) { img.attr('onerror', "this.style.display='none';"); }
   return img;
 }
 
@@ -3151,7 +3168,7 @@ function addLink(elem, site_name, target, site, state, scout_tick) {
         addform.attr('method', 'post');
         addform.attr('style', 'display: none;');
         addform.attr('target', '_blank');
-    for (name in data) {
+    for (const name in data) {
        var addinput = $("<input>");
            addinput.attr('type', 'text');
            addinput.attr('name', name);
@@ -3285,19 +3302,19 @@ async function maybeAddLink(elem, site_name, search_url, site, scout_tick, movie
       headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
       onload: function(response) {
         if (response.responseHeaders.indexOf('efresh: 0; url') > -1 || response.status > 399) {
-        addLink(elem, site_name, target, site, 'logged_out', scout_tick);
+          addLink(elem, site_name, target, site, 'logged_out', scout_tick);
         } else if (site['positiveMatch'] && site['loggedOutRegex'] && String(response.responseText).match(site['loggedOutRegex'])) {
           addLink(elem, site_name, target, site, 'logged_out', scout_tick);
         } else if (String(response.responseText).match(site['matchRegex']) ? !(success_match) : success_match) {
             if (getPageSetting('highlight_missing').split(',').includes(site['name'])) {
               if (elem.style) {
-              elem.parentNode.style.background = 'rgba(255,104,104,0.7)';
+                elem.parentNode.style.background = 'rgba(255,104,104,0.7)';
               } else {
                 document.querySelector('#imdbscout_missing').style.background = 'rgba(255,104,104,0.7)';
               }
             }
             if (!getPageSetting('hide_missing')) {
-            addLink(elem, site_name, target, site, 'missing', scout_tick);
+              addLink(elem, site_name, target, site, 'missing', scout_tick);
             }
         } else if (site['loggedOutRegex'] && String(response.responseText).match(site['loggedOutRegex'])) {
           addLink(elem, site_name, target, site, 'logged_out', scout_tick);
@@ -3320,19 +3337,19 @@ async function maybeAddLink(elem, site_name, search_url, site, scout_tick, movie
     url: search_url,
     onload: function(response) {
       if (response.responseHeaders.indexOf('efresh: 0; url') > -1 || response.status > 399) {
-      addLink(elem, site_name, target, site, 'logged_out', scout_tick);
+        addLink(elem, site_name, target, site, 'logged_out', scout_tick);
       } else if (site['positiveMatch'] && site['loggedOutRegex'] && String(response.responseText).match(site['loggedOutRegex'])) {
         addLink(elem, site_name, target, site, 'logged_out', scout_tick);
       } else if (String(response.responseText).match(site['matchRegex']) ? !(success_match) : success_match) {
           if (getPageSetting('highlight_missing').split(',').includes(site['name'])) {
             if (elem.style) {
-            elem.parentNode.style.background = 'rgba(255,104,104,0.7)';
+              elem.parentNode.style.background = 'rgba(255,104,104,0.7)';
             } else {
               document.querySelector('#imdbscout_missing').style.background = 'rgba(255,104,104,0.7)';
             }
           }
           if (!getPageSetting('hide_missing')) {
-          addLink(elem, site_name, target, site, 'missing', scout_tick);
+            addLink(elem, site_name, target, site, 'missing', scout_tick);
           }
       } else if (site['loggedOutRegex'] && String(response.responseText).match(site['loggedOutRegex'])) {
         addLink(elem, site_name, target, site, 'logged_out', scout_tick);
@@ -3459,7 +3476,7 @@ function addIconBar(movie_id, movie_title, movie_title_orig) {
             addform.attr('method', 'post');
             addform.attr('style', 'display: none;');
             addform.attr('target', '_blank');
-        for (name in data) {
+        for (const name in data) {
            var addinput = $("<input>");
                addinput.attr('type', 'text');
                addinput.attr('name', name);
@@ -3878,20 +3895,20 @@ function getLinkAreaThird() {
 
 // Count selected sites for the sorting launcher (showSitezFirstBar).
 function iconSorterCount(is_tv, is_movie) {
-  sitestosort = public_sites.concat(private_sites, usenet_sites)
+  let sitestosort = public_sites.concat(private_sites, usenet_sites);
   if (!is_tv && !is_movie || getPageSetting('ignore_type')) {
     showSitezFirstBar = sitestosort.reduce(function (n, site) {
       return n + (site['show'] == true); }, 0);
   } else if (is_tv && !getPageSetting('ignore_type')) {
-    showtvsitez = public_sites.concat(private_sites, usenet_sites).reduce(function (n, site) {
+    const showtvsitez = public_sites.concat(private_sites, usenet_sites).reduce(function (n, site) {
       return n + (site['TV'] == true && site['show'] == true); }, 0);
-    showbothsitez = public_sites.concat(private_sites, usenet_sites).reduce(function (n, site) {
+    const showbothsitez = public_sites.concat(private_sites, usenet_sites).reduce(function (n, site) {
       return n + (site['both'] == true && site['show'] == true); }, 0);
     showSitezFirstBar = showtvsitez + showbothsitez;
   } else if (is_movie && !getPageSetting('ignore_type')) {
-    showallsitez = sitestosort.reduce(function (n, site) {
+    const showallsitez = sitestosort.reduce(function (n, site) {
       return n + (site['show'] == true); }, 0);
-    showtvsitez = public_sites.concat(private_sites, usenet_sites).reduce(function (n, site) {
+    const showtvsitez = public_sites.concat(private_sites, usenet_sites).reduce(function (n, site) {
       return n + (site['TV'] == true && site['show'] == true); }, 0);
     showSitezFirstBar = showallsitez - showtvsitez;
   }
@@ -3914,127 +3931,127 @@ function iconSorterLauncher(site) {
 
 // Sorting of the found sites.
 function iconSorterFound() {
-  const imdbscout_found = document.querySelector("#imdbscout_found")
+  const imdbscout_found = document.querySelector("#imdbscout_found");
 
   const sorta = (list) => { // sort alphabetically
     return list.sort((a, b) => {
       if (GM_config.get("use_mod_icons_movie")) {
         if (a.firstChild.getAttribute("alt").toLowerCase() < b.firstChild.getAttribute("alt").toLowerCase()) {
-          return -1
+          return -1;
         } else if (a.firstChild.getAttribute("alt").toLowerCase() > b.firstChild.getAttribute("alt").toLowerCase()) {
-          return 1
+          return 1;
         } else {
-          return 0
+          return 0;
         }
       } else {
         if (a.textContent.toLowerCase() < b.textContent.toLowerCase()) {
-          return -1
+          return -1;
         } else if (a.textContent.toLowerCase() > b.textContent.toLowerCase()) {
-          return 1
+          return 1;
         } else {
-          return 0
+          return 0;
         }
       }
-    })
-  }
+    });
+  };
 
-  let highlighted = [], requests = [], others = []
+  let highlighted = [], requests = [], others = [];
 
-  let children = imdbscout_found.children
+  let children = imdbscout_found.children;
   if (!GM_config.get('one_line')) {
-    let [removed, ...children2] = children
-    children = children2
+    let [removed, ...children2] = children;
+    children = children2;
   }
   for (const child of children) {
     if (GM_config.get("use_mod_icons_movie")) {
       if (child.firstChild.getAttribute("alt").includes("-Req")) {
-        requests.push(child)
+        requests.push(child);
       } else {
-        child.children[0].style.border.includes("solid rgb(0, 220, 0)") ? highlighted.push(child) : others.push(child)
+        child.children[0].style.border.includes("solid rgb(0, 220, 0)") ? highlighted.push(child) : others.push(child);
       }
-    }else{
+    } else {
       if (child.textContent.includes("-Req")) {
-        requests.push(child)
+        requests.push(child);
       } else {
-        child.querySelector("b") ? highlighted.push(child) : others.push(child)
+        child.querySelector("b") ? highlighted.push(child) : others.push(child);
       }
     }
   }
 
-  let sorted
+  let sorted;
   if (GM_config.get("highlight_sites_movie").includes(",")) {
-    const highlighted_sites = GM_config.get("highlight_sites_movie").split(",")
-    let hl_temp = []
+    const highlighted_sites = GM_config.get("highlight_sites_movie").split(",");
+    let hl_temp = [];
     for (const hl of highlighted_sites) {
       for (const hl_node of highlighted) {
         if (hl === (!GM_config.get("use_mod_icons_movie") ? hl_node.textContent : hl_node.children[0].getAttribute("alt"))) {
-          hl_temp.push(hl_node)
+          hl_temp.push(hl_node);
         }
       }
     }
-    sorted = [...hl_temp, ...sorta(others)]
+    sorted = [...hl_temp, ...sorta(others)];
   } else {
-    sorted = [...sorta(highlighted), ...sorta(others)]
+    sorted = [...sorta(highlighted), ...sorta(others)];
   }
 
   for (const node of sorted) {
-    node.remove()
-    imdbscout_found.insertAdjacentHTML("beforeend", node.outerHTML + " ")
+    node.remove();
+    imdbscout_found.insertAdjacentHTML("beforeend", node.outerHTML + " ");
   }
 
-  sortReqOnNewLineTemp && requests.length > 0 ? imdbscout_found.insertAdjacentHTML("beforeend", "</br>") : false
+  sortReqOnNewLineTemp && requests.length > 0 ? imdbscout_found.insertAdjacentHTML("beforeend", "</br>") : false;
   for (const node of requests) {
-    node.remove()
-    imdbscout_found.insertAdjacentHTML("beforeend", node.outerHTML + " ")
+    node.remove();
+    imdbscout_found.insertAdjacentHTML("beforeend", node.outerHTML + " ");
   }
-  sortReqOnNewLineTemp && requests.length > 0 ? imdbscout_found.insertAdjacentHTML("beforeend", "</br>") : false
+  sortReqOnNewLineTemp && requests.length > 0 ? imdbscout_found.insertAdjacentHTML("beforeend", "</br>") : false;
 }
 
 // Sorting of the missing sites.
 function iconSorterMissing() {
   if (GM_config.get("hide_missing_movie") || !GM_config.get("call_http_mod_movie")) {
-  return
+  return;
   }
-  const imdbscout_missing = document.querySelector("#imdbscout_missing")
+  const imdbscout_missing = document.querySelector("#imdbscout_missing");
 
   const sorta = (list) => {
     return list.sort((a, b) => { // sort alphabetically
       if (GM_config.get("use_mod_icons_movie")) {
         if (a.firstChild.getAttribute("alt").toLowerCase() < b.firstChild.getAttribute("alt").toLowerCase()) {
-          return -1
+          return -1;
         } else if (a.firstChild.getAttribute("alt").toLowerCase() > b.firstChild.getAttribute("alt").toLowerCase()) {
-          return 1
+          return 1;
         } else {
-          return 0
+          return 0;
         }
       } else {
         if (a.textContent.toLowerCase() < b.textContent.toLowerCase()) {
-          return -1
+          return -1;
         } else if (a.textContent.toLowerCase() > b.textContent.toLowerCase()) {
-          return 1
+          return 1;
         } else {
-          return 0
+          return 0;
         }
       }
-    })
-  }
+    });
+  };
 
-  let all = []
+  let all = [];
 
-  let children = imdbscout_missing.children
+  let children = imdbscout_missing.children;
   if (!GM_config.get('one_line')) {
-    let [removed, ...children2] = children
-    children = children2
+    let [removed, ...children2] = children;
+    children = children2;
   }
   for (const child of children) {
-    all.push(child)
+    all.push(child);
   }
 
-  let sorted = [...sorta(all)]
+  let sorted = [...sorta(all)];
 
   for (const node of sorted) {
-    node.remove()
-    imdbscout_missing.insertAdjacentHTML("beforeend", node.outerHTML + " ")
+    node.remove();
+    imdbscout_missing.insertAdjacentHTML("beforeend", node.outerHTML + " ");
   }
 }
 
@@ -5478,7 +5495,7 @@ GM_config.init({
   }
 });
 
-GM.registerMenuCommand('IMDb Scout Mod Settings', function() {GM_config.open()});
+GM.registerMenuCommand('IMDb Scout Mod Settings', function() {GM_config.open();});
 
 //==============================================================================
 //    Fetch per-site values from GM_config
@@ -5547,3 +5564,4 @@ function startIMDbScout() {
 }
 
 window.addEventListener('DOMContentLoaded', startIMDbScout);
+
