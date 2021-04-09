@@ -1,7 +1,7 @@
 // ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      9.9
+// @version      9.10
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from various sites. Adds movies/series to Radarr/Sonarr. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         https://i.imgur.com/u17jjYj.png
@@ -732,7 +732,11 @@
         -   New feature: Add/Remove movies/series/episodes to/from Trakt's watchlist.
         -   Note: Current Tampermonkey ver. has bug with notifications, affected: Sonarr/Radarr/Trakt-Watchlist.
         
-9.9     -   Some code syntax and other tweaks. 
+9.9     -   Some code syntax and other tweaks.
+
+9.10    -   Fixed: T2K (tv).
+        -   Fixed: 'mPOST' wasn't working on the List/Search pages.
+        -   Fixed: 'SpaceEncode' wasn't working on 'mPOST'. 
 
 */
 //==============================================================================
@@ -804,7 +808,7 @@ On the Search/List pages if rateLimit<=1000 then it will be increased by a facto
 #  'mPOST':
 HTTP request by POST method. For the sites that doesn't support GET.
 Right mouse click won't submit such request.
-Atm 'SpaceEncode' attribute is not supported with this method.
+Atm 'goToUrl' not supported with it.
 
     -=  Search URL parameters: =-
 
@@ -1123,7 +1127,7 @@ var public_sites = [
       'searchUrl': 'https://torrentz2k.xyz/search/',
       'loggedOutRegex': /Ray ID|security check to access|Please turn JavaScript/,
       'matchRegex': /No Results Found/,
-      'mPOST': 'q=%search_string%&category=movies&x=0&y=0',
+      'mPOST': 'q=%search_string%&category=tv&x=0&y=0',
       'TV': true},
   {   'name': 'TGx',
       'icon': 'https://torrentgalaxy.to/common/favicon/favicon-16x16.png',
@@ -3038,7 +3042,7 @@ var icon_sites = [
 //==============================================================================
 
 async function replaceSearchUrlParams(site, movie_id, movie_title, movie_title_orig, movie_year) {
-  var search_url = site['searchUrl'];
+  var search_url = ('mPOST' in site) ? site['mPOST'] : site['searchUrl'];
   // If an array, do a little bit of recursion
   if ($.isArray(search_url)) {
     var search_array = [];
@@ -3148,7 +3152,7 @@ function getFavicon(site, hide_on_err) {
 //    Add search links to an element
 //==============================================================================
 
-function addLink(elem, site_name, target, site, state, scout_tick) {
+function addLink(elem, site_name, target, site, state, scout_tick, post_data) {
   // State should always be one of the values defined in valid_states
   var link = $('<a />').attr('href', target).attr('target', '_blank');
   if ($.inArray(state, valid_states) < 0) {
@@ -3156,11 +3160,11 @@ function addLink(elem, site_name, target, site, state, scout_tick) {
   }
   // Link and add Form element for POST method.
   if ('mPOST' in site) {
-    var form_name = (site['TV']) ? site['name'] + '-TV-form' : site['name'] + '-form';
+    var form_name = (site['TV']) ? site['name'] + '-TV-form' + scout_tick : site['name'] + '-form' + scout_tick;
     var placebo_url = new URL(target).origin;
     link = $('<a />').attr('href', placebo_url).attr('onclick', "$('#" + form_name + "').submit(); return false;").attr('target', '_blank');
 
-    var data = '{"' + site['mPOST'].replace(/&/g, '","').replace(/=/g, '":"').replace(/\+/g, ' ') + '"}',
+    var data = '{"' + post_data.replace(/&/g, '","').replace(/=/g, '":"').replace(/\+/g, ' ') + '"}',
         data = JSON.parse(data);
     var addform = $('<form></form>');
         addform.attr('id', form_name);
@@ -3294,17 +3298,17 @@ async function maybeAddLink(elem, site_name, search_url, site, scout_tick, movie
   }
   // Check for results with POST method.
   if ('mPOST' in site) {
-    var data = site['mPOST'];
+    const post_data = await replaceSearchUrlParams(site, movie_id, movie_title, movie_title_orig, movie_year);
     GM.xmlHttpRequest({
       method: 'POST',
       url: search_url,
-      data: data,
+      data: post_data,
       headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
       onload: function(response) {
         if (response.responseHeaders.indexOf('efresh: 0; url') > -1 || response.status > 399) {
-          addLink(elem, site_name, target, site, 'logged_out', scout_tick);
+          addLink(elem, site_name, target, site, 'logged_out', scout_tick, post_data);
         } else if (site['positiveMatch'] && site['loggedOutRegex'] && String(response.responseText).match(site['loggedOutRegex'])) {
-          addLink(elem, site_name, target, site, 'logged_out', scout_tick);
+          addLink(elem, site_name, target, site, 'logged_out', scout_tick, post_data);
         } else if (String(response.responseText).match(site['matchRegex']) ? !(success_match) : success_match) {
             if (getPageSetting('highlight_missing').split(',').includes(site['name'])) {
               if (elem.style) {
@@ -3314,19 +3318,19 @@ async function maybeAddLink(elem, site_name, search_url, site, scout_tick, movie
               }
             }
             if (!getPageSetting('hide_missing')) {
-              addLink(elem, site_name, target, site, 'missing', scout_tick);
+              addLink(elem, site_name, target, site, 'missing', scout_tick, post_data);
             }
         } else if (site['loggedOutRegex'] && String(response.responseText).match(site['loggedOutRegex'])) {
-          addLink(elem, site_name, target, site, 'logged_out', scout_tick);
+          addLink(elem, site_name, target, site, 'logged_out', scout_tick, post_data);
         } else {
-          addLink(elem, site_name, target, site, 'found', scout_tick);
+          addLink(elem, site_name, target, site, 'found', scout_tick, post_data);
         }
       },
       onerror: function() {
-        addLink(elem, site_name, target, site, 'error', scout_tick);
+        addLink(elem, site_name, target, site, 'error', scout_tick, post_data);
       },
       onabort: function() {
-        addLink(elem, site_name, target, site, 'error', scout_tick);
+        addLink(elem, site_name, target, site, 'error', scout_tick, post_data);
       }
     });
     return;
@@ -3377,10 +3381,7 @@ function perform(elem, movie_id, movie_title, movie_title_orig, is_tv, is_movie,
       site_shown = true;
       // For TV Series show only TV links. TV Special, TV Movie, Episode & Documentary are treated as TV and Movie.
       if ((Boolean(site['TV']) == is_tv || Boolean(site['both'])) || (!is_tv && !is_movie) || getPageSetting('ignore_type')) {
-        var searchUrl = await replaceSearchUrlParams(site, movie_id, movie_title, movie_title_orig, movie_year);
-        if ('mPOST' in site) {
-          site['mPOST'] = await replaceSearchUrlParams({'searchUrl': site['mPOST']}, movie_id, movie_title, movie_title_orig, movie_year);
-        }
+        var searchUrl = ('mPOST' in site) ? site['searchUrl'] : await replaceSearchUrlParams(site, movie_id, movie_title, movie_title_orig, movie_year);
         if ('goToUrl' in site && getPageSetting('call_http_mod')) {
           maybeAddLink(elem, site['name'], searchUrl, site, scout_tick, movie_id, movie_title, movie_title_orig, movie_year);
         }
@@ -3389,7 +3390,7 @@ function perform(elem, movie_id, movie_title, movie_title_orig, is_tv, is_movie,
           addLink(elem, site['name'], searchUrl, site, 'found', scout_tick);
         }
         if (!('goToUrl' in site) && getPageSetting('call_http_mod')) {
-          maybeAddLink(elem, site['name'], searchUrl, site, scout_tick);
+          maybeAddLink(elem, site['name'], searchUrl, site, scout_tick, movie_id, movie_title, movie_title_orig, movie_year);
         }
         if (!('goToUrl' in site) && !getPageSetting('call_http_mod')){
           addLink(elem, site['name'], searchUrl, site, 'found', scout_tick);
@@ -3458,17 +3459,17 @@ function addIconBar(movie_id, movie_title, movie_title_orig) {
   }
   $.each(icon_sites, async function(index, site) {
     if (site['show']) {
-      var search_url = await replaceSearchUrlParams(site, movie_id, movie_title, movie_title_orig);
+      var search_url = ('mPOST' in site) ? site['searchUrl'] : await replaceSearchUrlParams(site, movie_id, movie_title, movie_title_orig);
       var image = getFavicon(site);
       var html = $('<span />').append("&nbsp;").attr('style', 'font-size: 11px;').append($('<a />').attr('href', search_url).attr('target', '_blank').addClass('iconbar_icon').append(image));
       // Link and add Form element for POST method.
       if ('mPOST' in site) {
         var form_name = site['name'] + '-iconform';
-        var placebo_url = new URL(search_url).origin;
+        var placebo_url = new URL(site['searchUrl']).origin;
         html = $('<span />').append("&nbsp;").attr('style', 'font-size: 11px;').append($('<a />').attr('href', placebo_url).attr('onclick', "$('#" + form_name + "').submit(); return false;").attr('target', '_blank').addClass('iconbar_icon').append(image));
 
-        site['mPOST'] = await replaceSearchUrlParams({'searchUrl': site['mPOST']}, movie_id, movie_title, movie_title_orig);
-        var data = (site['mPOST'].match('{')) ? site['mPOST'] : '{"' + site['mPOST'].replace(/&/g, '","').replace(/=/g, '":"').replace(/\+/g, ' ') + '"}';
+        var post_data = await replaceSearchUrlParams(site, movie_id, movie_title, movie_title_orig);
+        var data = (post_data.match('{')) ? post_data : '{"' + post_data.replace(/&/g, '","').replace(/=/g, '":"').replace(/\+/g, ' ') + '"}';
             data = JSON.parse(data);
         var addform = $('<form></form>');
             addform.attr('id', form_name);
