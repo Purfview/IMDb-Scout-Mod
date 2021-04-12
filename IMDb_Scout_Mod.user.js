@@ -1,7 +1,7 @@
 // ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      9.11
+// @version      9.11.1
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from various sites. Adds movies/series to Radarr/Sonarr. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         https://i.imgur.com/u17jjYj.png
@@ -742,6 +742,8 @@
         -   New feature: New section in settings for the special icons/buttons.
         -   Note: Tampermonkey fixed notifications from v4.13.6134.
 
+9.11.1  -   Added: Filmow, WB.
+
 */
 //==============================================================================
 //    JSHint directives.
@@ -1190,6 +1192,11 @@ var public_sites = [
       'searchUrl': 'https://warez-v3.org/search.php?keywords=%tt%&sr=topics',
       'loggedOutRegex': /Cloudflare|Ray ID|you are not permitted/,
       'matchRegex': /Search found 0/,
+      'both': true},
+  {   'name': 'WB',
+      'searchUrl': 'https://www.warezbook.org/?q=%tt%',
+      'loggedOutRegex': /Cloudflare|Ray ID/,
+      'matchRegex': /<ul>\s*<\/ul>/,
       'both': true},
   {   'name': 'WC',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAAAAABWESUoAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAAFMSURBVDjLY3iKCo6GibNIxpxACDCgyi/hZAAB3vWYCjbGWjsVbuRlgACRq2gKHsczoIJaNAWVaPIMHqgKbvGiK3BCVbAMXZ4hC1XBJHR51sOoCtagK2hD8+YDcVR57Zy86l0ovpjLhOEKIVC4WmvCAmq2EIaKh4/rQeEKs+vWlCxOVAV7jMAUUkSgOYSVAV2BJAM2gNsEdAUPdgigxRcnTMHDE9Pmz5+/5IwYmi+OWoKo+cneEb3bwGZooMjzARNBBzASt12HW3KmvqTExdEeCJwKS+r3g4TOnUBLck/dwLpdcKbJpydkgfKyuBPt5YXT3DQ8pi28iksBLN7Xk63g3hLHicGHJWffw+nI4L1bo5724/bF3qinR4OfPtbcjEtB4Jmnl32Bqdwah4JtecCYcQMybFdhVxB8A0h4A/EuM6wK1reAyBAwsRgqBgBT7TkJcA3cwgAAAABJRU5ErkJggg==',
@@ -2929,6 +2936,9 @@ var icon_sites_main = [
   {   'name': 'FilmAffinity',
       'searchUrl': 'https://www.filmaffinity.com/en/advsearch.php?stext=%search_string%&stype[]=title&fromyear=%year%&toyear=%year%',
       'showByDefault': false},
+  {   'name': 'Filmow',
+      'searchUrl': 'https://filmow.com/buscar/?year_start=%year%&q=%search_string_orig%',
+      'showByDefault': false},
   {   'name': 'FindAnyFilm',
       'icon': 'https://www.findanyfilm.com/server-assets/favicon.png',
       'searchUrl': 'https://www.findanyfilm.com/search?all=%search_string%&sort=product_release_date&type=ALL',
@@ -4091,7 +4101,7 @@ function get_radarr_movies(movie_id) {
             throw "creds";
           }
           GM.setValue("IMDb_Scout_Mod_Radarr_movies", JSON.stringify(responseJSON));
-          console.log("IMDb Scout Mod(Radarr): Sync movies complete!");
+          console.log("IMDb Scout Mod (Radarr): Sync movies complete!");
           buttonBuilder(imdbid, radarr_url, radarr_apikey);
         }
         catch (e) {
@@ -4108,11 +4118,11 @@ function get_radarr_movies(movie_id) {
     },
     onerror: function() {
       $('a[href="https://radarr.video"]').find('img').prop("src", error_icon);
-      console.log("IMDb Scout Mod(Radarr): Request Error. Check that Radarr is running or your Radarr URL.");
+      console.log("IMDb Scout Mod (Radarr): Request Error. Check that Radarr is running or your Radarr URL.");
     },
     onabort: function() {
       $('a[href="https://radarr.video"]').find('img').prop("src", error_icon);
-      console.log("IMDb Scout Mod(Radarr): Request is aborted.");
+      console.log("IMDb Scout Mod (Radarr): Request is aborted.");
     }
   });
 }
@@ -4169,7 +4179,7 @@ function new_movie_lookup(imdbid, radarr_url, radarr_apikey, exists_icon) {
       let responseJSON = null;
       if (!response.responseJSON) {
         if (!response.responseText) {
-          GM.notification("No results found.", "IMDb Scout Mod(Radarr)");
+          GM.notification("No results found.", "IMDb Scout Mod (Radarr)");
           return;
         }
         responseJSON = JSON.parse(response.responseText);
@@ -4225,11 +4235,11 @@ function add_movie(movie, imdbid, radarr_url, radarr_apikey, exists_icon) {
           $(button).click(function() {
             GM.openInTab(radarr_url + "/movie/" + responseJSON.titleSlug);
           });
-          GM.notification('"' + responseJSON.title + '"' + " \nSuccessfully sent to Radarr.", "IMDb Scout Mod(Radarr)");
+          GM.notification('"' + responseJSON.title + '"' + " \nSuccessfully sent to Radarr.", "IMDb Scout Mod (Radarr)");
         }
         catch (e) {
           if (e == "exists") {
-            errorNotificationHandler(e, true, "Movie already exists in Radarr.", "IMDb Scout Mod(Radarr)");
+            errorNotificationHandler(e, true, "Movie already exists in Radarr.", "IMDb Scout Mod (Radarr)");
           } else {
             errorNotificationHandler(e, false);
           }
@@ -4240,11 +4250,11 @@ function add_movie(movie, imdbid, radarr_url, radarr_apikey, exists_icon) {
 }
 
 function errorNotificationHandler(error, expected, errormsg) {
-  let prestring = "IMDb Scout Mod(Radarr): ";
+  let prestring = "IMDb Scout Mod (Radarr): ";
   if (expected) {
-    GM.notification("Error: " + errormsg, "IMDb Scout Mod(Radarr)");
+    GM.notification("Error: " + errormsg, "IMDb Scout Mod (Radarr)");
   } else {
-    GM.notification("Unexpected Radarr Error, please report it. \nActual Error: " + error, "IMDb Scout Mod(Radarr)");
+    GM.notification("Unexpected Radarr Error, please report it. \nActual Error: " + error, "IMDb Scout Mod (Radarr)");
   }
 }
 
@@ -4257,11 +4267,11 @@ async function get_sonarr_tvseries(movie_id) {
   var tvdbid = await getTVDbID(movie_id);
   if (tvdbid == "0") {
     $('a[href="https://sonarr.tv"]').find('img').prop("src", error_icon);
-    console.log("IMDb Scout Mod(Sonarr): TVDb ID not found.");
+    console.log("IMDb Scout Mod (Sonarr): TVDb ID not found.");
     return;
   } else if (tvdbid == undefined) {
     $('a[href="https://sonarr.tv"]').find('img').prop("src", error_icon);
-    console.log("IMDb Scout Mod(Sonarr): Error converting IMDbID to TVDbID (undefined).");
+    console.log("IMDb Scout Mod (Sonarr): Error converting IMDbID to TVDbID (undefined).");
     return;
   }
   let sonarr_url = GM_config.get("sonarr_url").replace(/\/$/, "");
@@ -4282,7 +4292,7 @@ async function get_sonarr_tvseries(movie_id) {
             throw "creds";
           }
           GM.setValue("IMDb_Scout_Mod_Sonarr_series", JSON.stringify(responseJSON));
-          console.log("IMDb Scout Mod(Sonarr): Sync series complete!");
+          console.log("IMDb Scout Mod (Sonarr): Sync series complete!");
           sonarrButtonBuilder(tvdbid, sonarr_url, sonarr_apikey);
         }
         catch (e) {
@@ -4299,11 +4309,11 @@ async function get_sonarr_tvseries(movie_id) {
     },
     onerror: function() {
       $('a[href="https://sonarr.tv"]').find('img').prop("src", error_icon);
-      console.log("IMDb Scout Mod(Sonarr): Request Error. Check that Sonarr is running or your Sonarr URL.");
+      console.log("IMDb Scout Mod (Sonarr): Request Error. Check that Sonarr is running or your Sonarr URL.");
     },
     onabort: function() {
       $('a[href="https://sonarr.tv"]').find('img').prop("src", error_icon);
-      console.log("IMDb Scout Mod(Sonarr): Request is aborted.");
+      console.log("IMDb Scout Mod (Sonarr): Request is aborted.");
     }
   });
 }
@@ -4360,7 +4370,7 @@ function new_tvseries_lookup(tvdbid, sonarr_url, sonarr_apikey, exists_icon) {
       let responseJSON = null;
       if (!response.responseJSON) {
         if (!response.responseText) {
-          GM.notification("No results found.", "IMDb Scout Mod(Sonarr)");
+          GM.notification("No results found.", "IMDb Scout Mod (Sonarr)");
           return;
         }
         responseJSON = JSON.parse(response.responseText);
@@ -4458,11 +4468,11 @@ function add_tvseries(tvseries, tvdbid, sonarr_url, sonarr_apikey, exists_icon) 
           $(button).click(function() {
             GM.openInTab(sonarr_url + "/series/" + responseJSON.titleSlug);
           });
-          GM.notification('"' + responseJSON.title + '"' + " \nSuccessfully sent to Sonarr.", "IMDb Scout Mod(Sonarr)");
+          GM.notification('"' + responseJSON.title + '"' + " \nSuccessfully sent to Sonarr.", "IMDb Scout Mod (Sonarr)");
         }
         catch (e) {
           if (e == "exists") {
-            sonarrErrorNotificationHandler(e, true, "Series already exists in Sonarr.", "IMDb Scout Mod(Sonarr)");
+            sonarrErrorNotificationHandler(e, true, "Series already exists in Sonarr.", "IMDb Scout Mod (Sonarr)");
           } else {
             sonarrErrorNotificationHandler(e, false);
           }
@@ -4473,11 +4483,11 @@ function add_tvseries(tvseries, tvdbid, sonarr_url, sonarr_apikey, exists_icon) 
 }
 
 function sonarrErrorNotificationHandler(error, expected, errormsg) {
-  let prestring = "IMDb Scout Mod(Sonarr): ";
+  let prestring = "IMDb Scout Mod (Sonarr): ";
   if (expected) {
-    GM.notification("Error: " + errormsg, "IMDb Scout Mod(Sonarr)");
+    GM.notification("Error: " + errormsg, "IMDb Scout Mod (Sonarr)");
   } else {
-    GM.notification("Unexpected Sonarr Error, please report it. \nActual Error: " + error, "IMDb Scout Mod(Sonarr)");
+    GM.notification("Unexpected Sonarr Error, please report it. \nActual Error: " + error, "IMDb Scout Mod (Sonarr)");
   }
 }
 
@@ -4495,7 +4505,7 @@ async function start_trakt(movie_id, movie_title) {
     $(button).click(function() {
       button.remove();
     });
-    GM.notification("Trakt's access token not found. \nPress icon to authorize with Trakt. \nRefresh page after authorization is completed.", "IMDb Scout Mod(Trakt-Watchlist)");
+    GM.notification("Trakt's access token not found. \nPress icon to authorize with Trakt. \nRefresh page after authorization is completed.", "IMDb Scout Mod (Trakt-Watchlist)");
     return;
   }
   const created_at = await GM.getValue("IMDb_Scout_Mod_Trakt_created_at", 9999999999);
@@ -4553,7 +4563,7 @@ function get_trakt_watchlist(imdbid, title, access_token, button, error_icon, mi
 
         GM.setValue("IMDb_Scout_Mod_Trakt_watchlist", trakt_watchlist);
         GM.setValue("IMDb_Scout_Mod_Trakt_watchlist_synctime", set_synctime);
-        console.log("IMDb Scout Mod(Trakt-Watchlist): Sync watchlist complete!");
+        console.log("IMDb Scout Mod (Trakt-Watchlist): Sync watchlist complete!");
 
         if (Boolean(trakt_watchlist.match(imdbid))) {
           button.find('img').prop("src", exists_icon);
@@ -4572,16 +4582,16 @@ function get_trakt_watchlist(imdbid, title, access_token, button, error_icon, mi
       } else if (response.status > 499) {
         button.find('img').prop("src", error_icon);
         button.off("click");
-        GM.notification("Server/CF Error or Overloaded.", "IMDb Scout Mod(Trakt-Watchlist)");
+        GM.notification("Server/CF Error or Overloaded.", "IMDb Scout Mod (Trakt-Watchlist)");
       } else if (response.status > 399) {
         button.find('img').prop("src", error_icon);
         button.off("click");
-        GM.notification("Sync Error " + response.status + ", please report it.", "IMDb Scout Mod(Trakt-Watchlist)");
+        GM.notification("Sync Error " + response.status + ", please report it.", "IMDb Scout Mod (Trakt-Watchlist)");
       } else {
         button.find('img').prop("src", error_icon);
         button.off("click");
-        console.log("IMDb Scout Mod(Trakt Sync status): " + response.status);
-        console.log("IMDb Scout Mod(Trakt Sync response): " + response.responseText);
+        console.log("IMDb Scout Mod (Trakt Sync status): " + response.status);
+        console.log("IMDb Scout Mod (Trakt Sync response): " + response.responseText);
       }
     }
   });
@@ -4611,28 +4621,28 @@ function trakt_watchlist_add(imdbid, title, access_token, button, error_icon, mi
         if (countAdded == 0 && countExisting == 0) {
           button.find('img').prop("src", error_icon);
           button.off("click");
-          GM.notification('"' + title + '"' + " \nNot Found on Trakt.", "IMDb Scout Mod(Trakt-Watchlist)");
+          GM.notification('"' + title + '"' + " \nNot Found on Trakt.", "IMDb Scout Mod (Trakt-Watchlist)");
         } else if (countAdded == 0 && countExisting !== 0) {
           button.find('img').prop("src", exists_icon);
           button.off("click");
           $(button).click(function() {
             trakt_watchlist_remove(imdbid, title, access_token, button, error_icon, missing_icon, exists_icon);
           });
-          GM.notification('"' + title + '"' + " \nAlready exists in Trakt's watchlist!", "IMDb Scout Mod(Trakt-Watchlist)");
+          GM.notification('"' + title + '"' + " \nAlready exists in Trakt's watchlist!", "IMDb Scout Mod (Trakt-Watchlist)");
         } else if (countAdded > 1) {
           button.find('img').prop("src", exists_icon);
           button.off("click");
           $(button).click(function() {
             trakt_watchlist_remove(imdbid, title, access_token, button, error_icon, missing_icon, exists_icon);
           });
-          GM.notification('"' + title + '"' + " \nAdded to Trakt's watchlist. \nDetected incorrect data on Trakt!", "IMDb Scout Mod(Trakt-Watchlist)");
+          GM.notification('"' + title + '"' + " \nAdded to Trakt's watchlist. \nDetected incorrect data on Trakt!", "IMDb Scout Mod (Trakt-Watchlist)");
         } else {
           button.find('img').prop("src", exists_icon);
           button.off("click");
           $(button).click(function() {
             trakt_watchlist_remove(imdbid, title, access_token, button, error_icon, missing_icon, exists_icon);
           });
-          GM.notification('"' + title + '"' + " \nAdded to Trakt's watchlist.", "IMDb Scout Mod(Trakt-Watchlist)");
+          GM.notification('"' + title + '"' + " \nAdded to Trakt's watchlist.", "IMDb Scout Mod (Trakt-Watchlist)");
         }
       } else if (response.status == 401) {
         GM.setValue("IMDb_Scout_Mod_Trakt_access_token", "none");
@@ -4640,31 +4650,31 @@ function trakt_watchlist_add(imdbid, title, access_token, button, error_icon, mi
       } else if (response.status == 429) {
           button.find('img').prop("src", error_icon);
           button.off("click");
-          GM.notification("API rate limit exceeded.", "IMDb Scout Mod(Trakt-Watchlist)");
+          GM.notification("API rate limit exceeded.", "IMDb Scout Mod (Trakt-Watchlist)");
       } else if (response.status > 499) {
         button.find('img').prop("src", error_icon);
         button.off("click");
-        GM.notification("Server/CF Error or Overloaded.", "IMDb Scout Mod(Trakt-Watchlist)");
+        GM.notification("Server/CF Error or Overloaded.", "IMDb Scout Mod (Trakt-Watchlist)");
       } else if (response.status > 399) {
         button.find('img').prop("src", error_icon);
         button.off("click");
-        GM.notification("Add Error " + response.status + ", please report it.", "IMDb Scout Mod(Trakt-Watchlist)");
+        GM.notification("Add Error " + response.status + ", please report it.", "IMDb Scout Mod (Trakt-Watchlist)");
       } else {
         button.find('img').prop("src", error_icon);
         button.off("click");
-        console.log("IMDb Scout Mod(Trakt Add status): " + response.status);
-        console.log("IMDb Scout Mod(Trakt Add response): " + response.responseText);
+        console.log("IMDb Scout Mod (Trakt Add status): " + response.status);
+        console.log("IMDb Scout Mod (Trakt Add response): " + response.responseText);
       }
     },
     onerror: function() {
       button.find('img').prop("src", error_icon);
       button.off("click");
-      console.log("IMDb Scout Mod(Trakt-Watchlist): Add Request Error.");
+      console.log("IMDb Scout Mod (Trakt-Watchlist): Add Request Error.");
     },
     onabort: function() {
       button.find('img').prop("src", error_icon);
       button.off("click");
-      console.log("IMDb Scout Mod(Trakt-Watchlist): Add Request is aborted.");
+      console.log("IMDb Scout Mod (Trakt-Watchlist): Add Request is aborted.");
     }
   });
 }
@@ -4688,39 +4698,39 @@ function trakt_watchlist_remove(imdbid, title, access_token, button, error_icon,
         $(button).click(function() {
           trakt_watchlist_add(imdbid, title, access_token, button, error_icon, missing_icon, exists_icon);
         });
-        GM.notification('"' + title + '"' + " \nRemoved from Trakt's watchlist.", "IMDb Scout Mod(Trakt-Watchlist)");
+        GM.notification('"' + title + '"' + " \nRemoved from Trakt's watchlist.", "IMDb Scout Mod (Trakt-Watchlist)");
       } else if (response.status == 401) {
         GM.setValue("IMDb_Scout_Mod_Trakt_access_token", "none");
         location.reload();
       } else if (response.status == 429) {
           button.find('img').prop("src", error_icon);
           button.off("click");
-          GM.notification("API rate limit exceeded.", "IMDb Scout Mod(Trakt-Watchlist)");
+          GM.notification("API rate limit exceeded.", "IMDb Scout Mod (Trakt-Watchlist)");
       } else if (response.status > 499) {
         button.find('img').prop("src", error_icon);
         button.off("click");
-        GM.notification("Server/CF Error or Overloaded.", "IMDb Scout Mod(Trakt-Watchlist)");
+        GM.notification("Server/CF Error or Overloaded.", "IMDb Scout Mod (Trakt-Watchlist)");
       } else if (response.status > 399) {
         button.find('img').prop("src", error_icon);
         button.off("click");
-        GM.notification("Remove Error " + response.status + ", please report it.", "IMDb Scout Mod(Trakt-Watchlist)");
+        GM.notification("Remove Error " + response.status + ", please report it.", "IMDb Scout Mod (Trakt-Watchlist)");
 
       } else {
         button.find('img').prop("src", error_icon);
         button.off("click");
-        console.log("IMDb Scout Mod(Trakt Remove status): " + response.status);
-        console.log("IMDb Scout Mod(Trakt Remove response): " + response.responseText);
+        console.log("IMDb Scout Mod (Trakt Remove status): " + response.status);
+        console.log("IMDb Scout Mod (Trakt Remove response): " + response.responseText);
       }
     },
     onerror: function() {
       button.find('img').prop("src", error_icon);
       button.off("click");
-      console.log("IMDb Scout Mod(Trakt-Watchlist): Remove Request Error.");
+      console.log("IMDb Scout Mod (Trakt-Watchlist): Remove Request Error.");
     },
     onabort: function() {
       button.find('img').prop("src", error_icon);
       button.off("click");
-      console.log("IMDb Scout Mod(Trakt-Watchlist): Remove Request is aborted.");
+      console.log("IMDb Scout Mod (Trakt-Watchlist): Remove Request is aborted.");
     }
   });
 }
@@ -4752,8 +4762,8 @@ function traktCatchToken() {
         GM.setValue("IMDb_Scout_Mod_Trakt_created_at", created_at);
         window.close();
       } else {
-        console.log("IMDb Scout Mod(Trakt Get Token status): " + response.status);
-        console.log("IMDb Scout Mod(Trakt Get Token response): " + response.responseText);
+        console.log("IMDb Scout Mod (Trakt Get Token status): " + response.status);
+        console.log("IMDb Scout Mod (Trakt Get Token response): " + response.responseText);
       }
     }
   });
@@ -4784,12 +4794,12 @@ async function trakt_refresh_token() {
         GM.setValue("IMDb_Scout_Mod_Trakt_access_token", access_token);
         GM.setValue("IMDb_Scout_Mod_Trakt_refresh_token", refresh_token);
         GM.setValue("IMDb_Scout_Mod_Trakt_created_at", created_at);
-        GM.notification("Trakt's access token is refreshed. \nNext refresh after 2 months.", "IMDb Scout Mod(Trakt-Watchlist)");
+        GM.notification("Trakt's access token is refreshed. \nNext refresh after 2 months.", "IMDb Scout Mod (Trakt-Watchlist)");
         location.reload();
       } else {
         GM.setValue("IMDb_Scout_Mod_Trakt_access_token", "none");
-        console.log("IMDb Scout Mod(Trakt Refresh Token status): " + response.status);
-        console.log("IMDb Scout Mod(Trakt Refresh Token response): " + response.responseText);
+        console.log("IMDb Scout Mod (Trakt Refresh Token status): " + response.status);
+        console.log("IMDb Scout Mod (Trakt Refresh Token response): " + response.responseText);
       }
     }
   });
