@@ -1,7 +1,7 @@
 // ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      9.11.1
+// @version      9.12
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from various sites. Adds movies/series to Radarr/Sonarr. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         https://i.imgur.com/u17jjYj.png
@@ -743,6 +743,9 @@
         -   Note: Tampermonkey fixed notifications from v4.13.6134.
 
 9.11.1  -   Added: Filmow, WB.
+
+9.12    -   Added: Simkl, MovieLens, ratehouse, Filmsomniac, MyMovieRack.
+        -   Added support for Milkie search (needs auth token).
 
 */
 //==============================================================================
@@ -1768,6 +1771,19 @@ var private_sites = [
       'matchRegex': /Открити торенти - 0/,
       'rateLimit': 3000,
       'both': true},
+  {   'name': 'Milkie',
+      'icon': 'https://milkie.cc/favicon.png',
+      'searchUrl': 'https://milkie.cc/api/v1/torrents?query=%search_string%+%year%&oby=created_at&odir=desc&categories=1&pi=0&ps=50',
+      'goToUrl': 'https://milkie.cc/browse?query=%search_string%+%year%&categories=1',
+      'loggedOutRegex': /Cloudflare|Ray ID/,
+      'matchRegex': /hits":0/},
+  {   'name': 'Milkie',
+      'icon': 'https://milkie.cc/favicon.png',
+      'searchUrl': 'https://milkie.cc/api/v1/torrents?query=%search_string%&oby=created_at&odir=desc&categories=2&pi=0&ps=50',
+      'goToUrl': 'https://milkie.cc/browse?query=%search_string%&categories=2',
+      'loggedOutRegex': /Cloudflare|Ray ID/,
+      'matchRegex': /hits":0/,
+      'TV': true},
   {   'name': 'MOJBLiNK',
       'searchUrl': 'https://www.mojblink.si/brskanje?cat=0&search=%tt%&searchin=descr&incldead=0',
       'loggedOutRegex': /Cloudflare|Ray ID|Niste prijavljeni/,
@@ -2939,6 +2955,10 @@ var icon_sites_main = [
   {   'name': 'Filmow',
       'searchUrl': 'https://filmow.com/buscar/?year_start=%year%&q=%search_string_orig%',
       'showByDefault': false},
+  {   'name': 'Filmsomniac',
+      'searchUrl': 'https://www.filmsomniac.com/advanced-search/%search_string%',
+      'spaceEncode': ' ',
+      'showByDefault': false},
   {   'name': 'FindAnyFilm',
       'icon': 'https://www.findanyfilm.com/server-assets/favicon.png',
       'searchUrl': 'https://www.findanyfilm.com/search?all=%search_string%&sort=product_release_date&type=ALL',
@@ -2962,10 +2982,6 @@ var icon_sites_main = [
   {   'name': 'Metacritic',
       'searchUrl': 'https://www.metacritic.com/search/all/%search_string%/results?cats[movie]=1&cats[tv]=1&search_type=advanced&sort=relevancy',
       'showByDefault': false},
-  {   'name': 'Milkie',
-      'icon': 'https://milkie.cc/favicon.png',
-      'searchUrl': 'https://milkie.cc/browse?query=%search_string%+%year%',
-      'showByDefault': false},
   {   'name': 'Movie-Censorship',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAIAAAD8GO2jAAAAB3RJTUUH5AoDEjQAvYzAkgAABHxJREFUSMftVU1sE1cQfru209ACSQ9pK4HUSBFcoBERlzYVbQNqD4AQ7blRe0BqSISEaCWQ2qTcilo5OLEd2/k1IaUQBxCiCEcYK06kNiiFUCfkp0pShO3E+XHW9nrX6/X+dN57seum1/aW1Wj1dmbe972ZNzOLpP/5QVsEWwT/CUEanlSKigjvdHqTE3YQhA2rKEj/NouiSK3YQQSNlANBYM3Isqrreclks4UcsAE0eWtW1/8BLgiAlS3YLmta7lAYBAF6Mhab8Xgm3G6QoNu9+uKFBBxwEIIOm+PR6MzAALUuBAICNZGwFOBTlNDo6MQVvH2yry8SDPIQDXiQgyJd14fPnfseoVaEWhBqRmig5oM1bh2Chv1yNrsUDF7du4daW4jblKdfUVWB54H7T5/vZk2N86Wi1py1Y+eO3vJyT3V1aHJSlGWUkaQ5v7+v8i2HyeQqwgJOQ02NKVWFnEqZzK1DhywIuUxGMLUZDQOffLy0uJgRRVnXn1gsNpa1IuRAyE7EhlAbETiot66OV1WU4jhI3MMzZyiKg2XaGKajtHRhfFxWlD/u3IH9LqPBwSCnAWMNNZsTsgwRzHnvAxz4O40G1/ZXvOfP/+p236391GEwOI1GR1FR7949S+EwEuJxRVH8p+ssFAhhIAji3uefpXT97tGjrUSD9SyDCS5d4mUZbu72kcNgai8yAc3PdV9E0um4KCY07ZHDAZrLCPXu2xcJhTCBqmn++tM5AgYOCzG6thXfP3WqvbjYwWBNIYGgadHZ2c6SnW2EG+CGra2cIIjJJFxbSlF+v3Hdd/HiRCDAJZObCdpIQqnQ5OY1eYKUpk15vVRP8+b/timekaEJaOGmNY1XlATPC6lUnqAegup8tXTg5Em8k8HiZFmnyXjjow83UkTvAFIEBD7fRlhE2f/+e2sQAc+T6k/DAsoXJPV3BA31FlJhY16ve/cuqAe4Ooj9p3erhzs6KCVoCMF3SUVZWpjveeN1O8NAWE6GsRvYMXePpOv5rhy328aazeuxGLnkbJYSQDnPTk/7v/qylVQUwI24XI/7PbYCgoDZnIBEaJqvHm+B2nWyOI3tO7Y/sloBkYtGf2lqAlPXa2URXEUcB702dPZsC8u6Xt42+/RpeGGho6QECrynvPz56uposxnWtA9g8eDCBYgAKFYWF69VHYDmchlYpwGXH5zjakXFld27Wsj6QWPjMsch6NVxm62zrMxKbtVdUfF8airwzdc/4NqwTgcCdqKnTURlfmQkC2Mgk4nMz3mOHLbmHOy5bu8ufzPQYgmvriUTCSSr6mBtrXv//msHD/ZVVfVWVk4ODq4sL//W1RWORMLPnt0+dgz0P2I5cP2dt+81NIRmZoAAz05ZjsXjY93dt44fBwdwu3niRMByeTYYXOV5PpHAswiPLFWF76X1dZDlZBKKV4BS03XwAQjo2yjHUSssYjCYc7M2TQe1psHkAhPISiLBSRJPRnfB/wAqDBCJ4AWZ5ngOEwxxk5U6FP4MCkz0LRU4bP2Ttwi2CCTpLw+PfGOkBCRRAAAAAElFTkSuQmCC',
       'searchUrl': 'https://www.movie-censorship.com/list.php?s=%search_string%',
@@ -2976,6 +2992,10 @@ var icon_sites_main = [
   {   'name': 'MovieChat',
       'icon': 'https://moviechat.org/favicons/favicon-32x32.png',
       'searchUrl': 'https://moviechat.org/%tt%'},
+  {   'name': 'MovieLens',
+      'icon': 'https://movielens.org/favicon-32x32.png',
+      'searchUrl': 'https://movielens.org/explore?q=%search_string%',
+      'showByDefault': false},
   {   'name': 'MovieMistakes',
       'searchUrl': 'https://www.moviemistakes.com/search.php?text=%search_string%',
       'showByDefault': false},
@@ -2986,11 +3006,18 @@ var icon_sites_main = [
       'icon': 'https://www.mrqe.com/static/favicon.ico',
       'searchUrl': 'https://www.mrqe.com/search?utf8=✓&q=%search_string%',
       'showByDefault': false},
+  {   'name': 'MyMovieRack',
+      'searchUrl': 'https://www.mymovierack.com/title/topResultFor?q=%tt%',
+      'showByDefault': false},
   {   'name': 'Netflix',
       'searchUrl': 'https://www.netflix.com/search/%search_string%',
       'showByDefault': false},
   {   'name': 'OFDb (DE)',
       'searchUrl': 'https://ssl.ofdb.de/view.php?page=suchergebnis&SText=%tt%&Kat=IMDb',
+      'showByDefault': false},
+  {   'name': 'ratehouse',
+      'icon': 'https://rate.house/favicon-32x32.png',
+      'searchUrl': 'https://rate.house/search-all?query=%search_string%',
       'showByDefault': false},
   {   'name': 'Reelgood',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADkAAAA5CAMAAAC7xnO3AAABiVBMVEUAxnz////+///+//79//78//76/v35/vz3/vv2/vvz/fry/fnv/fft/ffr/Pbq/PXp/PXm/PTl+/Pk+/Pj+/Li+/Hc+u/b+u/a+u7Z+u7Z+u3W+ezS+erO+OjJ+ObI9+XH9+XG9+XE9+PD9+PC9+PA9uK89uC79t+49d629d209dyw9Nqv9Nqu9Nqr9Nir89ii8tSc8dGb8dGV8c6V8M6U8M2T8M2R8MyP8MuO8MuK78mJ78iI78iH78iH7sd97cN77cJ27MB07L9w671u67xr67tq67pp6rln6rlh6bZf6bVe6bVY6LJV6LBT57BT569S569R565Q565P565P561N561M5qxL5qxK5qtF5alE5alB5ac+5aY95KU65KQ55KMz46Ex46Av4p8t4p4q4p0q4pwp4pwn4Zsk4Zok4Zki4Zkg4Jgf4Jgc4JYY35QX35QV35MU35IT35IS35IR3pEQ3pAP3pAO3o8J3Y0I3Y0H3YwG3YwF3YsE3YsD3IoC3IoB3IoB3IkA3ImkwFqMAAAAAXRSTlP+GuMHfQAAAXZJREFUeNrt1VdTwkAQB3AWqWLviqgoFuwNLFiwdwURe1fsDUEFW8J+cucuCDMwQ5J7cHzIPv2zs7/ZzNxNolIhY6kUqcj/IZ8irHK93MszSoDmM1YJOkeQSZosAHkznwyy5Gu+AKB6l0Eihgf1oO64ZpCIAbsajGNvJPJ2m63F4YlKlBjbrAQoXuIQuRwgVboqKnXmbRJ2zGS+7uRXQtak+KksI951qcm0ri+YkKDdE5cRdzadbTpFTEqwisreCjpY5qH3MDY3NZRLG5obMUnL5CZ3n3+g3QsD7a1IkNrue/J01DgitK20Oysuaw9JvuzUgIt2o4W0vSAmixa/EfGxXw8AA6FQ6Pm4VXiTg8zSMPpK0zCkVn40k/S1X8VTuhzPeCofiZQm66MSv2Cpsu0F2eREDOXJnsB5DQ0NnEzpQtwSlq7Jl7ywtOpdtkS/sHRavuQswkUIy5bohWSWJ+NLjbfSpM9JaoPmfZqdfuWfrUhF/rH8AWogkZaxzEKaAAAAAElFTkSuQmCC',
@@ -3003,6 +3030,10 @@ var icon_sites_main = [
       'showByDefault': false},
   {   'name': 'SensCritique (FR)',
       'searchUrl': 'https://www.senscritique.com/search?q=%search_string%',
+      'showByDefault': false},
+  {   'name': 'Simkl',
+      'icon': 'https://eu.simkl.in/img_favicon/v2/favicon-32x32.png',
+      'searchUrl': 'https://simkl.com/search/?q=%tt%',
       'showByDefault': false},
   {   'name': 'The Numbers',
       'searchUrl': 'https://www.the-numbers.com/custom-search?searchterm=%search_string%',
@@ -3356,8 +3387,16 @@ async function maybeAddLink(elem, site_name, search_url, site, scout_tick, movie
     return;
   }
   // Check for results with GET method.
+  let reqHeader = {};
+  if (site['name'] == "Milkie") {
+    reqHeader = {
+      "Host": "milkie.cc",
+      "Authorization": GM_config.get("milkie_authToken")
+    };
+  }
   GM.xmlHttpRequest({
     method: 'GET',
+    headers: reqHeader,
     url: search_url,
     onload: function(response) {
       if (response.responseHeaders.indexOf('efresh: 0; url') > -1 || response.status > 399) {
@@ -3389,6 +3428,8 @@ async function maybeAddLink(elem, site_name, search_url, site, scout_tick, movie
     }
   });
 }
+
+
 
 //==============================================================================
 //    Perform code to create fields and display sites
@@ -4881,7 +4922,8 @@ function countSites(task) {
       'sonarr_customprofileid': {'type': 'text'},
       'sonarr_languageprofileid': {'type': 'text'},
       'sonarr_seriestype': {'type': 'select', 'options': ['standard', 'daily', 'anime']},
-      'trakt_synclimiter': {'type': 'select', 'options': ['15', '30', '60', '300']}
+      'trakt_synclimiter': {'type': 'select', 'options': ['15', '30', '60', '300']},
+      'milkie_authToken': {'type': 'text'}
     };
     $.each(custom_sites, function(index, site) {config_fields[configName(site)] = {'type': 'checkbox'};});
     $.each(public_sites, function(index, site) {config_fields[configName(site)] = {'type': 'checkbox'};});
@@ -5262,6 +5304,12 @@ var config_fields = {
     'type': 'select',
     'options': ['15', '30', '60', '300'],
     'default': '15'
+  },
+  'milkie_authToken': {
+    'label': 'Milkie:',
+    'section': 'Authorization Tokens:',
+    'type': 'text',
+    'default': ''
   }
 };
 
@@ -5363,7 +5411,8 @@ GM_config.init({
           #imdb_scout_section_header_4, #imdb_scout_section_header_5, #imdb_scout_section_header_6, \
           #imdb_scout_section_header_7, #imdb_scout_section_header_8, #imdb_scout_section_header_9, \
           #imdb_scout_section_header_10, #imdb_scout_section_header_11, #imdb_scout_section_header_12, \
-          #imdb_scout_section_header_13, #imdb_scout_section_header_14, #imdb_scout_section_header_15 { \
+          #imdb_scout_section_header_13, #imdb_scout_section_header_14, #imdb_scout_section_header_15, \
+          #imdb_scout_section_header_16 { \
              background:   #00ab00 !important; \
              color:          black !important; \
              font-weight:     bold !important; \
@@ -5424,61 +5473,61 @@ GM_config.init({
        'color': '#cb0000'
       });
 
-      $('#imdb_scout').contents().find('#imdb_scout_section_6').find('.field_label').each(function(index, label) {
+      $('#imdb_scout').contents().find('#imdb_scout_section_7').find('.field_label').each(function(index, label) {
         var url = new URL(custom_sites[index].searchUrl);
         $(label).append(' ' + '<a class="grey_link" target="_blank" style="color: gray; text-decoration : none" href="' + url.origin + '">'
                         + (/www./.test(url.hostname) ? url.hostname.match(/www.(.*)/)[1] : url.hostname) + '</a>');
         $(label).prepend(getFavicon(custom_sites[index], true));
       });
-      $('#imdb_scout').contents().find('#imdb_scout_section_7').find('.field_label').each(function(index, label) {
+      $('#imdb_scout').contents().find('#imdb_scout_section_8').find('.field_label').each(function(index, label) {
         var url = new URL(public_sites[index].searchUrl);
         $(label).append(' ' + '<a class="grey_link" target="_blank" style="color: gray; text-decoration : none" href="' + url.origin + '">'
                         + (/www./.test(url.hostname) ? url.hostname.match(/www.(.*)/)[1] : url.hostname) + '</a>');
         $(label).prepend(getFavicon(public_sites[index], true));
       });
-      $('#imdb_scout').contents().find('#imdb_scout_section_8').find('.field_label').each(function(index, label) {
+      $('#imdb_scout').contents().find('#imdb_scout_section_9').find('.field_label').each(function(index, label) {
         var url = new URL(private_sites[index].searchUrl);
         $(label).append(' ' + '<a class="grey_link" target="_blank" style="color: gray; text-decoration : none" href="' + url.origin + '">'
                         + (/www./.test(url.hostname) ? url.hostname.match(/www.(.*)/)[1] : url.hostname) + '</a>');
         $(label).prepend(getFavicon(private_sites[index], true));
       });
-      $('#imdb_scout').contents().find('#imdb_scout_section_9').find('.field_label').each(function(index, label) {
+      $('#imdb_scout').contents().find('#imdb_scout_section_10').find('.field_label').each(function(index, label) {
         var url = new URL(usenet_sites[index].searchUrl);
         $(label).append(' ' + '<a class="grey_link" target="_blank" style="color: gray; text-decoration : none" href="' + url.origin + '">'
                         + (/www./.test(url.hostname) ? url.hostname.match(/www.(.*)/)[1] : url.hostname) + '</a>');
         $(label).prepend(getFavicon(usenet_sites[index], true));
       });
-      $('#imdb_scout').contents().find('#imdb_scout_section_10').find('.field_label').each(function(index, label) {
+      $('#imdb_scout').contents().find('#imdb_scout_section_11').find('.field_label').each(function(index, label) {
         var url = new URL(subs_sites[index].searchUrl);
         $(label).append(' ' + '<a class="grey_link" target="_blank" style="color: gray; text-decoration : none" href="' + url.origin + '">'
                         + (/www./.test(url.hostname) ? url.hostname.match(/www.(.*)/)[1] : url.hostname) + '</a>');
         $(label).prepend(getFavicon(subs_sites[index], true));
       });
-      $('#imdb_scout').contents().find('#imdb_scout_section_11').find('.field_label').each(function(index, label) {
+      $('#imdb_scout').contents().find('#imdb_scout_section_12').find('.field_label').each(function(index, label) {
         var url = new URL(pre_databases[index].searchUrl);
         $(label).append(' ' + '<a class="grey_link" target="_blank" style="color: gray; text-decoration : none" href="' + url.origin + '">'
                         + (/www./.test(url.hostname) ? url.hostname.match(/www.(.*)/)[1] : url.hostname) + '</a>');
         $(label).prepend(getFavicon(pre_databases[index], true));
       });
-      $('#imdb_scout').contents().find('#imdb_scout_section_12').find('.field_label').each(function(index, label) {
+      $('#imdb_scout').contents().find('#imdb_scout_section_13').find('.field_label').each(function(index, label) {
         var url = new URL(other_sites[index].searchUrl);
         $(label).append(' ' + '<a class="grey_link" target="_blank" style="color: gray; text-decoration : none" href="' + url.origin + '">'
                         + (/www./.test(url.hostname) ? url.hostname.match(/www.(.*)/)[1] : url.hostname) + '</a>');
         $(label).prepend(getFavicon(other_sites[index], true));
       });
-      $('#imdb_scout').contents().find('#imdb_scout_section_13').find('.field_label').each(function(index, label) {
+      $('#imdb_scout').contents().find('#imdb_scout_section_14').find('.field_label').each(function(index, label) {
         var url = new URL(streaming_sites[index].searchUrl);
         $(label).append(' ' + '<a class="grey_link" target="_blank" style="color: gray; text-decoration : none" href="' + url.origin + '">'
                         + (/www./.test(url.hostname) ? url.hostname.match(/www.(.*)/)[1] : url.hostname) + '</a>');
         $(label).prepend(getFavicon(streaming_sites[index], true));
       });
-      $('#imdb_scout').contents().find('#imdb_scout_section_14').find('.field_label').each(function(index, label) {
+      $('#imdb_scout').contents().find('#imdb_scout_section_15').find('.field_label').each(function(index, label) {
         var url = new URL(icon_sites_main[index].searchUrl);
         $(label).append(' ' + '<a class="grey_link" target="_blank" style="color: gray; text-decoration : none" href="' + url.origin + '">'
                         + (/www./.test(url.hostname) ? url.hostname.match(/www.(.*)/)[1] : url.hostname) + '</a>');
         $(label).prepend(getFavicon(icon_sites_main[index], true));
       });
-      $('#imdb_scout').contents().find('#imdb_scout_section_15').find('.field_label').each(function(index, label) {
+      $('#imdb_scout').contents().find('#imdb_scout_section_16').find('.field_label').each(function(index, label) {
         var url = new URL(special_buttons[index].searchUrl);
         $(label).append(' ' + '<a class="grey_link" target="_blank" style="color: gray; text-decoration : none" href="' + url.origin + '">'
                         + (/www./.test(url.hostname) ? url.hostname.match(/www.(.*)/)[1] : url.hostname) + '</a>');
