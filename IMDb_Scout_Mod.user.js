@@ -3429,8 +3429,6 @@ async function maybeAddLink(elem, site_name, search_url, site, scout_tick, movie
   });
 }
 
-
-
 //==============================================================================
 //    Perform code to create fields and display sites
 //==============================================================================
