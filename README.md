@@ -42,7 +42,7 @@ Each site is a dictionary with the following attributes:
   - `inThirdSearchBar` (optional): Places site at the third searchable bar.
   - `rateLimit` (optional): Connection rate limit in milliseconds. Default is 200. On the Search/List pages if rateLimit<=1000 then it will be increased by a factor of 4.
   - `mPOST`: HTTP request by POST method. For the sites that doesn't support GET.
-  - #  `ignore404` (optional): Ignores all 4** HTTP errors.
+  - `ignore404` (optional): Ignores all 4** HTTP errors.
   
 
 Parameters you can use inside the URL:
