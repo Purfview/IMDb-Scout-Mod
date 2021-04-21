@@ -1,7 +1,7 @@
 // ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      9.13.1
+// @version      9.13.2
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from various sites. Adds movies/series to Radarr/Sonarr. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         https://i.imgur.com/u17jjYj.png
@@ -763,6 +763,8 @@
 
 9.13.1  -   Added: ARAMovie.
 
+9.13.2  -   Added: Cilipro, EXTTor, NPlus, NPlus-Req, DBy, DBy-Req.
+
 */
 //==============================================================================
 //    JSHint directives.
@@ -935,6 +937,13 @@ var public_sites = [
       'loggedOutRegex': /Cloudflare|Ray ID/,
       'matchRegex': /About 0 results/,
       'both': true},
+  {   'name': 'Cilipro',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAALxSURBVHja7JcxaxRRFIW/EbNqISJGC9sFf8BUaiHauNsphDOgIAhaGQux0VQJFqaxUCQiqJWKsKcTwWilhdqN+AMsbE1ERBujOBZv4s7Ozkx2NZDGy8Iy+/a+e+655973JsqyjI20TWywbTiAzcWHJEnK608lbbX9HLgHfGzazDYAkqr/IIFNr9erBlCyI/Pz812AOI4Pp2k6Y/s1cB14BXxddwZCBgLckjRbXIvjeHscx500TTvAR9ungafrCqBPnXZIOlDlEMcxwB7bB9YdQG4RMB3HcavOKU3TJds3c7CAy/7ZvwCYkHRuDbE9kLRU4K4IYS9wA3gL3FlLuJtLOwMcRNrRkP0KsDgk8MBDJDgraQqYMlwiCPdlAOPlZhFCSzCnxC168D7Uu2xfgBeVXQYTSNOF5+1IHaADXATuGn8AblcOIsFOQRBfYtozM7TTlHaaAtBO08z2LeBHDUEHBXXsTQKXgX1NGjgpmChSkpeFtoztH8ACKAOHwdK3FjCXf9dpZwl4WDuKBV1QVONNXssvJdWvWm3rFuyW7XdNDBxtcM4c+n6lBGp1iExTZG/YloCbkn42MVDfemH0PqxZ3i37PHbU1LrAp+bTUIBcHR5+AZ9r9j8l2CWMbCpKVNm6ax1G5Sbf5qDylypBE3T69DnPIRepwfbnutatvg9UsCDY0oMrwKQHgx+v1U7OhuFRXetGA1eyKMr+ZOKCKpT/ED7L+YhdAfYDHalpbEMCXeDZHzUXYpZLkOWHCYNA+jQIJjEza6q2b89VCN5YAg/R5EIQlcQ6QujA2LOR74SGN8MCLqp6tJQLnp8M98e5lM4avtVuNw6IkP2CwgCqtQERJlEEMNeD2TGTrRLfkwROUJFQMeamCuDXEnhSPe5HD26YopbNhjmg4DSVwGOPC8IhOCH4yt9eyVZH5zFDF3NB4UIxWH4PxV42LABXNWLwUUbxIrCYQFdwCHMG2FJY/w7cyw+qO4QhNZZF/19ONxrA7wEAeosRLlBGDTwAAAAASUVORK5CYII=',
+      'searchUrl': 'https://www.cilipro1.xyz/search/',
+      'mPOST': 'keyword=%search_string_orig%',
+      'loggedOutRegex': /Cloudflare|Ray ID/,
+      'matchRegex': /显示前0个/,
+      'both': true},
   {   'name': 'CineCalidad',
       'searchUrl': 'https://www.cinecalidad.is/?s=%tt%',
       'loggedOutRegex': /Cloudflare|Ray ID/,
@@ -1004,6 +1013,17 @@ var public_sites = [
       'loggedOutRegex': /Not logged in/,
       'matchRegex': /nijedan torent/,
       'both': true},
+  {   'name': 'EXTTor',
+      'icon': 'https://ext.to/static/img/favicon.png',
+      'searchUrl': 'https://ext.to/search/?c=movies&q=%search_string_orig%+%year%',
+      'loggedOutRegex': /Cloudflare|Ray ID/,
+      'matchRegex': /No results found/},
+  {   'name': 'EXTTor',
+      'icon': 'https://ext.to/static/img/favicon.png',
+      'searchUrl': 'https://ext.to/search/?c=tv&q=%search_string_orig%',
+      'loggedOutRegex': /Cloudflare|Ray ID/,
+      'matchRegex': /No results found/,
+      'TV': true},
   {   'name': 'GloTor',
       'icon': 'https://glodls.to/themes/NB-GloSite/images/favicon.ico',
       'searchUrl': 'https://glodls.to/search_results.php?search=%search_string%+%year%&cat=1&incldead=1&inclexternal=0',
@@ -1653,6 +1673,16 @@ var private_sites = [
       'matchRegex': /Request Not Fulfilled/,
       'positiveMatch': true,
       'both': true},
+  {   'name': 'DBy',
+      'searchUrl': 'https://danishbytes.org/torrents/filter?imdb=%tt%',
+      'loggedOutRegex': /Cloudflare|Ray ID|Glemt din adgangskode|Service Unavailable/,
+      'matchRegex': /<tbody>\s*<\/tbody>/,
+      'both': true},
+  {   'name': 'DBy-Req',
+      'searchUrl': 'https://danishbytes.org/requests/filter?tmdb=%tmdbid%&unfilled=1',
+      'loggedOutRegex': /Cloudflare|Ray ID|Glemt din adgangskode|Service Unavailable/,
+      'matchRegex': /<tbody>\s*<\/tbody>/,
+      'both': true},
   {   'name': 'DC',
       'searchUrl': 'https://digitalcore.club/api/v1/torrents?categories[]=1&categories[]=2&categories[]=3&categories[]=4&categories[]=5&categories[]=6&categories[]=7&dead=false&limit=1&page=search&searchText=%search_string%+%year%',
       'goToUrl': 'https://digitalcore.club/search?search=%search_string%+%year%&cats=1,2,5,6,3,4,7&fc=true',
@@ -2116,6 +2146,16 @@ var private_sites = [
       'loggedOutRegex': /Cloudflare|Ray ID|Jelszó-emlékeztető|Password recovery/,
       'matchRegex': />\s*Nem\s*</,
       'positiveMatch': true,
+      'both': true},
+  {   'name': 'NPlus',
+      'searchUrl': 'https://nordicplus.org/torrents/filter?imdb=%tt%',
+      'loggedOutRegex': /Cloudflare|Ray ID|Forgot Your Password|Service Unavailable/,
+      'matchRegex': /<tbody>\s*<\/tbody>/,
+      'both': true},
+  {   'name': 'NPlus-Req',
+      'searchUrl': 'https://nordicplus.org/requests/filter?tmdb=%tmdbid%&unfilled=1',
+      'loggedOutRegex': /Cloudflare|Ray ID|Forgot Your Password|Service Unavailable/,
+      'matchRegex': /<tbody>\s*<\/tbody>/,
       'both': true},
   {   'name': 'NTELogo',
       'searchUrl': 'https://ntelogo.org/torrents/filter?imdb=%tt%',
