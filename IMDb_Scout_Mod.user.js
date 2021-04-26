@@ -1,7 +1,7 @@
 // ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      9.14.1
+// @version      9.14.2
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from various sites. Adds movies/series to Radarr/Sonarr. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         https://i.imgur.com/u17jjYj.png
@@ -771,6 +771,8 @@
         -   New feature: New 'ignore404' attribute.
 
 9.14.1  -   Added: TLFBits, UHDB-Req, ANT-Req, NBL-Req, bB-Req.
+
+9.14.2  -   Added: HDTurk.
 
 */
 //==============================================================================
@@ -1977,6 +1979,12 @@ var private_sites = [
       'searchUrl': 'https://hdtime.org/torrents.php?incldead=0&search=%tt%&search_area=1',
       'loggedOutRegex': /Cloudflare|Ray ID|SSL \(HTTPS\)/,
       'matchRegex': /Nothing found|没有种子|沒有種子/,
+      'both': true},
+  {   'name': 'HDTurk',
+      'searchUrl': 'https://hdturk.club/browse.php?do=search&keywords=%tt%&search_type=t_genre&category=0&include_dead_torrents=yes',
+      'loggedOutRegex': /Cloudflare|Ray ID|Lütfen Giriş yapınız/,
+      'matchRegex': /dl.png/,
+      'positiveMatch': true,
       'both': true},
   {   'name': 'HDU',
       'searchUrl': 'https://pt.upxin.net/torrents.php?search_area=4&search=%tt%',
