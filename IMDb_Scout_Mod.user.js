@@ -1,7 +1,7 @@
 // ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      9.14.2
+// @version      9.14.3
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from various sites. Adds movies/series to Radarr/Sonarr. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         https://i.imgur.com/u17jjYj.png
@@ -773,6 +773,8 @@
 9.14.1  -   Added: TLFBits, UHDB-Req, ANT-Req, NBL-Req, bB-Req.
 
 9.14.2  -   Added: HDTurk.
+
+9.14.3  -   Added: HDMonkey.
 
 */
 //==============================================================================
@@ -1948,6 +1950,15 @@ var private_sites = [
       'searchUrl': 'https://hdme.eu/browse.php?search=%search_string%&blah=0&cat=0&incldead=1',
       'loggedOutRegex': /You need cookies enabled/,
       'matchRegex': /Try again with a refined search string./,
+      'TV': true},
+  {   'name': 'HDMonkey',
+      'searchUrl': 'https://hdmonkey.org/torrents-search.php?c75=1&c26=1&c42=1&c50=1&c74=1&c49=1&c46=1&c24=1&c28=1&search=%search_string_orig%+%year%',
+      'loggedOutRegex': /Cloudflare|Ray ID|Recover Account/,
+      'matchRegex': /Nothing Found|Nu a fost gasit nimic/},
+  {   'name': 'HDMonkey',
+      'searchUrl': 'https://hdmonkey.org/torrents-search.php?c41=1&c52=1&c48=1&c9=1&search=%search_string_orig%',
+      'loggedOutRegex': /Cloudflare|Ray ID|Recover Account/,
+      'matchRegex': /Nothing Found|Nu a fost gasit nimic/,
       'TV': true},
   {   'name': 'HDS',
       'searchUrl': 'https://hdsky.me/torrents.php?incldead=1&search=%tt%&search_area=4&search_mode=0',
