@@ -1,7 +1,7 @@
-// ==UserScript==
+﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      9.14.3
+// @version      9.15
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from various sites. Adds movies/series to Radarr/Sonarr. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         https://i.imgur.com/u17jjYj.png
@@ -678,7 +678,7 @@
 9.0     -   Added: DOGnzb (movie search is by IMDb id, tv search by TVDb id) .
         -   New feature:  Support search by TVDb ID and TMDb ID
                          with new search URL parameters: %tvdbid% and %tmdbid%.
-                          If matching id is not found then it will be set to "0",
+                          If matching id is not found then it will be set to "00000000",
                          if it's "undefined" then response didn't came in time,
                          timeout is set to wait for 2 seconds.
                          Some functions are async now.
@@ -775,6 +775,8 @@
 9.14.2  -   Added: HDTurk.
 
 9.14.3  -   Added: HDMonkey.
+
+9.15    -   New feature: Check on tmdb/tvdb conversion, if it's not successful = 'error' icon.
 
 */
 //==============================================================================
@@ -3696,7 +3698,7 @@ function getTVDbID(movie_id) {
         const xmldata = response.responseXML;
         tvdb_id = xmldata.getElementsByTagName("seriesid")[0].childNodes[0].nodeValue;
       } else {
-        tvdb_id = "0";
+        tvdb_id = "00000000";
       }
     }
   });
@@ -3717,7 +3719,7 @@ function getTMDbID(movie_id) {
       } else if (String(response.responseText).match('tv_episode_results":\\[{')) {
         tmdb_id = result.tv_episode_results[0].id;
       } else {
-        tmdb_id = "0";
+        tmdb_id = "00000000";
       }
     }
   });
@@ -3904,6 +3906,11 @@ async function maybeAddLink(elem, site_name, search_url, site, scout_tick, movie
   var target = search_url;
   if ('goToUrl' in site) {
     target = await replaceSearchUrlParams({'searchUrl': site['goToUrl'], 'spaceEncode': ('spaceEncode' in site) ? site['spaceEncode'] : '+'}, movie_id, movie_title, movie_title_orig, movie_year);
+  }
+  // Check tmdb/tvdb conversion.
+  if (search_url.indexOf('=00000000') > -1 || search_url.indexOf('=undefined') > -1) {
+    addLink(elem, site_name, target, site, 'error', scout_tick);
+    return;
   }
   // Check for results with POST method.
   if ('mPOST' in site) {
