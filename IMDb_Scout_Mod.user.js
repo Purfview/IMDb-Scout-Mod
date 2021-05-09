@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      9.15.1
+// @version      9.15.2
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from various sites. Adds movies/series to Radarr/Sonarr. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         https://i.imgur.com/u17jjYj.png
@@ -780,6 +780,8 @@
 
 9.15.1  -   Added: RPTor, SF, BestCore, HD-F-Req, BHD-Req.
         -   Tweak: HD-F (add search for tv).
+
+9.15.2  -   Tweaks: BTN, BTN-TVDb.
 
 */
 //==============================================================================
@@ -1626,7 +1628,8 @@ var private_sites = [
   {   'name': 'BTN',
       'searchUrl': 'https://broadcasthe.net/torrents.php?imdb=%tt%',
       'loggedOutRegex': /Lost your password\?/,
-      'matchRegex': /Error 404/,
+      'matchRegex': /action=download/,
+      'positiveMatch': true,
       'rateLimit': 125,
       'TV': true},
   {   'name': 'BTN-Title',
@@ -1638,7 +1641,8 @@ var private_sites = [
   {   'name': 'BTN-TVDb',
       'searchUrl': 'https://broadcasthe.net/torrents.php?tvdb=%tvdbid%',
       'loggedOutRegex': /Lost your password\?/,
-      'matchRegex': /Error 404/,
+      'matchRegex': /action=download/,
+      'positiveMatch': true,
       'rateLimit': 125,
       'TV': true},
   {   'name': 'BTN-Req',
