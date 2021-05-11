@@ -4186,7 +4186,7 @@ function addIconBar(movie_id, movie_title, movie_title_orig) {
         var data = (post_data.match('{')) ? post_data : '{"' + post_data.replace(/&/g, '","').replace(/=/g, '":"').replace(/\+/g, ' ') + '"}';
         var addform = $('<form></form>');
             addform.attr('id', form_name);
-            addform.attr('action', target);
+            addform.attr('action', search_url);
             addform.attr('method', 'post');
             addform.attr('style', 'display: none;');
             addform.attr('target', '_blank');
