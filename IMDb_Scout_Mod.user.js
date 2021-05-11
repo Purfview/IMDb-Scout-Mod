@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      9.15.2
+// @version      9.16
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from various sites. Adds movies/series to Radarr/Sonarr. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         https://i.imgur.com/u17jjYj.png
@@ -783,6 +783,11 @@
 
 9.15.2  -   Tweaks: BTN, BTN-TVDb.
 
+9.16    -   Added: IS, IS-Req.
+        -   New feature: 'mPOST' can be formed as json for all sites.
+        -   New feature: 'mPOST' can be formed as json array (supports duplicate keys).
+        -   New feature: Support for parameters in 'searchUrl' & 'mPOST' at the same time.
+
 */
 //==============================================================================
 //    JSHint directives.
@@ -854,6 +859,10 @@ On the Search/List pages if rateLimit<=1000 then it will be increased by a facto
 HTTP request by POST method. For the sites that doesn't support GET.
 Right mouse click won't submit such request.
 Atm 'goToUrl' not supported with it.
+Examples (3 types of formating):
+'cat1=4&cat2=6&filter=%tt%'
+'{"cat1":4,"cat2":6,"filter":"all=%tt%&sort=date"}'
+'{ key:"cat",value:"4"},{key:"cat",value:"6"},{key:"filter",value:"%tt%"}'  // (supports duplicate keys)
 
 #  'ignore404' (optional):
 Ignores all 4** HTTP errors.
@@ -2082,6 +2091,23 @@ var private_sites = [
       'loggedOutRegex': /Ray ID|security check to access|Forgot your password/,
       'matchRegex': /\( 0 requests/,
       'both': true},
+  {   'name': 'IS',
+      'searchUrl': 'https://immortalseed.me/browse.php?do=search&keywords=%tt%&search_type=t_genre',
+      'loggedOutRegex': /Cloudflare|Ray ID|Recover Password/,
+      'matchRegex': />Nothing Found</},
+  {   'name': 'IS',
+      'searchUrl': 'https://immortalseed.me/browse.php?do=search&keywords=%search_string_orig%&search_type=t_name',
+      'mPOST': '{key:"selectcats[]",value:"4"},{key:"selectcats[]",value:"6"},{key:"selectcats[]",value:"8"},{key:"selectcats[]",value:"9"},{key:"selectcats[]",value:"47"},{key:"selectcats[]",value:"48"},{key:"selectcats[]",value:"53"},{key:"selectcats[]",value:"54"},{key:"filtercats",value:"Filter"}',
+      'loggedOutRegex': /Cloudflare|Ray ID|Recover Password/,
+      'matchRegex': />Nothing Found</,
+      'TV': true},
+  {   'name': 'IS-Req',
+      'searchUrl': 'https://immortalseed.me/viewrequests.php?do=search_request',
+      'mPOST': 'do=search_request&keywords=%search_string_orig%',
+      'loggedOutRegex': /Cloudflare|Ray ID|Recover Password/,
+      'matchRegex': /input_true.gif/,
+      'positiveMatch': true,
+      'both': true},
   {   'name': 'IT',
       'searchUrl': 'https://newinsane.info/browse.php?search=%tt%',
       'loggedOutRegex': /Ray ID|login_button/,
@@ -2715,11 +2741,11 @@ var private_sites = [
       'matchRegex': /Try again with a refined search string/,
       'both': true},
   {   'name': 'TorSurf',
-      'searchUrl': 'http://torrentsurf.net/browse.php?search=%search_string_orig%+%year%&cat=0&blah=0',
+      'searchUrl': 'https://torrentsurf.net/browse.php?search=%search_string_orig%+%year%&cat=0&blah=0',
       'loggedOutRegex': /Cloudflare|Ray ID|Not logged in/,
       'matchRegex': /Nothing found/},
   {   'name': 'TorSurf',
-      'searchUrl': 'http://torrentsurf.net/browse.php?search=%search_string_orig%&cat=0&blah=0',
+      'searchUrl': 'https://torrentsurf.net/browse.php?search=%search_string_orig%&cat=0&blah=0',
       'loggedOutRegex': /Cloudflare|Ray ID|Not logged in/,
       'matchRegex': /Nothing found/,
       'TV': true},
@@ -3697,8 +3723,8 @@ var icon_sites = icon_sites_main.concat(special_buttons);
 //    Replace Search URL parameters
 //==============================================================================
 
-async function replaceSearchUrlParams(site, movie_id, movie_title, movie_title_orig, movie_year) {
-  var search_url = ('mPOST' in site) ? site['mPOST'] : site['searchUrl'];
+async function replaceSearchUrlParams(site, movie_id, movie_title, movie_title_orig, movie_year, mPOSTsearch) {
+  var search_url = ('mPOST' in site && !mPOSTsearch) ? site['mPOST'] : site['searchUrl'];
   // If an array, do a little bit of recursion
   if ($.isArray(search_url)) {
     var search_array = [];
@@ -3820,21 +3846,34 @@ function addLink(elem, site_name, target, site, state, scout_tick, post_data) {
     var placebo_url = new URL(target).origin;
     link = $('<a />').attr('href', placebo_url).attr('onclick', "$('#" + form_name + "').submit(); return false;").attr('target', '_blank');
 
-    var data = '{"' + post_data.replace(/&/g, '","').replace(/=/g, '":"').replace(/\+/g, ' ') + '"}',
-        data = JSON.parse(data);
+    var data = (post_data.match('{')) ? post_data : '{"' + post_data.replace(/&/g, '","').replace(/=/g, '":"').replace(/\+/g, ' ') + '"}';
     var addform = $('<form></form>');
         addform.attr('id', form_name);
         addform.attr('action', target);
         addform.attr('method', 'post');
         addform.attr('style', 'display: none;');
         addform.attr('target', '_blank');
-    for (const name in data) {
-       var addinput = $("<input>");
-           addinput.attr('type', 'text');
-           addinput.attr('name', name);
-           addinput.attr('value', data[name]);
-       addform.append(addinput);
-       $('body').append(addform);
+
+    if (post_data.match('},{')) {
+      const dataArray = (new Function("return [" +data+ "];")());
+      dataArray.forEach(function (item, index) {
+        let addinput = $("<input>");
+            addinput.attr('type', 'text');
+            addinput.attr('name', item.key);
+            addinput.attr('value', item.value);
+        addform.append(addinput);
+        $('body').append(addform);
+      });
+    } else {
+      data = JSON.parse(data);
+      for (const name in data) {
+        let addinput = $("<input>");
+            addinput.attr('type', 'text');
+            addinput.attr('name', name);
+            addinput.attr('value', data[name]);
+        addform.append(addinput);
+        $('body').append(addform);
+     }
     }
   }
   // Icon/Text appearance.
@@ -3966,6 +4005,9 @@ async function maybeAddLink(elem, site_name, search_url, site, scout_tick, movie
       data: post_data,
       headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
       onload: function(response) {
+      //console.log("GET Response: " + response.responseText);
+      //console.log("GET Response Status: " + response.status);
+      //console.log("GET Response Headers: " + response.responseHeaders);
         if (response.responseHeaders.indexOf('efresh: 0; url') > -1 || response.status > 499 || (response.status > 399 && !site.ignore404)) {
           addLink(elem, site_name, target, site, 'logged_out', scout_tick, post_data);
         } else if (site['positiveMatch'] && site['loggedOutRegex'] && String(response.responseText).match(site['loggedOutRegex'])) {
@@ -4053,7 +4095,7 @@ function perform(elem, movie_id, movie_title, movie_title_orig, is_tv, is_movie,
       site_shown = true;
       // For TV Series show only TV links. TV Special, TV Movie, Episode & Documentary are treated as TV and Movie.
       if ((Boolean(site['TV']) == is_tv || Boolean(site['both'])) || (!is_tv && !is_movie) || getPageSetting('ignore_type')) {
-        var searchUrl = ('mPOST' in site) ? site['searchUrl'] : await replaceSearchUrlParams(site, movie_id, movie_title, movie_title_orig, movie_year);
+        var searchUrl = await replaceSearchUrlParams(site, movie_id, movie_title, movie_title_orig, movie_year, true);
         if ('goToUrl' in site && getPageSetting('call_http_mod')) {
           maybeAddLink(elem, site['name'], searchUrl, site, scout_tick, movie_id, movie_title, movie_title_orig, movie_year);
         }
@@ -4142,20 +4184,33 @@ function addIconBar(movie_id, movie_title, movie_title_orig) {
 
         var post_data = await replaceSearchUrlParams(site, movie_id, movie_title, movie_title_orig);
         var data = (post_data.match('{')) ? post_data : '{"' + post_data.replace(/&/g, '","').replace(/=/g, '":"').replace(/\+/g, ' ') + '"}';
-            data = JSON.parse(data);
         var addform = $('<form></form>');
             addform.attr('id', form_name);
-            addform.attr('action', search_url);
+            addform.attr('action', target);
             addform.attr('method', 'post');
             addform.attr('style', 'display: none;');
             addform.attr('target', '_blank');
-        for (const name in data) {
-           var addinput = $("<input>");
-               addinput.attr('type', 'text');
-               addinput.attr('name', name);
-               addinput.attr('value', data[name]);
-           addform.append(addinput);
-           $('body').append(addform);
+
+        if (post_data.match('},{')) {
+          const dataArray = (new Function("return [" +data+ "];")());
+          dataArray.forEach(function (item, index) {
+            let addinput = $("<input>");
+                addinput.attr('type', 'text');
+                addinput.attr('name', item.key);
+                addinput.attr('value', item.value);
+            addform.append(addinput);
+            $('body').append(addform);
+          });
+        } else {
+          data = JSON.parse(data);
+          for (const name in data) {
+            let addinput = $("<input>");
+                addinput.attr('type', 'text');
+                addinput.attr('name', name);
+                addinput.attr('value', data[name]);
+            addform.append(addinput);
+            $('body').append(addform);
+         }
         }
       }
       iconbar.append(html).append();
