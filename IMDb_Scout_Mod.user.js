@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      9.16
+// @version      9.16.1
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from various sites. Adds movies/series to Radarr/Sonarr. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         https://i.imgur.com/u17jjYj.png
@@ -787,6 +787,8 @@
         -   New feature: 'mPOST' can be formed as json for all sites.
         -   New feature: 'mPOST' can be formed as json array (supports duplicate keys).
         -   New feature: Support for parameters in 'searchUrl' & 'mPOST' at the same time.
+
+9.16.1  -   Added: HDT-Req.
 
 */
 //==============================================================================
@@ -2035,8 +2037,15 @@ var private_sites = [
   {   'name': 'HDT',
       'icon': 'https://hdts.ru/favicon.ico',
       'searchUrl': 'https://hd-torrents.org/torrents.php?active=0&options=2&search=%tt%',
-      'loggedOutRegex': /not authorized to view this Torrents/,
-      'matchRegex': /No torrents here.../,
+      'loggedOutRegex': /not authorized to view this/,
+      'matchRegex': /No torrents here/,
+      'both': true},
+  {   'name': 'HDT-Req',
+      'icon': 'https://hdts.ru/favicon.ico',
+      'searchUrl': 'https://hd-torrents.org/requests.php?search=%search_string_orig%',
+      'loggedOutRegex': /not autorized to view this/,
+      'matchRegex': />No</,
+      'positiveMatch': true,
       'both': true},
   {   'name': 'HDtime',
       'searchUrl': 'https://hdtime.org/torrents.php?incldead=0&search=%tt%&search_area=1',
