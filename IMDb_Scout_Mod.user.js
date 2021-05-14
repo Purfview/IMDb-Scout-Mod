@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      9.16.2
+// @version      9.16.3
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from various sites. Adds movies/series to Radarr/Sonarr. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         https://i.imgur.com/u17jjYj.png
@@ -791,6 +791,8 @@
 9.16.1  -   Added: HDT-Req.
 
 9.16.2  -   Added: ASC.
+
+9.16.3  -   Added: MKO.
 
 */
 //==============================================================================
@@ -2229,6 +2231,13 @@ var private_sites = [
       'loggedOutRegex': /Cloudflare|Ray ID|Трябва да влезеш в акаунта/,
       'matchRegex': /Открити торенти - 0/,
       'rateLimit': 3000,
+      'both': true},
+  {   'name': 'MKO',
+      'icon': 'https://makingoff.org/forum/favicon.ico',
+      'searchUrl': 'https://indice.makingoff.org/response.php?search_term=%tt%',
+      'goToUrl': 'https://indice.makingoff.org/index.php?origem=busca&search_term=%tt%',
+      'loggedOutRegex': /que todos efetuem login/,
+      'matchRegex': /total":0/,
       'both': true},
   {   'name': 'Milkie',
       'icon': 'https://milkie.cc/favicon.png',
