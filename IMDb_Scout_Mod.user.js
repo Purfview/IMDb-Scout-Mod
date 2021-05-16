@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      9.16.3
+// @version      9.16.4
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from various sites. Adds movies/series to Radarr/Sonarr. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         https://i.imgur.com/u17jjYj.png
@@ -793,6 +793,8 @@
 9.16.2  -   Added: ASC.
 
 9.16.3  -   Added: MKO.
+
+9.16.4  -   Added: Hon3yHD, Hon3yHD-Req, TLZ.
 
 */
 //==============================================================================
@@ -2080,6 +2082,23 @@ var private_sites = [
       'loggedOutRegex': /Cloudflare|Ray ID|SSL \(HTTPS\)/,
       'matchRegex': /Nothing found|没有种子|沒有種子/,
       'both': true},
+  {   'name': 'Hon3yHD',
+      'icon': 'https://hon3yhd.com/templates/2/pic/favicon.ico',
+      'searchUrl': 'https://hon3yhd.com/browse.php?c31=1&c70=1&c30=1&c68=1&c73=1&c9=1&c10=1&c71=1&c8=1&c7=1&c1=1&c2=1&c32=1&c33=1&c4=1&c18=1&c72=1&c5=1&c36=1&c15=1&c11=1&c17=1&c16=1&c29=1&c3=1&search=%search_string_orig%&searchin=title&incldead=0',
+      'loggedOutRegex': /Cloudflare|Ray ID|Not logged in/,
+      'matchRegex': /Nothing found/},
+  {   'name': 'Hon3yHD',
+      'icon': 'https://hon3yhd.com/templates/2/pic/favicon.ico',
+      'searchUrl': 'https://hon3yhd.com/browse.php?c68=1&c73=1&c21=1&c20=1&c19=1&search=%search_string_orig%&searchin=title&incldead=0',
+      'loggedOutRegex': /Cloudflare|Ray ID|Not logged in/,
+      'matchRegex': /Nothing found/,
+      'TV': true},
+  {   'name': 'Hon3yHD-Req',
+      'icon': 'https://hon3yhd.com/templates/2/pic/favicon.ico',
+      'searchUrl': 'https://hon3yhd.com/viewrequests.php?search=%search_string_orig%&category=0&filter=true',
+      'loggedOutRegex': /Cloudflare|Ray ID|Not logged in/,
+      'matchRegex': /Nothing here/,
+      'both': true},
   {   'name': 'HQS',
       'searchUrl': 'https://hqsource.org/browse.php?c36=1&c3=1&c2=1&c49=1&c1=1&c8=1&c4=1&c7=1&c45=1&c9=1&c5=1&search=%search_string_orig%+%year%&blah=1&incldead=1&polish=0',
       'loggedOutRegex': /Cloudflare|Ray ID|Zapomniałes hasła/,
@@ -2759,6 +2778,17 @@ var private_sites = [
       'loggedOutRegex': /Ray ID|Niezalogowany!/,
       'matchRegex': /Nic tutaj nie ma/,
       'both': true},
+  {   'name': 'TLZ',
+      'searchUrl': 'https://tlz.digital/browse.php?c31=1&c26=1&c11=1&c3=1&c24=1&c30=1&search=%2B%search_string_orig%%2B%year%&searchin=title&incldead=0',
+      'loggedOutRegex': /Cloudflare|Ray ID|Not logged in/,
+      'spaceEncode': '%2B',
+      'matchRegex': /Nothing found/},
+  {   'name': 'TLZ',
+      'searchUrl': 'https://tlz.digital/browse.php?c18=1&c16=1&c19=1&c29=1&search=%2B%search_string_orig%&searchin=title&incldead=0',
+      'loggedOutRegex': /Cloudflare|Ray ID|Not logged in/,
+      'spaceEncode': '%2B',
+      'matchRegex': /Nothing found/,
+      'TV': true},
   {   'name': 'TM',
       'icon': 'https://torrentmasters.info/images/tm.gif',
       'searchUrl': 'https://torrentmasters.info/letoltes.php?search=%search_string_orig%+%year%',
