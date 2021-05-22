@@ -26,8 +26,8 @@ Contributions are welcome.
 
 ## Adding new sites:
 
-Inside the script, there is a list of dictionaries that contains of all the sites, and the data necessary to check IMDb against them.
-Each site is a dictionary with the following attributes:
+Inside the script, there is a list of dictionaries that contains of all the sites, and the data necessary to check IMDb against them.   
+**Each site is a dictionary with the following attributes:**
   - `name`: The site name, abbreviated.
   - `icon` (optional): Icon for the site.
   - `searchUrl`: The URL to perform the search against, see below for how to tailor the string to a site.
@@ -44,9 +44,10 @@ Each site is a dictionary with the following attributes:
   - `rateLimit` (optional): Connection rate limit in milliseconds. Default is 200. On the Search/List pages if rateLimit<=1000 then it will be increased by a factor of 4.
   - `mPOST`: HTTP request by POST method. For the sites that doesn't support GET.
   - `ignore404` (optional): Ignores all 4** HTTP errors.
-  
-
-Parameters you can use inside the URL:
+  - `ignoreEmpty` (optional): Use it if an empty response means that no results found, otherwise by default it means 'logged_out'.
+      
+    
+**Parameters you can use inside the URL:**
   - `%tt%`: The IMDb id with the tt prefix (e.g. tt0055630).
   - `%nott%`: The IMDb id without the tt prefix (e.g. 0055630).
   - `%tvdbid%`: The TVDb id.
