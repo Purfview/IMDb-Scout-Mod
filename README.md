@@ -13,7 +13,7 @@ Supports [Greasemonkey](https://www.greasespot.net/), [Violentmonkey](https://vi
 Meanings of the color borders around the icons:  
 ![#008000](https://via.placeholder.com/15/008000/000000?text=+) - `Search completed. Results found.`  
 ![#daa520](https://via.placeholder.com/15/daa520/000000?text=+) - `Search completed. Results not found.`  
-![#ff0000](https://via.placeholder.com/15/ff0000/000000?text=+) - `No access to search`  
+![#ff0000](https://via.placeholder.com/15/ff0000/000000?text=+) - `No access to search or search can't be done.`  
 ![#0000ff](https://via.placeholder.com/15/0000ff/000000?text=+) - `Search completed. Request found.` 
 
 ## Installing:
