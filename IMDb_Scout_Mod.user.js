@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      10.2
+// @version      10.3
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from various sites. Adds movies/series to Radarr/Sonarr. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         https://i.imgur.com/u17jjYj.png
@@ -814,6 +814,12 @@
         -   Changed GM_config link to a better host.
         -   Updated some icons of the public sites.
 
+10.3    -   Added: Mubi, Hurtom.
+        -   Updated: sHD.
+        -   New feature: Support for new IMDb layout on Lists/Search pages.
+        -   New feature: Support for reference view on Lists/Search pages (if set in Content Settings).
+        -   As everything is so big on the new layout the icon size default is bumped to 32.
+
 */
 //==============================================================================
 //    JSHint directives.
@@ -1137,6 +1143,14 @@ var public_sites = [
       'searchUrl': 'https://hevcbay.com/?s="%search_string%"',
       'loggedOutRegex': /Cloudflare|Ray ID/,
       'matchRegex': /nothing matched/},
+  {   'name': 'Hurtom',
+      'icon': 'https://toloka.to/favicon.png',
+      'searchUrl': 'https://toloka.to/tracker.php?prev_sd=0&prev_a=0&prev_my=0&prev_n=0&prev_shc=0&prev_shf=1&prev_sha=1&prev_cg=0&prev_ct=0&prev_at=0&prev_nt=0&prev_de=0&prev_nd=0&prev_tcs=1&prev_shs=0&f[]=117&f[]=84&f[]=42&f[]=124&f[]=125&f[]=129&f[]=219&f[]=118&f[]=16&f[]=32&f[]=19&f[]=44&f[]=127&f[]=55&f[]=94&f[]=144&f[]=190&f[]=70&f[]=192&f[]=193&f[]=195&f[]=194&f[]=196&f[]=197&f[]=225&f[]=21&f[]=131&f[]=226&f[]=227&f[]=228&f[]=229&f[]=230&f[]=136&f[]=96&f[]=173&f[]=139&f[]=174&f[]=140&f[]=120&f[]=66&f[]=137&f[]=138&f[]=237&f[]=72&f[]=45&o=1&s=2&tm=-1&shf=1&sha=1&tcs=1&sns=-1&sds=-1&nm=%search_string_orig% %year%',
+      'loggedOutRegex': /Cloudflare|Ray ID|>Вхід</,
+      'matchRegex': />DL</,
+      'positiveMatch': true,
+      'spaceEncode': ' ',
+      'both': true},
   {   'name': 'ilCorSaRoNeRo',
       'searchUrl': 'https://ilcorsaronero.link/argh.php?search=%search_string_orig%+%year%',
       'loggedOutRegex': /Cloudflare|Ray ID/,
@@ -2643,7 +2657,8 @@ var private_sites = [
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAAABGdBTUEAALGPC/xhBQAAAcJJREFUOE9j3Hty6c3n2z99fc5ACLAxiWjLeTJMXR9dt0ps8lGf2aeiZxwPnXkifPrxwC3XGzdcrZ1+PAgoDkF9h4WAyjqWOjO0LbWHCK24WDD3dEz/Ydf5ZxL//fvz7ffHOaejJh72mnzEG64NpAGIIfwzj1etvVzeud96zeXy////AdGS81kTDrtPPga1BKgGRcO+u5P3350KVP311zug6r///q65XNl32BmnhmUXcj/+ePHt18f/MPD0w6UJh92Ajpx9MhLiChQbpp8I2XGjY8u1po8/XgK1fP/98e23x1de7Fh0NuXA/ZlYNACFeg869h92f/rxMlDDrz/fTzxcdu7JWqCe8083YtcACr5DLttutEEc9fPP1yXnMiYe9QSGNU4NPYect1xrhnvj7tvjoICCxQaKH8Ci3sBgufZyF1zD99+f552Oxalh4hGPuafjgK6Ha/jx+8uyczk4NfQccjr6YN7ff3/23pm463bfow/nnn+6PuWoL04NvYecDt6b+fH7y4lHPNv2mW673gJ0Elw1Ih4giW/miQig/5aczwDGNDCm+g+5LDid+AOsYdrxACAJTXzLN0wB+p1INH/FBAC7js3OZsq8KwAAAABJRU5ErkJggg==',
       'searchUrl': 'https://scenehd.org/browse.php?search=%tt%',
       'loggedOutRegex': /If you have forgotten your password/,
-      'matchRegex': /No torrents found!/},
+      'matchRegex': /No torrents found!/,
+      'both': true},
   {   'name': 'SI',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAMAAACdt4HsAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAABOUExURQAAAAAAAAAAAAAAAAAAACoAACoqACoqKlUqKlVVKlVVVX9VKn9VVX9/VX9/f6p/Vap/f6qqf9SqVdSqf9SqqtTUqv/Uqv/U1P//qv//1Hdub04AAAAEdFJOU97t7/HHfsZqAAADyklEQVQYGaXB23bbRhIAwOoeUJd1nPz/X8bHa1sSMd0LEKSkTfKSw6qQ7lExwj06y10q3SndaXGIEWoSmbNkjnViIZwRQ6BXLILIdbVbXOQpIi3fPCzLz/L4kL8m+UWkb5PHp87A+bvld7vx9s0uXSSJcGgCQbRE5wibp2dX0yHtYkT4JIRNCiwIh/ngL9IuUAiHdJGZxfAhhnYRDmmXQpfPBpLZMVxEECJF+CQdMkc6DDcZ1u5EC3PaBEJIh7SLZK6F8kmyEnbZf357I+2ilcNiEzYvnEs6BCJ1E2M6vDw6/DjTLhaH8YrVbllaNCKjZ40Myq572OV5ullsuoVDMb6si11GTlqSbjqk8G5xWJepyqbkQiCYmuEqQtVIfpusv+wWF80pvZ1RibAZNq2GXfOYiso6nVh/2aVdU8p/3HQimCoERX757ZGzSKpKu1js5qk0xiTsCknbDLv8D+ZPm/QhXaytkTbpKtXUOmzKZv1W2iFcLC7WSoNxToM1h03q515EuFmni9mcXSwOVcKmWF/7KdumY3xtHWOipAeH72c36W/mOu2CJkTaZL2RC4HyLr1Lm/QukrZLu5fi5K8WuzyVv8mKpINxtpmVHn/ZnWym3eIwWjB9EoLqDGlX62K4+Irzn3aLmwjKuykz6r8VX9twsZLLisqSDukqJNOhGIK51mw35+JkV96lq4jy5sMUbcVkuJjNo02md4tdzSHSi107ZGtMM1H0WaSehHcRwy4zrE1kVMmMmpkxixjhHAtnsVktLnrazIjhHjMZ7pFM90h3GpEOY2hOD6ObJdouM6IxoomBDJ/14ir/yNfvvjzi9cfT1/nj1eb3LC8v/F7ry3x6evuRX62q3trV4qoVy6PNySZsIqWBGJYpCJtMb+2Q3g1Ow6bdDF0SHRaHskk36UNaSsRIhN0yao20i/QuZLpafCiy1jfpZlHr8xhTkGkTap3PUeFqcRUhpf7mk6VqJacmh8Ncz4/lJn1W4reHYReB6CoxbNpDujr7sPiseX72/cWmEboqh01Z1unQPqTPXiWekYkRKEmot7H4B+mz8/fzWsKmkCmGSpt1Df9k8SF4efHHQygag+dnHXTU7DHLRfqQPrRDo56+PAsXkchqNyfK1eKz5+fKKJKRXoddy7I5P7g4LQ9ruVlctd0IrWyaGDV/enzooFkftCatqlwtbhqtGa9oRHad1YNx7uZMuFrdLK66Z5kTbz/N2WVVzsyJqcy3XjVmz+kmYvhsZK/+hbn4f3P6d9Kd0p3SndKd0p3SndKdMt0lQ7pH/Q8N+K7UIUD68gAAAABJRU5ErkJggg==',
       'searchUrl': 'https://shareisland.org/torrents/filter?imdb=%tt%',
@@ -3792,6 +3807,10 @@ var icon_sites_main = [
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABAAgMAAADXB5lNAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAAAJUExURQAAAP////SWKj2rvDcAAAACdFJOUwAAdpPNOAAAALZJREFUOMu90z0OAiEURtEbEhuWwnrU9dC4DxoTcldpMSPC4GS0UMqTQN7PB5fN4UdwBiADnBpErT0E1dJBsgR9QVBIlgbRCtHaIFkgaAPNgOYVggJoWSEukKwN6ghpgah7oAUgvIHb55AHuO4Bb+B+CAePflfpLnw8sfiEureGaVHTKudlT3GYAoObSM2hI21iCck8wtJwd6UwQFzn3tWhdr08IR9CGQqz63YZqLkHwquXP/zsB236OSKC/2dIAAAAAElFTkSuQmCC',
       'searchUrl': 'https://www.mrqe.com/search?utf8=✓&q=%search_string%',
       'showByDefault': false},
+  {   'name': 'Mubi',
+      'icon': 'https://mubi.com/apple-touch-icon.png',
+      'searchUrl': 'https://mubi.com/search/films?query=%search_string_orig%',
+      'showByDefault': false},
   {   'name': 'MyMovieRack',
       'icon': 'https://www.mymovierack.com/sys_images/icon/apple-icon-57x57.png',
       'searchUrl': 'https://www.mymovierack.com/title/topResultFor?q=%tt%',
@@ -3979,7 +3998,7 @@ function getFavicon(site, hide_on_err) {
     var url = new URL(site['searchUrl']);
     favicon = url.origin + '/favicon.ico';
   }
-  var iconsize = ('matchRegex' in site) ? GM_config.get('cfg_icons_size') : GM_config.get('cfg_icons_size') - 4;
+  var iconsize = ('matchRegex' in site) ? GM_config.get('mod_icons_size') : GM_config.get('mod_icons_size') - 4;
   var title = (site['TV']) ? site['name'] + ' (TV)' : site['name'];
   var img = $('<img />').attr({'style': '-moz-opacity: 0.4; border: 0',
                                'width': iconsize,
@@ -4525,17 +4544,36 @@ function performSearchSecondPart(elem, link, movie_id, showsites, scout_tick) {
         var parser = new DOMParser();
         var result = parser.parseFromString(response.responseText, "text/html");
 
-        var is_tv    = Boolean($(result).find('title').text().match('TV Series')) || Boolean($(result).find('.tv-extra').length);
-        var is_movie = (Boolean($(result).find('.subtext').text().match('TV Special'))) ? false : Boolean($(result).find('title').text().match(/.*? \(([0-9]*)\)/));
-        if (Boolean($(result).find('.subtext').text().match('Documentary'))) {
+        var is_tv    = Boolean($(result).find('title').text().match('TV Series'));
+        // newLayout || reference || oldLayout : check if 'title' has just a year in brackets, eg. "(2009)"
+        var is_movie = (Boolean($(result).find('[class^=TitleBlock__TitleMetaDataContainer]').text().match('TV')) || Boolean($(result).find('li.ipl-inline-list__item').text().match('TV Special')) || Boolean($(result).find('.subtext').text().match('TV Special'))) ? false : Boolean($(result).find('title').text().match(/.*? \(([0-9]*)\)/));
+        // newLayout || reference || oldLayout
+        if (Boolean($(result).find('[class^=GenresAndPlot__Genre]').text().match('Documentary')) || Boolean($(result).find('li.ipl-inline-list__item').text().match('Documentary')) || Boolean($(result).find('.subtext').text().match('Documentary'))) {
           is_tv    = false;
           is_movie = false;
         }
         var movie_year       = result.title.replace(/^(.+) \((\D*|)(\d{4})(.*)$/gi, '$3');
-        var movie_title      = $(result).find('.title_wrapper>h1').clone().children().remove().end().text();
-        var movie_title_orig = $(result).find('.originalTitle').clone().children().remove().end().text();
+        var movie_title = $(result).find('[class^=TitleHeader__TitleText]').text().trim();
+        // reference
+        if (movie_title === "") {
+          movie_title = $(result).find('h3[itemprop="name"]').text().trim();
+          movie_title = movie_title.substring(movie_title.lastIndexOf("\n") + 1, -1 ).trim();
+          // oldLayout
+          if (movie_title === "") {
+            movie_title = $(result).find('.title_wrapper>h1').clone().children().remove().end().text();
+          }
+        }
+        var movie_title_orig = $(result).find('[class^=OriginalTitle__OriginalTitleText]').text().trim().replace("Original title: ", "");
+        // reference
+        if (movie_title_orig === "" && $(result).find('h3[itemprop="name"]').length) {
+          movie_title_orig = $.trim($($(result).find('h3[itemprop="name"]')[0].nextSibling).text());
+          // oldLayout
+        } else if (movie_title_orig === "" && $(result).find('.originalTitle').length) {
+          movie_title_orig = $(result).find('.originalTitle').clone().children().remove().end().text().trim();
+        }
+        // not found
         if (movie_title_orig === "") {
-            movie_title_orig = movie_title;
+          movie_title_orig = movie_title;
         }
         perform(elem, movie_id, movie_title, movie_title_orig, is_tv, is_movie, movie_year, scout_tick);
     }
@@ -5682,7 +5720,7 @@ function countSites(task) {
       'imdbscoutmod_header_text': {'type': 'text'},
       'imdbscoutsecondbar_header_text': {'type': 'text'},
       'imdbscoutthirdbar_header_text': {'type': 'text'},
-      'cfg_icons_size': {'type': 'text'},
+      'mod_icons_size': {'type': 'text'},
       'iconsborder_size': {'type': 'select', 'options': ['2px', '3px', '4px', '5px', '6px']},
       'loadmod_on_start_movie': {'type': 'checkbox'},
       'load_second_bar': {'type': 'checkbox'},
@@ -5868,10 +5906,10 @@ var config_fields = {
     'type': 'text',
     'default': ''
   },
-  'cfg_icons_size': {
+  'mod_icons_size': {
     'label': 'Size of the icons (pixels): &nbsp &nbsp',
     'type': 'text',
-    'default': '24'
+    'default': '32'
   },
   'iconsborder_size': {
     'label': 'Size of the icons border:&nbsp &nbsp &nbsp',
@@ -6266,7 +6304,7 @@ GM_config.init({
       $('#imdb_scout').contents().find('input#imdb_scout_field_highlight_missing_movie').attr('size', '35');
       $('#imdb_scout').contents().find('input#imdb_scout_field_highlight_sites_search').attr('size', '35');
       $('#imdb_scout').contents().find('input#imdb_scout_field_highlight_missing_search').attr('size', '35');
-      $('#imdb_scout').contents().find('input#imdb_scout_field_cfg_icons_size').attr('size', '1');
+      $('#imdb_scout').contents().find('input#imdb_scout_field_mod_icons_size').attr('size', '1');
       $('#imdb_scout').contents().find('input#imdb_scout_field_radarr_customprofileid').attr('size', '1');
       $('#imdb_scout').contents().find('input#imdb_scout_field_sonarr_customprofileid').attr('size', '1');
       $('#imdb_scout').contents().find('input#imdb_scout_field_sonarr_languageprofileid').attr('size', '1');
