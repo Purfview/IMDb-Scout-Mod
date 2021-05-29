@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      10.4
+// @version      10.5
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from various sites. Adds movies/series to Radarr/Sonarr. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         https://i.imgur.com/u17jjYj.png
@@ -822,6 +822,9 @@
 
 10.4    -   Added: HD-Olimpo, HD-Olimpo-Req.
         -   Fixed: Sometimes script wasn't loading/icons disappearing on the new IMDb layout.
+
+10.5    -   New feature: Script removes tracking references from IMDb's URL (eg. ?ref_=tt_sims_tt_i_2).
+        -   New feature: Separate setting for the icons in settings.
 
 */
 //==============================================================================
@@ -5739,6 +5742,7 @@ function countSites(task) {
       'imdbscoutthirdbar_header_text': {'type': 'text'},
       'mod_icons_size': {'type': 'text'},
       'iconsborder_size': {'type': 'select', 'options': ['2px', '3px', '4px', '5px', '6px']},
+      'cfg_iconsize': {'type': 'text'},
       'loadmod_on_start_movie': {'type': 'checkbox'},
       'load_second_bar': {'type': 'checkbox'},
       'load_third_bar_movie': {'type': 'checkbox'},
@@ -5813,8 +5817,20 @@ function countSites(task) {
 }
 
 
+//============================================================================//
 //================================  MAIN  ====================================//
+//============================================================================//
 
+
+//==============================================================================
+//    Remove tracking references from IMDb's URL
+//==============================================================================
+
+if (Boolean(location.href.match('ref_='))) {
+  const stripped_href = location.href.split('?ref_=')[0];
+  window.location.replace(stripped_href);
+  return;
+}
 
 //==============================================================================
 //    Polyfill for GM3 notifications
@@ -5875,6 +5891,7 @@ if (typeof GM.notification === "undefined") {
 //==============================================================================
 
 // To have consistent spacing in different browsers.
+var set_cfg_iconsize_spacing = "&nbsp &nbsp";
 var radarr_url_spacing = "&nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp";
 var radarr_apikey_spacing = "&nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp";
 var radarr_rootfolderpath_spacing = "&nbsp";
@@ -5884,6 +5901,7 @@ var sonarr_monitored_spacing = " &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp
 var sonarr_languageprofileid_spacing = " &nbsp &nbsp &nbsp &nbsp &nbsp";
 var sonarr_seriestype_spacing = "&nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp";
 if (navigator.userAgent.toLowerCase().indexOf('firefox') > -1) {
+  set_cfg_iconsize_spacing = " &nbsp";
   radarr_url_spacing = " &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp";
   radarr_apikey_spacing = "&nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp";
   radarr_rootfolderpath_spacing = "";
@@ -5933,6 +5951,11 @@ var config_fields = {
     'type': 'select',
     'options': ['2px', '3px', '4px', '5px', '6px'],
     'default': '3px'
+  },
+  'cfg_iconsize': {
+    'label': 'Size of the settings icons:' + set_cfg_iconsize_spacing,
+    'type': 'text',
+    'default': '22'
   },
   'loadmod_on_start_movie': {
     'section': 'Title Page:',
@@ -6322,6 +6345,7 @@ GM_config.init({
       $('#imdb_scout').contents().find('input#imdb_scout_field_highlight_sites_search').attr('size', '35');
       $('#imdb_scout').contents().find('input#imdb_scout_field_highlight_missing_search').attr('size', '35');
       $('#imdb_scout').contents().find('input#imdb_scout_field_mod_icons_size').attr('size', '1');
+      $('#imdb_scout').contents().find('input#imdb_scout_field_cfg_iconsize').attr('size', '1');
       $('#imdb_scout').contents().find('input#imdb_scout_field_radarr_customprofileid').attr('size', '1');
       $('#imdb_scout').contents().find('input#imdb_scout_field_sonarr_customprofileid').attr('size', '1');
       $('#imdb_scout').contents().find('input#imdb_scout_field_sonarr_languageprofileid').attr('size', '1');
@@ -6395,7 +6419,7 @@ GM_config.init({
         $(label).prepend(getFavicon(special_buttons[index], true));
       });
 
-      $('#imdb_scout').contents().find("img").css({"margin-right": "4px"});
+      $('#imdb_scout').contents().find("img").css({"margin-right": "4px", "width": GM_config.get('cfg_iconsize'), "height": GM_config.get('cfg_iconsize')});
     },
 
     'close': function() {
