@@ -3669,7 +3669,7 @@ var pre_databases = [
       'inSecondSearchBar': true,
       'TV': true},
   {   'name': 'srrDB',
-      'searchUrl': 'https://www.srrdb.com/browse/imdb:%nott%',
+      'searchUrl': 'https://www.srrdb.com/browse/imdb:%nott%/order:date-desc/1',
       'matchRegex': />0 results</,
       'inSecondSearchBar': true,
       'both': true},
