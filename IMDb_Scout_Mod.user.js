@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      10.5
+// @version      10.6
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from various sites. Adds movies/series to Radarr/Sonarr. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         https://i.imgur.com/u17jjYj.png
@@ -826,6 +826,8 @@
 10.5    -   New feature: Script removes tracking references from IMDb's URL (eg. ?ref_=tt_sims_tt_i_2).
         -   New feature: Separate setting for the icons in settings.
 
+10.6    -   New feature: Option to disable icons in settings.
+
 */
 //==============================================================================
 //    JSHint directives.
@@ -1110,11 +1112,6 @@ var public_sites = [
   {   'name': 'ETTV',
       'searchUrl': 'https://www.ettvcentral.com/torrents-search.php?search=%search_string%+%year%',
       'matchRegex': /Nothing Found/,
-      'both': true},
-  {   'name': 'EUC',
-      'searchUrl': 'https://eliteunitedcrew.org/browse.php?search=%tt%&cat=0&incldead=1&btn=Search',
-      'loggedOutRegex': /Not logged in/,
-      'matchRegex': /nijedan torent/,
       'both': true},
   {   'name': 'EXTTor',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAAAeUExURT9RtT9RteLl9OPm9Ojq9vDx+fHy+vHz+vT1+////1he4nYAAAABdFJOUwBA5thmAAAAWklEQVRIx2NgYBTEAwQY8MuDVBBUIEgAjCpAVSAWigYC0RRIzkQDE4eqgon4wmEEKZiibAwHWBUgg0GrYEZ6ORyM5NgcDAqQ46K8cFgWIKP1BSEFlNfdhJoHAFcHWeyBUYH6AAAAAElFTkSuQmCC',
@@ -1937,9 +1934,15 @@ var private_sites = [
       'loggedOutRegex': /Nie masz konta|Nie zalogowany!/,
       'matchRegex': /Nic tutaj nie ma!/},
   {   'name': 'DWR',
+      'icon': 'data:image/png;base64,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',
       'searchUrl': 'https://dragonworld-reloaded.net/selection.php?search=%search_string_orig%+%year%',
       'loggedOutRegex': /Cloudflare|Ray ID|PW vergessen/,
       'matchRegex': /Nichts gefunden/},
+  {   'name': 'EUC',
+      'searchUrl': 'https://eliteunitedcrew.org/browse.php?search=%tt%&cat=0&incldead=1&btn=Search',
+      'loggedOutRegex': /Not logged in/,
+      'matchRegex': /nijedan torent/,
+      'both': true},
   {   'name': 'ExiTor',
       'icon': 'https://exitorrent.org/favicon.ico',
       'searchUrl': 'https://exitorrent.org/browse.php?search=%tt%&blah=1&incldead=0&polish=0',
@@ -2795,11 +2798,13 @@ var private_sites = [
       'matchRegex': /Try again with a refined search string/,
       'TV': true},
   {   'name': 'Team-HuSh',
+      'icon': 'data:image/png;base64,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',
       'searchUrl': 'https://team-hush.org/filterTorrents?imdb=%tt%',
       'loggedOutRegex': /Cloudflare|Ray ID|Mot de passe oublié/,
       'matchRegex': /<tbody>\s*<\/tbody>/,
       'both': true},
   {   'name': 'Team-HuSh-Req',
+      'icon': 'data:image/png;base64,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',
       'searchUrl': 'https://team-hush.org/filterRequests?imdb=%nott%&unfilled=1',
       'loggedOutRegex': /Cloudflare|Ray ID|Mot de passe oublié/,
       'matchRegex': /<tbody>\s*<\/tbody>/,
@@ -2907,15 +2912,18 @@ var private_sites = [
       'matchRegex': /Try again with a refined search string/,
       'both': true},
   {   'name': 'TorSurf',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAAUbSURBVFjDrZdbiFZVFMfPyCSSJFkPBZ0izB6iMMGK08U3qcaJjGoHMtAQgfgwhhstCkpQiozaM4FJJSMRpdZOLcGIgrxkbcMUGkHB0ByPXehGgTpDdPn6r7XX2d8+3/mO4zg9/DmXfVm/s9baa++TJMomQRnJdOB+DrQIWg29Bq2D1kIroIXQtWGMLuTqZUh5e8lEl0JPQYehf6HGOegIDG+AgflnNT4mgHYXQBk6bYW+gX7E8xmoAQNeFeMmEr/7Df2fhS4aP0DpRWnQ9bhuBsAwDByAjlUAskj0zMBu9TgBosZ4EOZKXOPKxOYb0UYTOxjfDkPbYPBEFUJ7MYg7jTF3TxAg9xCs/GmG8CA7AbIGRvuhvSUvkFLtRZ4y+UCi84kChM5T0fdABLIHRpbDqMKXO+8B8USAMNR3VwjveQOQHN+naDsOjWBcQxJ1K0BuhPH7YPxMCAUBJMpDmXzfxDxQDscjaB+FjnoAkbI9+OIEhl9n41WInWcHaM3caghivSlGd+P6d1iu2m3jupLq2SEMMYRt9LerA82HwqiJ3F7nOpMPsSeU3Qjjp8MS1VxHJsEDAFGfewjlIQja5N2lD/XGGi2SpKm8j2Rct+TBcRh+HjoVQfwDXY2vJogXghcIxORHffU1vgq3N1CExLbJhSAqVB/KihjCZH3QaChU2v2FthkMkaiHPERWtC3Hc8KqBSAPFBtOfRjWY7KvPQRCocz9ASBjQz+j7WKBuIO94EPxnTeuxgAgL9BgUnuARfz12u3w4bDLAHBXAOA6gHpBfSknkmwWe4Hb0G9MDxAAxYoGE0RppbBnZkIncL8F/f+UlTELffuaEFwRn2MINpjdgMH0/l3olnYA0wAwuQwQQcRnB+3mov9PuO6F1klNGPHtZnOojPTe5pns/0maZF1oO4l+r7RLrl7o8VAbAkAkLfmh3QL0O8RGNVYCxdxDbJBxf4Q9wuS7i+QGAIHMw/s762JLA9bUAqhwAnoJ/T6Dt3LcbwHEyqg63oS+14UNyofiXvYy5gBEBybqiI5UpePVNVLZfsfA26sA7IUrINqcvgDA+7IvPOy9wQBHfCj0y2GjMvn2UOSQDymvgmI9xlJ2KndU9kUYG8XgLyGDiRaifSYmf1Qq4UHoGLRejK6C1obSbPL5kj85e8FXwqua4aVCxBQV0VLCrmeXyiF0EM/Ycs0pmRiZ736FPpVqOCge24NrVzjGGbePDaX6wSgMfVEIawFIS/yuJkvJG6BJ38I9nQV+wfM78uWvyh5A97eifb+UZDI4x5dk/bGEYVPpFF0L4MMxBe7rxcCV8EAPBs6DNslh1GCCfvHAM3j/lUA+gOuSKAxPyg55G+eCwdFOR78Cfn23qMiFzHRKrKZAC6Dh5iEUhxDtDstXKzzvEIABTtDmxvRJKEKpppz5vvQvUsnwWKme7I9bLUetzMzGRN3RkkNiWicATqBPhu2Zlp7i/eAxLlrx6bvtKkh1AUCEnRjYg/sBbKercL1cTro/iPH9Upq/lcQbFoAPwtZsG5d4Y+oyvLs5lHJdF4I4FHFeFFXQuLejU1CvuHNEsvyQ7KTLBGAE6/5CfsdL3JRrzjkB+NpQVMmPwjLT9g0xPiPE3OTvSQ2ZKwBDwd2hiI0XgHc+cZuyi3EdkBVRJFOXHDTo3HePBzDTxUMrwk+sOl+AUDhaSnYzm/vF+CAnnN9DpqGPhaY3+5mWP+r/C0DbJxDnxc3jHL+bBHUGozUA/wGqqbOC+XSCnQAAAABJRU5ErkJggg==',
       'searchUrl': 'https://torrentsurf.net/browse.php?search=%search_string_orig%+%year%&cat=0&blah=0',
       'loggedOutRegex': /Cloudflare|Ray ID|Not logged in/,
       'matchRegex': /Nothing found/},
   {   'name': 'TorSurf',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAAUbSURBVFjDrZdbiFZVFMfPyCSSJFkPBZ0izB6iMMGK08U3qcaJjGoHMtAQgfgwhhstCkpQiozaM4FJJSMRpdZOLcGIgrxkbcMUGkHB0ByPXehGgTpDdPn6r7XX2d8+3/mO4zg9/DmXfVm/s9baa++TJMomQRnJdOB+DrQIWg29Bq2D1kIroIXQtWGMLuTqZUh5e8lEl0JPQYehf6HGOegIDG+AgflnNT4mgHYXQBk6bYW+gX7E8xmoAQNeFeMmEr/7Df2fhS4aP0DpRWnQ9bhuBsAwDByAjlUAskj0zMBu9TgBosZ4EOZKXOPKxOYb0UYTOxjfDkPbYPBEFUJ7MYg7jTF3TxAg9xCs/GmG8CA7AbIGRvuhvSUvkFLtRZ4y+UCi84kChM5T0fdABLIHRpbDqMKXO+8B8USAMNR3VwjveQOQHN+naDsOjWBcQxJ1K0BuhPH7YPxMCAUBJMpDmXzfxDxQDscjaB+FjnoAkbI9+OIEhl9n41WInWcHaM3caghivSlGd+P6d1iu2m3jupLq2SEMMYRt9LerA82HwqiJ3F7nOpMPsSeU3Qjjp8MS1VxHJsEDAFGfewjlIQja5N2lD/XGGi2SpKm8j2Rct+TBcRh+HjoVQfwDXY2vJogXghcIxORHffU1vgq3N1CExLbJhSAqVB/KihjCZH3QaChU2v2FthkMkaiHPERWtC3Hc8KqBSAPFBtOfRjWY7KvPQRCocz9ASBjQz+j7WKBuIO94EPxnTeuxgAgL9BgUnuARfz12u3w4bDLAHBXAOA6gHpBfSknkmwWe4Hb0G9MDxAAxYoGE0RppbBnZkIncL8F/f+UlTELffuaEFwRn2MINpjdgMH0/l3olnYA0wAwuQwQQcRnB+3mov9PuO6F1klNGPHtZnOojPTe5pns/0maZF1oO4l+r7RLrl7o8VAbAkAkLfmh3QL0O8RGNVYCxdxDbJBxf4Q9wuS7i+QGAIHMw/s762JLA9bUAqhwAnoJ/T6Dt3LcbwHEyqg63oS+14UNyofiXvYy5gBEBybqiI5UpePVNVLZfsfA26sA7IUrINqcvgDA+7IvPOy9wQBHfCj0y2GjMvn2UOSQDymvgmI9xlJ2KndU9kUYG8XgLyGDiRaifSYmf1Qq4UHoGLRejK6C1obSbPL5kj85e8FXwqua4aVCxBQV0VLCrmeXyiF0EM/Ycs0pmRiZ736FPpVqOCge24NrVzjGGbePDaX6wSgMfVEIawFIS/yuJkvJG6BJ38I9nQV+wfM78uWvyh5A97eifb+UZDI4x5dk/bGEYVPpFF0L4MMxBe7rxcCV8EAPBs6DNslh1GCCfvHAM3j/lUA+gOuSKAxPyg55G+eCwdFOR78Cfn23qMiFzHRKrKZAC6Dh5iEUhxDtDstXKzzvEIABTtDmxvRJKEKpppz5vvQvUsnwWKme7I9bLUetzMzGRN3RkkNiWicATqBPhu2Zlp7i/eAxLlrx6bvtKkh1AUCEnRjYg/sBbKercL1cTro/iPH9Upq/lcQbFoAPwtZsG5d4Y+oyvLs5lHJdF4I4FHFeFFXQuLejU1CvuHNEsvyQ7KTLBGAE6/5CfsdL3JRrzjkB+NpQVMmPwjLT9g0xPiPE3OTvSQ2ZKwBDwd2hiI0XgHc+cZuyi3EdkBVRJFOXHDTo3HePBzDTxUMrwk+sOl+AUDhaSnYzm/vF+CAnnN9DpqGPhaY3+5mWP+r/C0DbJxDnxc3jHL+bBHUGozUA/wGqqbOC+XSCnQAAAABJRU5ErkJggg==',
       'searchUrl': 'https://torrentsurf.net/browse.php?search=%search_string_orig%&cat=0&blah=0',
       'loggedOutRegex': /Cloudflare|Ray ID|Not logged in/,
       'matchRegex': /Nothing found/,
       'TV': true},
   {   'name': 'TorSurf-Req',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAAUbSURBVFjDrZdbiFZVFMfPyCSSJFkPBZ0izB6iMMGK08U3qcaJjGoHMtAQgfgwhhstCkpQiozaM4FJJSMRpdZOLcGIgrxkbcMUGkHB0ByPXehGgTpDdPn6r7XX2d8+3/mO4zg9/DmXfVm/s9baa++TJMomQRnJdOB+DrQIWg29Bq2D1kIroIXQtWGMLuTqZUh5e8lEl0JPQYehf6HGOegIDG+AgflnNT4mgHYXQBk6bYW+gX7E8xmoAQNeFeMmEr/7Df2fhS4aP0DpRWnQ9bhuBsAwDByAjlUAskj0zMBu9TgBosZ4EOZKXOPKxOYb0UYTOxjfDkPbYPBEFUJ7MYg7jTF3TxAg9xCs/GmG8CA7AbIGRvuhvSUvkFLtRZ4y+UCi84kChM5T0fdABLIHRpbDqMKXO+8B8USAMNR3VwjveQOQHN+naDsOjWBcQxJ1K0BuhPH7YPxMCAUBJMpDmXzfxDxQDscjaB+FjnoAkbI9+OIEhl9n41WInWcHaM3caghivSlGd+P6d1iu2m3jupLq2SEMMYRt9LerA82HwqiJ3F7nOpMPsSeU3Qjjp8MS1VxHJsEDAFGfewjlIQja5N2lD/XGGi2SpKm8j2Rct+TBcRh+HjoVQfwDXY2vJogXghcIxORHffU1vgq3N1CExLbJhSAqVB/KihjCZH3QaChU2v2FthkMkaiHPERWtC3Hc8KqBSAPFBtOfRjWY7KvPQRCocz9ASBjQz+j7WKBuIO94EPxnTeuxgAgL9BgUnuARfz12u3w4bDLAHBXAOA6gHpBfSknkmwWe4Hb0G9MDxAAxYoGE0RppbBnZkIncL8F/f+UlTELffuaEFwRn2MINpjdgMH0/l3olnYA0wAwuQwQQcRnB+3mov9PuO6F1klNGPHtZnOojPTe5pns/0maZF1oO4l+r7RLrl7o8VAbAkAkLfmh3QL0O8RGNVYCxdxDbJBxf4Q9wuS7i+QGAIHMw/s762JLA9bUAqhwAnoJ/T6Dt3LcbwHEyqg63oS+14UNyofiXvYy5gBEBybqiI5UpePVNVLZfsfA26sA7IUrINqcvgDA+7IvPOy9wQBHfCj0y2GjMvn2UOSQDymvgmI9xlJ2KndU9kUYG8XgLyGDiRaifSYmf1Qq4UHoGLRejK6C1obSbPL5kj85e8FXwqua4aVCxBQV0VLCrmeXyiF0EM/Ycs0pmRiZ736FPpVqOCge24NrVzjGGbePDaX6wSgMfVEIawFIS/yuJkvJG6BJ38I9nQV+wfM78uWvyh5A97eifb+UZDI4x5dk/bGEYVPpFF0L4MMxBe7rxcCV8EAPBs6DNslh1GCCfvHAM3j/lUA+gOuSKAxPyg55G+eCwdFOR78Cfn23qMiFzHRKrKZAC6Dh5iEUhxDtDstXKzzvEIABTtDmxvRJKEKpppz5vvQvUsnwWKme7I9bLUetzMzGRN3RkkNiWicATqBPhu2Zlp7i/eAxLlrx6bvtKkh1AUCEnRjYg/sBbKercL1cTro/iPH9Upq/lcQbFoAPwtZsG5d4Y+oyvLs5lHJdF4I4FHFeFFXQuLejU1CvuHNEsvyQ7KTLBGAE6/5CfsdL3JRrzjkB+NpQVMmPwjLT9g0xPiPE3OTvSQ2ZKwBDwd2hiI0XgHc+cZuyi3EdkBVRJFOXHDTo3HePBzDTxUMrwk+sOl+AUDhaSnYzm/vF+CAnnN9DpqGPhaY3+5mWP+r/C0DbJxDnxc3jHL+bBHUGozUA/wGqqbOC+XSCnQAAAABJRU5ErkJggg==',
       'searchUrl': 'https://torrentsurf.net/viewrequests.php?search=%search_string_orig%',
       'loggedOutRegex': /Cloudflare|Ray ID|Not logged in/,
       'matchRegex': />No</,
@@ -3028,6 +3036,7 @@ var private_sites = [
       'rateLimit': 5100,
       'both': true},
   {   'name': 'XS',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAMAAABg3Am1AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAAB7UExURQAAABcXFxcXLhcuLi4XFy4XLi4uFy4uLkVFRUVFXEVcRUVcXFxFRVxFXFxcRVxcXFxcc1xzXFxzc3NcXHNcc3NzXHNzc3Nzi3OLc3OLi4tzc4tzi4uLc4uLi4uLoqKLoqKii6KioqKiubm5udDQ0NDQ5+fQ5+fn5////1iw3I8AAAIKSURBVEjHvZbbctsgEIatRrHkOBFxHBPXNW0pNPD+T9gFdlccZI2nF/lHoxGwn5Y9CHuz+Qp1dwvtjTG6kYmq5ob/BmhGtWCYU0laI5Dma7UzagbUAqDWgDuJHLhPBKyYSCVnqTxo3YZbz/OWnHPee8gtvM86C4OYX+N8mM+FQBoQgLDRxjciD548KAJUqLS7BcAaDGBj+GAtuErWrhQBybtz1lgG0ivhGS7QEuARsLkHm4kB2DsMaZ9Ox/Sn/ZSZ/Y0APJoZ8FAqBrhwIkjOHjIgGLUeykrHKmI1jFHyygVhQdKlOM9b4ijDQnxZAxjJW0oR+Qr4awvAlICmRghFEJFQ6o9BpXhKwBAQFo4xLZK+cFw654DJAPWO7Z8ODwKCh56zlAJM5bPN6RLMARgJ4Ii5NapDCT2MsiMPOm8+BlCagmYg/+Lar4zTLXhLyQgiOY7vy+ZxFYBtCWi5l5/OrQDf+JsO9TqFluTDYtbP0GuwNI7HjgEINHWwiFWrFK1BYgFITVHoGlamHNCx3cVtjSiBQde2+3CbdlNmigCm9SIPK6/fT08MdJWH/fQ8jnDt4HqeXqbKQQs8jasaGLgd8MtuWvAQMkd6PRR1eMvgA58adIpEneqqvcqTwBLNPyhYorP6cZWXvGgfH/JC5Hf1KwGbgdX1/dDPw+HhYRi2/eMj3Ldh/CX/ZP4BymfKmIFynKsAAAAASUVORK5CYII=',
       'searchUrl': 'https://www.xspeeds.eu/browse.php?do=search&keywords=%search_string%&search_type=t_name&category=0&include_dead_torrents=yes',
       'loggedOutRegex': /Forget your password/,
       'matchRegex': /<b>Nothing Found<\/b>/},
@@ -3200,7 +3209,7 @@ var usenet_sites = [
       'matchRegex': /returned 0 releases/,
       'TV': true},
   {   'name': 'NZBGrabit',
-      'icon': 'https://www.nzbgrabit.xyz/animated_favicon.gif',
+      'icon': 'data:image/gif;base64,R0lGODlhEAAQAKIAAM/j5CQ/T6vKzFqInAAAAP///wAAAAAAACH/C05FVFNDQVBFMi4wAwEAAAAh/wtYTVAgRGF0YVhNUDw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoV2luZG93cykiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6MjM1RTVFRkNDMTY3MTFFQkE2NkZGMkMzRkY2MDAxQTEiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6MjM1RTVFRkRDMTY3MTFFQkE2NkZGMkMzRkY2MDAxQTEiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDoyMzVFNUVGQUMxNjcxMUVCQTY2RkYyQzNGRjYwMDFBMSIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDoyMzVFNUVGQkMxNjcxMUVCQTY2RkYyQzNGRjYwMDFBMSIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PgH//v38+/r5+Pf29fTz8vHw7+7t7Ovq6ejn5uXk4+Lh4N/e3dzb2tnY19bV1NPS0dDP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',
       'searchUrl': 'https://www.nzbgrabit.xyz/nzbsearch.php?query=%tt%',
       'loggedOutRegex': /Cloudflare|Ray ID|You are not logged in/,
       'matchRegex': /There are no posts/,
@@ -3345,10 +3354,12 @@ var subs_sites = [
       'matchRegex': /No results found/,
       'inSecondSearchBar': true},
   {   'name': 'Napisy24 (PL)',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABAAgMAAADXB5lNAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAAAMUExURf///y9usmxpaf///3rL57kAAAABdFJOUwBA5thmAAAAM0lEQVQ4y2NgGLqAaRUKWECMwNJQJBA2KkAlgfr/EECCAFXcEQ4y8itJAlT3PumpcBgBAHh/F92ZowfMAAAAAElFTkSuQmCC',
       'searchUrl': 'https://napisy24.pl/szukaj?page=1&lang=1&search=%search_string_orig%&typ=1#',
       'matchRegex': /Znalezione Napisy \(0\)/,
       'inSecondSearchBar': true},
   {   'name': 'Napisy24 (PL)',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABAAgMAAADXB5lNAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAAAMUExURf///y9usmxpaf///3rL57kAAAABdFJOUwBA5thmAAAAM0lEQVQ4y2NgGLqAaRUKWECMwNJQJBA2KkAlgfr/EECCAFXcEQ4y8itJAlT3PumpcBgBAHh/F92ZowfMAAAAAElFTkSuQmCC',
       'searchUrl': 'https://napisy24.pl/szukaj?page=1&lang=1&search=%search_string_orig%&typ=2#',
       'matchRegex': /Znalezione Napisy \(0\)/,
       'inSecondSearchBar': true,
@@ -4011,7 +4022,11 @@ function getPageSetting(key) {
 
 function getFavicon(site, hide_on_err) {
   var favicon;
-  if (typeof(hide_on_err) === 'undefined') { hide_on_err = false; }
+  if (typeof(hide_on_err) === 'undefined') {
+    hide_on_err = false;
+  } else if (hide_on_err === false) {
+    return;
+  }
   if ('icon' in site) {
     favicon = site['icon'];
   } else {
@@ -5743,6 +5758,7 @@ function countSites(task) {
       'mod_icons_size': {'type': 'text'},
       'iconsborder_size': {'type': 'select', 'options': ['2px', '3px', '4px', '5px', '6px']},
       'cfg_iconsize': {'type': 'text'},
+      'load_icons_in_settings': {'type': 'checkbox'},
       'loadmod_on_start_movie': {'type': 'checkbox'},
       'load_second_bar': {'type': 'checkbox'},
       'load_third_bar_movie': {'type': 'checkbox'},
@@ -5956,6 +5972,11 @@ var config_fields = {
     'label': 'Size of the settings icons:' + set_cfg_iconsize_spacing,
     'type': 'text',
     'default': '22'
+  },
+  'load_icons_in_settings': {
+    'type': 'checkbox',
+    'label': 'Load icons in settings (most of them are external)?',
+    'default': true
   },
   'loadmod_on_start_movie': {
     'section': 'Title Page:',
@@ -6291,7 +6312,7 @@ GM_config.init({
   'id': 'imdb_scout',
   'title': 'IMDb Scout Mod Settings',
   'fields': config_fields,
-  'css': '#imdb_scout_section_header_1, #imdb_scout_section_header_2, #imdb_scout_section_header_3, \
+  'css': `#imdb_scout_section_header_1, #imdb_scout_section_header_2, #imdb_scout_section_header_3, \
           #imdb_scout_section_header_4, #imdb_scout_section_header_5, #imdb_scout_section_header_6, \
           #imdb_scout_section_header_7, #imdb_scout_section_header_8, #imdb_scout_section_header_9, \
           #imdb_scout_section_header_10, #imdb_scout_section_header_11, #imdb_scout_section_header_12, \
@@ -6329,7 +6350,7 @@ GM_config.init({
              background:     black !important; \
              color:          white !important;}\
           #imdb_scout_section_0 { \
-             margin-top:       0px !important;}',
+             margin-top:       0px !important;}`,
   'events':
   {
     'open': function() {
@@ -6358,65 +6379,67 @@ GM_config.init({
        'color': '#cb0000'
       });
 
+      const iconsInSettings = GM_config.get('load_icons_in_settings');
+
       $('#imdb_scout').contents().find('#imdb_scout_section_7').find('.field_label').each(function(index, label) {
         var url = new URL(custom_sites[index].searchUrl);
         $(label).append(' ' + '<a class="grey_link" target="_blank" style="color: gray; text-decoration : none" href="' + url.origin + '">'
                         + (/www./.test(url.hostname) ? url.hostname.match(/www.(.*)/)[1] : url.hostname) + '</a>');
-        $(label).prepend(getFavicon(custom_sites[index], true));
+        $(label).prepend(getFavicon(custom_sites[index], iconsInSettings));
       });
       $('#imdb_scout').contents().find('#imdb_scout_section_8').find('.field_label').each(function(index, label) {
         var url = new URL(public_sites[index].searchUrl);
         $(label).append(' ' + '<a class="grey_link" target="_blank" style="color: gray; text-decoration : none" href="' + url.origin + '">'
                         + (/www./.test(url.hostname) ? url.hostname.match(/www.(.*)/)[1] : url.hostname) + '</a>');
-        $(label).prepend(getFavicon(public_sites[index], true));
+        $(label).prepend(getFavicon(public_sites[index], iconsInSettings));
       });
       $('#imdb_scout').contents().find('#imdb_scout_section_9').find('.field_label').each(function(index, label) {
         var url = new URL(private_sites[index].searchUrl);
         $(label).append(' ' + '<a class="grey_link" target="_blank" style="color: gray; text-decoration : none" href="' + url.origin + '">'
                         + (/www./.test(url.hostname) ? url.hostname.match(/www.(.*)/)[1] : url.hostname) + '</a>');
-        $(label).prepend(getFavicon(private_sites[index], true));
+        $(label).prepend(getFavicon(private_sites[index], iconsInSettings));
       });
       $('#imdb_scout').contents().find('#imdb_scout_section_10').find('.field_label').each(function(index, label) {
         var url = new URL(usenet_sites[index].searchUrl);
         $(label).append(' ' + '<a class="grey_link" target="_blank" style="color: gray; text-decoration : none" href="' + url.origin + '">'
                         + (/www./.test(url.hostname) ? url.hostname.match(/www.(.*)/)[1] : url.hostname) + '</a>');
-        $(label).prepend(getFavicon(usenet_sites[index], true));
+        $(label).prepend(getFavicon(usenet_sites[index], iconsInSettings));
       });
       $('#imdb_scout').contents().find('#imdb_scout_section_11').find('.field_label').each(function(index, label) {
         var url = new URL(subs_sites[index].searchUrl);
         $(label).append(' ' + '<a class="grey_link" target="_blank" style="color: gray; text-decoration : none" href="' + url.origin + '">'
                         + (/www./.test(url.hostname) ? url.hostname.match(/www.(.*)/)[1] : url.hostname) + '</a>');
-        $(label).prepend(getFavicon(subs_sites[index], true));
+        $(label).prepend(getFavicon(subs_sites[index], iconsInSettings));
       });
       $('#imdb_scout').contents().find('#imdb_scout_section_12').find('.field_label').each(function(index, label) {
         var url = new URL(pre_databases[index].searchUrl);
         $(label).append(' ' + '<a class="grey_link" target="_blank" style="color: gray; text-decoration : none" href="' + url.origin + '">'
                         + (/www./.test(url.hostname) ? url.hostname.match(/www.(.*)/)[1] : url.hostname) + '</a>');
-        $(label).prepend(getFavicon(pre_databases[index], true));
+        $(label).prepend(getFavicon(pre_databases[index], iconsInSettings));
       });
       $('#imdb_scout').contents().find('#imdb_scout_section_13').find('.field_label').each(function(index, label) {
         var url = new URL(other_sites[index].searchUrl);
         $(label).append(' ' + '<a class="grey_link" target="_blank" style="color: gray; text-decoration : none" href="' + url.origin + '">'
                         + (/www./.test(url.hostname) ? url.hostname.match(/www.(.*)/)[1] : url.hostname) + '</a>');
-        $(label).prepend(getFavicon(other_sites[index], true));
+        $(label).prepend(getFavicon(other_sites[index], iconsInSettings));
       });
       $('#imdb_scout').contents().find('#imdb_scout_section_14').find('.field_label').each(function(index, label) {
         var url = new URL(streaming_sites[index].searchUrl);
         $(label).append(' ' + '<a class="grey_link" target="_blank" style="color: gray; text-decoration : none" href="' + url.origin + '">'
                         + (/www./.test(url.hostname) ? url.hostname.match(/www.(.*)/)[1] : url.hostname) + '</a>');
-        $(label).prepend(getFavicon(streaming_sites[index], true));
+        $(label).prepend(getFavicon(streaming_sites[index], iconsInSettings));
       });
       $('#imdb_scout').contents().find('#imdb_scout_section_15').find('.field_label').each(function(index, label) {
         var url = new URL(icon_sites_main[index].searchUrl);
         $(label).append(' ' + '<a class="grey_link" target="_blank" style="color: gray; text-decoration : none" href="' + url.origin + '">'
                         + (/www./.test(url.hostname) ? url.hostname.match(/www.(.*)/)[1] : url.hostname) + '</a>');
-        $(label).prepend(getFavicon(icon_sites_main[index], true));
+        $(label).prepend(getFavicon(icon_sites_main[index], iconsInSettings));
       });
       $('#imdb_scout').contents().find('#imdb_scout_section_16').find('.field_label').each(function(index, label) {
         var url = new URL(special_buttons[index].searchUrl);
         $(label).append(' ' + '<a class="grey_link" target="_blank" style="color: gray; text-decoration : none" href="' + url.origin + '">'
                         + (/www./.test(url.hostname) ? url.hostname.match(/www.(.*)/)[1] : url.hostname) + '</a>');
-        $(label).prepend(getFavicon(special_buttons[index], true));
+        $(label).prepend(getFavicon(special_buttons[index], iconsInSettings));
       });
 
       $('#imdb_scout').contents().find("img").css({"margin-right": "4px", "width": GM_config.get('cfg_iconsize'), "height": GM_config.get('cfg_iconsize')});
