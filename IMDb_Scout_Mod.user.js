@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      10.6
+// @version      10.7
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from various sites. Adds movies/series to Radarr/Sonarr. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         https://i.imgur.com/u17jjYj.png
@@ -16,12 +16,12 @@
 // @require      https://code.jquery.com/jquery-3.5.1.min.js
 // @require      https://greasemonkey.github.io/gm4-polyfill/gm4-polyfill.js
 //
-// @include      http*://*.imdb.tld/title/tt*/
-// @include      http*://*.imdb.tld/title/tt*/?ref*
-// @include      http*://*.imdb.tld/title/tt*/reference*
+// @include      http*://*.imdb.tld/title/tt*
 // @include      http*://*.imdb.tld/search/title*
-// @include      http*://*.imdb.tld/user/*/watchlist*
-// @include      http*://*.imdb.tld/list/*
+// @include      http*://*.imdb.tld/user/ur*/watchlist*
+// @include      http*://*.imdb.tld/list/ls*
+//
+// @exclude      /title\/tt\d+\/\w(?!(eference))/
 //
 // @connect      *
 // @grant        GM_getValue
@@ -827,6 +827,9 @@
         -   New feature: Separate setting for the icons in settings.
 
 10.6    -   New feature: Option to disable icons in settings.
+
+10.7    -   Fixed: Bug in the references removal code.
+        -   Refined @include and added @exlude so the script wouldn't active where it shouldn't.
 
 */
 //==============================================================================
@@ -3372,6 +3375,7 @@ var subs_sites = [
       'mPOST': 'ajax=1&sSearch=%tt%',
       'inSecondSearchBar': true},
   {   'name': 'OpenSubtitles',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwAgMAAAAqbBEUAAAACVBMVEUAAAD///8TExOI954UAAAAk0lEQVQoz62SQQ7DMAgEcSXfe/F/+gQf4D99egeCjJtTpITIG4agtYMsX1nxkr/os56r8EB0+6ANJcxmqEWJV6oMFTq6ynAgm64N8J6j7EksW0CaEL7Z1h0GBjvoBt20oHGoBXyyAmgDTliAe26avk3PoAnxCwVh8nYD1oTJmklsbZTQY1QapVlDZDz34/492K/YD8ElL5+2GoYbAAAAAElFTkSuQmCC',
       'searchUrl': 'https://www.opensubtitles.org/en/search/imdbid-%nott%',
       'loggedOutRegex': /Guru Meditation/,
       'matchRegex': /div itemscope/,
@@ -3379,6 +3383,7 @@ var subs_sites = [
       'inSecondSearchBar': true,
       'both': true},
   {   'name': 'OpenSubtitles (DE)',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwAgMAAAAqbBEUAAAACVBMVEUAAAD///8TExOI954UAAAAk0lEQVQoz62SQQ7DMAgEcSXfe/F/+gQf4D99egeCjJtTpITIG4agtYMsX1nxkr/os56r8EB0+6ANJcxmqEWJV6oMFTq6ynAgm64N8J6j7EksW0CaEL7Z1h0GBjvoBt20oHGoBXyyAmgDTliAe26avk3PoAnxCwVh8nYD1oTJmklsbZTQY1QapVlDZDz34/492K/YD8ElL5+2GoYbAAAAAElFTkSuQmCC',
       'searchUrl': 'https://www.opensubtitles.org/en/search/sublanguageid-ger/imdbid-%nott%',
       'loggedOutRegex': /Guru Meditation/,
       'matchRegex': /div itemscope/,
@@ -3386,6 +3391,7 @@ var subs_sites = [
       'inSecondSearchBar': true,
       'both': true},
   {   'name': 'OpenSubtitles (EN)',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwAgMAAAAqbBEUAAAACVBMVEUAAAD///8TExOI954UAAAAk0lEQVQoz62SQQ7DMAgEcSXfe/F/+gQf4D99egeCjJtTpITIG4agtYMsX1nxkr/os56r8EB0+6ANJcxmqEWJV6oMFTq6ynAgm64N8J6j7EksW0CaEL7Z1h0GBjvoBt20oHGoBXyyAmgDTliAe26avk3PoAnxCwVh8nYD1oTJmklsbZTQY1QapVlDZDz34/492K/YD8ElL5+2GoYbAAAAAElFTkSuQmCC',
       'searchUrl': 'https://www.opensubtitles.org/en/search/sublanguageid-eng/imdbid-%nott%',
       'loggedOutRegex': /Guru Meditation/,
       'matchRegex': /div itemscope/,
@@ -3393,6 +3399,7 @@ var subs_sites = [
       'inSecondSearchBar': true,
       'both': true},
   {   'name': 'OpenSubtitles (ES)',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwAgMAAAAqbBEUAAAACVBMVEUAAAD///8TExOI954UAAAAk0lEQVQoz62SQQ7DMAgEcSXfe/F/+gQf4D99egeCjJtTpITIG4agtYMsX1nxkr/os56r8EB0+6ANJcxmqEWJV6oMFTq6ynAgm64N8J6j7EksW0CaEL7Z1h0GBjvoBt20oHGoBXyyAmgDTliAe26avk3PoAnxCwVh8nYD1oTJmklsbZTQY1QapVlDZDz34/492K/YD8ElL5+2GoYbAAAAAElFTkSuQmCC',
       'searchUrl': 'https://www.opensubtitles.org/en/search/sublanguageid-spa/imdbid-%nott%',
       'loggedOutRegex': /Guru Meditation/,
       'matchRegex': /div itemscope/,
@@ -3400,6 +3407,7 @@ var subs_sites = [
       'inSecondSearchBar': true,
       'both': true},
   {   'name': 'OpenSubtitles (FR)',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwAgMAAAAqbBEUAAAACVBMVEUAAAD///8TExOI954UAAAAk0lEQVQoz62SQQ7DMAgEcSXfe/F/+gQf4D99egeCjJtTpITIG4agtYMsX1nxkr/os56r8EB0+6ANJcxmqEWJV6oMFTq6ynAgm64N8J6j7EksW0CaEL7Z1h0GBjvoBt20oHGoBXyyAmgDTliAe26avk3PoAnxCwVh8nYD1oTJmklsbZTQY1QapVlDZDz34/492K/YD8ElL5+2GoYbAAAAAElFTkSuQmCC',
       'searchUrl': 'https://www.opensubtitles.org/en/search/sublanguageid-fre/imdbid-%nott%',
       'loggedOutRegex': /Guru Meditation/,
       'matchRegex': /div itemscope/,
@@ -3407,6 +3415,7 @@ var subs_sites = [
       'inSecondSearchBar': true,
       'both': true},
   {   'name': 'OpenSubtitles (GR)',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwAgMAAAAqbBEUAAAACVBMVEUAAAD///8TExOI954UAAAAk0lEQVQoz62SQQ7DMAgEcSXfe/F/+gQf4D99egeCjJtTpITIG4agtYMsX1nxkr/os56r8EB0+6ANJcxmqEWJV6oMFTq6ynAgm64N8J6j7EksW0CaEL7Z1h0GBjvoBt20oHGoBXyyAmgDTliAe26avk3PoAnxCwVh8nYD1oTJmklsbZTQY1QapVlDZDz34/492K/YD8ElL5+2GoYbAAAAAElFTkSuQmCC',
       'searchUrl': 'https://www.opensubtitles.org/en/search/sublanguageid-ell/imdbid-%nott%',
       'loggedOutRegex': /Guru Meditation/,
       'matchRegex': /div itemscope/,
@@ -3414,6 +3423,7 @@ var subs_sites = [
       'inSecondSearchBar': true,
       'both': true},
   {   'name': 'OpenSubtitles (IT)',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwAgMAAAAqbBEUAAAACVBMVEUAAAD///8TExOI954UAAAAk0lEQVQoz62SQQ7DMAgEcSXfe/F/+gQf4D99egeCjJtTpITIG4agtYMsX1nxkr/os56r8EB0+6ANJcxmqEWJV6oMFTq6ynAgm64N8J6j7EksW0CaEL7Z1h0GBjvoBt20oHGoBXyyAmgDTliAe26avk3PoAnxCwVh8nYD1oTJmklsbZTQY1QapVlDZDz34/492K/YD8ElL5+2GoYbAAAAAElFTkSuQmCC',
       'searchUrl': 'https://www.opensubtitles.org/en/search/sublanguageid-ita/imdbid-%nott%',
       'loggedOutRegex': /Guru Meditation/,
       'matchRegex': /div itemscope/,
@@ -3421,6 +3431,7 @@ var subs_sites = [
       'inSecondSearchBar': true,
       'both': true},
   {   'name': 'OpenSubtitles (PL)',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwAgMAAAAqbBEUAAAACVBMVEUAAAD///8TExOI954UAAAAk0lEQVQoz62SQQ7DMAgEcSXfe/F/+gQf4D99egeCjJtTpITIG4agtYMsX1nxkr/os56r8EB0+6ANJcxmqEWJV6oMFTq6ynAgm64N8J6j7EksW0CaEL7Z1h0GBjvoBt20oHGoBXyyAmgDTliAe26avk3PoAnxCwVh8nYD1oTJmklsbZTQY1QapVlDZDz34/492K/YD8ElL5+2GoYbAAAAAElFTkSuQmCC',
       'searchUrl': 'https://www.opensubtitles.org/en/search/sublanguageid-pol/imdbid-%nott%',
       'loggedOutRegex': /Guru Meditation/,
       'matchRegex': /div itemscope/,
@@ -3428,6 +3439,7 @@ var subs_sites = [
       'inSecondSearchBar': true,
       'both': true},
   {   'name': 'OpenSubtitles (PT)',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwAgMAAAAqbBEUAAAACVBMVEUAAAD///8TExOI954UAAAAk0lEQVQoz62SQQ7DMAgEcSXfe/F/+gQf4D99egeCjJtTpITIG4agtYMsX1nxkr/os56r8EB0+6ANJcxmqEWJV6oMFTq6ynAgm64N8J6j7EksW0CaEL7Z1h0GBjvoBt20oHGoBXyyAmgDTliAe26avk3PoAnxCwVh8nYD1oTJmklsbZTQY1QapVlDZDz34/492K/YD8ElL5+2GoYbAAAAAElFTkSuQmCC',
       'searchUrl': 'https://www.opensubtitles.org/en/search/sublanguageid-por/imdbid-%nott%',
       'loggedOutRegex': /Guru Meditation/,
       'matchRegex': /div itemscope/,
@@ -3435,6 +3447,7 @@ var subs_sites = [
       'inSecondSearchBar': true,
       'both': true},
   {   'name': 'OpenSubtitles (RO)',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwAgMAAAAqbBEUAAAACVBMVEUAAAD///8TExOI954UAAAAk0lEQVQoz62SQQ7DMAgEcSXfe/F/+gQf4D99egeCjJtTpITIG4agtYMsX1nxkr/os56r8EB0+6ANJcxmqEWJV6oMFTq6ynAgm64N8J6j7EksW0CaEL7Z1h0GBjvoBt20oHGoBXyyAmgDTliAe26avk3PoAnxCwVh8nYD1oTJmklsbZTQY1QapVlDZDz34/492K/YD8ElL5+2GoYbAAAAAElFTkSuQmCC',
       'searchUrl': 'https://www.opensubtitles.org/en/search/sublanguageid-rum/imdbid-%nott%',
       'loggedOutRegex': /Guru Meditation/,
       'matchRegex': /div itemscope/,
@@ -3442,6 +3455,7 @@ var subs_sites = [
       'inSecondSearchBar': true,
       'both': true},
   {   'name': 'OpenSubtitles (RU)',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwAgMAAAAqbBEUAAAACVBMVEUAAAD///8TExOI954UAAAAk0lEQVQoz62SQQ7DMAgEcSXfe/F/+gQf4D99egeCjJtTpITIG4agtYMsX1nxkr/os56r8EB0+6ANJcxmqEWJV6oMFTq6ynAgm64N8J6j7EksW0CaEL7Z1h0GBjvoBt20oHGoBXyyAmgDTliAe26avk3PoAnxCwVh8nYD1oTJmklsbZTQY1QapVlDZDz34/492K/YD8ElL5+2GoYbAAAAAElFTkSuQmCC',
       'searchUrl': 'https://www.opensubtitles.org/en/search/sublanguageid-rus/imdbid-%nott%',
       'loggedOutRegex': /Guru Meditation/,
       'matchRegex': /div itemscope/,
@@ -3449,6 +3463,7 @@ var subs_sites = [
       'inSecondSearchBar': true,
       'both': true},
   {   'name': 'OpenSubtitles (TR)',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwAgMAAAAqbBEUAAAACVBMVEUAAAD///8TExOI954UAAAAk0lEQVQoz62SQQ7DMAgEcSXfe/F/+gQf4D99egeCjJtTpITIG4agtYMsX1nxkr/os56r8EB0+6ANJcxmqEWJV6oMFTq6ynAgm64N8J6j7EksW0CaEL7Z1h0GBjvoBt20oHGoBXyyAmgDTliAe26avk3PoAnxCwVh8nYD1oTJmklsbZTQY1QapVlDZDz34/492K/YD8ElL5+2GoYbAAAAAElFTkSuQmCC',
       'searchUrl': 'https://www.opensubtitles.org/en/search/sublanguageid-tur/imdbid-%nott%',
       'loggedOutRegex': /Guru Meditation/,
       'matchRegex': /div itemscope/,
@@ -5842,7 +5857,7 @@ function countSites(task) {
 //    Remove tracking references from IMDb's URL
 //==============================================================================
 
-if (Boolean(location.href.match('ref_='))) {
+if (Boolean(location.href.match('\\?ref_='))) {
   const stripped_href = location.href.split('?ref_=')[0];
   window.location.replace(stripped_href);
   return;
