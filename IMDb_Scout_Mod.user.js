@@ -824,12 +824,15 @@
         -   Fixed: Sometimes script wasn't loading/icons disappearing on the new IMDb layout.
 
 10.5    -   New feature: Script removes tracking references from IMDb's URL (eg. ?ref_=tt_sims_tt_i_2).
-        -   New feature: Separate setting for the icons in settings.
+        -   New feature: Separate size setting for the icons in settings.
 
 10.6    -   New feature: Option to disable icons in settings.
 
 10.7    -   Fixed: Bug in the references removal code.
-        -   Refined @include and added @exlude so the script wouldn't active where it shouldn't.
+        -   Refined @include and added @exlude so the script wouldn't activate where it shouldn't.
+
+10.7.1  -   Added: TSP-Req.
+        -   Removed: DesiTor.
 
 */
 //==============================================================================
@@ -1919,19 +1922,6 @@ var private_sites = [
       'loggedOutRegex': /Cloudflare|Ray ID|Forgot Your Password/,
       'matchRegex': /<tbody>\s*<\/tbody>/,
       'both': true},
-  {   'name': 'DesiTor',
-      'searchUrl': 'https://desitorrents.tv/ajax.php?action=search_torrent_cats',
-      'loggedOutRegex': /Cloudflare|Ray ID|Recover Password/,
-      'matchRegex': /orange-download.png/,
-      'mPOST': 'selected_group=&search_username=&selected_sorting=relevance&selected_sub%5B%5D=47&selected_sub%5B%5D=48&selected_sub%5B%5D=49&selected_sub%5B%5D=51&selected_sub%5B%5D=52&selected_sub%5B%5D=53&selected_sub%5B%5D=54&selected_sub%5B%5D=55&selected_sub%5B%5D=56&selected_sub%5B%5D=57&selected_sub%5B%5D=58&selected_sub%5B%5D=103&selected_sub%5B%5D=104&selected_sub%5B%5D=110&selected_sub%5B%5D=117&selected_sub%5B%5D=124&selected_sub%5B%5D=128&selected_sub%5B%5D=129&selected_sub%5B%5D=140&search_string=%search_string_orig%',
-      'positiveMatch': true},
-  {   'name': 'DesiTor',
-      'searchUrl': 'https://desitorrents.tv/ajax.php?action=search_torrent_cats',
-      'loggedOutRegex': /Cloudflare|Ray ID|Recover Password/,
-      'matchRegex': /orange-download.png/,
-      'mPOST': 'selected_group=&search_username=&selected_sorting=relevance&selected_sub%5B%5D=59&selected_sub%5B%5D=60&selected_sub%5B%5D=61&selected_sub%5B%5D=62&selected_sub%5B%5D=63&selected_sub%5B%5D=97&selected_sub%5B%5D=98&selected_sub%5B%5D=101&selected_sub%5B%5D=102&selected_sub%5B%5D=113&selected_sub%5B%5D=125&selected_sub%5B%5D=130&selected_sub%5B%5D=132&selected_sub%5B%5D=139&search_string=%search_string_orig%',
-      'positiveMatch': true,
-      'TV': true},
   {   'name': 'DVDSeed',
       'searchUrl': 'https://www.dvdseed.eu/browse2.php?search=%tt%&wheresearch=2&incldead=1&polish=0&nuke=0&rodzaj=0',
       'loggedOutRegex': /Nie masz konta|Nie zalogowany!/,
@@ -2975,13 +2965,19 @@ var private_sites = [
       'searchUrl': 'https://www.thesceneplace.com/index.php?page=torrents&search=%search_string_orig%+%year%&category=20;21;22;23;24&options=0&active=0',
       'loggedOutRegex': /Cloudflare|Ray ID|not authorized to view/,
       'positiveMatch': true,
-      'matchRegex': /download.gif/},
+      'matchRegex': /onMouseOut="this.className/},
   {   'name': 'TSP',
       'searchUrl': 'https://www.thesceneplace.com/index.php?page=torrents&search=%search_string_orig%&category=15;16;17;18;25&options=0&active=0',
       'loggedOutRegex': /Cloudflare|Ray ID|not authorized to view/,
       'positiveMatch': true,
-      'matchRegex': /download.gif/,
+      'matchRegex': /onMouseOut="this.className/,
       'TV': true},
+  {   'name': 'TSP-Req',
+      'searchUrl': 'https://www.thesceneplace.com/index.php?page=viewrequests&search=%search_string_orig%',
+      'loggedOutRegex': /Cloudflare|Ray ID|not authorized to view/,
+      'positiveMatch': true,
+      'matchRegex': />No</,
+      'both': true},
   {   'name': 'TT',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAhBQTFRFAAAAFxcXfIdXgZNPPUchAAAAAAAAV2RIY3pDPEojAAAAKioqZW9Gq8RfjqdMAAAADBMGeJVJaIk6KDMYAAAAcX1MrsZmjKRLAAAAAAAAAAAABgwGcI8/Y4I6LDsZfpFGlq9RVFw9iJtaj6hZhJ5RaH0/QEsreJdHOk8hSFQnmK5RkahNo75YkKRbo79ffZ1HXXc1bo8+XHo0WXcyGyUOCg8FCQkEISUSDhMHBQoABAgAWmc7JTAVbH4/N0kefY9JRVsnAAAAjKNNVW8vAAAAHBwVExoNY3E+nr1Wg51JgJxIiqtMOUckDw8KDQ0GAAAAYmpFr8Vqo7pesMpnrMZmVWQwLTQcsbGxsLGwIysVYHJEiahXdZVFc5JLY4I9ICwSfI1Gl7JRHSIQAAAAlZWVi4uLAAAAJzAVdZZBOEsfUV4rmbFSkqxPBwcDAAAAAAAAGh8Ud5ZFc5dAWnczICoRPEYio7xXjaZMBwcDFBoKbo0+ZIM3Fx8MAAAAS1YoY3M0KzIWKjcWRFglJjIUAAAAs9Fgep5EuNRjdJhBvNhluNVidZpCcZdAocFXmrpUk7RRja5Npb1jp8ZaocBXhqlKbIo8rctdgKRHla9QpsRag6VIcJA+gJZFaHs4nrxVh6hKSl0paYc6qsdccog+aX05hJ9IfJhEV2wwYnw2f6JHkKhQmLRTfJtGbYlAtdFh////SoNNDAAAAIV0Uk5TAAuJyWsDAWPIjxAGYvzyNyjv/HIIfPf1PAcbKPD4ir/4ncjh4cmX9tVt+/3+/v7+/v79/IkyNXqQMjp5jZ2yw9AM5esdJCfL/v7+/tkwJgJg+f3+/umz+vy04f7+/fpusvpvEtDaIFX4yHT390IhJzHy/vmPYfr3RjHy/HgKi9qIctmeExoMbtgAAAABYktHRK/ObKMxAAAACXBIWXMAAB7BAAAewQHDaVRTAAAA0klEQVQYGVXBvy4EURiH4d/7zZkz50+BRCIalWajkSgVsjcgao3sFYhIlAq1VmdD4kI020zcApEImTtQ7CzrDJXnQQx6SZ7i03LOVympSOkyxnWXOPuOJDRv0MUNls4rxSKt5azqNDFicALc8avehWPowfEAr65/0n690MDcTDJJZo0K70ySSTLnsrTivW1KThrjYYOi2unk/AEEpsCEyCEc8Z9bHdE/82er5sXS27ZynqZ0H6O6Llfvex9h6Wdt+zWu/bJurQthHm9VXDeLEB5/AFWwKWjvya9AAAAAJXRFWHRkYXRlOmNyZWF0ZQAyMDE1LTA1LTAxVDE4OjA2OjExKzAyOjAwq9Q12QAAACV0RVh0ZGF0ZTptb2RpZnkAMjAxNS0wNS0wMVQxODowNjoxMSswMjowMNqJjWUAAAAASUVORK5CYII=',
       'searchUrl': 'https://tt.smallfoot.me/t?q=%tt%',
