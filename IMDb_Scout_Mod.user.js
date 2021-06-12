@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      10.8
+// @version      11.0
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from various sites. Adds movies/series to Radarr/Sonarr. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         https://i.imgur.com/u17jjYj.png
@@ -13,6 +13,7 @@
 // @supportURL   https://github.com/Purfview/IMDb-Scout-Mod/issues
 //
 // @require      https://cdn.jsdelivr.net/gh/sizzlemctwizzle/GM_config@43fd0fe4de1166f343883511e53546e87840aeaf/gm_config.js
+// @require      https://greasyfork.org/scripts/403996-exev/code/ExEv.js?version=808391
 // @require      https://code.jquery.com/jquery-3.5.1.min.js
 // @require      https://greasemonkey.github.io/gm4-polyfill/gm4-polyfill.js
 //
@@ -841,6 +842,10 @@
         -   New feature: Ads removal for the new layout and new option to disable it.
         -   New feature: Option to force the title pages to open in Reference View without login.
         -   Updated some private sites icons.
+
+11.0    -   Fixed: Trakt authorization was broken if imdb opens in Reference View.
+        -   New feature: Dark style for Reference View (optional).
+        -   New feature: Compact mode for Reference View (optional).
 
 */
 //==============================================================================
@@ -3993,7 +3998,7 @@ var special_buttons = [
       'showByDefault': false},
   {   'name': 'Trakt-Watchlist',
       'icon': 'data:image/png;base64,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',
-      'searchUrl': 'https://trakt.tv/oauth/authorize?client_id=325c09f8f8d6e3466c7ced12c11cc32d4af00e1af1f6310da4f6dfb702c7b8c2&redirect_uri=https://www.imdb.com/title/tt0052077/&response_type=code',
+      'searchUrl': 'https://trakt.tv/oauth/authorize?client_id=325c09f8f8d6e3466c7ced12c11cc32d4af00e1af1f6310da4f6dfb702c7b8c2&redirect_uri=https://www.imdb.com/title/tt0052077/reference&response_type=code',
       'showByDefault': false}
 ];
 
@@ -4450,7 +4455,14 @@ function addIconBar(movie_id, movie_title, movie_title_orig) {
   // oldlayout
   } else if ($('h1.header:first').length || $('.title_wrapper h1').length) {
     iconbar = getIconsLinkArea();
-  // reference
+  // reference + remove "Reference View" txt and a link to settings
+  } else if ($('.titlereference-header div script').length) {
+    // wrap text node for removal
+    $($('.titlereference-header div script')[0].nextSibling).wrap('<span class="removethis"/>');
+    $('.removethis').remove();
+    $('.titlereference-change-view-link').remove();
+    iconbar = getIconsLinkArea();
+  // in case if code above breaks
   } else if ($('h3[itemprop="name"]').length) {
     iconbar = $('h3[itemprop="name"]').append($('<br/>'));
   }
@@ -4546,6 +4558,9 @@ function getIconsLinkArea() {
   });
   if ($('[class^=TitleBlock__TitleContainer]').length) {
     $('[class^=TitleBlock__TitleContainer]').append(p);
+  // reference
+  } else if ($('.titlereference-header div hr').first().length) {
+    $('.titlereference-header div hr').first().after(p);
   // oldlayout
   } else if ($('h1.header:first').length) {
     $('h1.header:first').append(p);
@@ -4802,6 +4817,10 @@ function getLinkArea() {
   // reference
   } else if ($('.titlereference-header').length) {
     $('.titlereference-header').append(p);
+    if (GM_config.get('dark_reference_view')) {
+      const hr = $('<hr>').css({'margin': '0px'});
+      $('#imdbscout_header').after(hr);
+    }
   }
   return $('#imdbscout_header');
 }
@@ -4848,6 +4867,10 @@ function getLinkAreaSecond() {
   // reference
   } else if ($('.titlereference-header').length) {
     $('.titlereference-header').append(p);
+    if (GM_config.get('dark_reference_view')) {
+      const hr = $('<hr>').css({'margin': '0px'});
+      $('#imdbscoutsecondbar_header').after(hr);
+    }
   }
   return $('#imdbscoutsecondbar_header');
 }
@@ -4894,6 +4917,10 @@ function getLinkAreaThird() {
   // reference
   } else if ($('.titlereference-header').length) {
     $('.titlereference-header').append(p);
+    if (GM_config.get('dark_reference_view')) {
+      const hr = $('<hr>').css({'margin': '0px'});
+      $('#imdbscoutthirdbar_header').after(hr);
+    }
   }
   return $('#imdbscoutthirdbar_header');
 }
@@ -5486,7 +5513,7 @@ function sonarrErrorNotificationHandler(error, expected, errormsg) {
 async function start_trakt(movie_id, movie_title) {
   const imdbid = "tt" + movie_id;
   const title = movie_title.trim();
-  let button = $('a[href="https://trakt.tv/oauth/authorize?client_id=325c09f8f8d6e3466c7ced12c11cc32d4af00e1af1f6310da4f6dfb702c7b8c2&redirect_uri=https://www.imdb.com/title/tt0052077/&response_type=code"]');
+  let button = $('a[href="https://trakt.tv/oauth/authorize?client_id=325c09f8f8d6e3466c7ced12c11cc32d4af00e1af1f6310da4f6dfb702c7b8c2&redirect_uri=https://www.imdb.com/title/tt0052077/reference&response_type=code"]');
   const access_token = await GM.getValue("IMDb_Scout_Mod_Trakt_access_token", "none");
 
   if (access_token == 'none') {
@@ -5724,12 +5751,12 @@ function trakt_watchlist_remove(imdbid, title, access_token, button, error_icon,
 }
 
 function traktCatchToken() {
-  const code = location.href.replace('https://www.imdb.com/title/tt0052077/?code=','');
+  const code = location.href.replace('https://www.imdb.com/title/tt0052077/reference?code=','');
   var body = {
     'code': code,
     'client_id': '325c09f8f8d6e3466c7ced12c11cc32d4af00e1af1f6310da4f6dfb702c7b8c2',
     'client_secret': 'ee4204782a908e201ae22da35fbd19f08362e99ba158b04f1931caf8eea55fe4',
-    'redirect_uri': 'https://www.imdb.com/title/tt0052077/',
+    'redirect_uri': 'https://www.imdb.com/title/tt0052077/reference',
     'grant_type': 'authorization_code'
   };
   GM.xmlHttpRequest({
@@ -5763,7 +5790,7 @@ async function trakt_refresh_token() {
     'refresh_token': refresh_token,
     'client_id': '325c09f8f8d6e3466c7ced12c11cc32d4af00e1af1f6310da4f6dfb702c7b8c2',
     'client_secret': 'ee4204782a908e201ae22da35fbd19f08362e99ba158b04f1931caf8eea55fe4',
-    'redirect_uri': 'https://www.imdb.com/title/tt0052077/',
+    'redirect_uri': 'https://www.imdb.com/title/tt0052077/reference',
     'grant_type': 'refresh_token'
   };
   GM.xmlHttpRequest({
@@ -5829,7 +5856,6 @@ function countSites(task) {
       'cfg_iconsize': {'type': 'text'},
       'load_icons_in_settings': {'type': 'checkbox'},
       'remove_ads': {'type': 'checkbox'},
-      'force_reference_view': {'type': 'checkbox'},
       'loadmod_on_start_movie': {'type': 'checkbox'},
       'load_second_bar': {'type': 'checkbox'},
       'load_third_bar_movie': {'type': 'checkbox'},
@@ -5841,6 +5867,9 @@ function countSites(task) {
       'one_line': {'type': 'checkbox'},
       'ignore_type_movie': {'type': 'checkbox'},
       'remove_openall': {'type': 'checkbox'},
+      'force_reference_view': {'type': 'checkbox'},
+      'dark_reference_view': {'type': 'checkbox'},
+      'compact_reference_view': {'type': 'checkbox'},
       'highlight_sites_movie': {'type': 'text'},
       'highlight_missing_movie': {'type': 'text'},
       'loadmod_on_start_search': {'type': 'checkbox'},
@@ -6054,11 +6083,6 @@ var config_fields = {
     'label': 'Remove IMDb ads?',
     'default': true
   },
-  'force_reference_view': {
-    'type': 'checkbox',
-    'label': 'Force the title pages to open in Reference View (no login)?',
-    'default': false
-  },
   'loadmod_on_start_movie': {
     'section': 'Title Page:',
     'type': 'checkbox',
@@ -6113,6 +6137,21 @@ var config_fields = {
   'remove_openall': {
     'type': 'checkbox',
     'label': 'Remove "Open All" button?',
+    'default': false
+  },
+  'force_reference_view': {
+    'type': 'checkbox',
+    'label': 'Force the title pages to open in Reference View (without login)?',
+    'default': false
+  },
+  'dark_reference_view': {
+    'type': 'checkbox',
+    'label': 'Reference View: Enable the dark style?',
+    'default': false
+  },
+  'compact_reference_view': {
+    'type': 'checkbox',
+    'label': 'Reference View: Enable the compact mode?',
     'default': false
   },
   'highlight_sites_movie': {
@@ -6573,32 +6612,39 @@ const onSearchPage = Boolean(location.href.match('/search/'))
                   || Boolean(location.href.match('/list/'))
                   || Boolean(location.href.match('watchlist'));
 
+// Are we on a reference page?
+const onReferencePage = Boolean(location.href.match('/reference'));
+
 // Globals for the sorting launcher.
 var showSitezFirstBar = 0;
 var sortReqOnNewLineTemp = false;
 
 // Trakt auth code?
-const traktCodePage = Boolean(location.href.match(/tt0052077\/\?code=/));
+const traktCodePage = Boolean(location.href.match(/tt0052077\/reference\?code=/));
 
 //==============================================================================
 //    Remove ads from IMDb
 //==============================================================================
 
-//oldlayout and reference
-function adsRemovalOld() {
+function adsRemovalReference() {
   if (!GM_config.get('remove_ads')) {
     return;
   }
+  // oldlayout?
   $('#top_ad_wrapper').remove();
   $('#top_rhs_wrapper').remove();
   $('.pro_logo_main_title').remove();
   $('#promoted-partner-bar').remove();
 
-  // reference only
+  // reference
   if (Boolean($('.aux-content-widget-2').first().text().match("IMDb Answers"))) {
     $('.aux-content-widget-2').first().remove();
   }
   $('.cornerstone_slot').remove();
+  $('.imdb-footer').remove();
+  $('#social-share-widget').remove();
+  $('.navbar__imdbpro').remove();
+  $('[class^=Root__Separator]').remove();
 }
 
 function adsRemoval() {
@@ -6623,6 +6669,9 @@ function adsRemoval() {
   $('[class*=ProLink]').remove();
   $('[class^=IMDbPro]').remove();
   $('.imdb-editorial-single').remove();
+  $('.imdb-footer').remove();
+  $('.navbar__imdbpro').remove();
+  $('[class^=Root__Separator]').remove();
 }
 
 //==============================================================================
@@ -6657,6 +6706,77 @@ function checkDummyElem(mutation, observer) {
 }
 
 //==============================================================================
+//    Dark styles for Reference View
+//==============================================================================
+
+function darkReferenceStyles() {
+  if (!GM_config.get('dark_reference_view') && onReferencePage) {
+    return;
+  }
+  // www.w3schools.com/colors/colors_picker.asp
+  // background color
+  addGlobalStyles('#nav-search-form {background: #d9d9d9}');
+  addGlobalStyles('#wrapper, #pagecontent, .recently-viewed {background-color: #000000}');
+  addGlobalStyles('.aux-content-widget-2 {background: #191919}');
+  addGlobalStyles('#imdbscout_header, #imdbscoutsecondbar_header, #imdbscoutthirdbar_header, .article, .cast_list tr, .titlereference-list tr {background-color: #191919 !important}');
+  addGlobalStyles('.add-image-container {background-color: #262626}');
+  // border color
+  addGlobalStyles('.article, .aux-content-widget-2, .cast_list tr, .titlereference-list tr, .recently-viewed .item {border-color: #323232 !important}');
+  addGlobalStyles('hr, .answers-widget__question, .answers-widget__see-more {border-color: #666666}');
+  addGlobalStyles('.recently-viewed {border-color: #000000}');
+  // font color
+  addGlobalStyles('h3[itemprop="name"], .titlereference-title-year a {color: #f5c20a}');
+  addGlobalStyles('.titlereference-original-title-label {color: #cc0000}');
+  addGlobalStyles('.ipl-rating-star__rating {font-weight: bold; color: #00b300;}');
+  addGlobalStyles('.article, .aux-content-widget-2, .cast_list tr td {color: #cccccc !important}');
+  addGlobalStyles('.ipl-list-title, #sidebar h4, .ipl-list-title::after {color: #c49b08}');
+  addGlobalStyles('.ipl-list-title::after {border-color: #7a6105}');
+}
+
+function addGlobalStyles(css) {
+  var head, style;
+  head = document.getElementsByTagName('head')[0];
+  if (!head) { return; }
+  style = document.createElement('style');
+  style.className = 'IMDbScoutStyles';
+  style.innerHTML = css;
+  head.appendChild(style);
+}
+
+//==============================================================================
+//    Compact mode for Reference View
+//==============================================================================
+
+function compactReferenceStyles() {
+  if (!GM_config.get('compact_reference_view') && onReferencePage) {
+    return;
+  }
+  addGlobalStyles('#main {margin-left:25px !important}');
+  addGlobalStyles('#sidebar {margin-right:25px !important}');
+  addGlobalStyles('#content-2-wide {margin-top:5px !important}');
+  addGlobalStyles('.aux-content-widget-2 {margin-top:0px; padding-top:0px !important}');
+
+  addGlobalStyles('#imdbHeader {width:960px; display:flex; justify-content:center; align-items:center; margin:auto !important}');
+  document.getElementById('styleguide-v2').id = 'styleguide-v2x';
+  addGlobalStyles('body#styleguide-v2x {background-color: #000000; margin-top:0px}');
+}
+
+function compactReferenceElemRemoval() {
+  if (!GM_config.get('compact_reference_view') && onReferencePage) {
+    return;
+  }
+  $('.titlereference-section-credits').nextUntil('.titlereference-section-storyline').remove();
+  $('.titlereference-section-credits').remove();
+  if (Boolean($('.titlereference-section-storyline .ipl-zebra-list__item').first().text().match("Plot Summary"))) {
+    $('.titlereference-section-storyline .ipl-zebra-list__item').first().nextUntil('section').remove();
+  } else {
+    $('.titlereference-section-storyline').remove();
+  }
+  $('.titlereference-section-did-you-know').remove();
+  $('#contribute-main-section').remove();
+}
+
+//==============================================================================
 //    Start: Display 'Load' button or add links to sites
 //==============================================================================
 
@@ -6675,7 +6795,12 @@ function startIMDbScout() {
 }
 
 if ($('html[xmlns\\:og="http://ogp.me/ns#"]').length) {
-  document.addEventListener('DOMContentLoaded', adsRemovalOld);
+  document.events.on('bodyloaded', () => {
+    darkReferenceStyles();
+    compactReferenceStyles();
+  });
+  document.addEventListener('DOMContentLoaded', compactReferenceElemRemoval);
+  document.addEventListener('DOMContentLoaded', adsRemovalReference);
   document.addEventListener('DOMContentLoaded', startIMDbScout);
 } else {
   document.addEventListener('DOMContentLoaded', startObserver);
