@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      11.0
+// @version      11.1
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from various sites. Adds movies/series to Radarr/Sonarr. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         https://i.imgur.com/u17jjYj.png
@@ -847,6 +847,8 @@
         -   New feature: Dark style for Reference View (optional).
         -   New feature: Compact mode for Reference View (optional).
 
+11.1    -   Fixed: Few conditionals.
+
 */
 //==============================================================================
 //    JSHint directives.
@@ -1386,14 +1388,14 @@ var public_sites = [
       'both': true},
   {   'name': 'T2K',
       'searchUrl': 'https://torrentz2k.xyz/search/',
-      'loggedOutRegex': /Ray ID|security check to access|Please turn JavaScript/,
+      'loggedOutRegex': /Ray ID|security check to access|Please turn JavaScript|equiv="refresh/,
       'matchRegex': /No Results Found/,
-      'mPOST': 'q=%search_string%&category=movies&x=0&y=0'},
+      'mPOST': 'q=%search_string%&secs=secs&category=movies'},
   {   'name': 'T2K',
       'searchUrl': 'https://torrentz2k.xyz/search/',
-      'loggedOutRegex': /Ray ID|security check to access|Please turn JavaScript/,
+      'loggedOutRegex': /Ray ID|security check to access|Please turn JavaScript|equiv="refresh/,
       'matchRegex': /No Results Found/,
-      'mPOST': 'q=%search_string%&category=tv&x=0&y=0',
+      'mPOST': 'q=%search_string%&secs=secs&category=tv',
       'TV': true},
   {   'name': 'TGx',
       'icon': 'https://torrentgalaxy.to/common/favicon/apple-icon-57x57.png',
@@ -1798,11 +1800,13 @@ var private_sites = [
       'rateLimit': 125,
       'TV': true},
   {   'name': 'BWT',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQAQMAAAAlPW0iAAAABlBMVEUAAADm5uZJRQb6AAAAJUlEQVQI12P4/x+EGtgZGpgZDjSCUTPDASCbEcZtBEoBFUBUAgDM+xMZ0lHWKQAAAABJRU5ErkJggg==',
       'searchUrl': 'https://bwtorrents.tv/index.php?search=%search_string_orig%+%year%&blah=0&cat=0&incldead=0',
       'loggedOutRegex': /Cloudflare|Ray ID|FORGOT PASSWORD/,
       'matchRegex': /Nothing found/,
       'both': true},
   {   'name': 'BWT-Req',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQAQMAAAAlPW0iAAAABlBMVEUAAADm5uZJRQb6AAAAJUlEQVQI12P4/x+EGtgZGpgZDjSCUTPDASCbEcZtBEoBFUBUAgDM+xMZ0lHWKQAAAABJRU5ErkJggg==',
       'searchUrl': 'https://bwtorrents.tv/viewrequests.php?search=%search_string_orig%&filter=true',
       'loggedOutRegex': /Cloudflare|Ray ID|FORGOT PASSWORD/,
       'matchRegex': />No</,
@@ -6710,7 +6714,7 @@ function checkDummyElem(mutation, observer) {
 //==============================================================================
 
 function darkReferenceStyles() {
-  if (!GM_config.get('dark_reference_view') && onReferencePage) {
+  if (!GM_config.get('dark_reference_view') || !onReferencePage) {
     return;
   }
   // www.w3schools.com/colors/colors_picker.asp
@@ -6748,7 +6752,7 @@ function addGlobalStyles(css) {
 //==============================================================================
 
 function compactReferenceStyles() {
-  if (!GM_config.get('compact_reference_view') && onReferencePage) {
+  if (!GM_config.get('compact_reference_view') || !onReferencePage) {
     return;
   }
   addGlobalStyles('#main {margin-left:25px !important}');
@@ -6762,7 +6766,7 @@ function compactReferenceStyles() {
 }
 
 function compactReferenceElemRemoval() {
-  if (!GM_config.get('compact_reference_view') && onReferencePage) {
+  if (!GM_config.get('compact_reference_view') || !onReferencePage) {
     return;
   }
   $('.titlereference-section-credits').nextUntil('.titlereference-section-storyline').remove();
