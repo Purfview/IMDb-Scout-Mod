@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      11.1
+// @version      11.2
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from various sites. Adds movies/series to Radarr/Sonarr. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         https://i.imgur.com/u17jjYj.png
@@ -848,6 +848,10 @@
         -   New feature: Compact mode for Reference View (optional).
 
 11.1    -   Fixed: Few conditionals.
+
+11.2    -   Added: TNT (needs auth token).
+        -   New feature: Remove ":" and "-" symbols from the titles (possibly, search on some sites can break).
+        -   Tweaked the compact mode.
 
 */
 //==============================================================================
@@ -2977,6 +2981,19 @@ var private_sites = [
       'matchRegex': />No</,
       'positiveMatch': true,
       'both': true},
+  {   'name': 'TNT',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJUAAACVAQMAAABrbCoMAAAABlBMVEXm5uYmLzenm8r7AAAC9klEQVRIx73Tz27TMBgAcIcgBSE074R2GMsLIAHiAIeqZuJF9gZw7KFqslNv9AWQhsQL8ASQnXJj10G7OlMOHJcKafXWLB9tbH92Yrb2Aj641q/x5+/zH/Jv2v1V5zXtUW3xWtup+6Rhz+v+oGHvsTctq/vXNnnSOrb5MvqebYHMgtpG8S/T9jCEaR1cylTWU4NZbCoTaiDM5BeFGvRNdbmO08VKvFRPCXexipEOTT9gFUdoJ1hFiP+msa6ii1Hy5A7r9DGDWaatRLvS1jMmCm0CK0K7Mlbq4cyyngry21jVv932c8s62/XvW9u60nLb1K7ObWNyYWiYuN3sXCJldh13WHRl9qqEQpowJtAqPA9trBygzSBTxvB8z5WFlbEcEmkQ4t1I0UZ4r0ZoKVqojIK5kwxiZTO8u5GyIBJ4x2GuEj0q9fs4h+9qdAL6HaXwUZ8vjFTKo6qPUXIZeYth5IrNZFa7ER5NNBTSdoDqrFhRyTf1UkSZrqjUb/oQdJUUsF6I9a4B4AB3HPTJQIWnBaBOGko86QitQDO7lqGFQLbkGglaADEV9XdIy4WToKpP1ZgHmb8KyUpiWlR4q1ARLisnQbYKYVkAq28CsOjBciYTy/0hMdoWgSIUJBK+MQqhWH4EKRjzIS1p6QHmJ68+BFUgLz1OFmwINJNTcQOHKYQU7DoAzlPYZWDPZZBfwFcGWaOOY4AyBGK3MF5UgiYN65JXcOBnDeuRd/CFFKTZOD8l7TbnvTZ5n6dP2+bvTx47djzZa9u9w8lDJ543uU8cnJCNzJ+6FgR/sZFrlMeOhTxxjPHMsYgXjgEXTsrASyflOR846f0aMSeVE37UToZRPmwnU4b8uL3wmydnyfYmdQzGbh3VWGxiXjUuNzG//+PSuQfXP683mns5dvaKVmOI23u1tMQplzsFR9/4RbtgAA6ibRGft21wc7Zoz2U3Z9BeIwTu5EIXUydnfzGt1t8XfIPr798z/mmjOx7wde8I35vbTsn/bH8ANSe+EaJ+o2YAAAAASUVORK5CYII=',
+      'searchUrl': 'https://tntracker.org/api/browse?cats=6,7,17,18,19,20,22,24,34,35,36,37,38,39,43,45,46,48&orderC=4&orderD=desc&start=0&length=1&search=%search_string_orig%+%year%',
+      'goToUrl': 'https://tntracker.org/browse/?search=%search_string_orig%+%year%&perPage=100&cats=6,7,17,18,19,20,22,24,34,35,36,37,38,39,43,45,46,48&page=1',
+      'loggedOutRegex': /:"no access/,
+      'matchRegex': /recordsTotal":0/},
+  {   'name': 'TNT',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJUAAACVAQMAAABrbCoMAAAABlBMVEXm5uYmLzenm8r7AAAC9klEQVRIx73Tz27TMBgAcIcgBSE074R2GMsLIAHiAIeqZuJF9gZw7KFqslNv9AWQhsQL8ASQnXJj10G7OlMOHJcKafXWLB9tbH92Yrb2Aj641q/x5+/zH/Jv2v1V5zXtUW3xWtup+6Rhz+v+oGHvsTctq/vXNnnSOrb5MvqebYHMgtpG8S/T9jCEaR1cylTWU4NZbCoTaiDM5BeFGvRNdbmO08VKvFRPCXexipEOTT9gFUdoJ1hFiP+msa6ii1Hy5A7r9DGDWaatRLvS1jMmCm0CK0K7Mlbq4cyyngry21jVv932c8s62/XvW9u60nLb1K7ObWNyYWiYuN3sXCJldh13WHRl9qqEQpowJtAqPA9trBygzSBTxvB8z5WFlbEcEmkQ4t1I0UZ4r0ZoKVqojIK5kwxiZTO8u5GyIBJ4x2GuEj0q9fs4h+9qdAL6HaXwUZ8vjFTKo6qPUXIZeYth5IrNZFa7ER5NNBTSdoDqrFhRyTf1UkSZrqjUb/oQdJUUsF6I9a4B4AB3HPTJQIWnBaBOGko86QitQDO7lqGFQLbkGglaADEV9XdIy4WToKpP1ZgHmb8KyUpiWlR4q1ARLisnQbYKYVkAq28CsOjBciYTy/0hMdoWgSIUJBK+MQqhWH4EKRjzIS1p6QHmJ68+BFUgLz1OFmwINJNTcQOHKYQU7DoAzlPYZWDPZZBfwFcGWaOOY4AyBGK3MF5UgiYN65JXcOBnDeuRd/CFFKTZOD8l7TbnvTZ5n6dP2+bvTx47djzZa9u9w8lDJ543uU8cnJCNzJ+6FgR/sZFrlMeOhTxxjPHMsYgXjgEXTsrASyflOR846f0aMSeVE37UToZRPmwnU4b8uL3wmydnyfYmdQzGbh3VWGxiXjUuNzG//+PSuQfXP683mns5dvaKVmOI23u1tMQplzsFR9/4RbtgAA6ibRGft21wc7Zoz2U3Z9BeIwTu5EIXUydnfzGt1t8XfIPr798z/mmjOx7wde8I35vbTsn/bH8ANSe+EaJ+o2YAAAAASUVORK5CYII=',
+      'searchUrl': 'https://tntracker.org/api/browse?cats=2,6,7,16,27,28,29,40,41,42&orderC=4&orderD=desc&start=0&length=1&search=%search_string_orig%',
+      'goToUrl': 'https://tntracker.org/browse/?search=%search_string_orig%&perPage=100&cats=2,6,7,16,27,28,29,40,41,42&page=1',
+      'loggedOutRegex': /:"no access/,
+      'matchRegex': /recordsTotal":0/,
+      'TV': true},
   {   'name': 'TP',
       'searchUrl': 'https://theplace.click/browse.php?incldead=0&country=&nonboolean=1&search=%tt%',
       'loggedOutRegex': /not found on this server|You need cookies enabled/,
@@ -4030,8 +4047,8 @@ async function replaceSearchUrlParams(site, movie_id, movie_title, movie_title_o
   }
 
   var space_replace      = ('spaceEncode' in site) ? site['spaceEncode'] : '+';
-  var search_string      = movie_title.trim().replace(/ +\(.*|&/g, '').replace(/\s+/g, space_replace);
-  var search_string_orig = movie_title_orig.trim().replace(/ +\(.*|&/g, '').replace(/\s+/g, space_replace);
+  var search_string      = movie_title.trim().replace(/ +\(.*|&|:|-/g, '').replace(/\s+/g, space_replace);
+  var search_string_orig = movie_title_orig.trim().replace(/ +\(.*|&|:|-/g, '').replace(/\s+/g, space_replace);
   var movie_year         = (onSearchPage) ? movie_year : document.title.replace(/^(.+) \((\D*|)(\d{4})(.*)$/gi, '$3');
   var s = search_url.replace(/%tt%/g, 'tt' + movie_id)
                     .replace(/%nott%/g, movie_id)
@@ -4338,6 +4355,11 @@ async function maybeAddLink(elem, site_name, search_url, site, scout_tick, movie
     reqHeader = {
       "Host": "milkie.cc",
       "Authorization": GM_config.get("milkie_authToken")
+    };
+  } else if (site['name'] == "TNT") {
+    reqHeader = {
+      "Host": "tntracker.org",
+      "Authorization": GM_config.get("tnt_authToken")
     };
   }
   GM.xmlHttpRequest({
@@ -5907,7 +5929,8 @@ function countSites(task) {
       'sonarr_languageprofileid': {'type': 'text'},
       'sonarr_seriestype': {'type': 'select', 'options': ['standard', 'daily', 'anime']},
       'trakt_synclimiter': {'type': 'select', 'options': ['15', '30', '60', '300']},
-      'milkie_authToken': {'type': 'text'}
+      'milkie_authToken': {'type': 'text'},
+      'tnt_authToken': {'type': 'text'}
     };
     $.each(custom_sites, function(index, site) {config_fields[configName(site)] = {'type': 'checkbox'};});
     $.each(public_sites, function(index, site) {config_fields[configName(site)] = {'type': 'checkbox'};});
@@ -6337,6 +6360,11 @@ var config_fields = {
   'milkie_authToken': {
     'label': 'Milkie:',
     'section': 'Authorization Tokens:',
+    'type': 'text',
+    'default': ''
+  },
+  'tnt_authToken': {
+    'label': 'TNT:&nbsp &nbsp',
     'type': 'text',
     'default': ''
   }
@@ -6778,6 +6806,7 @@ function compactReferenceElemRemoval() {
   }
   $('.titlereference-section-did-you-know').remove();
   $('#contribute-main-section').remove();
+  $('.recently-viewed').remove();
 }
 
 //==============================================================================
