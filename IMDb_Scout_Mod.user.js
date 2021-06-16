@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      11.2
+// @version      11.3
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from various sites. Adds movies/series to Radarr/Sonarr. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         https://i.imgur.com/u17jjYj.png
@@ -853,6 +853,10 @@
         -   New feature: Remove ":" and "-" symbols from the titles (possibly, search on some sites can break).
         -   Tweaked the compact mode.
 
+11.3    -   Added: SceneRush, TorParadise, TCh, TTR, MH.
+        -   Reverted removal of "-".
+        -   Tweaked "Open all" button so it wouldn't open the special buttons.
+
 */
 //==============================================================================
 //    JSHint directives.
@@ -1418,6 +1422,17 @@ var public_sites = [
       'loggedOutRegex': /Cloudflare|Ray ID/,
       'matchRegex': /No results found/,
       'both': true},
+  {   'name': 'TorParadise',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwBAMAAAClLOS0AAAAMFBMVEUAAAD/8Z/j6siicFqISzX/6WVvvA9Xow+FzSGfz2S615R+rUI3gQzQsJy6j3byv2DnxbMHAAAAAXRSTlMAQObYZgAAAgxJREFUOMudkjGI01AYx98FFHrFwxQ6m/NAKMoh5LkIQrlkvWKH7E7Jw95QbkjTmjmN3BI61FKX6HAi3iAiPW03BwNeh0JdK/Wyu7lav+8lOZqQLvcNL9/3/73/9773CLl2CP4G/egiH9yzP0kbwIZWp4FE7uZ5HPvtwA7GPK9I6yDoTy8mEy49+JGo788njNnTZON2EGd903WY0zJ7kH/42rsCRfM1M0zHcfUOEQZ6a1z4HgFjSCoBc186rOvBTfuN+yYH21CdWe5Jb1hhz6EuMLt99R6Byz5X4TAdK73bTsYoWKxBFdhgoHLqjkwvAmeu44cAyE08ZO7a03iultMjc4qZTyBhR+PzbxxYOtTqMrKH8hdjRmy0CFaHkD35gOv7iuKYTVL8iANb0HonAoJMH3ctaOQjMGG5FcK8yGvkZITbuQMBPUTDXK0WGoPjGHRQoipiWZH6xwkQ+DekM+xUFQxv1IzBM1z5RX6qy3dt8sqLgceBOiMC3H8oka60/q/tqFU44gDrF2QtQKwhxDdtZsAh2VOxSdHPAgFMEBWSDqqQkAMpA0Iqwe1zYk4v6cM88Icu6DLXoS5yHTDrQr2UsqogSvv0CX2j3U7rW2Jp95es0N/lDBHF0p2Q1uijslZPGeqiWF79W63+alrKckNMAsDTdVBP9AzY0iJSRpA6fZdLWlbnKOpVIteP/7PEpSZgLT8AAAAAAElFTkSuQmCC',
+      'searchUrl': 'https://torrentparadise.pm/search.php?f=%search_string_orig%+%year%',
+      'loggedOutRegex': /Cloudflare|Ray ID/,
+      'matchRegex': /No results found/},
+  {   'name': 'TorParadise',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwBAMAAAClLOS0AAAAMFBMVEUAAAD/8Z/j6siicFqISzX/6WVvvA9Xow+FzSGfz2S615R+rUI3gQzQsJy6j3byv2DnxbMHAAAAAXRSTlMAQObYZgAAAgxJREFUOMudkjGI01AYx98FFHrFwxQ6m/NAKMoh5LkIQrlkvWKH7E7Jw95QbkjTmjmN3BI61FKX6HAi3iAiPW03BwNeh0JdK/Wyu7lav+8lOZqQLvcNL9/3/73/9773CLl2CP4G/egiH9yzP0kbwIZWp4FE7uZ5HPvtwA7GPK9I6yDoTy8mEy49+JGo788njNnTZON2EGd903WY0zJ7kH/42rsCRfM1M0zHcfUOEQZ6a1z4HgFjSCoBc186rOvBTfuN+yYH21CdWe5Jb1hhz6EuMLt99R6Byz5X4TAdK73bTsYoWKxBFdhgoHLqjkwvAmeu44cAyE08ZO7a03iultMjc4qZTyBhR+PzbxxYOtTqMrKH8hdjRmy0CFaHkD35gOv7iuKYTVL8iANb0HonAoJMH3ctaOQjMGG5FcK8yGvkZITbuQMBPUTDXK0WGoPjGHRQoipiWZH6xwkQ+DekM+xUFQxv1IzBM1z5RX6qy3dt8sqLgceBOiMC3H8oka60/q/tqFU44gDrF2QtQKwhxDdtZsAh2VOxSdHPAgFMEBWSDqqQkAMpA0Iqwe1zYk4v6cM88Icu6DLXoS5yHTDrQr2UsqogSvv0CX2j3U7rW2Jp95es0N/lDBHF0p2Q1uijslZPGeqiWF79W63+alrKckNMAsDTdVBP9AzY0iJSRpA6fZdLWlbnKOpVIteP/7PEpSZgLT8AAAAAAElFTkSuQmCC',
+      'searchUrl': 'https://torrentparadise.pm/search.php?f=%search_string_orig%',
+      'loggedOutRegex': /Cloudflare|Ray ID/,
+      'matchRegex': /No results found/,
+      'TV': true},
   {   'name': 'TPB',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAAA8BAMAAAAkp6FXAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAAAkUExURQAAABkZGTMZAEwzM0xMM0xMTGZMM2ZMTGZmTH9mZn9/Zv///0CpG+oAAAGySURBVDjLxdXNitNgFMbxx2NlHHMThz8DfmRTBnfdSDeDuhFczc5LKINQ0M2Ay16CFyDSTYxgnT435yLph0lqVXA8q5D8kpf3Oe8h8pHS7YF5tzpgrH6V+yDoV/FHYOA55X8CkhSHQBBczOfzKUEMgPzoa2y7zoWrAXBir8K26/v2OvqgtN2AYnejC/gVKLaJHwB37VUD2qtuN3PiV00AOfGs06ybaHNo48oATvdAPRT16Bg4+SdAABkHQAYGKOsG9sDjunAFace6C74GUPjUFeTS99zdpgU8qvMpwNkzPveOfZ2QQgFIKUDL3x7evHMERE6OgLbzA/Xals1BUKmw7DdwAIx50HyBeDEIZhSWK0gUiwEApeUZ+WQq9cgKkbYMYa+nktiRT0jNAMvXKleLlsQ72+u3SCARnDRRq8n9AyhICSm4tMekZbuOpnPft6dt2bYwtmDk1XkGqBmJJmRZ0SwRIAUSF0tfKYjndkW+3LT7C6TEZbuFK4XiIeRkA74FZz+lMBUJ2h6YmuxkeHO+GW/ZdjXQrs1LLRj1GxH5freEigGwt8Rg5TFQ6bb/en8PfgCTTMM5Mqng0wAAAABJRU5ErkJggg==',
       'searchUrl': 'https://apibay.org/q.php?q=%search_string%&cat=201,202,207,209',
@@ -2389,6 +2404,17 @@ var private_sites = [
       'matchRegex': /Открити торенти - 0/,
       'rateLimit': 3000,
       'both': true},
+  {   'name': 'MH',
+      'searchUrl': 'https://magic-heaven.info/browse.php?do=search&keywords=%search_string_orig%+%year%&search_type=t_name&category=0&include_dead_torrents=no',
+      'loggedOutRegex': /Cloudflare|Ray ID|be redirected/,
+      'matchRegex': /\/dl.png/,
+      'positiveMatch': true,},
+  {   'name': 'MH',
+      'searchUrl': 'https://magic-heaven.info/browse.php?do=search&keywords=%search_string_orig%&search_type=t_name&category=0&include_dead_torrents=no',
+      'loggedOutRegex': /Cloudflare|Ray ID|be redirected/,
+      'matchRegex': /\/dl.png/,
+      'positiveMatch': true,
+      'TV': true},
   {   'name': 'Milkie',
       'icon': 'https://milkie.cc/favicon.png',
       'searchUrl': 'https://milkie.cc/api/v1/torrents?query=%search_string%+%year%&oby=created_at&odir=desc&categories=1&pi=0&ps=50',
@@ -2700,6 +2726,17 @@ var private_sites = [
       'matchRegex': /Nothing found!/,
       'rateLimit': 100,
       'both': true},
+  {   'name': 'SceneRush',
+      'icon': 'http://www.scene-rush.com/apple-touch-icon-57x57.png',
+      'searchUrl': 'https://www.scene-rush.pt/browse.php?c46=1&c8=1&c20=1&c35=1&c41=1&c32=1&c23=1&c38=1&c37=1&c13=1&c3=1&c6=1&c42=1&c2=1&search=%search_string_orig%+%year%&blah=0&incldead=1',
+      'loggedOutRegex': /Cloudflare|Ray ID|Recuperar Password/,
+      'matchRegex': /Nada encontrado/},
+  {   'name': 'SceneRush',
+      'icon': 'http://www.scene-rush.com/apple-touch-icon-57x57.png',
+      'searchUrl': 'https://www.scene-rush.pt/browse.php?c13=1&c4=1&c18=1&c17=1&c23=1&search=%search_string_orig%&blah=0&incldead=1',
+      'loggedOutRegex': /Cloudflare|Ray ID|Recuperar Password/,
+      'matchRegex': /Nada encontrado/,
+      'TV': true},
   {   'name': 'SDBits',
       'searchUrl': 'https://sdbits.org/browse.php?incldead=1&imdb=%tt%',
       'loggedOutRegex': /Not logged in!|Technical Difficulties/,
@@ -2813,6 +2850,19 @@ var private_sites = [
       'loggedOutRegex': /<title>TorrentBD : Login</,
       'matchRegex': /This title is not available!/,
       'both': true},
+  {   'name': 'TCh',
+      'icon': 'https://tch.to/ipb/favicon.ico',
+      'searchUrl': 'https://tch.to/index.php?category=2;3;4;5;6;11;13;27;28;29&page=torrents&search=%search_string_orig%+%year%&options=0&active=1',
+      'loggedOutRegex': /Cloudflare|Ray ID|Recuperar cuenta/,
+      'matchRegex': /download.gif/,
+      'positiveMatch': true},
+  {   'name': 'TCh',
+      'icon': 'https://tch.to/ipb/favicon.ico',
+      'searchUrl': 'https://tch.to/index.php?category=9;10;11;20&page=torrents&search=%search_string_orig%&options=0&active=1',
+      'loggedOutRegex': /Cloudflare|Ray ID|Recuperar cuenta/,
+      'matchRegex': /download.gif/,
+      'positiveMatch': true,
+      'TV': true},
   {   'name': 'TCTG',
       'icon': 'https://tctg.in/themes/NB-KidVision/images/favicon.ico',
       'searchUrl': 'https://tctg.in/torrents-search.php?search="%search_string_orig% %year%"&cat=0&incldead=0&freeleech=0&lang=0',
@@ -3061,6 +3111,19 @@ var private_sites = [
       'loggedOutRegex': /Cloudflare|Ray ID|Forget your password/,
       'matchRegex': /Didn't match any titles/,
       'both': true},
+  {   'name': 'TTR',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAMFBMVEUAAADXJwCQIRliExP/OhPEJwD///8pBgVTCAfwJAf8UBTPm5jtz83GY1b26+iFZGFCzkGWAAAAAXRSTlMAQObYZgAAAw9JREFUSMftk89r02AYx6sieo1YZLf5ltrWWS15GY1KD8N4WHVCO4puMnbLpd0PGuSNnkZzSGSnYT304EXqYUE9FNkO6TYQKcIyhTmm7AfeepilouK6m75J875vuh9/gODn0Lzh++33eZ4kj+8/B0GKCqGgoaN0Xf1jWpb5VdAnD9WFQlVyWN5TDnPA/JwkjTesuiRlW+pBXdbnpJz5E4ArmzUpG4/v10+HLkmNVUFXBV2PLkrf5al9BjVfz33SoYOeWJQ+q/sC4ru5igpdhEQtq8Q6DIW8tAIJChR6pHno1U+FL2QDRNdbMizMjXV0cVyvVWj+dEuBMCGFvIPAaU/AkoIKEK6/Vz0thi+/haANDlA1JQB7xtQYqxCupoELDhBUxAO+Gg5RA8+vED0w3YKCHpcB2PoSoAaQqFDDkgyhE9FT4SdJCyC6SgzXcQCCEEdEK3yMtACigIADtLiMIwDYBt3UMEL0+0gXZICghvLYEHYNDwCZITiPFA2CkKIhhP9FuuylhlGEkMynAdIRymeYIUMIYQOPr3fxVQmmgWs4Tw0Cjg7aBw0pEB/cOYe6SjMlGy4NtV770PUEQZDhMu4LPSsWxbWiiJlJF0plfO0vhvkUNroPAmtJs1+0ORO5teYcbgbPiiIx4OOr6puiIxSXN0QHv/1DDclNs+FE9N9e2C6LBGIYFgfMau1d0Q5omOYG1fvcJi8ayarVzM0axuydb6a5kDRc+twxrxnGpmXVdpJGsm4tmz8Mwgtfm0eGMfDBao6Xy6/xbn4cpobnruFYOTm71WzWd4r1erP5OykSbpDXjQd4JjWl3Eu8+xMRqpfOkbUpYdbHJYdfJUpXt88lwnFdo2194vEM5+LP0N16mMG3u45hj+pcJs324im+H20HcMxwz0fhUm4EDmAVupnhasqO6AwgnwurgSNwADMM+jwM2REjdgCrEPMaTjoRYaazGbwRKY9OWmQRTLXDSAeMiL9DJx0wTgz5vXqICmxUzp8i9VkBL/kUltoM0mfUWSXoFgj4jkIFQbzTU75/jb9YLXSq/qxHmQAAAABJRU5ErkJggg==',
+      'searchUrl': 'http://torrenteros.org/api/torrents?keys=%search_string_orig%+%year%&limit=1&torrent_type=all',
+      'goToUrl': 'http://torrenteros.org/torrents/aggregate?keys=%search_string_orig%+%year%',
+      'loggedOutRegex': /Cloudflare|Ray ID/,
+      'matchRegex': /total":0/},
+  {   'name': 'TTR',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAMFBMVEUAAADXJwCQIRliExP/OhPEJwD///8pBgVTCAfwJAf8UBTPm5jtz83GY1b26+iFZGFCzkGWAAAAAXRSTlMAQObYZgAAAw9JREFUSMftk89r02AYx6sieo1YZLf5ltrWWS15GY1KD8N4WHVCO4puMnbLpd0PGuSNnkZzSGSnYT304EXqYUE9FNkO6TYQKcIyhTmm7AfeepilouK6m75J875vuh9/gODn0Lzh++33eZ4kj+8/B0GKCqGgoaN0Xf1jWpb5VdAnD9WFQlVyWN5TDnPA/JwkjTesuiRlW+pBXdbnpJz5E4ArmzUpG4/v10+HLkmNVUFXBV2PLkrf5al9BjVfz33SoYOeWJQ+q/sC4ru5igpdhEQtq8Q6DIW8tAIJChR6pHno1U+FL2QDRNdbMizMjXV0cVyvVWj+dEuBMCGFvIPAaU/AkoIKEK6/Vz0thi+/haANDlA1JQB7xtQYqxCupoELDhBUxAO+Gg5RA8+vED0w3YKCHpcB2PoSoAaQqFDDkgyhE9FT4SdJCyC6SgzXcQCCEEdEK3yMtACigIADtLiMIwDYBt3UMEL0+0gXZICghvLYEHYNDwCZITiPFA2CkKIhhP9FuuylhlGEkMynAdIRymeYIUMIYQOPr3fxVQmmgWs4Tw0Cjg7aBw0pEB/cOYe6SjMlGy4NtV770PUEQZDhMu4LPSsWxbWiiJlJF0plfO0vhvkUNroPAmtJs1+0ORO5teYcbgbPiiIx4OOr6puiIxSXN0QHv/1DDclNs+FE9N9e2C6LBGIYFgfMau1d0Q5omOYG1fvcJi8ayarVzM0axuydb6a5kDRc+twxrxnGpmXVdpJGsm4tmz8Mwgtfm0eGMfDBao6Xy6/xbn4cpobnruFYOTm71WzWd4r1erP5OykSbpDXjQd4JjWl3Eu8+xMRqpfOkbUpYdbHJYdfJUpXt88lwnFdo2194vEM5+LP0N16mMG3u45hj+pcJs324im+H20HcMxwz0fhUm4EDmAVupnhasqO6AwgnwurgSNwADMM+jwM2REjdgCrEPMaTjoRYaazGbwRKY9OWmQRTLXDSAeMiL9DJx0wTgz5vXqICmxUzp8i9VkBL/kUltoM0mfUWSXoFgj4jkIFQbzTU75/jb9YLXSq/qxHmQAAAABJRU5ErkJggg==',
+      'searchUrl': 'http://torrenteros.org/api/torrents?keys=%search_string_orig%&limit=1&torrent_type=tvserial',
+      'goToUrl': 'http://torrenteros.org/torrents/aggregate?keys=%search_string_orig%',
+      'loggedOutRegex': /Cloudflare|Ray ID/,
+      'matchRegex': /total":0/,
+      'TV': true},
   {   'name': 'TVCK',
       'searchUrl': 'https://tvchaosuk.com/torrents/filter?imdb=%tt%',
       'loggedOutRegex': /Forgot Your Password/,
@@ -4047,8 +4110,8 @@ async function replaceSearchUrlParams(site, movie_id, movie_title, movie_title_o
   }
 
   var space_replace      = ('spaceEncode' in site) ? site['spaceEncode'] : '+';
-  var search_string      = movie_title.trim().replace(/ +\(.*|&|:|-/g, '').replace(/\s+/g, space_replace);
-  var search_string_orig = movie_title_orig.trim().replace(/ +\(.*|&|:|-/g, '').replace(/\s+/g, space_replace);
+  var search_string      = movie_title.trim().replace(/ +\(.*|&|:/g, '').replace(/\s+/g, space_replace);
+  var search_string_orig = movie_title_orig.trim().replace(/ +\(.*|&|:/g, '').replace(/\s+/g, space_replace);
   var movie_year         = (onSearchPage) ? movie_year : document.title.replace(/^(.+) \((\D*|)(\d{4})(.*)$/gi, '$3');
   var s = search_url.replace(/%tt%/g, 'tt' + movie_id)
                     .replace(/%nott%/g, movie_id)
@@ -4349,7 +4412,7 @@ async function maybeAddLink(elem, site_name, search_url, site, scout_tick, movie
     });
     return;
   }
-  // Check for results with GET method.
+  // Auth tokens
   let reqHeader = {};
   if (site['name'] == "Milkie") {
     reqHeader = {
@@ -4362,6 +4425,7 @@ async function maybeAddLink(elem, site_name, search_url, site, scout_tick, movie
       "Authorization": GM_config.get("tnt_authToken")
     };
   }
+  // Check for results with GET method.
   GM.xmlHttpRequest({
     method: 'GET',
     headers: reqHeader,
@@ -4563,6 +4627,10 @@ function addIconBar(movie_id, movie_title, movie_title_orig) {
             });
         });
         iconbar.append(aopenall);
+        // Rename class of the special buttons so "Open all" wouldn't open them.
+        $('img[title="Radarr"]').parent().attr('class','iconbar_spec_icon');
+        $('img[title="Sonarr"]').parent().attr('class','iconbar_spec_icon');
+        $('img[title="Trakt-Watchlist"]').parent().attr('class','iconbar_spec_icon');
       }, 300);
     }
   }
