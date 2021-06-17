@@ -1,3 +1,4 @@
+[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/donate?hosted_button_id=JF5BEQE3YQGH2)   
 ![alt text](https://i.imgur.com/8IZMkRY.png)
 
 # IMDb Scout Mod:
@@ -63,3 +64,6 @@ Follows a bastardization of the [semver](http://semver.org/) standard:
 * Patch versions will not change behavior, only the URL/settings for trackers.
 * Minor versions will definitely change code, although behavior may in fact remain the same.
 * Major versions will definitely change behavior, although it will only be increased at the discretion of the current maintainer.
+   
+[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/donate?hosted_button_id=JF5BEQE3YQGH2)
+
