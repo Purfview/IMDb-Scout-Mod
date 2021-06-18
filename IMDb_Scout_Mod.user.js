@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      11.4
+// @version      11.5
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from various sites. Adds movies/series to Radarr/Sonarr. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         https://i.imgur.com/u17jjYj.png
@@ -862,8 +862,12 @@
         -   Updated: MOJBLiNK.
 
 11.4    -   Added: HDCenter, HDCenter-Req, TorSyndikat, TorSyndikat-Req, BTF, TSC, NRW, NRW-Req, SFP, SFP-Req.
-        -   (Hacks: TorSyndikat link -> button. SFP-Req search works but links to the page without search results.)  
+        -   (Hacks: TorSyndikat link -> button. SFP-Req search works but links to the page without search results.)
         -   New feature: German sites moved to the new section in settings - "German sites".
+
+11.5    -   Added: STT, Tubi, TurkTor, Partis.
+        -   Fixed: "Hack" in previous patch wasn't working properly.
+        -   Tweaked the buttons code.
 
 */
 //==============================================================================
@@ -1072,7 +1076,7 @@ var public_sites = [
       'both': true},
   {   'name': 'CineCalidad',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAAAYUExURQAAAP////////////8AAP///wAAAADMuIrsNr4AAAAGdFJOUwAABgwUPEMWCvsAAAEESURBVEjH3ZUxDsMgDEX/xJ4b9Cg9Qo8QqdLPyhRfv0ML2I6JU3Xr35CfPgjMN5ZEWBYo8a2+9gDpCAsUDq0BoOuN0ICtfwgN0MsBZEQMoATAqgEytOhACYF1AIzVAWUgIsqiAbosIntfe0CaHFB8vXm0M3zqmzgCDhAtfVHlaCCyc4UDxOo+HisykAoPRPU5UHVPFrMDgFEPAABARQBYawPoIyAB6hzYrgH4C+D2w0WdXXX6WBefO20Y23I2BqOmDYBt3tVl3vcnwK5zMtrD5OTk+w/gGCBCks8D4CNoxKALsR5Rj8sxmAZpHsVpmOfjIB0ogcXXQy0di/lgzUfzbLif6wXCRdoSVLccNgAAAABJRU5ErkJggg==',
-      'searchUrl': 'https://www.cinecalidad.is/?s=%search_string_orig%+%year%',
+      'searchUrl': 'https://www.cine-calidad.com/?s=%search_string_orig%+%year%',
       'loggedOutRegex': /Cloudflare|Ray ID/,
       'matchRegex': /in_title/,
       'positiveMatch': true,
@@ -1266,6 +1270,21 @@ var public_sites = [
       'loggedOutRegex': /Cloudflare|Ray ID/,
       'matchRegex': /Pas de torrents disponibles/,
       'both': true},
+  {   'name': 'Partis',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEYAAABGAgMAAAAMQAoXAAAACVBMVEUAAAB1dnbkmQdwRkMRAAAAAXRSTlMAQObYZgAAANZJREFUOMvN0sENhCAQBdAPWS/cbYIqLIFNoB9K4Wimyl1AYXDUeNv9xxfnO07Er/KSNJ3QIkg5SV5SkF3hWDaH4I7PfDNSlnFSFfJD0xUtosrLKnekd57TkW3l6zcmRku9xMoIqrzPdvLbVW1s5DYyidGr0sqoRlM/3zWB4iWpTjbdkGu0b3FLhvZDn5AXNHXqi7X6G0JYBM2FNECNJle6OalCFroTyhYEy2iuJyWi4bc3RJzgAJtl7ZTnchInI4lKoiSIwQRRjzG2CzuyyDMyj0jjj/IBZ05ftNQK2woAAAAASUVORK5CYII=',
+      'searchUrl': 'https://www.partis.si/?p=search',
+      'mPOST': 'najdi=%search_string_orig%+%year%&gremo=Gremo!',
+      'loggedOutRegex': /Cloudflare|Ray ID/,
+      'matchRegex': /download.svg/,
+      'positiveMatch': true},
+  {   'name': 'Partis',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEYAAABGAgMAAAAMQAoXAAAACVBMVEUAAAB1dnbkmQdwRkMRAAAAAXRSTlMAQObYZgAAANZJREFUOMvN0sENhCAQBdAPWS/cbYIqLIFNoB9K4Wimyl1AYXDUeNv9xxfnO07Er/KSNJ3QIkg5SV5SkF3hWDaH4I7PfDNSlnFSFfJD0xUtosrLKnekd57TkW3l6zcmRku9xMoIqrzPdvLbVW1s5DYyidGr0sqoRlM/3zWB4iWpTjbdkGu0b3FLhvZDn5AXNHXqi7X6G0JYBM2FNECNJle6OalCFroTyhYEy2iuJyWi4bc3RJzgAJtl7ZTnchInI4lKoiSIwQRRjzG2CzuyyDMyj0jjj/IBZ05ftNQK2woAAAAASUVORK5CYII=',
+      'searchUrl': 'https://www.partis.si/?p=search',
+      'mPOST': 'najdi=%search_string_orig%&gremo=Gremo!',
+      'loggedOutRegex': /Cloudflare|Ray ID/,
+      'matchRegex': /download.svg/,
+      'positiveMatch': true,
+      'TV': true},
   {   'name': 'PB',
       'searchUrl': 'https://pb.wtf/tracker/?ss=%search_string_orig%+%year%',
       'loggedOutRegex': /Cloudflare|Ray ID/,
@@ -3105,6 +3124,11 @@ var private_sites = [
       'loggedOutRegex': /Cloudflare|Ray ID/,
       'matchRegex': /total":0/,
       'TV': true},
+  {   'name': 'TurkTor',
+      'searchUrl': 'https://turktorrent.us/?p=torrents&pid=10&keywords=%tt%&search_type=name',
+      'loggedOutRegex': /Cloudflare|Ray ID|Şifrenizi mi unuttunuz/,
+      'matchRegex': /Sonuç bulunamadı|no results found/,
+      'both': true},
   {   'name': 'TVCK',
       'searchUrl': 'https://tvchaosuk.com/torrents/filter?imdb=%tt%',
       'loggedOutRegex': /Forgot Your Password/,
@@ -3295,6 +3319,17 @@ var german_sites = [
       'matchRegex': /input_true.gif/,
       'positiveMatch': true,
       'both': true},
+  {   'name': 'STT',
+      'icon': 'https://st-tracker.eu/design/ex1080_default/favicon.ico',
+      'searchUrl': 'https://st-tracker.eu/tfiles.php?showsearch=1&h66=1&search=%search_string_orig%+%year%&orderby=added&sort=desc&incldead=0',
+      'loggedOutRegex': /Cloudflare|Ray ID|Nicht eingelogt/,
+      'matchRegex': /keine Torrents/},
+  {   'name': 'STT',
+      'icon': 'https://st-tracker.eu/design/ex1080_default/favicon.ico',
+      'searchUrl': 'https://st-tracker.eu/tfiles.php?showsearch=1&h76=1&search=%search_string_orig%&orderby=added&sort=desc&incldead=0',
+      'loggedOutRegex': /Cloudflare|Ray ID|Nicht eingelogt/,
+      'matchRegex': /keine Torrents/,
+      'TV': true},
   {   'name': 'SW',
       'searchUrl': 'https://main.starwarez.to/index.php?search/666/&q=%tt%&o=date',
       'loggedOutRegex': /Cloudflare|Ray ID/,
@@ -4160,6 +4195,11 @@ var icon_sites_main = [
   {   'name': 'TVDB',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAADGUExURf///8bGxqqqqqqqqqqqqqqqqo2NjVVVVTg4OAAAABwcHAAAABwcHDg4OBwcHAAAABwcHBwcHBwcHBwcHBwcHBwcHBwcHAAAAAAAAABVAABxAABxHABxOACNHACNOACNVRwcHByNVRyqVTgcODg4ODiqVTiqcVU4VVVVVVWqcVXGjXFVVXFxcXHGjXHiqo1xcY1xjY2NjY3iqqqNqqqqqqriqqrixsaqxsbGxsb/4uLGxuLG4uLi4uL/4uL////i4v/i/////0lx5+8AAAAYdFJOUwA/R1BUYHZ+hJ6eqqrf6Onp6u3y8/X5+1fyvVQAAAFUSURBVDjLzZLtWoJAEEa37zRL0z6GpWAkpDW0XMRMNG3u/6aaXUJJ8W9P5w887GFmdvcV4g84bFguNjQ2HAtxAoAIAOGzUnEcKxU+gfmUA6fiCnhZTanMOCwMuBMdBJzTZxJ1fc/gB/0JUVoU6YgWwBd1pXTXSEf2aWobI7ZZSMlzvF+4TkSKx+JOLCAlW+tsyOUKQmKrLZqKfHdb8OSQjDAwgiZ3V3AD/nswMC2a00rB47/zIZvZslrQYAwW5jNZKbzBYhGCFaorxDykNkK2p8II0rSY4WHfDLh/F/5mF5oeKw4qoBC0toKiQO4IziuByodsAb1X3AVl5qhDK2jqOu7WbQ55DdDe5jXCB/VduU6EeUu4eJGHG36mRLPkJeoFQdCLhpOZucafzN2KS5NJHM9LkcxGuM5kRxzco001d8zBUqgRjoQ4q9WZWpl6Qe1c/Ae+Aa3UZLmlWGG0AAAAAElFTkSuQmCC',
       'searchUrl': 'https://www.thetvdb.com/search?query=%search_string%'},
+  {   'name': 'Tubi',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHgAAAB4BAMAAADLSivhAAAAGFBMVEUmJi34Mzf1KWT8PCH4TyGqMS3XPyexKFH+E2IbAAAB4klEQVRYw+3Vv1PCMBQH8IqHrMZenWkWV70H7h7IHPXAtRzQmWPx3zdfLj/oC8SDTX3foYQ0nzyaQCgkEolEIpFIJPn053OTuX2llDp9fzqdzro9N6o6A0+7PUsMvxD37fDb34fPf+bLV3uWdP4JXM0Ruw+4uizadhNw6EZzbjoYQf03pcj3r61zq73AFBu+zykuOQ55gc5jVZ7A9n7zI1bH8Yu9c38pVkhzEUZhlM7gIsG4IvSkXGmOw7tTeDTZmP4SuOK4p+7qbQ5P6BXvoe8TrLXO45H7KdqYDH6vj+FxOAVUk8O6TjE1cXHyWNcp9kcIWB5r379ymJ790XcOHh3BFa7l40lsPCaaWTzhuCRiOGkDg62JY+J4eASXYJiis2AMDyx44BOhDpHd4A8iMnGrHhNswyfC0BL4Oo7FMdMwXABvHY5tWwaDbsg/NBQZjneuHKJ9+wrYONKg5wOtguOeE4MtJnJtpdxxBoJZFngdJ3igXYaYaJ+7GrgKBaldEUEluNA+BxP5IwsPHWNS3PPCfW4Epf2XJWRcBJyWHqK0x/j6s9Im4rT0A9Y+4PALiYVTHIU+aCuUiRvstjvgVG9Z2+vV3hqGYwY7/eXbn6Hd+bt1adu2KSQSiUQikUj+fb4B4n/CsDtPLf0AAAAASUVORK5CYII=',
+      'searchUrl': 'https://tubitv.com/search/%search_string_orig%',
+      'spaceEncode': ' ',
+      'showByDefault': false},
   {   'name': 'TVmaze',
       'icon': 'https://static.tvmaze.com/images/favico/favicon-96x96.png',
       'searchUrl': 'https://www.tvmaze.com/search?q=%search_string%',
@@ -4424,26 +4464,29 @@ function addLink(elem, site_name, target, site, state, scout_tick, post_data) {
     $('#imdbscout3_' + state + scout_tick).append(link);
   }
 
-  // Hack: Convert link to button to deal with same-origin problem (icons mode only).
-  if (site['name'] == "TorSyndikat") {
-    const button = $('img[title="TorSyndikat"]').parent();
-    const link = button.attr('href');
-          button.prop("href", "javascript: void(0)");
-          button.removeAttr("target");
-    $(button).click(function() {
-      GM.openInTab(link);
-    });
+  if (onSearchPage) {
+    // Hack: Convert link to button to deal with same-origin problem (icons mode only).
+    // Sorting removes event, so on the title pages same hack will run at the end of the sorting (iconToButtonHack).
+    if (site['name'] == "TorSyndikat") {
+      const button = $('span[id*='+ scout_tick +']').find('img[title="TorSyndikat"]').parent();
+      const link = button.attr('href');
+            button.prop("href", "javascript: void(0)");
+            button.removeAttr("target");
+      button.click(function() {
+        GM.openInTab(link);
+      });
+    }
+    if (site['name'] == "TorSyndikat-Req") {
+      const button = $('span[id*='+ scout_tick +']').find('img[title="TorSyndikat-Req"]').parent();
+      const link = button.attr('href');
+            button.prop("href", "javascript: void(0)");
+            button.removeAttr("target");
+      button.click(function() {
+        GM.openInTab(link);
+      });
+    }
   }
-  if (site['name'] == "TorSyndikat-Req") {
-    const button = $('img[title="TorSyndikat-Req"]').parent();
-    const link = button.attr('href');
-          button.prop("href", "javascript: void(0)");
-          button.removeAttr("target");
-    $(button).click(function() {
-      GM.openInTab(link);
-    });
-  }
-  // Hack: Same-origin problem (POST), so remove 'onclick' (icons mode only).
+  // Hack: Same-origin problem with POST, so remove 'onclick' form (icons mode only).
   if (site['name'] == "SFP-Req") {
     const button = $('img[title="SFP-Req"]').parent();
           button.prop("href", "https://s-f-p.dyndns.dk/viewrequests.php");
@@ -4453,6 +4496,27 @@ function addLink(elem, site_name, target, site, state, scout_tick, post_data) {
   // Call to the sorting launcher.
   if (!onSearchPage && !in_element_two && !in_element_three) {
     iconSorterLauncher(site);
+  }
+}
+
+function iconToButtonHack() {
+  if ($('img[title="TorSyndikat"]').length) {
+    const button = $('img[title="TorSyndikat"]').parent();
+    const link = button.attr('href');
+          button.prop("href", "javascript: void(0)");
+          button.removeAttr("target");
+    button.click(function() {
+      GM.openInTab(link);
+    });
+  }
+  if ($('img[title="TorSyndikat-Req"]').length) {
+    const button = $('img[title="TorSyndikat-Req"]').parent();
+    const link = button.attr('href');
+          button.prop("href", "javascript: void(0)");
+          button.removeAttr("target");
+    button.click(function() {
+      GM.openInTab(link);
+    });
   }
 }
 
@@ -5193,6 +5257,9 @@ function iconSorterLauncher(site) {
     iconSorterMissing();
     //console.log('SORTING!');
   }
+  if (showSitezFirstBar == 0) {
+    iconToButtonHack();
+  }
 }
 
 // Sorting of the found sites.
@@ -5380,11 +5447,11 @@ async function buttonBuilder(imdbid, radarr_url, radarr_apikey) {
       button.removeAttr("target");
   if (exists) {
     button.find('img').prop("src", exists_icon);
-    $(button).click(function() {
+    button.click(function() {
       GM.openInTab(radarr_url + "/movie/" + exists[0].titleSlug);
     });
   } else {
-    $(button).click(function() {
+    button.click(function() {
       new_movie_lookup(imdbid, radarr_url, radarr_apikey, exists_icon);
     });
   }
@@ -5477,7 +5544,7 @@ function add_movie(movie, imdbid, radarr_url, radarr_apikey, exists_icon) {
           let button = $('img[title="Radarr"]');
               button.prop("src", exists_icon);
               button.parent().off("click");
-          $(button).click(function() {
+          button.click(function() {
             GM.openInTab(radarr_url + "/movie/" + responseJSON.titleSlug);
           });
           GM.notification('"' + responseJSON.title + '"' + " \nSuccessfully sent to Radarr.", "IMDb Scout Mod (Radarr)");
@@ -5571,11 +5638,11 @@ async function sonarrButtonBuilder(tvdbid, sonarr_url, sonarr_apikey) {
       button.removeAttr("target");
   if (exists) {
     button.find('img').prop("src", exists_icon);
-    $(button).click(function() {
+    button.click(function() {
       GM.openInTab(sonarr_url + "/series/" + exists[0].titleSlug);
     });
   } else {
-    $(button).click(function() {
+    button.click(function() {
       new_tvseries_lookup(tvdbid, sonarr_url, sonarr_apikey, exists_icon);
     });
   }
@@ -5710,7 +5777,7 @@ function add_tvseries(tvseries, tvdbid, sonarr_url, sonarr_apikey, exists_icon) 
           let button = $('img[title="Sonarr"]');
               button.prop("src", exists_icon);
               button.parent().off("click");
-          $(button).click(function() {
+          button.click(function() {
             GM.openInTab(sonarr_url + "/series/" + responseJSON.titleSlug);
           });
           GM.notification('"' + responseJSON.title + '"' + " \nSuccessfully sent to Sonarr.", "IMDb Scout Mod (Sonarr)");
@@ -5747,7 +5814,7 @@ async function start_trakt(movie_id, movie_title) {
   const access_token = await GM.getValue("IMDb_Scout_Mod_Trakt_access_token", "none");
 
   if (access_token == 'none') {
-    $(button).click(function() {
+    button.click(function() {
       button.remove();
     });
     GM.notification("Trakt's access token not found. \nPress icon to authorize with Trakt. \nRefresh page after authorization is completed.", "IMDb Scout Mod (Trakt-Watchlist)");
@@ -5773,12 +5840,12 @@ async function start_trakt(movie_id, movie_title) {
 
       if (Boolean(trakt_watchlist.match(imdbid))) {
         button.find('img').prop("src", exists_icon);
-        $(button).click(function() {
+        button.click(function() {
           trakt_watchlist_remove(imdbid, title, access_token, button, error_icon, missing_icon, exists_icon);
         });
       } else {
         button.find('img').prop("src", missing_icon);
-        $(button).click(function() {
+        button.click(function() {
           trakt_watchlist_add(imdbid, title, access_token, button, error_icon, missing_icon, exists_icon);
         });
       }
@@ -5812,12 +5879,12 @@ function get_trakt_watchlist(imdbid, title, access_token, button, error_icon, mi
 
         if (Boolean(trakt_watchlist.match(imdbid))) {
           button.find('img').prop("src", exists_icon);
-          $(button).click(function() {
+          button.click(function() {
             trakt_watchlist_remove(imdbid, title, access_token, button, error_icon, missing_icon, exists_icon);
           });
         } else {
           button.find('img').prop("src", missing_icon);
-          $(button).click(function() {
+          button.click(function() {
             trakt_watchlist_add(imdbid, title, access_token, button, error_icon, missing_icon, exists_icon);
           });
         }
@@ -5870,21 +5937,21 @@ function trakt_watchlist_add(imdbid, title, access_token, button, error_icon, mi
         } else if (countAdded == 0 && countExisting !== 0) {
           button.find('img').prop("src", exists_icon);
           button.off("click");
-          $(button).click(function() {
+          button.click(function() {
             trakt_watchlist_remove(imdbid, title, access_token, button, error_icon, missing_icon, exists_icon);
           });
           GM.notification('"' + title + '"' + " \nAlready exists in Trakt's watchlist!", "IMDb Scout Mod (Trakt-Watchlist)");
         } else if (countAdded > 1) {
           button.find('img').prop("src", exists_icon);
           button.off("click");
-          $(button).click(function() {
+          button.click(function() {
             trakt_watchlist_remove(imdbid, title, access_token, button, error_icon, missing_icon, exists_icon);
           });
           GM.notification('"' + title + '"' + " \nAdded to Trakt's watchlist. \nDetected incorrect data on Trakt!", "IMDb Scout Mod (Trakt-Watchlist)");
         } else {
           button.find('img').prop("src", exists_icon);
           button.off("click");
-          $(button).click(function() {
+          button.click(function() {
             trakt_watchlist_remove(imdbid, title, access_token, button, error_icon, missing_icon, exists_icon);
           });
           GM.notification('"' + title + '"' + " \nAdded to Trakt's watchlist.", "IMDb Scout Mod (Trakt-Watchlist)");
@@ -5940,7 +6007,7 @@ function trakt_watchlist_remove(imdbid, title, access_token, button, error_icon,
       if (response.status == 200) {
         button.find('img').prop("src", missing_icon);
         button.off("click");
-        $(button).click(function() {
+        button.click(function() {
           trakt_watchlist_add(imdbid, title, access_token, button, error_icon, missing_icon, exists_icon);
         });
         GM.notification('"' + title + '"' + " \nRemoved from Trakt's watchlist.", "IMDb Scout Mod (Trakt-Watchlist)");
