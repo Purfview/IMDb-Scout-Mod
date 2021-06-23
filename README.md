@@ -8,6 +8,9 @@ Supports Title/Reference pages and does multi auto-search on List/Watchlist/Adva
 Adds links to IMDb pages from various sites.   
 Adds movies/series to Radarr/Sonarr.   
 Adds/Removes movies/series/episodes to/from Trakt's watchlist.   
+Auto loads Reference View without login.   
+Dark theme/style for Reference View.   
+Compact mode for Reference View.   
 Removes ads.   
 Supports [Greasemonkey](https://www.greasespot.net/), [Violentmonkey](https://violentmonkey.github.io/), [Tampermonkey](https://www.tampermonkey.net/), [Greasemonkey v3](https://github.com/greasemonkey/greasemonkey/releases?after=4.0) & [Greasemonkey for Pale Moon](https://github.com/janekptacijarabaci/greasemonkey/releases).  
 
