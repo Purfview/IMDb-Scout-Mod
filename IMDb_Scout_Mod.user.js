@@ -7180,7 +7180,7 @@ function compactReferenceStyles() {
 
   addGlobalStyles('#imdbHeader {width:960px; display:flex; justify-content:center; align-items:center; margin:auto !important}');
   document.getElementById('styleguide-v2').id = 'styleguide-v2x';
-  addGlobalStyles('body#styleguide-v2x {background-color: #000000; margin-top:0px !important}');
+  addGlobalStyles('body#styleguide-v2x {background-color: #000000 !important; margin-top:0px}');
 }
 
 function compactReferenceElemRemoval() {
