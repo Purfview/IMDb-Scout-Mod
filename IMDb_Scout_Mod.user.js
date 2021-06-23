@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      11.6.1
+// @version      11.7
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from various sites. Adds movies/series to Radarr/Sonarr. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         https://i.imgur.com/u17jjYj.png
@@ -874,6 +874,9 @@
 
 11.6.1  -   Added: Sinefil (TR), InterSinema (TR), Filmux (LT), OK (RU).
         -   Renamed few icon sites.
+
+11.7    -   Added: SoR.
+        -   New feature: No icon borders if auto-search is disabled.
 
 */
 //==============================================================================
@@ -3337,6 +3340,15 @@ var german_sites = [
       'matchRegex': /input_true.gif/,
       'positiveMatch': true,
       'both': true},
+  {   'name': 'SoR',
+      'searchUrl': 'https://sor-next.tk/selection.php?scat[]=30&scat[]=134&scat[]=138&scat[]=137&scat[]=160&scat[]=186&scat[]=143&scat[]=133&scat[]=182&scat[]=183&scat[]=174&scat[]=173&scat[]=191&scat[]=147&search=%search_string_orig%+%year%&blah=0&orderby=added&sort=desc#1',
+      'loggedOutRegex': /Cloudflare|Ray ID|Angemeldet bleiben/,
+      'matchRegex': /Nicht gefunden was du/},
+  {   'name': 'SoR',
+      'searchUrl': 'https://sor-next.tk/selection.php?scat[]=140&scat[]=135&scat[]=136&scat[]=180&scat[]=184&scat[]=179&scat[]=173&scat[]=191&scat[]=147&search=%search_string_orig%&blah=0&orderby=added&sort=desc#1',
+      'loggedOutRegex': /Cloudflare|Ray ID|Angemeldet bleiben/,
+      'matchRegex': /Nicht gefunden was du/,
+      'TV': true},
   {   'name': 'STT',
       'icon': 'https://st-tracker.eu/design/ex1080_default/favicon.ico',
       'searchUrl': 'https://st-tracker.eu/tfiles.php?showsearch=1&h66=1&search=%search_string_orig%+%year%&orderby=added&sort=desc&incldead=0',
@@ -4438,11 +4450,12 @@ function getFavicon(site, hide_on_err) {
 //==============================================================================
 
 function addLink(elem, site_name, target, site, state, scout_tick, post_data) {
-  // State should always be one of the values defined in valid_states
-  var link = $('<a />').attr('href', target).attr('target', '_blank');
+  // State should always be one of the values defined in valid_states.
   if ($.inArray(state, valid_states) < 0) {
-    console.log("Unknown state " + state);
+    console.log("Unknown state: " + state);
   }
+
+  var link = $('<a />').attr('href', target).attr('target', '_blank');
   // Link and add Form element for POST method.
   if ('mPOST' in site) {
     var form_name = (site['TV']) ? site['name'] + '-TV-form' + scout_tick : site['name'] + '-form' + scout_tick;
@@ -4480,9 +4493,10 @@ function addLink(elem, site_name, target, site, state, scout_tick, post_data) {
     }
   }
   // Icon/Text appearance.
+  let icon;
   const border_width = GM_config.get('iconsborder_size');
-  if (getPageSetting('use_mod_icons')) {
-    var icon = getFavicon(site);
+  if (getPageSetting('use_mod_icons') && getPageSetting('call_http_mod')) {
+    icon = getFavicon(site);
     (!GM_config.get('one_line') && !onSearchPage) ? icon.css({'border-width': '0px',        'border-style': 'solid', 'border-radius': '2px', 'margin': '1px 0px 2px'})
                                                   : icon.css({'border-width': border_width, 'border-style': 'solid', 'border-radius': '2px', 'margin': '1px 0px 2px'});
     if (state == 'error' || state == 'logged_out') {
@@ -4497,7 +4511,7 @@ function addLink(elem, site_name, target, site, state, scout_tick, post_data) {
         if ((site['name']).match('-Req')) icon.css('border-color', 'rgb(50,50,200)');
     }
     link.append(icon);
-  } else {
+  } else if (!getPageSetting('use_mod_icons')) {
     site_name = (getPageSetting('highlight_sites').split(',').includes(site['name'])) ? site_name.bold() : site_name;
     if (state == 'missing' || state == 'error' || state == 'logged_out') {
       link.append($('<s />').append(site_name));
@@ -4507,6 +4521,13 @@ function addLink(elem, site_name, target, site, state, scout_tick, post_data) {
     if (state == 'error' || state == 'logged_out') {
       link.css('color', 'red');
     }
+  } else {
+    icon = getFavicon(site);
+    icon.css({'border-width': '0px', 'border-style': 'solid', 'border-radius': '2px', 'margin': '1px 0px 2px'});
+    (getPageSetting('highlight_sites').split(',').includes(site['name'])) ? icon.css('border-color', 'rgb(0,220,0)')
+                                                                          : icon.css('border-color', 'rgb(0,130,0)');
+    if ((site['name']).match('-Req')) icon.css('border-color', 'rgb(50,50,200)');
+    link.append(icon);
   }
   // Create/find elements for Search/List pages.
   if (onSearchPage) {
@@ -6494,7 +6515,7 @@ var config_fields = {
   },
   'call_http_mod_movie': {
     'type': 'checkbox',
-    'label': 'Actually check for the search results?',
+    'label': 'Auto-search the sites for the results?',
     'default': true
   },
   'hide_missing_movie': {
@@ -6560,7 +6581,7 @@ var config_fields = {
   },
   'call_http_mod_search': {
     'type': 'checkbox',
-    'label': 'Actually check for the search results?',
+    'label': 'Auto-search the sites for the results?',
     'default': true
   },
   'hide_missing_search': {
@@ -7159,7 +7180,7 @@ function compactReferenceStyles() {
 
   addGlobalStyles('#imdbHeader {width:960px; display:flex; justify-content:center; align-items:center; margin:auto !important}');
   document.getElementById('styleguide-v2').id = 'styleguide-v2x';
-  addGlobalStyles('body#styleguide-v2x {background-color: #000000; margin-top:0px}');
+  addGlobalStyles('body#styleguide-v2x {background-color: #000000; margin-top:0px !important}');
 }
 
 function compactReferenceElemRemoval() {
