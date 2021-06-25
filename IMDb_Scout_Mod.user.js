@@ -12,7 +12,10 @@
 // @homepage     https://github.com/Purfview/IMDb-Scout-Mod
 // @supportURL   https://github.com/Purfview/IMDb-Scout-Mod/issues
 // @contributionURL https://www.paypal.com/donate?hosted_button_id=JF5BEQE3YQGH2
-// @compatible   firefox, chrome, opera, safari
+// @compatible   firefox
+// @compatible   opera
+// @compatible   chrome
+// @compatible   safari
 //
 // @require      https://cdn.jsdelivr.net/gh/sizzlemctwizzle/GM_config@43fd0fe4de1166f343883511e53546e87840aeaf/gm_config.js
 // @require      https://greasyfork.org/scripts/403996-exev/code/ExEv.js?version=808391
