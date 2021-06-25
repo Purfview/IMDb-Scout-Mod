@@ -6284,6 +6284,7 @@ function addRatingsElements(imdbid, title, title_orig) {
   // oldlayout
   } else if ($('.title_block').length) {
     $('.title_block').prepend(table);
+    $('#scout_rating_table').after(hr);    
   } else {
     return;
   }
