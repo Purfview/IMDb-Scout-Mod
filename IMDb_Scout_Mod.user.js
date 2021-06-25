@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      12.0
+// @version      12.1
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from hundreds various sites. Adds movies/series to Radarr/Sonarr. Dark theme/style for Reference View. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         https://i.imgur.com/u17jjYj.png
@@ -887,6 +887,8 @@
                           Gets raw average rating from Letterboxd even if there is no score.
                           Experimental atm: Rotten Tomatoes & Metacritic.
         -   Some code tweaks.
+
+12.1    -   External ratings enabled for old layout.
 
 */
 //==============================================================================
@@ -6257,7 +6259,7 @@ async function trakt_refresh_token() {
 
 function externalRatings(imdbid, title, title_orig) {
   // temp
-  if (!onReferencePage) {
+  if (!$('.titlereference-header').length && !$('.title_block').length) {
     return;
   }
   addRatingsElements(imdbid, title, title_orig);
@@ -6274,9 +6276,17 @@ function addRatingsElements(imdbid, title, title_orig) {
                   $('<tbody>').append(
                     $('<tr>')
   ));
-  $('#main').children().first().prepend(table);
   const hr = $('<hr />').css({'margin-top':'3px', 'margin-bottom':'3px'});
-  $('#scout_rating_table').after(hr);
+  // reference
+  if ($('.titlereference-header').length) {
+    $('#main').children().first().prepend(table);
+    $('#scout_rating_table').after(hr);
+  // oldlayout
+  } else if ($('.title_block').length) {
+    $('.title_block').prepend(table);
+  } else {
+    return;
+  }
 
   // IMDb ratings
   if (GM_config.get("ratings_cfg_imdb")) {
