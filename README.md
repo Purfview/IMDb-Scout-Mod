@@ -8,6 +8,7 @@ Supports Title/Reference pages and does multi auto-search on List/Watchlist/Adva
 Adds links to IMDb pages from hundreds various sites.   
 Adds movies/series to Radarr/Sonarr.   
 Adds/Removes movies/series/episodes to/from Trakt's watchlist.   
+Adds external ratings from Metacritic, Rotten Tomatoes, Letterboxd.   
 Auto loads Reference View without login.   
 Dark theme/style for Reference View.   
 Compact mode for Reference View.   
