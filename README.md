@@ -12,7 +12,7 @@ Adds external ratings from Metacritic, Rotten Tomatoes, Letterboxd, Douban.
 Auto loads Reference View without login.   
 Dark theme/style for Reference View.   
 Compact mode for Reference View.   
-Removes ads.
+Removes ads.   
 Supports browsers: Firefox, Chrome, Opera, Safari, Waterfox, Brave, Pale Moon.    
 Supports [Greasemonkey](https://www.greasespot.net/), [Violentmonkey](https://violentmonkey.github.io/), [Tampermonkey](https://www.tampermonkey.net/), [Greasemonkey v3](https://github.com/greasemonkey/greasemonkey/releases?after=4.0) & [Greasemonkey for Pale Moon](https://github.com/janekptacijarabaci/greasemonkey/releases).  
 
