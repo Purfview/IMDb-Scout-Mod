@@ -8,11 +8,12 @@ Supports Title/Reference pages and does multi auto-search on List/Watchlist/Adva
 Adds links to IMDb pages from hundreds various sites.   
 Adds movies/series to Radarr/Sonarr.   
 Adds/Removes movies/series/episodes to/from Trakt's watchlist.   
-Adds external ratings from Metacritic, Rotten Tomatoes, Letterboxd.   
+Adds external ratings from Metacritic, Rotten Tomatoes, Letterboxd, Douban.   
 Auto loads Reference View without login.   
 Dark theme/style for Reference View.   
 Compact mode for Reference View.   
-Removes ads.   
+Removes ads.
+Supports browsers: Firefox, Chrome, Opera, Safari, Waterfox, Brave, Pale Moon.    
 Supports [Greasemonkey](https://www.greasespot.net/), [Violentmonkey](https://violentmonkey.github.io/), [Tampermonkey](https://www.tampermonkey.net/), [Greasemonkey v3](https://github.com/greasemonkey/greasemonkey/releases?after=4.0) & [Greasemonkey for Pale Moon](https://github.com/janekptacijarabaci/greasemonkey/releases).  
 
 Meanings of the color borders around the icons:  
@@ -57,6 +58,7 @@ Inside the script, there is a list of dictionaries that contains of all the site
   - `%nott%`: The IMDb id without the tt prefix (e.g. 0055630).
   - `%tvdbid%`: The TVDb id.
   - `%tmdbid%`: The TMDb id.
+  - `%doubanid%`: The Douban id.
   - `%search_string%`: The movie title (e.g. Yojimbo). Depends on your preferences at www.imdb.com/preferences/general .
   - `%search_string_orig%`: The original movie title (e.g. Yôjinbô). Reverts to %search_string% if an original title is not set at IMDb.
   - `%year%`: The movie year (e.g. 1961).
