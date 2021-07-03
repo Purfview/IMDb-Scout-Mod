@@ -9,6 +9,7 @@ Adds links to IMDb pages from hundreds various sites.
 Adds movies/series to Radarr/Sonarr.   
 Adds/Removes movies/series/episodes to/from Trakt's watchlist.   
 Adds external ratings from Metacritic, Rotten Tomatoes, Letterboxd, Douban.   
+Extract info to clipboard with the special button "Copy info to BBCode".    
 Auto loads Reference View without login.   
 Dark theme/style for Reference View.   
 Compact mode for Reference View.   
