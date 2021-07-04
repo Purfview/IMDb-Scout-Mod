@@ -4186,6 +4186,7 @@ var icon_sites_main = [
       'searchUrl': 'https://www.amazon.com/s/ref=nb_sb_noss?url=search-alias%3Dmovies-tv&field-keywords=%search_string%',
       'showByDefault': false},
   {   'name': 'Amazon Prime (DE)',
+      'icon': 'https://www.amazon.com/favicon.ico',
       'searchUrl': 'https://www.amazon.de/s?k=%search_string_orig%&i=instant-video',
       'showByDefault': false},
   {   'name': 'BCDB',
