@@ -910,6 +910,8 @@
         -   Removed: PirataDigital (dupe of 'PD').
         -   New feature: Extract info to clipboard with the special button "Copy info to BBCode".
 
+12.5    -   Fixed: Reference View forcing wasn't working from imdb's chart pages.
+
 */
 //==============================================================================
 //    JSHint directives.
@@ -8031,8 +8033,9 @@ GM.registerMenuCommand('IMDb Scout Mod Settings', function() {GM_config.open();}
 //    Force the title pages to open in Reference View
 //==============================================================================
 
-if (Boolean(location.href.match('\\?ref_='))) {
+if (Boolean(location.href.match('\\?ref_=')) || Boolean(location.href.match('\\?pf_'))) {
   let stripped_href = location.href.split('?ref_=')[0];
+      stripped_href = stripped_href.split('?pf_')[0];
   if (GM_config.get('force_reference_view') && Boolean(location.href.match('/title/tt')) && !Boolean(location.href.match('reference'))) {
     stripped_href = stripped_href + "reference";
   }
