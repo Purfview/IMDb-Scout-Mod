@@ -4152,7 +4152,8 @@ var streaming_sites = [
       'searchUrl': 'http://obniv.com/ws4xct8/home/obniv',
       'mPOST': 'searchword=%search_string_orig%',
       'loggedOutRegex': /Cloudflare|Ray ID/,
-      'matchRegex': /aucuns resultats disponible/},
+      'matchRegex': /aucuns resultats disponible/,
+      'inThirdSearchBar': true}
   {   'name': 'OK (RU)',
       'searchUrl': 'https://ok.ru/video/search?st.cmd=video&st.psft=search&st.m=SEARCH&st.ft=search&cmd=VideoContentBlock&st.v.srt=All&st.v.sfd=LONG&st.v.sfhd=off&st.v.sq=%search_string_orig%&gwt.requested=xxx',
       'loggedOutRegex': /Cloudflare|Ray ID/,
