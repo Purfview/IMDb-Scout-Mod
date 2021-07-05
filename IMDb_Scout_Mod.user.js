@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      12.4
+// @version      12.5
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from hundreds various sites. Adds movies/series to Radarr/Sonarr. Adds external ratings from Metacritic, Rotten Tomatoes, Letterboxd, Douban. Dark theme/style for Reference View. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAMFBMVEUAAAD/AAAcAAA1AABEAABVAAC3AADnAAD2AACFAAClAABlAAB3AADHAACVAADYAABCnXhrAAAD10lEQVRIx73TV4xMURgH8H/OnRmZWe3T7h2sOWaNXu7oJRg9UccuHgTRBatMtAgSg+gJu9q+kFmihcQoD8qLTkK0CIkoy0YJITsRD0rCKTHFrnkSv5e5c88/53znO+fiPwvsvrN038cPNqrG9pJmHkRVnPcpaTlHJY60cfPSpsrzl1LKihrmLvxhCM2i3OHvDx0d+H7e3F6JBv5iZMiJfhFTfPYDMHrMImpwimWWUdSgDQkbno7fFpUPVgh+pHFbZR4SovSctDCM9Hac9IKd9rO8EevtBCkXgY5IMmgquwypP7qqfcp/Tp4KLONDVsWh3RSBB2rnZfit69ocUdqLn2prrRZYM0Jg4JibamKsqe7gfEh5GOAfeYJjVHIPZvil97rcXkMog30byWRwXYRWoxHbzNFHJJpAarO8NdEBBsdCaP3WMJltTmQd4zlnekTq9Z5dgACwAlrpK4BxdV5mvLuspRgMSHbCIFF0iS8MZ5S8oYBYKY7rByC4dDM9uSIUmPOIwxgQBoYeF93auP4qFyPbIVXziWeGTH1EFM57kJo2hqQju6BwIyRf6RmCjdT4JOdiwNgiH/PPD3qoqlsNaXRd+fKtFfECxlZVNVF9SOsgTZEr2TUjJJbyeNX1IZrKIbyGlBABfpQPv2UDrly13LkJXDVhpQ5MhtGwcyF4HKjlU4E8xwB0AvDjd6AGmevZ87EcQRHgcO52e9uNsYELOrAa/Yh81YlmYLQJ5HWyq0+kzQ/DQKEusg6CRI27ryy8nReRS0wsoetkmRwogHSprliCckfEjXG9yAQc74J0WB99vu6DF3i3pMucsXM6tpBbxd2mVJAwXwGogNRBvGRA4jtHKTXkAIwLGCR/mT4Lh75oneQXXP9sAYfGRDCsnw7pX/jRZkU3M44kjw2l5zRIzb4CbZ8dULdL6wbNPZOpK0B6gN1UR1mdoxAaL/GrWiLPL3SEwW9YMTU/d64BtLahAVyucWhj9Mm8ign9IfQaBtd2/GbvCAEBpG5eMcrj2I0ktpKLeaqXQ3Pst42KGIshpdTmQLAeTgFGJ2wvh+tayMOR0n1RZ8B9z13vnOPBnsBq4E1ffgZpPFZHWVpO2cvhjYpOcbBd5TlhpDu5zq9mHGZcVi0y+VFkcFkDdyKJfTt99wEyHSEzDM90KH0nexpwZHJHKYYhjzlwGe0pP/IKfxociaEb7YDbi6KGJY1R2cR76E6NAtXqY4pPH3plLcl8LD7V+cOLUbUWRFZRPTAbVZO3mxK18Xc1ZaAiS8ARJXpZliXAomR94siiiMx8ZBOkXGTlnH0F/9ov1xPtWwEqP9wAAAAASUVORK5CYII=
@@ -11,7 +11,6 @@
 // @downloadURL  https://greasyfork.org/scripts/407284-imdb-scout-mod/code/IMDb%20Scout%20Mod.user.js
 // @homepage     https://github.com/Purfview/IMDb-Scout-Mod
 // @supportURL   https://github.com/Purfview/IMDb-Scout-Mod/issues
-// @contributionURL https://www.paypal.com/donate?hosted_button_id=JF5BEQE3YQGH2
 // @compatible   firefox
 // @compatible   opera
 // @compatible   chrome
@@ -911,7 +910,12 @@
         -   New feature: Extract info to clipboard with the special button "Copy info to BBCode".
 
 12.5    -   Fixed: Reference View forcing wasn't working from imdb's chart pages.
+        -   Fixed: Dirty hack on IDs conversions, now they work properly and more reliably.
+        -   Reworked: "Copy info to BBCode" button. Double action, first click activates the button.
+                      Grey: standby, Yellow: working, Green(hollow): ready to copy, Red: error.
+        -   New feature: Option to disable grey background for the searchable sites bars in Reference View.
         -   Added: Amazon Prime (DE).
+        -   Moved OBNIV to the third bar.
 
 */
 //==============================================================================
@@ -4431,9 +4435,10 @@ var icon_sites_main = [
       'searchUrl': 'https://www.youtube.com/results?search_query="%search_string%"+%year%+trailer'}
 ];
 
+// Class of these should be renamed(search: "class of the special buttons").
 var special_buttons = [
   {   'name': 'Copy Info to BBcode',
-      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABAAQMAAACQp+OdAAAABlBMVEUAAACpjQD94zkmAAAAAXRSTlMAQObYZgAAALBJREFUKM910rENwyAUBNCPKFKyQdiErEVhKYzGKIzgkgLl4v/x2Y7k0PCQ7nQNcp53n7fHZ+IBFEMAqiECzfASvxqSuFlbxA1i9vMFjahEQZ+Yc9lWikJX6kQNTWFzhiS+b+BcjkPnDFkcDhSialjRiJXoe4YQGUQinjNMRPQTlvkFW3/rt1iIxPCLiJXAPhEIT8gBtm6xXJEUaX/onAxFLOK6AYAhbFgVHvwEG+Q4X86vk0jZCGx+AAAAAElFTkSuQmCC',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABAAQMAAACQp+OdAAAABlBMVEUAAACMjIw+cENnAAAAAXRSTlMAQObYZgAAALBJREFUKM910rENwyAUBNCPKFKyQdiErEVhKYzGKIzgkgLl4v/x2Y7k0PCQ7nQNcp53n7fHZ+IBFEMAqiECzfASvxqSuFlbxA1i9vMFjahEQZ+Yc9lWikJX6kQNTWFzhiS+b+BcjkPnDFkcDhSialjRiJXoe4YQGUQinjNMRPQTlvkFW3/rt1iIxPCLiJXAPhEIT8gBtm6xXJEUaX/onAxFLOK6AYAhbFgVHvwEG+Q4X86vk0jZCGx+AAAAAElFTkSuQmCC',
       'searchUrl': 'https://dummycopy.info',
       'showByDefault': false},
   {   'name': 'Radarr',
@@ -4495,59 +4500,88 @@ async function replaceSearchUrlParams(site, movie_id, movie_title, movie_title_o
 //==============================================================================
 
 function getTVDbID(movie_id) {
-  var tvdb_id;
-  GM.xmlHttpRequest({
-    method: "GET",
-    url:    "https://thetvdb.com/api/GetSeriesByRemoteID.php?imdbid=tt" + movie_id,
-    onload: function(response) {
-      if (String(response.responseText).match("seriesid")) {
-        response.responseXML = new DOMParser().parseFromString(response.responseText, "application/xml");
-        const xmldata = response.responseXML;
-        tvdb_id = xmldata.getElementsByTagName("seriesid")[0].childNodes[0].nodeValue;
-      } else {
-        tvdb_id = "00000000";
+  return new Promise(resolve => {
+    GM.xmlHttpRequest({
+      method: "GET",
+      url:    "https://thetvdb.com/api/GetSeriesByRemoteID.php?imdbid=tt" + movie_id,
+      onload: function(response) {
+        if (String(response.responseText).match("seriesid")) {
+          response.responseXML = new DOMParser().parseFromString(response.responseText, "application/xml");
+          const xmldata = response.responseXML;
+          const tvdb_id = xmldata.getElementsByTagName("seriesid")[0].childNodes[0].nodeValue;
+          resolve(tvdb_id);
+        } else {
+          const tvdb_id = "00000000";
+          resolve(tvdb_id);
+        }
+      },
+      onerror: function() {
+        GM.notification("Request Error.", "IMDb Scout Mod (getTVDbID)");
+        console.log("IMDb Scout Mod (getTVDbID): Request Error.");
+      },
+      onabort: function() {
+        console.log("IMDb Scout Mod (getTVDbID): Request is aborted.");
       }
-    }
+    });
   });
-  return new Promise(resolve => { setTimeout(() => { resolve(tvdb_id); }, 2200); });
 }
 
 function getTMDbID(movie_id) {
-  var tmdb_id;
-  GM.xmlHttpRequest({
-    method: "GET",
-    url:    "https://api.themoviedb.org/3/find/tt" + movie_id + "?api_key=d12b33d3f4fb8736dc06f22560c4f8d4&external_source=imdb_id",
-    onload: function(response) {
-      const result = JSON.parse(response.responseText);
-      if (String(response.responseText).match('movie_results":\\[{')) {
-        tmdb_id = result.movie_results[0].id;
-      } else if (String(response.responseText).match('tv_results":\\[{')) {
-        tmdb_id = result.tv_results[0].id;
-      } else if (String(response.responseText).match('tv_episode_results":\\[{')) {
-        tmdb_id = result.tv_episode_results[0].id;
-      } else {
-        tmdb_id = "00000000";
+  return new Promise(resolve => {
+    GM.xmlHttpRequest({
+      method: "GET",
+      url:    "https://api.themoviedb.org/3/find/tt" + movie_id + "?api_key=d12b33d3f4fb8736dc06f22560c4f8d4&external_source=imdb_id",
+      onload: function(response) {
+        const result = JSON.parse(response.responseText);
+        if (String(response.responseText).match('movie_results":\\[{')) {
+          const tmdb_id = result.movie_results[0].id;
+          resolve(tmdb_id);
+        } else if (String(response.responseText).match('tv_results":\\[{')) {
+          const tmdb_id = result.tv_results[0].id;
+          resolve(tmdb_id);
+        } else if (String(response.responseText).match('tv_episode_results":\\[{')) {
+          const tmdb_id = result.tv_episode_results[0].id;
+          resolve(tmdb_id);
+        } else {
+          const tmdb_id = "00000000";
+          resolve(tmdb_id);
+        }
+      },
+      onerror: function() {
+        GM.notification("Request Error.", "IMDb Scout Mod (getTMDbID)");
+        console.log("IMDb Scout Mod (getTMDbID): Request Error.");
+      },
+      onabort: function() {
+        console.log("IMDb Scout Mod (getTMDbID): Request is aborted.");
       }
-    }
+    });
   });
-  return new Promise(resolve => { setTimeout(() => { resolve(tmdb_id); }, 2200); });
 }
 
 function getDoubanID(movie_id) {
-  let douban_id;
-  GM.xmlHttpRequest({
-    method: "GET",
-    url:    "https://movie.douban.com/j/subject_suggest?q=tt" + movie_id,
-    onload: function(response) {
-      const result = JSON.parse(response.responseText);
-      if (String(response.responseText).match(movie_id)) {
-        douban_id = result[0].id;
-      } else {
-        douban_id = "00000000";
+  return new Promise(resolve => {
+    GM.xmlHttpRequest({
+      method: "GET",
+      url:    "https://movie.douban.com/j/subject_suggest?q=tt" + movie_id,
+      onload: function(response) {
+        const result = JSON.parse(response.responseText);
+        if (String(response.responseText).match(movie_id)) {
+          const douban_id = result[0].id;
+          resolve(douban_id);
+        } else {
+          const douban_id = "00000000";
+          resolve(douban_id);
+        }
+      },
+      onerror: function() {
+        GM.notification("Request Error.", "IMDb Scout Mod (getDoubanID)");
+        console.log("IMDb Scout Mod (getDoubanID): Request Error.");
+      },
+      onabort: function() {
+        console.log("IMDb Scout Mod (getDoubanID): Request is aborted.");
       }
-    }
+    });
   });
-  return new Promise(resolve => { setTimeout(() => { resolve(douban_id); }, 2200); });
 }
 
 //==============================================================================
@@ -5080,6 +5114,7 @@ function addIconBar(movie_id, movie_title, movie_title_orig) {
             });
         iconbar.append(aopenall);
         // Rename class of the special buttons so "Open all" wouldn't open them.
+        $('img[title="Copy info to BBCode"]').parent().removeClass('iconbar_icon').addClass('iconbar_spec_icon');
         $('img[title="Radarr"]').parent().attr('class','iconbar_spec_icon');
         $('img[title="Sonarr"]').parent().attr('class','iconbar_spec_icon');
         $('img[title="Trakt-Watchlist"]').parent().attr('class','iconbar_spec_icon');
@@ -5308,19 +5343,19 @@ function performPage() {
   addIconBar(movie_id, movie_title, movie_title_orig);
 
   } else {
-  addIconBar(movie_id, movie_title, movie_title_orig);
-  perform(getLinkArea(), movie_id, movie_title, movie_title_orig, is_tv, is_movie);
-  if (GM_config.get('load_second_bar') && !GM_config.get('load_third_bar_movie')) {
-    getLinkAreaSecond();
-  } else if (!GM_config.get('load_second_bar') && GM_config.get('load_third_bar_movie')) {
-    getLinkAreaThird();
-  } else if (GM_config.get('load_second_bar') && GM_config.get('load_third_bar_movie') && !GM_config.get('switch_bars')) {
-    getLinkAreaSecond();
-    getLinkAreaThird();
-  } else if (GM_config.get('load_second_bar') && GM_config.get('load_third_bar_movie') && GM_config.get('switch_bars')) {
-    getLinkAreaThird();
-    getLinkAreaSecond();
-  }
+    addIconBar(movie_id, movie_title, movie_title_orig);
+    perform(getLinkArea(), movie_id, movie_title, movie_title_orig, is_tv, is_movie);
+    if (GM_config.get('load_second_bar') && !GM_config.get('load_third_bar_movie')) {
+      getLinkAreaSecond();
+    } else if (!GM_config.get('load_second_bar') && GM_config.get('load_third_bar_movie')) {
+      getLinkAreaThird();
+    } else if (GM_config.get('load_second_bar') && GM_config.get('load_third_bar_movie') && !GM_config.get('switch_bars')) {
+      getLinkAreaSecond();
+      getLinkAreaThird();
+    } else if (GM_config.get('load_second_bar') && GM_config.get('load_third_bar_movie') && GM_config.get('switch_bars')) {
+      getLinkAreaThird();
+      getLinkAreaSecond();
+    }
   }
 }
 
@@ -5334,10 +5369,16 @@ function getLinkArea() {
     return $('#imdbscout_header');
   }
   var font_weight = (GM_config.get('highlight_sites_movie').length == 0) ? 'bold' : 'normal';
+  let backgroundColor;
+  if (onReferencePage) {
+    backgroundColor = (GM_config.get('greybackground_reference_view')) ? '#333333' : '#ffffff' ;
+  } else {
+    backgroundColor = '#333333';
+  }
   var p = $('<p />').append(GM_config.get('imdbscoutmod_header_text')).attr('id', 'imdbscout_header').css({
     'padding': '4px 10px',
     'font-weight': font_weight,
-    'background-color': '#333333',
+    'background-color': backgroundColor,
     'margin-top': '0px',
     'margin-bottom': '0px',
     'overflow': 'hidden',
@@ -5385,10 +5426,16 @@ function getLinkAreaSecond() {
     return $('#imdbscoutsecondbar_header');
   }
   var font_weight = (GM_config.get('highlight_sites_movie').length == 0) ? 'bold' : 'normal';
+  let backgroundColor;
+  if (onReferencePage) {
+    backgroundColor = (GM_config.get('greybackground_reference_view')) ? '#333333' : '#ffffff' ;
+  } else {
+    backgroundColor = '#333333';
+  }
   var p = $('<p />').append(GM_config.get('imdbscoutsecondbar_header_text')).attr('id', 'imdbscoutsecondbar_header').css({
     'padding': '4px 10px',
     'font-weight': font_weight,
-    'background-color': '#333333',
+    'background-color': backgroundColor,
     'margin-top': '0px',
     'margin-bottom': '0px',
     'overflow': 'hidden',
@@ -5435,10 +5482,16 @@ function getLinkAreaThird() {
     return $('#imdbscoutthirdbar_header');
   }
   var font_weight = (GM_config.get('highlight_sites_movie').length == 0) ? 'bold' : 'normal';
+  let backgroundColor;
+  if (onReferencePage) {
+    backgroundColor = (GM_config.get('greybackground_reference_view')) ? '#333333' : '#ffffff' ;
+  } else {
+    backgroundColor = '#333333';
+  }
   var p = $('<p />').append(GM_config.get('imdbscoutthirdbar_header_text')).attr('id', 'imdbscoutthirdbar_header').css({
     'padding': '4px 10px',
     'font-weight': font_weight,
-    'background-color': '#333333',
+    'background-color': backgroundColor,
     'margin-top': '0px',
     'margin-bottom': '0px',
     'overflow': 'hidden',
@@ -5648,9 +5701,23 @@ function iconSorterMissing() {
 //    Special button: Copy info to BBCode
 //==============================================================================
 
-async function start_copyInfoToBBcode(imdbid, movie_title_orig) {
+function start_copyInfoToBBcode(imdbid, movie_title_orig) {
+  const standby_icon = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABAAQMAAACQp+OdAAAABlBMVEUAAACpjQD94zkmAAAAAXRSTlMAQObYZgAAALBJREFUKM910rENwyAUBNCPKFKyQdiErEVhKYzGKIzgkgLl4v/x2Y7k0PCQ7nQNcp53n7fHZ+IBFEMAqiECzfASvxqSuFlbxA1i9vMFjahEQZ+Yc9lWikJX6kQNTWFzhiS+b+BcjkPnDFkcDhSialjRiJXoe4YQGUQinjNMRPQTlvkFW3/rt1iIxPCLiJXAPhEIT8gBtm6xXJEUaX/onAxFLOK6AYAhbFgVHvwEG+Q4X86vk0jZCGx+AAAAAElFTkSuQmCC';
+  let button = $('a[href="https://dummycopy.info"]');
+      button.addClass('CopyInfotoBBcode');
+      button.removeAttr("href");
+      button.removeAttr("target");
+  button.prop("href", "javascript: void(0)");
+  button.click(function() {
+    button.find('img').prop("src", standby_icon);
+    copyInfoToBBcode(imdbid, movie_title_orig);
+  });
+}
+
+async function copyInfoToBBcode(imdbid, movie_title_orig) {
   const error_icon = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABAAQMAAACQp+OdAAAABlBMVEUAAACgAAB8H+SvAAAAAXRSTlMAQObYZgAAALBJREFUKM910rENwyAUBNCPKFKyQdiErEVhKYzGKIzgkgLl4v/x2Y7k0PCQ7nQNcp53n7fHZ+IBFEMAqiECzfASvxqSuFlbxA1i9vMFjahEQZ+Yc9lWikJX6kQNTWFzhiS+b+BcjkPnDFkcDhSialjRiJXoe4YQGUQinjNMRPQTlvkFW3/rt1iIxPCLiJXAPhEIT8gBtm6xXJEUaX/onAxFLOK6AYAhbFgVHvwEG+Q4X86vk0jZCGx+AAAAAElFTkSuQmCC';
-  const success_icon = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABAAQMAAACQp+OdAAAABlBMVEUAAAAAZACk9hdsAAAAAXRSTlMAQObYZgAAALBJREFUKM910rENwyAUBNCPKFKyQdiErEVhKYzGKIzgkgLl4v/x2Y7k0PCQ7nQNcp53n7fHZ+IBFEMAqiECzfASvxqSuFlbxA1i9vMFjahEQZ+Yc9lWikJX6kQNTWFzhiS+b+BcjkPnDFkcDhSialjRiJXoe4YQGUQinjNMRPQTlvkFW3/rt1iIxPCLiJXAPhEIT8gBtm6xXJEUaX/onAxFLOK6AYAhbFgVHvwEG+Q4X86vk0jZCGx+AAAAAElFTkSuQmCC';
+  const ready_icon = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABAAQMAAACQp+OdAAAABlBMVEUAAAAAZACk9hdsAAAAAXRSTlMAQObYZgAAALBJREFUKM910rENwyAUBNCPKFKyQdiErEVhKYzGKIzgkgLl4v/x2Y7k0PCQ7nQNcp53n7fHZ+IBFEMAqiECzfASvxqSuFlbxA1i9vMFjahEQZ+Yc9lWikJX6kQNTWFzhiS+b+BcjkPnDFkcDhSialjRiJXoe4YQGUQinjNMRPQTlvkFW3/rt1iIxPCLiJXAPhEIT8gBtm6xXJEUaX/onAxFLOK6AYAhbFgVHvwEG+Q4X86vk0jZCGx+AAAAAElFTkSuQmCC';
+  const success_icon1 = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABAAQMAAACQp+OdAAAABlBMVEUAAAAAZACk9hdsAAAAAXRSTlMAQObYZgAAAKZJREFUKM990cENwyAMBVBHHHpkg7JJslYPkcpojMIIHH1A/FKTTxVViSXgHWwh68uv3jpehzbwAKLBA8kQgGzYgELomAYq0f6QiURE6IBDG/BANAQgDSSfDZu4YljFqWGXpRLN8JIFE5FIRCYKoXKGSCVW4nlGgN6CzZfj99jYPBEm+IUnHCFEr2/zBfYJW/C4dguxn2r5RlnUAMDgcSTtwPA6ZNYH82fX5apYo9sAAAAASUVORK5CYII=';
   const success_icon2 = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABAAQMAAACQp+OdAAAABlBMVEUAAAAAZACk9hdsAAAAAXRSTlMAQObYZgAAAJxJREFUKM+V0rENxCAMBVCiFFcyApuEtVJECqMxCiNQUiD+WfZ97qJTirjxK/6XG7vvnM32imF4AUnhgawIQFFEt1bF5harHW7phPX3HxQiEwnNYOd2vZIUAchEUUSgEk1xAl0QumAQmEhE/oRRiEo0ZiY6MSY0fIO/8MM6cRAbEYmQCXSDJ1bCETKPEAX9giBoF3hBta/gEwjcnDdEcwZMhnHuiwAAAABJRU5ErkJggg==';
   let key;
   if (GM_config.get("ratings_cfg_omdb_apikey") == '') {
@@ -5660,14 +5727,12 @@ async function start_copyInfoToBBcode(imdbid, movie_title_orig) {
     key = GM_config.get("ratings_cfg_omdb_apikey");
   }
   // Preparing button
-  let button = $('a[href="https://dummycopy.info"]');
-      button.addClass('CopyInfotoBBcode');
-      button.removeAttr("href");
-      button.removeAttr("target");
+  let button = $('.CopyInfotoBBcode');
+      button.off("click");
 
-  // Wait till RT ratings will finish and get OMDb response from storage
+  // Pause and let RT ratings to finish and get OMDb response from storage
   if (GM_config.get("ratings_cfg_rotten")) {
-    await sleep(2000);
+    await sleep(1000);
   }
   const omdbLast = await GM.getValue("OMDb_last","{}");
   let x;
@@ -5680,7 +5745,7 @@ async function start_copyInfoToBBcode(imdbid, movie_title_orig) {
 
   const y = JSON.stringify(x);
   if (y != undefined) {
-    button.find('img').prop("src", success_icon);
+    button.find('img').prop("src", ready_icon);
   } else {
     button.find('img').prop("src", error_icon);
     GM.notification("Error: 'undefined'!", "IMDb Scout Mod (Copy Info to BBCode)");
@@ -5728,7 +5793,7 @@ async function start_copyInfoToBBcode(imdbid, movie_title_orig) {
       button.find('img').prop("src", success_icon2);
       button.removeClass('CopyInfotoBBcode').addClass('CopyInfotoBBcode2');
     } else {
-      button.find('img').prop("src", success_icon);
+      button.find('img').prop("src", success_icon1);
       button.removeClass('CopyInfotoBBcode2').addClass('CopyInfotoBBcode');
     }
   });
@@ -5747,49 +5812,49 @@ function sleep(ms) {
 }
 
 function getInfoFromOMDb(key, imdbid, error_icon, button) {
-  const url = "http://www.omdbapi.com/?i=tt" +imdbid+ "&apikey=" +key+ "&plot=full";
-  let returnInfo;
-  GM.xmlHttpRequest({
-    method: "GET",
-    url:    url,
-    onload: function(response) {
-      if (String(response.responseText).match("limit reached!")) {
-        GM.notification("Limit reached! \nSet OMDb API key in settings (at Ratings). \nGet it at www.omdbapi.com .", "IMDb Scout Mod (Copy Info to BBCode)");
-        $('.CopyInfotoBBcode').find('img').prop("src", error_icon);
-        button.off("click");
-        return;
-      }
-      let responseJSON;
-      if (response.status == 200) {
-        responseJSON = JSON.parse(response.responseText);
-        if (responseJSON['Response'] == "False") {
-          GM.notification("Response: 'False'! \nNo data!?", "IMDb Scout Mod (Copy Info to BBCode)");
+  return new Promise(resolve => {
+    const url = "http://www.omdbapi.com/?i=tt" +imdbid+ "&apikey=" +key+ "&plot=full";
+    GM.xmlHttpRequest({
+      method: "GET",
+      url:    url,
+      onload: function(response) {
+        if (String(response.responseText).match("limit reached!")) {
+          GM.notification("Limit reached! \nSet OMDb API key in settings (at Ratings). \nGet it at www.omdbapi.com .", "IMDb Scout Mod (Copy Info to BBCode)");
           $('.CopyInfotoBBcode').find('img').prop("src", error_icon);
           button.off("click");
           return;
         }
-        returnInfo = responseJSON;
-        GM.setValue("OMDb_last", JSON.stringify(responseJSON));
-      } else {
-        GM.notification("Request not successful! \nStatus code:" +response.status+ ".", "IMDb Scout Mod (Copy Info to BBCode)");
+        let responseJSON;
+        if (response.status == 200) {
+          responseJSON = JSON.parse(response.responseText);
+          if (responseJSON['Response'] == "False") {
+            GM.notification("Response: 'False'! \nNo data!?", "IMDb Scout Mod (Copy Info to BBCode)");
+            $('.CopyInfotoBBcode').find('img').prop("src", error_icon);
+            button.off("click");
+            return;
+          }
+          GM.setValue("OMDb_last", JSON.stringify(responseJSON));
+          const returnInfo = responseJSON;
+          resolve(returnInfo);
+        } else {
+          GM.notification("Request not successful! \nStatus code:" +response.status+ ".", "IMDb Scout Mod (Copy Info to BBCode)");
+          $('.CopyInfotoBBcode').find('img').prop("src", error_icon);
+          button.off("click");
+        }
+      },
+      onerror: function() {
+        GM.notification("Request Error.", "IMDb Scout Mod (Copy Info to BBCode)");
+        console.log("IMDb Scout Mod (Copy Info to BBCode): Request Error.");
+        $('.CopyInfotoBBcode').find('img').prop("src", error_icon);
+        button.off("click");
+      },
+      onabort: function() {
+        console.log("IMDb Scout Mod (Copy Info to BBCode): Request is aborted.");
         $('.CopyInfotoBBcode').find('img').prop("src", error_icon);
         button.off("click");
       }
-    },
-    onerror: function() {
-      GM.notification("Request Error.", "IMDb Scout Mod (Copy Info to BBCode)");
-      console.log("IMDb Scout Mod (Copy Info to BBCode): Request Error.");
-      $('.CopyInfotoBBcode').find('img').prop("src", error_icon);
-      button.off("click");
-    },
-    onabort: function() {
-      GM.notification("Request is aborted.", "IMDb Scout Mod (Copy Info to BBCode)");
-      console.log("IMDb Scout Mod (Copy Info to BBCode): Request is aborted.");
-      $('.CopyInfotoBBcode').find('img').prop("src", error_icon);
-      button.off("click");
-    }
+    });
   });
-  return new Promise(resolve => { setTimeout(() => { resolve(returnInfo); }, 3000); });
 }
 
 //==============================================================================
@@ -6557,7 +6622,8 @@ function externalRatings(imdbid, title, title_orig) {
     getLetterboxdRatings(imdbid, lboxd_icon, lboxd_cust);
   }
   // Get Metacritic's Metascore & RT's Tomatometer. Link for RT Audience score & "Certified" badge.
-  if (GM_config.get("ratings_cfg_metacritic") || GM_config.get("ratings_cfg_rotten")) {
+  // Running for Metascore without RT enabled is currently disabled, GM_config.get("ratings_cfg_metacritic")
+  if (GM_config.get("ratings_cfg_rotten")) {
     getRTandMetaRatings_OMDb(key, imdbid, meta_icon, rott_rotten, rott_certified, rott_fresh, rott_user_up, rott_user_down);
   }
   // Get Metacritic's Metascore & "Must-See" Badge. Link for Metacritic's User Score.
@@ -7257,6 +7323,7 @@ function countSites(task) {
       'force_reference_view': {'type': 'checkbox'},
       'dark_reference_view': {'type': 'checkbox'},
       'compact_reference_view': {'type': 'checkbox'},
+      'greybackground_reference_view': {'type': 'checkbox'},
       'highlight_sites_movie': {'type': 'text'},
       'highlight_missing_movie': {'type': 'text'},
       'loadmod_on_start_search': {'type': 'checkbox'},
@@ -7541,6 +7608,11 @@ var config_fields = {
   'compact_reference_view': {
     'type': 'checkbox',
     'label': 'Reference View: Enable the compact mode?',
+    'default': true
+  },
+  'greybackground_reference_view': {
+    'type': 'checkbox',
+    'label': 'Reference View: Enable grey background for searchable sites?',
     'default': true
   },
   'highlight_sites_movie': {
