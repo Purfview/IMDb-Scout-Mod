@@ -1618,6 +1618,24 @@ var private_sites = [
       'loggedOutRegex': /Forgot your username|Ray ID/,
       'matchRegex': /Translation: No search results/,
       'both': true},
+  {   'name': 'ABN',
+      'searchUrl': 'https://abn.lol/Torrent?UserId=&SelectedCats=2&SelectedCats=3&SelectedCats=4&YearOperator=≥&Year=&RatingOperator=≥&Rating=&SortOn=Created&SortOrder=desc&Search=%search_string_orig%+%year%',
+      'loggedOutRegex': /Cloudflare|Ray ID|Mot de passe oublié/,
+      'matchRegex': /Aucune donn&#xE9;e trouv&#xE9;e/},
+  {   'name': 'ABN',
+      'searchUrl': 'https://abn.lol/Torrent?UserId=&SelectedCats=1&SelectedCats=3&SelectedCats=4&SelectedCats=9&YearOperator=≥&Year=&RatingOperator=≥&Rating=&SortOn=Created&SortOrder=desc&Search=%search_string_orig%',
+      'loggedOutRegex': /Cloudflare|Ray ID|Mot de passe oublié/,
+      'matchRegex': /Aucune donn&#xE9;e trouv&#xE9;e/,
+      'TV': true},
+  {   'name': 'ABN-Req',
+      'searchUrl': 'https://abn.lol/Request?SelectedCats=2&SelectedCats=3&SelectedCats=4&Filter=all&SortOn=Created&SortOrder=desc&Unfilled=true&Search=%search_string_orig%+%year%',
+      'loggedOutRegex': /Cloudflare|Ray ID|Mot de passe oublié/,
+      'matchRegex': /Aucune donn&#xE9;e trouv&#xE9;e/},
+  {   'name': 'ABN-Req',
+      'searchUrl': 'https://abn.lol/Request?SelectedCats=1&SelectedCats=3&SelectedCats=4&SelectedCats=9&Filter=all&SortOn=Created&SortOrder=desc&Unfilled=true&Search=%search_string_orig%',
+      'loggedOutRegex': /Cloudflare|Ray ID|Mot de passe oublié/,
+      'matchRegex': /Aucune donn&#xE9;e trouv&#xE9;e/,
+      'TV': true},
   {   'name': 'ACM',
       'searchUrl': 'https://asiancinema.me/torrents/filter?imdb=%tt%',
       'loggedOutRegex': /Forgot Your Password|Ray ID/,
@@ -4496,7 +4514,7 @@ async function replaceSearchUrlParams(site, movie_id, movie_title, movie_title_o
   } else if (search_url.match("%tmdbid%")) {
     movie_id = await getTMDbID(movie_id);
   } else if (search_url.match("%doubanid%")) {
-    movie_id = await getDoubanID(movie_id);
+    movie_id = await getDoubanID1(movie_id);
   }
 
   var space_replace      = ('spaceEncode' in site) ? site['spaceEncode'] : '+';
@@ -4577,7 +4595,7 @@ function getTMDbID(movie_id) {
   });
 }
 
-function getDoubanID(movie_id) {
+function getDoubanID1(movie_id) {
   return new Promise(resolve => {
     GM.xmlHttpRequest({
       method: "GET",
@@ -4593,11 +4611,69 @@ function getDoubanID(movie_id) {
         }
       },
       onerror: function() {
-        GM.notification("Request Error.", "IMDb Scout Mod (getDoubanID)");
-        console.log("IMDb Scout Mod (getDoubanID): Request Error.");
+        GM.notification("Request Error.", "IMDb Scout Mod (getDoubanID1)");
+        console.log("IMDb Scout Mod (getDoubanID1): Request Error.");
       },
       onabort: function() {
-        console.log("IMDb Scout Mod (getDoubanID): Request is aborted.");
+        console.log("IMDb Scout Mod (getDoubanID1): Request is aborted.");
+      }
+    });
+  });
+}
+
+function getDoubanID2(movie_id) {
+  return new Promise(resolve => {
+    GM.xmlHttpRequest({
+      method: "GET",
+      url:    'https://query.wikidata.org/sparql?format=json&query=SELECT * WHERE {?s wdt:P345 "tt' +movie_id+ '". OPTIONAL { ?s wdt:P4529 ?Douban_film_ID. }}',
+      onload: function(response) {
+        const result = JSON.parse(response.responseText);
+        if (result.results.bindings[0] != undefined) {
+          if (result.results.bindings[0].Douban_film_ID != undefined) {
+            const douban_id = result.results.bindings[0].Douban_film_ID.value;
+            resolve(douban_id);
+          } else {
+            const douban_id = "00000000";
+            resolve(douban_id);
+          }
+        } else {
+          const douban_id = "00000000";
+          resolve(douban_id);
+        }
+      },
+      onerror: function() {
+        GM.notification("Request Error.", "IMDb Scout Mod (getDoubanID2)");
+        console.log("IMDb Scout Mod (getDoubanID2): Request Error.");
+      },
+      onabort: function() {
+        console.log("IMDb Scout Mod (getDoubanID2): Request is aborted.");
+      }
+    });
+  });
+}
+
+function getDoubanID3(movie_id) {
+  return new Promise(resolve => {
+    GM.xmlHttpRequest({
+      method: "GET",
+      url:    "https://www.google.com/search?q=tt" +movie_id+ " site:https://movie.douban.com/subject&safe=off",
+      onload: function(response) {
+        const result = String(response.responseText);
+        if (result.match("movie\.douban\.com\/subject\/")) {
+          const x = result.split('')
+          const douban_id = result[0].id;
+          resolve(douban_id);
+        } else {
+          const douban_id = "00000000";
+          resolve(douban_id);
+        }
+      },
+      onerror: function() {
+        GM.notification("Request Error.", "IMDb Scout Mod (getDoubanID3)");
+        console.log("IMDb Scout Mod (getDoubanID3): Request Error.");
+      },
+      onabort: function() {
+        console.log("IMDb Scout Mod (getDoubanID3): Request is aborted.");
       }
     });
   });
@@ -7177,10 +7253,14 @@ function getRotten(url, rott_rotten, rott_certified, rott_fresh, rott_user_up, r
 }
 
 async function getDoubanRatings(imdbid, douban_icon) {
-  const id = await getDoubanID(imdbid);
+  let id = await getDoubanID1(imdbid);
+  if (id == "00000000") {
+    id = await getDoubanID2(imdbid);
+  }
   if (id == "00000000") {
     return;
   }
+
   const url = "https://movie.douban.com/subject/" +id;
   GM.xmlHttpRequest({
     method: "GET",
