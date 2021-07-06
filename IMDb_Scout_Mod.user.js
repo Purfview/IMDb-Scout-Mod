@@ -7242,9 +7242,11 @@ async function getAllocineRatings(imdbid, allocine_icon) {
         } else {
           user_rating = "-";
         }
+        if (crit_rating > 0 || user_rating > 0) {
+          $('.AllocineUserRatingImg').attr('src', allocine_icon);
+        }
         $('.AllocineCritRating').text(crit_rating);
         $('.AllocineUserRating').text(user_rating);
-        $('.AllocineUserRatingImg').attr('src', allocine_icon);
         $('.AllocineUserRatingUrl').attr('href', url);
         ratingsColor();
       }
