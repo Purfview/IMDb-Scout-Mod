@@ -1,9 +1,9 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      12.5
+// @version      12.6
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
-// @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from hundreds various sites. Adds movies/series to Radarr/Sonarr. Adds external ratings from Metacritic, Rotten Tomatoes, Letterboxd, Douban. Dark theme/style for Reference View. Adds/Removes to/from Trakt's watchlist. Removes ads.
+// @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from hundreds various sites. Adds movies/series to Radarr/Sonarr. Adds external ratings from Metacritic, Rotten Tomatoes, Letterboxd, Douban, Allocine. Dark theme/style for Reference View. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAMFBMVEUAAAD/AAAcAAA1AABEAABVAAC3AADnAAD2AACFAAClAABlAAB3AADHAACVAADYAABCnXhrAAAD10lEQVRIx73TV4xMURgH8H/OnRmZWe3T7h2sOWaNXu7oJRg9UccuHgTRBatMtAgSg+gJu9q+kFmihcQoD8qLTkK0CIkoy0YJITsRD0rCKTHFrnkSv5e5c88/53znO+fiPwvsvrN038cPNqrG9pJmHkRVnPcpaTlHJY60cfPSpsrzl1LKihrmLvxhCM2i3OHvDx0d+H7e3F6JBv5iZMiJfhFTfPYDMHrMImpwimWWUdSgDQkbno7fFpUPVgh+pHFbZR4SovSctDCM9Hac9IKd9rO8EevtBCkXgY5IMmgquwypP7qqfcp/Tp4KLONDVsWh3RSBB2rnZfit69ocUdqLn2prrRZYM0Jg4JibamKsqe7gfEh5GOAfeYJjVHIPZvil97rcXkMog30byWRwXYRWoxHbzNFHJJpAarO8NdEBBsdCaP3WMJltTmQd4zlnekTq9Z5dgACwAlrpK4BxdV5mvLuspRgMSHbCIFF0iS8MZ5S8oYBYKY7rByC4dDM9uSIUmPOIwxgQBoYeF93auP4qFyPbIVXziWeGTH1EFM57kJo2hqQju6BwIyRf6RmCjdT4JOdiwNgiH/PPD3qoqlsNaXRd+fKtFfECxlZVNVF9SOsgTZEr2TUjJJbyeNX1IZrKIbyGlBABfpQPv2UDrly13LkJXDVhpQ5MhtGwcyF4HKjlU4E8xwB0AvDjd6AGmevZ87EcQRHgcO52e9uNsYELOrAa/Yh81YlmYLQJ5HWyq0+kzQ/DQKEusg6CRI27ryy8nReRS0wsoetkmRwogHSprliCckfEjXG9yAQc74J0WB99vu6DF3i3pMucsXM6tpBbxd2mVJAwXwGogNRBvGRA4jtHKTXkAIwLGCR/mT4Lh75oneQXXP9sAYfGRDCsnw7pX/jRZkU3M44kjw2l5zRIzb4CbZ8dULdL6wbNPZOpK0B6gN1UR1mdoxAaL/GrWiLPL3SEwW9YMTU/d64BtLahAVyucWhj9Mm8ign9IfQaBtd2/GbvCAEBpG5eMcrj2I0ktpKLeaqXQ3Pst42KGIshpdTmQLAeTgFGJ2wvh+tayMOR0n1RZ8B9z13vnOPBnsBq4E1ffgZpPFZHWVpO2cvhjYpOcbBd5TlhpDu5zq9mHGZcVi0y+VFkcFkDdyKJfTt99wEyHSEzDM90KH0nexpwZHJHKYYhjzlwGe0pP/IKfxociaEb7YDbi6KGJY1R2cR76E6NAtXqY4pPH3plLcl8LD7V+cOLUbUWRFZRPTAbVZO3mxK18Xc1ZaAiS8ARJXpZliXAomR94siiiMx8ZBOkXGTlnH0F/9ov1xPtWwEqP9wAAAAASUVORK5CYII=
 // @license      MIT
 //
@@ -917,6 +917,8 @@
         -   Added: Amazon Prime (DE).
         -   Moved OBNIV to the third bar.
 
+12.6    -   Added: TorrentHistory, Wikidata.
+        -   New feature: Allocine ratings.
 */
 //==============================================================================
 //    JSHint directives.
@@ -4068,8 +4070,9 @@ var pre_databases = [
   {   'name': 'PreDB.de',
       'icon': 'https://predb.de/favicon-32x32.png',
       'searchUrl': 'https://predb.de/search.php?t=pre&s=%search_string_orig%',
-      'loggedOutRegex': /Cloudflare|Ray ID/,
-      'matchRegex': /Nothing found/,
+      'loggedOutRegex': /Cloudflare|Ray ID|experiencing some problems/,
+      'matchRegex': /itemListElement/,
+      'positiveMatch': true,
       'inSecondSearchBar': true,
       'both': true},
   {   'name': 'PreDB.org',
@@ -4140,6 +4143,14 @@ var other_sites = [
       'searchUrl': 'https://torrenthistory.org/search?order=desc&sort_by=created&q=%search_string_orig%&target=torrents',
       'loggedOutRegex': /Cloudflare|Ray ID|Cannot parse/,
       'matchRegex': />Created</,
+      'positiveMatch': true,
+      'inSecondSearchBar': true,
+      'both': true},
+  {   'name': 'Wikidata',
+      'icon': 'https://www.wikidata.org/static/favicon/wikidata.ico',
+      'searchUrl': 'https://tools.wmflabs.org/wikidata-todo/resolver.php?prop=P345&value=%tt%',
+      'loggedOutRegex': /Cloudflare|Ray ID/,
+      'matchRegex': /wiki\/Q/,
       'positiveMatch': true,
       'inSecondSearchBar': true,
       'both': true}
@@ -4587,6 +4598,41 @@ function getDoubanID(movie_id) {
       },
       onabort: function() {
         console.log("IMDb Scout Mod (getDoubanID): Request is aborted.");
+      }
+    });
+  });
+}
+
+function getAllocineID(movie_id) {
+  return new Promise(resolve => {
+    GM.xmlHttpRequest({
+      method: "GET",
+      url:    'https://query.wikidata.org/sparql?format=json&query=SELECT * WHERE {?s wdt:P345 "tt' +movie_id+ '". OPTIONAL {?s wdt:P1265 ?AlloCin__film_ID.}  OPTIONAL {?s wdt:P1267 ?AlloCin__series_ID.}}',
+      onload: function(response) {
+        responseJSON = JSON.parse(response.responseText);
+        const result = JSON.parse(response.responseText);
+        if (result.results.bindings[0] != undefined) {
+          if (result.results.bindings[0].AlloCin__film_ID != undefined) {
+            GM.setValue("AllocineID_last_is_film", true);
+            const allocine_id = result.results.bindings[0].AlloCin__film_ID.value;
+            resolve(allocine_id);
+          } else if (result.results.bindings[0].AlloCin__series_ID != undefined) {
+            GM.setValue("AllocineID_last_is_film", false);
+            const allocine_id = result.results.bindings[0].AlloCin__series_ID.value;
+            resolve(allocine_id);
+          } else {
+            GM.setValue("AllocineID_last_is_film", "none");
+            const allocine_id = "00000000";
+            resolve(allocine_id);
+          }
+        }
+      },
+      onerror: function() {
+        GM.notification("Request Error.", "IMDb Scout Mod (getAllocineID)");
+        console.log("IMDb Scout Mod (getAllocineID): Request Error.");
+      },
+      onabort: function() {
+        console.log("IMDb Scout Mod (getAllocineID): Request is aborted.");
       }
     });
   });
@@ -5336,17 +5382,17 @@ function performPage() {
   // Create areas to put links in
   // oldlayout
   if ($('.button_panel.navigation_panel').length || $('.title_block').length) {
-  if (GM_config.get('load_second_bar') && !GM_config.get('load_third_bar_movie')) {
-    getLinkAreaSecond();
-  } else if (!GM_config.get('load_second_bar') && GM_config.get('load_third_bar_movie')) {
-    getLinkAreaThird();
-  } else if (GM_config.get('load_second_bar') && GM_config.get('load_third_bar_movie') && !GM_config.get('switch_bars')) {
-    getLinkAreaThird();
-    getLinkAreaSecond();
-  } else if (GM_config.get('load_second_bar') && GM_config.get('load_third_bar_movie') && GM_config.get('switch_bars')) {
-    getLinkAreaSecond();
-    getLinkAreaThird();
-  }
+    if (GM_config.get('load_second_bar') && !GM_config.get('load_third_bar_movie')) {
+      getLinkAreaSecond();
+    } else if (!GM_config.get('load_second_bar') && GM_config.get('load_third_bar_movie')) {
+      getLinkAreaThird();
+    } else if (GM_config.get('load_second_bar') && GM_config.get('load_third_bar_movie') && !GM_config.get('switch_bars')) {
+      getLinkAreaThird();
+      getLinkAreaSecond();
+    } else if (GM_config.get('load_second_bar') && GM_config.get('load_third_bar_movie') && GM_config.get('switch_bars')) {
+      getLinkAreaSecond();
+      getLinkAreaThird();
+    }
   perform(getLinkArea(), movie_id, movie_title, movie_title_orig, is_tv, is_movie);
   addIconBar(movie_id, movie_title, movie_title_orig);
 
@@ -6610,6 +6656,7 @@ function externalRatings(imdbid, title, title_orig) {
   const lboxd_icon = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACABAMAAAAxEHz4AAAALVBMVEUAAAAgKDD/gABAvPQA4FT8/v1Dw/0E6ViwYRE5msej6OIFx09I54QLokj/zZqk8vmhAAAAAXRSTlMAQObYZgAAArJJREFUaN7tmT1r21AUhuN/oNctwaZ0sKBQSimYC4KOBYGhydaqg+liBBc8FlQ0FA/O1NUUCpn7sQcKHkK3tHugkMFz/keva8tH55hYco6KnJBnNLyPz8H3y/fu/T/AUGQJr1y6gQ145eIKBUqg+HoqQpHnBpnXGbAFyrxD0QA1IfO6ErAtnq4Ah1rg6TpwiAJ0JeBaqAWsA10PqEkA6qAugVeVANemIkGjRoG3IwIouCWCBhR4d4JqBKhVAC5o+Y7HIGY/0vTgHMRxYO3zyVWCI3/BOPtgmoaO9ABL2oE1xgS2KwSU54ZpEv6j92GZt2YBGfKCpk9gzoXLLw0jzAlMRjDJCah/ogPggcuvDCcA9mOzIhYCaoCamIY55k3EhggGUtDyGZ2sACph3+QJpKDpc1wBjBFiLugKgS/oJFzQu8cFZsgFLSl4Egq+G06QCRrUQZ5LUcFhXwq6THAkBdFXLngZxcIwYAKZfxa95oL30RchGG4UPIrecsGvNUGQF7TWBX0u+Ba92UpwKQS9KOobguaDtxA01wVRUqngUAoc3QLB2c0XJFpByZ9x8zggoisGkld+JL6SgoLJVDgXjHo2FqwHZ3I9MIJBwYoUcnrrP8LmRfVpKPgtBeAC2cM4EYK2XJWL9oULnn+HQHQgBJA700O+HpzT1kibIxPwEgBewghAwBd1KYDYnVkJKRz5vWkIIaDhTKec+0l+d3d8XhksuIAMlHf8yU4oLwBmsBMpIAPlHbM0deWnJ8j4ZK2xNp6AC4iPLj5Gjtnp6U/kaB8bdkhDJefE2s/Kd4IqBLX/8bzZgl25wdAIduQiag+1X8YpBfobTb1Af6vbqP1iWnG3rhGonwf0DxTKErSvPJ72maeKly5NE16Vr32EIq998SSDIl+6DeW78V4ZdHGSyPCu8hfYVeoYJ6xJswAAAABJRU5ErkJggg==";
   const lboxd_cust = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAMAAAD04JH5AAAAS1BMVEUAAAAgKDBTU1NUVFT/gACgoKAA4FSpqamrq6ujo6P8/v3MzMwE6ViwYRGvr6+NjY3Nzc25ubn/zZqwsLAFx08LokiOjo5I54Sj6OIuaCjQAAAAAXRSTlMAQObYZgAABz1JREFUeNrtm9122kAMhItdJxSoTQqlff8nrW39fFqbeiFRLnpOlWAMyWFGI2lX6zVf/kHbFda0bds0TdvMhySIOizWNkpBGLSTZTPZbdkEPj9cBWEwn38eOGbQs+fCRagYs89Bx4L8giro9oMQ6egQIPyGKG/a+9MhH54qEGtKARpCoaxy4bGYea2ng0MLF0mHbHwImAacC7SZvZMIj8Ws85i7+0rCdUjDxzT+oMtrlV0iEzhkwWONewyiv2xsbECWLHwIYDARMua2mlLJwocA7kYiECAwcsgjQA5Q8cBzKr/olIGPqeNlBVAEcapqbZjMwocAv84gvqnPPCXi75BWS4CM8CKM8ZH3EwmUPQBZhwzIwriQgs9siM7Be4VsohpEKQWf2VD9NMXNVz2nCvxviQSoPS90fWJwDgOFv5eBz0iItqYzvJxO2yBUJgHmIgoieos2YkYiiwCfjfQWdD+DHlQT8MkBARYMSOjrVW0ozwQChIBpEDfjDERviD45+DsygG4EKHlJEnpx5hFQLPeeYUDhqATCIHFIIkCyl/0x5RgmyKBCFgFKgPUZMxMR8ARlgEjB31mS82gJArURWjWSI4kAZUY0VHQUoVQYIZIIkISOwlvAIQyp+nECozH9ewmWMw8Ok6YaEfATckB/Qxu4ZMZ/+h9SCIT2ww/L3tTeL7OzySIQh15kFyP2lCKrpQwCMeWJg/Fx+HWuZimAR+u5MJRBbNHI0QwCTC+e4CTcojQho/+VgL/Dn2UXYAccX61UcggQVBykJCwPiEKcqrcIfP9q9v3+P/y8Xl9Op75/7QaEV2/F3WHovk3WDTdjwUjERZsN9A0O19Pp9DLa6+t+P5GwrPM43LoJWmw60xpAGwjU4KEAvKALgfHnte87Pn5y3sGdQ0dX5of7BEAtLIiv8KaAUhhIwQ74wOHGdBTH4or7GO6/YPtJArFLZ2mA+yWDLqxUGInq+IQBfBTAes2EFTxxmMEpDQiAv2XgxxDo7/i4dLP/IK4phBBAoBZ/DPxCgb1rMGz4L1EoruZAAPwKA8HH5hwcTTLx9dKMGJsMBhYsJCEBqNnvlzUBJBhfvAn+BoOwiGmfFuDHYanAXoCNwuX4ViPQhcblaQEOBySIVeAqvJ2PVQlooCDwsACHw1qBOQry1J+PdQkGLmU9S+Aw2q97CkgqQqAigQ8FEHg0AsSgHAdUg7fj8XiuxsBm46cJ/LhPgDTojxOBh2LADsaTKXBY1IF7LxE4P5QEbCt9nICNwvvpcTmeUWDD6JXeQ+DXhgLHyeoEaFETCKj3cy5eRv8fUYAe/YMECIGNg+TAlrE6yEjC0XwyPD8Wgsn/9xNYTkaagPvHc2BgoZowDgi4yjArUB+I2M5JGAmtDGUyPo9JWB2KWc8+Pxndnwv2NiNfHkoBrlokzYbeEe374yMDIWu3p/sBEwBT3y0K42xUjUDYyXhHRwR0EQJrjC7neg2E3e3nm9JfKwJehzIv99UaCBexIPBoEL7TFS8mIxOiGepdMRuN71gX/DzdV0D9b5rtvvzbrVijOwGsgg8DcoC1ST81/boy3FgdcuMRBLBtfBgQAl+bXAYZ39BghR/39smB0rbwYcBc4P3YxbSFwTL+5QbmqgrIxMoVihcomPfj0jhcE70RhoDPkmxRhjUKwLsITsFakX3TUF53L5Hc2ExReJKwRgF4KFxPo01J2I/Wme9sG8tFom+dXaeKd9x5JUIAg8N3AQd9TeJ6teld3ZejYrTDbZj+Psjbav4PVMFHLH6knDsNNu29AVhcMkwhALhCuJ9cKebRsHuad61Y1FyA6rOftYsNhDQCfL5/NEGJmBBAphwCSGu+4yObiuwWQChrv0CLDxarPfRyU4FhIIfAaHwsEVYG/nfoEZsMAuK4Y7NnEcseeuEeuywC6Lq4GE49kKZlqJK2bvFPYJ0KqC5OTM42h4DAktmgu79UXxgm8wgYMgUX04BXCht3dFMImMfUGZHgzsJI0Ksk7R6SeGsALef6Rh7+KL85BMRDKh4+TPzkAkWSqAABp9Eg8EheNGRCAMu5iaV1TF4pKGdsVuQQYPy1B9FelcN8zCbA3jxJyDOYcoo0eXfT4TapoGAcjAf7dlkEfAYAhhxQW9xTJYe8WzqZc9CYAZr46w/L0hwClBvb1gpDcqC9v8i7q7ZB3VUDqD+OTMJk3tbLVE9zisW4MBIn3thsLgKjr8oWmQlh4x7/lJURhUgaxuGJAGQRoOoEFSp4zGvwsxgwuxB/HI8rMj1SATkMyPrYfxuR1QhII5LFwLCK4DPxERfnkvYtFwhQ87QF5QoBPuAnMYgd71++cAYR8PMoEPjlvYzgFjcsZDNoIj5DEC0Z1HA/kwLVVfQ9OA6Jz/m+H1q7EuBzBnw2B9YEDAJkgWUF8OkUNL8Igpz5M95/Ege+RmNodEKVgSeHA+0GLTBp8CXLauPA6suFFc8TiXiu02//t6fsD1bxl8/V56nJAAAAAElFTkSuQmCC";
   const douban_icon = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACAAgMAAAC+UIlYAAAADFBMVEUAAAABdhD9/v16t4L0Izp4AAAAAXRSTlMAQObYZgAAARhJREFUWMPt2D0OgjAUB/A6eATv4xEcKE0YcOcI3qNHcABjnDhKL8HuYqK1EuA988orUQeI/S8Q8iNtXstHK4SQTITLmgM7BzYcSEgLtI0VD7akC6QTGx4kYSADiQCBvPLmHMHPgbLeXGc1HxYCPLW8A/CPRhnBp8CiND5gJKSIIAIEmrnO6j8Ae/tw19Cje4H3ZJfUATRUNXkVKwTcqfYCA8AAoLcpAqBh6M50gKfhcSjKyQMOr29xm2wCKCmAy0AxwC0XfpAOoOm6S0HFAqifO6kpgBFQDNA90BRArVMHDAVQ63wKkBRAATMKbJubq1R7HKav6UE1Eh3BO7AjMfP6l1s6+HrFGlwUh5fVggfBpX14cyC4vfAEQ6sYUOFLXfsAAAAASUVORK5CYII=";
+  const allocine_icon = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHYAAAB2BAMAAADviXoiAAAAGFBMVEUAAAAmJib/////ywBcUzPIoQmUehKRkZFw3PDCAAAAAXRSTlMAQObYZgAAA2BJREFUWMPdmU1P20AQQKv+AzeOe3WjSD1HG+fuptBz5JS7lY87qBJ/vxCyed6ZHS94b8wBiOTHzL7xLvbw5VPF18Vb1B8mF8OYQhIfqFZHPRUFTqNTYdA0nEaBk+hkOIoQ70Wf2+I1ymcBpyv+VxB/gqpTaX8WYTwlE8uk0dSJih8LHd/HqxaoBY+lXRbx+DWSGE1hlIc+FGanVWjnVtcfzcTGYu+dcxuxZIOVFZ/cSzSizUbJraz3Eq3/HC866njr3qIXru20xOzKrgojMaxq7fzKrmlyhCWtYpFFYp0WybDIQjWJYektrpBFj2Ep+VaYv/Tg2R2/j6KH7A9/K3XejfOxhv0Gq0u+e7mW5SIrUjTsdddQ48HdoiAES3OrDjl3jujlPob1JVfOx/n36fL94dxRyKBoUTIrJI7X/GtVNOz1xigFuvf2NvLArXWHOkegt0MWXQqW69USO+6vVi8YtmXXqa7OAlklLKqELARtDVmokrKo02lZsNzMsZIrPiBLsELWipIpAjbQzHXiPrTuLDQrWTevVKFEozm4ozeDDglZmkUWie57r6AxWY65Q7Dczh19Ja1o0rC9yOLaSm9hGuzZpT6T5S26Etu/lu0l1YYF6PPOYIvhpWJnJNmOEktIZJkssnbUj6xRFj+9Or52abaC3QbsOsGyyFaxzTiLLFgiwdJUfkLWOIsslCMrzVYWu06z5Y0tTwG7gY3tBWTxdEbE9gJ7EFksnmjVIavYGdeFt9YOVp85XB9l16PnFbJ6WCVLn7EE9YVsEz9jH6WsFayQxdlOg4kt9altaP89Amhi7EqyusEVsugvsmgvf7sJGgKLrAVsRPTBJ4ZFFpqlaM67po1vYf2sgiwM/T2fXhd5+YponpFMWTyf8fkoVBmy0BMsAlXmgjuqvN3iD/KJAXYZyvJxM78Xz8Bm0TO5dea9eDKzX1MqsWXtZ37dpZI7WAQdghVFd6gixDuOVfQB1ijZfqebGTU/wZrvklXMFe+S9jssspo+Nqio7XdnZG3aaNrafGdH1t6Yj1izAmQ1RyCRNjGjmDeiXmYU6dmIPQ6yZzJ2MJNJz4KM4VnODCpj9pUzc8ub9eXPGPNnm/kzVWA78mfI+bPr/Jl5/qwe2EKnwnXe/0Sm0Rn/A/pM8R8w2HBWwA4YRgAAAABJRU5ErkJggg==";
 
   let key;
   if (GM_config.get("ratings_cfg_omdb_apikey") == '') {
@@ -6619,7 +6666,9 @@ function externalRatings(imdbid, title, title_orig) {
     key = GM_config.get("ratings_cfg_omdb_apikey");
   }
 
-  addRatingsElements(imdbid, title, title_orig);
+  if (GM_config.get("ratings_cfg_imdb") || GM_config.get("ratings_cfg_letterboxd") || GM_config.get("ratings_cfg_rotten") || GM_config.get("ratings_cfg_metacritic") || GM_config.get("ratings_cfg_douban") || GM_config.get("ratings_cfg_allocine")) {
+    addRatingsElements(imdbid, title, title_orig);
+  }
 
   // Get IMDb ratings.
   if (GM_config.get("ratings_cfg_imdb")) {
@@ -6636,11 +6685,15 @@ function externalRatings(imdbid, title, title_orig) {
   }
   // Get Metacritic's Metascore & "Must-See" Badge. Link for Metacritic's User Score.
   if (GM_config.get("ratings_cfg_metacritic")) {
-    getMetacritic_IMDb(imdbid, meta_icon, meta_badge);
+    getMetacriticRatings_IMDb(imdbid, meta_icon, meta_badge);
   }
   // Get Douban ratings.
   if (GM_config.get("ratings_cfg_douban")) {
-    getDouban(imdbid, douban_icon);
+    getDoubanRatings(imdbid, douban_icon);
+  }
+  // Get Allocine ratings.
+  if (GM_config.get("ratings_cfg_allocine")) {
+    getAllocineRatings(imdbid, allocine_icon);
   }
 }
 
@@ -6773,6 +6826,25 @@ function addRatingsElements(imdbid, title, title_orig) {
           td.append('<br>');
     $('#scout_rating_table').find('tr').append(td);
   }
+
+  // Allocine ratings
+  if (GM_config.get("ratings_cfg_allocine")) {
+    const img = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHYAAAB2BAMAAADviXoiAAAAGFBMVEUAAAAzMzPr6+vExMSdnZ1WVlaCgoJubm4HXAuhAAAAAXRSTlMAQObYZgAAA45JREFUWMPdmU1T2zAQhjv8A+OPXNNMoeeMnPgcPJCzG5q7G1LObtLp329JLL/Su5JVrBt7acrwoN13P5CWTx/KbhZXm7+bXJg2mWQ67C3bfCrKcBhleCrKcBhlOIhOhhfj9r/otkneLD8THPb4mMD25PX4sfeJbT9wcAh9TNieAY97vEmkZeNeE+qDx469S9z2beRgyGRbfmhtwfzHMjqr1bL/6D3YE+xeKVVRyB6WPT6rf1ZSmj0udxSqulij/Xc77dR4p67WktbOYxubTXt2OTiCg5nl1GY9WyHJDhbRChZiIWI6FiITC7Eg9ZxZ5Ja1UnAoE6xdUrnW9aTZ/qeiuJj9rEupXvWflLYV2FuwhsstSun6qRjYNdgCThtsX0rw8aAGS2DEIrmzGuI8K1jHfWyzG8vL1+/ny79PP2s4YigtXc4U2bEXYOVwGuyXS7SEPl6HpCVW8qBZylAfLtViDbGQJStcVAOXxM4SKxNsY3Qdt0BqiZWDhVQkFgQ6ecW60T1EYsHPoYXRS2BRzC6XC/wHYjnYg8PlHVqYWd0I+D64jMS13A6WzCzWMGcw7yC0yeIbtVVGhkgsyUIsHLTvtASlk9XVTGK111CP2pOGKnqQ+aucb43RkyTWr4vQmr2TM5lLdEntP0d6WazKCIDFumVWm1kZ1BlBttYu8ihoAizE0uML1oXZFLJmNAmCbIFTdha7CrAIshHsOsBCrEZMLxVkNZFItguzqY/d+FgWC+mCWGE2H9j8hcViVtxwagiT1yZMvYAeJLEQPImFHkTvk1gNWlKI9cAzB5b52JVnXrFYHVghlpyxMO0fsyXPWMx2a94tmUUgBVgk2GzhysW2Y7+PAJQudilZvofOIFZqsZX4HSrfJzohzJbioiOFPuiDwUKs3HVXoXlXdtaExhRjlsW62NPr+a0i/ryAxR2J72YQC7Y1hu2R7mYesSAPgmhIKnfANfVO3juAcMFy+2PaDD19pDuw1+mUW6fo6GYGltuhoJb13/lllnJUMBkyBJacrmnM0Btn9G11IpbfVsze+5+g/KYbfUsWrBW/JeUblsUq8ePoDSvfziTWGl+gt7PnzQ6xtp79SGhXkKryNyDaFQR2FBn85VVUeDfiXwcFdzJscicT3gXJ5VnMDipi9xWzc4vY9cXsGON3m/E71fhdbvwOGXD84jt+4R6/6AcahhmN+5vINDrib0Afyf4CrepxXp43oBkAAAAASUVORK5CYII=";
+    const url = "https://www.allocine.fr/rechercher/?q=" +title_orig;
+    const td1 = $('<td>').append(
+                  $('<center>').append(
+                    $('<a>').addClass('AllocineUserRatingUrl').attr({'href': url, 'title':'Allocine', 'target': '_blank'}).css('display','flex').append(
+                      $('<img>').addClass('AllocineUserRatingImg').attr('src', img).css({'height':img_px, 'width':img_px})
+    )));
+    $('#scout_rating_table').find('tr').append(td1);
+
+    const td = $('<td>').attr('style', 'width:30px; vertical-align:middle;');
+          td.append($('<span>').addClass('AllocineCritRating scoutRatings').attr('title','Critics').css('font-weight', 'bold').text("-"));
+          td.append('<br>');
+          td.append($('<span>').addClass('AllocineUserRating scoutRatings').attr('title','Users').css('font-weight', 'bold').text("-"));
+          td.append('<br>');
+    $('#scout_rating_table').find('tr').append(td);
+  }
 }
 
 function getIMDbRatings(imdbid, imdb_icon) {
@@ -6790,23 +6862,23 @@ function getIMDbRatings(imdbid, imdb_icon) {
         if ($.isNumeric(user_rating)) {
           user_rating = user_rating *10;
         } else {
-          user_rating = "0";
+          user_rating = "-";
         }
         crit_rating = $(result).find('.ratingTable.noLeftBorder .bigcell').text().trim();
         if ($.isNumeric(crit_rating)) {
           crit_rating = crit_rating *10;
         } else {
-          crit_rating = "0";
+          crit_rating = "-";
         }
         if (GM_config.get("ratings_imdb_fem")) {
           fem_rating = $(result).find('.ratingTable:eq(10)').find('.bigcell').text().trim();
           if ($.isNumeric(fem_rating)) {
             fem_rating = fem_rating *10;
           } else {
-            fem_rating = "0";
+            fem_rating = "-";
           }
         } else {
-          fem_rating = "0";
+          fem_rating = "-";
         }
       } else {
         return;
@@ -6828,7 +6900,7 @@ function getIMDbRatings(imdbid, imdb_icon) {
   });
 }
 
-function getMetacritic_IMDb(imdbid, meta_icon, meta_badge) {
+function getMetacriticRatings_IMDb(imdbid, meta_icon, meta_badge) {
   const url = "https://www.imdb.com/title/tt" +imdbid+ "/criticreviews";
   GM.xmlHttpRequest({
     method: "GET",
@@ -7105,7 +7177,7 @@ function getRotten(url, rott_rotten, rott_certified, rott_fresh, rott_user_up, r
   });
 }
 
-async function getDouban(imdbid, douban_icon) {
+async function getDoubanRatings(imdbid, douban_icon) {
   const id = await getDoubanID(imdbid);
   if (id == "00000000") {
     return;
@@ -7135,6 +7207,54 @@ async function getDouban(imdbid, douban_icon) {
     },
     onabort: function() {
       console.log("IMDb Scout Mod (Douban): Request is aborted.");
+    }
+  });
+}
+
+async function getAllocineRatings(imdbid, allocine_icon) {
+  const id = await getAllocineID(imdbid);
+  const is_film = await GM.getValue("AllocineID_last_is_film");
+  let url;
+  if (id == "00000000") {
+    return;
+  } else if (is_film) {
+    url = "https://www.allocine.fr/film/fichefilm_gen_cfilm=" +id+ ".html";
+  } else {
+    url = "https://www.allocine.fr/series/ficheserie_gen_cserie=" +id+ ".html";
+  }
+  GM.xmlHttpRequest({
+    method: "GET",
+    url:    url,
+    onload: function(response) {
+      const parser = new DOMParser();
+      const result = parser.parseFromString(response.responseText, "text/html");
+
+      let crit_rating, user_rating;
+      if ($(result).find('.stareval-note').length) {
+        const x = $(result).find('.stareval-note:eq(0)').text().replace(',','.') *20;
+        const y = $(result).find('.stareval-note:eq(1)').text().replace(',','.') *20;
+        if ($.isNumeric(x)) {
+          crit_rating = x;
+        } else {
+          crit_rating = "-";
+        }
+        if ($.isNumeric(y)) {
+          user_rating = y;
+        } else {
+          user_rating = "-";
+        }
+        $('.AllocineCritRating').text(crit_rating);
+        $('.AllocineUserRating').text(user_rating);
+        $('.AllocineUserRatingImg').attr('src', allocine_icon);
+        $('.AllocineUserRatingUrl').attr('href', url);
+        ratingsColor();
+      }
+    },
+    onerror: function() {
+      console.log("IMDb Scout Mod (Allocine): Request Error.");
+    },
+    onabort: function() {
+      console.log("IMDb Scout Mod (Allocine): Request is aborted.");
     }
   });
 }
@@ -7348,6 +7468,7 @@ function countSites(task) {
       'ratings_cfg_rotten': {'type': 'checkbox'},
       'ratings_cfg_letterboxd': {'type': 'checkbox'},
       'ratings_cfg_douban': {'type': 'checkbox'},
+      'ratings_cfg_allocine': {'type': 'checkbox'},
       'ratings_imdb_fem': {'type': 'checkbox'},
       'ratings_cfg_color': {'type': 'checkbox'},
       'ratings_cfg_color_scheme': {'type': 'text'},
@@ -7704,6 +7825,11 @@ var config_fields = {
   'ratings_cfg_douban': {
     'type': 'checkbox',
     'label': 'Enable Douban ratings?',
+    'default': false
+  },
+  'ratings_cfg_allocine': {
+    'type': 'checkbox',
+    'label': 'Enable Allocine ratings?',
     'default': false
   },
   'ratings_imdb_fem': {
