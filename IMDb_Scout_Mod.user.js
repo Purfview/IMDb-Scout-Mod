@@ -4609,7 +4609,6 @@ function getAllocineID(movie_id) {
       method: "GET",
       url:    'https://query.wikidata.org/sparql?format=json&query=SELECT * WHERE {?s wdt:P345 "tt' +movie_id+ '". OPTIONAL {?s wdt:P1265 ?AlloCin__film_ID.}  OPTIONAL {?s wdt:P1267 ?AlloCin__series_ID.}}',
       onload: function(response) {
-        responseJSON = JSON.parse(response.responseText);
         const result = JSON.parse(response.responseText);
         if (result.results.bindings[0] != undefined) {
           if (result.results.bindings[0].AlloCin__film_ID != undefined) {
