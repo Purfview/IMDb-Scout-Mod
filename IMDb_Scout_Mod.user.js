@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      12.7
+// @version      12.8
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from hundreds various sites. Adds movies/series to Radarr/Sonarr. Adds external ratings from Metacritic, Rotten Tomatoes, Letterboxd, Douban, Allocine. Dark theme/style for Reference View. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAMFBMVEUAAAD/AAAcAAA1AABEAABVAAC3AADnAAD2AACFAAClAABlAAB3AADHAACVAADYAABCnXhrAAAD10lEQVRIx73TV4xMURgH8H/OnRmZWe3T7h2sOWaNXu7oJRg9UccuHgTRBatMtAgSg+gJu9q+kFmihcQoD8qLTkK0CIkoy0YJITsRD0rCKTHFrnkSv5e5c88/53znO+fiPwvsvrN038cPNqrG9pJmHkRVnPcpaTlHJY60cfPSpsrzl1LKihrmLvxhCM2i3OHvDx0d+H7e3F6JBv5iZMiJfhFTfPYDMHrMImpwimWWUdSgDQkbno7fFpUPVgh+pHFbZR4SovSctDCM9Hac9IKd9rO8EevtBCkXgY5IMmgquwypP7qqfcp/Tp4KLONDVsWh3RSBB2rnZfit69ocUdqLn2prrRZYM0Jg4JibamKsqe7gfEh5GOAfeYJjVHIPZvil97rcXkMog30byWRwXYRWoxHbzNFHJJpAarO8NdEBBsdCaP3WMJltTmQd4zlnekTq9Z5dgACwAlrpK4BxdV5mvLuspRgMSHbCIFF0iS8MZ5S8oYBYKY7rByC4dDM9uSIUmPOIwxgQBoYeF93auP4qFyPbIVXziWeGTH1EFM57kJo2hqQju6BwIyRf6RmCjdT4JOdiwNgiH/PPD3qoqlsNaXRd+fKtFfECxlZVNVF9SOsgTZEr2TUjJJbyeNX1IZrKIbyGlBABfpQPv2UDrly13LkJXDVhpQ5MhtGwcyF4HKjlU4E8xwB0AvDjd6AGmevZ87EcQRHgcO52e9uNsYELOrAa/Yh81YlmYLQJ5HWyq0+kzQ/DQKEusg6CRI27ryy8nReRS0wsoetkmRwogHSprliCckfEjXG9yAQc74J0WB99vu6DF3i3pMucsXM6tpBbxd2mVJAwXwGogNRBvGRA4jtHKTXkAIwLGCR/mT4Lh75oneQXXP9sAYfGRDCsnw7pX/jRZkU3M44kjw2l5zRIzb4CbZ8dULdL6wbNPZOpK0B6gN1UR1mdoxAaL/GrWiLPL3SEwW9YMTU/d64BtLahAVyucWhj9Mm8ign9IfQaBtd2/GbvCAEBpG5eMcrj2I0ktpKLeaqXQ3Pst42KGIshpdTmQLAeTgFGJ2wvh+tayMOR0n1RZ8B9z13vnOPBnsBq4E1ffgZpPFZHWVpO2cvhjYpOcbBd5TlhpDu5zq9mHGZcVi0y+VFkcFkDdyKJfTt99wEyHSEzDM90KH0nexpwZHJHKYYhjzlwGe0pP/IKfxociaEb7YDbi6KGJY1R2cR76E6NAtXqY4pPH3plLcl8LD7V+cOLUbUWRFZRPTAbVZO3mxK18Xc1ZaAiS8ARJXpZliXAomR94siiiMx8ZBOkXGTlnH0F/9ov1xPtWwEqP9wAAAAASUVORK5CYII=
@@ -922,6 +922,8 @@
 
 12.7    -   Added: ABN, ABN-Req.
         -   Additional fallback methods to get douban id.
+
+12.8    -   Fixed few ratings bugs.
 
 */
 //==============================================================================
@@ -4162,7 +4164,7 @@ var other_sites = [
       'both': true},
   {   'name': 'TorrentHistory',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAQAAAD9CzEMAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAADsSURBVHja3NhbFoMwCEVR5j9p+ltr4B7Io0v1L6nslGSZoLntve0IIK/kefWY+hUcZg8o5qIKNNLNgfaMCiBeWKNrjPzGs2GDDJ4xKVALHiLhHIjgcR8D0vAqdSMiAch0auIKlEYPCA7c2ynxDYDxk1bXAF05JJ1XpTR+Z4v5DvgLAfVyyHoXAF4D1ox/GtD/dwog6ZwA2GwtALwH2JLwzwfsr4BtAhovC3KEgTtaG4i2TJtIUbwn2wogP1UAgvUiwMoAOdnhs2kb2H66PlAfVCocr1c40zWa8yrT91aZR+rkA5U+Qdi3ip33ZwAb5/CcnuFpKAAAAABJRU5ErkJggg==',
-      'searchUrl': 'https://torrenthistory.org/search?order=desc&sort_by=created&q=%search_string_orig%&target=torrents',
+      'searchUrl': 'https://torrenthistory.org/search?order=desc&sort_by=created&q=%search_string_orig%+created>=%year%&target=torrents',
       'loggedOutRegex': /Cloudflare|Ray ID|Cannot parse/,
       'matchRegex': />Created</,
       'positiveMatch': true,
@@ -7251,7 +7253,6 @@ function getRotten(url, rott_rotten, rott_certified, rott_fresh, rott_user_up, r
       } else if (rott_user <= 59 && rott_user >= 0) {
         $('.RottUserRatingImg').attr('src', rott_user_down);
       }
-      $('.RottUserRatingUrl').attr('href', url);
       ratingsColor();
     },
     onerror: function() {
@@ -7275,6 +7276,7 @@ async function getDoubanRatings(imdbid, douban_icon) {
     return;
   }
   const url = "https://movie.douban.com/subject/" +id;
+  $('.DoubanUserRatingUrl').attr('href', url);
   GM.xmlHttpRequest({
     method: "GET",
     url:    url,
@@ -7289,7 +7291,6 @@ async function getDoubanRatings(imdbid, douban_icon) {
           user_rating = x *10;
           $('.DoubanUserRating').text(user_rating);
           $('.DoubanUserRatingImg').attr('src', douban_icon);
-          $('.DoubanUserRatingUrl').attr('href', url);
           ratingsColor();
         }
       }
@@ -7314,33 +7315,38 @@ async function getAllocineRatings(imdbid, allocine_icon) {
   } else {
     url = "https://www.allocine.fr/series/ficheserie_gen_cserie=" +id+ ".html";
   }
+  $('.AllocineUserRatingUrl').attr('href', url);
   GM.xmlHttpRequest({
     method: "GET",
     url:    url,
     onload: function(response) {
       const parser = new DOMParser();
       const result = parser.parseFromString(response.responseText, "text/html");
+      const resultStr = String(response.responseText);
 
-      let crit_rating, user_rating;
+      let rating1, rating2;
       if ($(result).find('.stareval-note').length) {
         const x = $(result).find('.stareval-note:eq(0)').text().replace(',','.') *20;
         const y = $(result).find('.stareval-note:eq(1)').text().replace(',','.') *20;
         if ($.isNumeric(x)) {
-          crit_rating = x;
+          rating1 = x;
         } else {
-          crit_rating = "-";
+          rating1 = "-";
         }
         if ($.isNumeric(y)) {
-          user_rating = y;
+          rating2 = y;
         } else {
-          user_rating = "-";
+          rating2 = "-";
         }
-        if (crit_rating > 0 || user_rating > 0) {
+        if (rating1 > 0 || rating2 > 0) {
           $('.AllocineUserRatingImg').attr('src', allocine_icon);
         }
-        $('.AllocineCritRating').text(crit_rating);
-        $('.AllocineUserRating').text(user_rating);
-        $('.AllocineUserRatingUrl').attr('href', url);
+        if (resultStr.match('critiques/presse')) {
+          $('.AllocineCritRating').text(rating1);
+          $('.AllocineUserRating').text(rating2);
+        } else {
+          $('.AllocineUserRating').text(rating1);
+        }
         ratingsColor();
       }
     },
