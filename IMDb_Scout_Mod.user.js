@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      12.6
+// @version      12.7
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from hundreds various sites. Adds movies/series to Radarr/Sonarr. Adds external ratings from Metacritic, Rotten Tomatoes, Letterboxd, Douban, Allocine. Dark theme/style for Reference View. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAMFBMVEUAAAD/AAAcAAA1AABEAABVAAC3AADnAAD2AACFAAClAABlAAB3AADHAACVAADYAABCnXhrAAAD10lEQVRIx73TV4xMURgH8H/OnRmZWe3T7h2sOWaNXu7oJRg9UccuHgTRBatMtAgSg+gJu9q+kFmihcQoD8qLTkK0CIkoy0YJITsRD0rCKTHFrnkSv5e5c88/53znO+fiPwvsvrN038cPNqrG9pJmHkRVnPcpaTlHJY60cfPSpsrzl1LKihrmLvxhCM2i3OHvDx0d+H7e3F6JBv5iZMiJfhFTfPYDMHrMImpwimWWUdSgDQkbno7fFpUPVgh+pHFbZR4SovSctDCM9Hac9IKd9rO8EevtBCkXgY5IMmgquwypP7qqfcp/Tp4KLONDVsWh3RSBB2rnZfit69ocUdqLn2prrRZYM0Jg4JibamKsqe7gfEh5GOAfeYJjVHIPZvil97rcXkMog30byWRwXYRWoxHbzNFHJJpAarO8NdEBBsdCaP3WMJltTmQd4zlnekTq9Z5dgACwAlrpK4BxdV5mvLuspRgMSHbCIFF0iS8MZ5S8oYBYKY7rByC4dDM9uSIUmPOIwxgQBoYeF93auP4qFyPbIVXziWeGTH1EFM57kJo2hqQju6BwIyRf6RmCjdT4JOdiwNgiH/PPD3qoqlsNaXRd+fKtFfECxlZVNVF9SOsgTZEr2TUjJJbyeNX1IZrKIbyGlBABfpQPv2UDrly13LkJXDVhpQ5MhtGwcyF4HKjlU4E8xwB0AvDjd6AGmevZ87EcQRHgcO52e9uNsYELOrAa/Yh81YlmYLQJ5HWyq0+kzQ/DQKEusg6CRI27ryy8nReRS0wsoetkmRwogHSprliCckfEjXG9yAQc74J0WB99vu6DF3i3pMucsXM6tpBbxd2mVJAwXwGogNRBvGRA4jtHKTXkAIwLGCR/mT4Lh75oneQXXP9sAYfGRDCsnw7pX/jRZkU3M44kjw2l5zRIzb4CbZ8dULdL6wbNPZOpK0B6gN1UR1mdoxAaL/GrWiLPL3SEwW9YMTU/d64BtLahAVyucWhj9Mm8ign9IfQaBtd2/GbvCAEBpG5eMcrj2I0ktpKLeaqXQ3Pst42KGIshpdTmQLAeTgFGJ2wvh+tayMOR0n1RZ8B9z13vnOPBnsBq4E1ffgZpPFZHWVpO2cvhjYpOcbBd5TlhpDu5zq9mHGZcVi0y+VFkcFkDdyKJfTt99wEyHSEzDM90KH0nexpwZHJHKYYhjzlwGe0pP/IKfxociaEb7YDbi6KGJY1R2cR76E6NAtXqY4pPH3plLcl8LD7V+cOLUbUWRFZRPTAbVZO3mxK18Xc1ZaAiS8ARJXpZliXAomR94siiiMx8ZBOkXGTlnH0F/9ov1xPtWwEqP9wAAAAASUVORK5CYII=
@@ -919,6 +919,10 @@
 
 12.6    -   Added: TorrentHistory, Wikidata.
         -   New feature: Allocine ratings.
+
+12.7    -   Added: ABN.
+        -   Additional fallback methods to get douban id.
+
 */
 //==============================================================================
 //    JSHint directives.
@@ -4516,6 +4520,12 @@ async function replaceSearchUrlParams(site, movie_id, movie_title, movie_title_o
   } else if (search_url.match("%doubanid%")) {
     movie_id = await getDoubanID1(movie_id);
   }
+  if (search_url.match("%doubanid%") && movie_id == "00000000") {
+    movie_id = await getDoubanID2(imdbid);
+  }
+  if (search_url.match("%doubanid%") && movie_id == "00000000") {
+    movie_id = await getDoubanID3(imdbid);
+  }
 
   var space_replace      = ('spaceEncode' in site) ? site['spaceEncode'] : '+';
   var search_string      = movie_title.trim().replace(/ +\(.*|&|:/g, '').replace(/\s+/g, space_replace);
@@ -4656,12 +4666,13 @@ function getDoubanID3(movie_id) {
   return new Promise(resolve => {
     GM.xmlHttpRequest({
       method: "GET",
-      url:    "https://www.google.com/search?q=tt" +movie_id+ " site:https://movie.douban.com/subject&safe=off",
+      url:    'https://www.google.com/search?q="tt' +movie_id+ '" site:https://movie.douban.com/subject&safe=off',
       onload: function(response) {
         const result = String(response.responseText);
-        if (result.match("movie\.douban\.com\/subject\/")) {
-          const x = result.split('')
-          const douban_id = result[0].id;
+        if (result.match("movie.douban.com/subject/")) {
+          const x = result.split("movie.douban.com/subject/")[1];
+          const y = x.split("/")[0];
+          const douban_id = y;
           resolve(douban_id);
         } else {
           const douban_id = "00000000";
@@ -7258,9 +7269,11 @@ async function getDoubanRatings(imdbid, douban_icon) {
     id = await getDoubanID2(imdbid);
   }
   if (id == "00000000") {
+    id = await getDoubanID3(imdbid);
+  }
+  if (id == "00000000") {
     return;
   }
-
   const url = "https://movie.douban.com/subject/" +id;
   GM.xmlHttpRequest({
     method: "GET",
