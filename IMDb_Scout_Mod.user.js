@@ -920,7 +920,7 @@
 12.6    -   Added: TorrentHistory, Wikidata.
         -   New feature: Allocine ratings.
 
-12.7    -   Added: ABN.
+12.7    -   Added: ABN, ABN-Req.
         -   Additional fallback methods to get douban id.
 
 */
