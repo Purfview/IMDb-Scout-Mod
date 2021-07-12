@@ -6163,7 +6163,8 @@ function getAuthFromJellyfin(jelly_url, jelly_user, jelly_pass, debug) {
 
 function searchJellyfin(title, movie_id, user_id, access_token, debug) {
   return new Promise(resolve => {
-    const url = "http://localhost:8096/Users/" +user_id+ "/Items?searchTerm=" +title+ "&IncludeItemTypes=Series,Movie,Episode&Limit=24&Fields=OriginalTitle,ProviderIds&Recursive=true";
+    const titleUri = title.replace(/&/g,'%26').replace(/#/g,'%23');
+    const url = "http://localhost:8096/Users/" +user_id+ "/Items?searchTerm=" +titleUri+ "&IncludeItemTypes=Series,Movie,Episode&Limit=24&Fields=OriginalTitle,ProviderIds&Recursive=true";
     const auth = 'MediaBrowser Client="Jellyfin Web", Device="IMDb Scout Mod", DeviceId="666", Version="10.7.6", Token="' +access_token+ '"';
     const imdbid = "tt" +movie_id;
     GM.xmlHttpRequest({
@@ -6270,17 +6271,17 @@ async function start_plex(movie_id, movie_title, movie_title_orig) {
 
 function getInfoFromPlex(title, movie_id, tvdb_id, plex_url, plex_token) {
   return new Promise(resolve => {
+    const titleUri = title.replace(/&/g,'%26').replace(/#/g,'%23');
     const imdbid = "tt" +movie_id;
     const tvdbid = "thetvdb://" +tvdb_id;
-    const url = plex_url+ "/search?query=" +title+ "&X-Plex-Token=" +plex_token;
+    const url = plex_url+ "/search?query=" +titleUri+ "&X-Plex-Token=" +plex_token;
     GM.xmlHttpRequest({
       method: "GET",
       timeout: 3000,
       url:    url,
       onload: function(response) {
-        let responseStr;
+        const resultStr = String(response.responseText);
         if (response.status == 200) {
-          resultStr = String(response.responseText);
           if (resultStr.match(imdbid) || resultStr.match(tvdbid)) {
             resolve(true);
           } else {
