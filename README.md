@@ -9,7 +9,7 @@ Adds links to IMDb pages from hundreds various sites.
 Adds movies/series to Radarr/Sonarr.   
 Adds/Removes movies/series/episodes to/from Trakt's watchlist.   
 Adds external ratings from Metacritic, Rotten Tomatoes, Letterboxd, Douban, Allocine.   
-Media Server indicators for Plex, Jellyfin.   
+Media Server indicators for Plex, Jellyfin, Emby.   
 Extract info to clipboard with the special button "Copy info to BBCode".    
 Auto loads Reference View without login.   
 Dark theme/style for Reference View.   
