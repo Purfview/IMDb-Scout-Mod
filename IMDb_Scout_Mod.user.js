@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      13.1
+// @version      13.2
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from hundreds various sites. Adds movies/series to Radarr/Sonarr. Adds external ratings from Metacritic, Rotten Tomatoes, Letterboxd, Douban, Allocine. Media Server indicators for Plex, Jellyfin, Emby. Dark theme/style for Reference View. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAMFBMVEUAAAD/AAAcAAA1AABEAABVAAC3AADnAAD2AACFAAClAABlAAB3AADHAACVAADYAABCnXhrAAAD10lEQVRIx73TV4xMURgH8H/OnRmZWe3T7h2sOWaNXu7oJRg9UccuHgTRBatMtAgSg+gJu9q+kFmihcQoD8qLTkK0CIkoy0YJITsRD0rCKTHFrnkSv5e5c88/53znO+fiPwvsvrN038cPNqrG9pJmHkRVnPcpaTlHJY60cfPSpsrzl1LKihrmLvxhCM2i3OHvDx0d+H7e3F6JBv5iZMiJfhFTfPYDMHrMImpwimWWUdSgDQkbno7fFpUPVgh+pHFbZR4SovSctDCM9Hac9IKd9rO8EevtBCkXgY5IMmgquwypP7qqfcp/Tp4KLONDVsWh3RSBB2rnZfit69ocUdqLn2prrRZYM0Jg4JibamKsqe7gfEh5GOAfeYJjVHIPZvil97rcXkMog30byWRwXYRWoxHbzNFHJJpAarO8NdEBBsdCaP3WMJltTmQd4zlnekTq9Z5dgACwAlrpK4BxdV5mvLuspRgMSHbCIFF0iS8MZ5S8oYBYKY7rByC4dDM9uSIUmPOIwxgQBoYeF93auP4qFyPbIVXziWeGTH1EFM57kJo2hqQju6BwIyRf6RmCjdT4JOdiwNgiH/PPD3qoqlsNaXRd+fKtFfECxlZVNVF9SOsgTZEr2TUjJJbyeNX1IZrKIbyGlBABfpQPv2UDrly13LkJXDVhpQ5MhtGwcyF4HKjlU4E8xwB0AvDjd6AGmevZ87EcQRHgcO52e9uNsYELOrAa/Yh81YlmYLQJ5HWyq0+kzQ/DQKEusg6CRI27ryy8nReRS0wsoetkmRwogHSprliCckfEjXG9yAQc74J0WB99vu6DF3i3pMucsXM6tpBbxd2mVJAwXwGogNRBvGRA4jtHKTXkAIwLGCR/mT4Lh75oneQXXP9sAYfGRDCsnw7pX/jRZkU3M44kjw2l5zRIzb4CbZ8dULdL6wbNPZOpK0B6gN1UR1mdoxAaL/GrWiLPL3SEwW9YMTU/d64BtLahAVyucWhj9Mm8ign9IfQaBtd2/GbvCAEBpG5eMcrj2I0ktpKLeaqXQ3Pst42KGIshpdTmQLAeTgFGJ2wvh+tayMOR0n1RZ8B9z13vnOPBnsBq4E1ffgZpPFZHWVpO2cvhjYpOcbBd5TlhpDu5zq9mHGZcVi0y+VFkcFkDdyKJfTt99wEyHSEzDM90KH0nexpwZHJHKYYhjzlwGe0pP/IKfxociaEb7YDbi6KGJY1R2cR76E6NAtXqY4pPH3plLcl8LD7V+cOLUbUWRFZRPTAbVZO3mxK18Xc1ZaAiS8ARJXpZliXAomR94siiiMx8ZBOkXGTlnH0F/9ov1xPtWwEqP9wAAAAASUVORK5CYII=
@@ -684,9 +684,7 @@
 9.0     -   Added: DOGnzb (movie search is by IMDb id, tv search by TVDb id) .
         -   New feature:  Support search by TVDb ID and TMDb ID
                          with new search URL parameters: %tvdbid% and %tmdbid%.
-                          If matching id is not found then it will be set to "00000000",
-                         if it's "undefined" then response didn't came in time,
-                         timeout is set to wait for 2 seconds.
+                          If matching id is not found then it will be set to "00000000".
                          Some functions are async now.
 
 9.1     -   New feature: All icons from Imgur and the problematic sites are stored in the script as Base64 strings.
@@ -935,6 +933,10 @@
         -   New features: If found on Plex/Jellyfin/Emby then link opens actual movie/series.
         -   One more fallback method to get douban id.
 
+13.2    -   Removed: SW.
+        -   Added timeouts for the requests to sites.
+        -   New features: Debug and Timeout option.
+
 */
 //==============================================================================
 //    JSHint directives.
@@ -1068,12 +1070,12 @@ var public_sites = [
       'TV': true},
   {   'name': '1337x-Proxy',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADgAAAA4BAMAAABaqCYtAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAAAPUExURdY2AN9iOP///9Y2AN9iOE1iXmMAAAADdFJOUwAAAPp2xN4AAADRSURBVDjLtdXtDQIhDAbgxmMBDAP4NcDFOoAI+8/kQXsmV6DgRfuL8KTlhT/ARSkYwHNMZZdyafHS8LhFN4SxhZ7Rf4OW0TUxjqCVyHFjG30ffYG07fZi5FgF5v34c7Sr+f+glXgCAEMWluVhF85VBGqclU5UMOCjiQERq5iHKpga8VnHbClRgYatjmwpboETrlXBoCF2caJEEk3ebuDUR6C7SOSXo0QSOaeKNECg4YejowVyHh1pgsDASGcL5DwdDCXePpgPv2/wyjep4o7f4Q1FlOJhL4s2tAAAAABJRU5ErkJggg==',
-      'searchUrl': 'https://1337x.unblockit.li/category-search/%search_string%+%year%/Movies/1/',
+      'searchUrl': 'https://1337x.unblockit.uno/category-search/%search_string%+%year%/Movies/1/',
       'loggedOutRegex': /Cloudflare|Ray ID/,
       'matchRegex': /No results were returned/},
   {   'name': '1337x-Proxy',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADgAAAA4BAMAAABaqCYtAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAAAPUExURdY2AN9iOP///9Y2AN9iOE1iXmMAAAADdFJOUwAAAPp2xN4AAADRSURBVDjLtdXtDQIhDAbgxmMBDAP4NcDFOoAI+8/kQXsmV6DgRfuL8KTlhT/ARSkYwHNMZZdyafHS8LhFN4SxhZ7Rf4OW0TUxjqCVyHFjG30ffYG07fZi5FgF5v34c7Sr+f+glXgCAEMWluVhF85VBGqclU5UMOCjiQERq5iHKpga8VnHbClRgYatjmwpboETrlXBoCF2caJEEk3ebuDUR6C7SOSXo0QSOaeKNECg4YejowVyHh1pgsDASGcL5DwdDCXePpgPv2/wyjep4o7f4Q1FlOJhL4s2tAAAAABJRU5ErkJggg==',
-      'searchUrl': 'https://1337x.unblockit.li/category-search/%search_string%/TV/1/',
+      'searchUrl': 'https://1337x.unblockit.uno/category-search/%search_string%/TV/1/',
       'loggedOutRegex': /Cloudflare|Ray ID/,
       'matchRegex': /No results were returned/,
       'TV': true},
@@ -1303,13 +1305,13 @@ var public_sites = [
   {   'name': 'LimeTor-Proxy',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAAUOSURBVHjanJdLiF1FEIa/iaMRQ6IILozVulDxgbtk0S34AIkuBDdyIi4CiouIEGEmCxdGCARBRXMxS9GFG8GcbARFCUIEkW4JKkhWGhGsWimBiKCYxBkXXedx753MTNJwuPdwurv+rvrrr+qF1dVVFhYWmBuN/4o/1r9vA+4GuZNAALajnAP7jZafKfwCXGKTY3FTs4xrEB6XEJ9tYnpUkBBCQJDRFEMbvVSsnM05f2GtfUTh9EZbL2zogchTMTWvLadm99hgZ3YY09+yZtrSflqOlsMUvrsaADukkXeX4tJzKaT+lDUaepntwgiOYBhZ87+TyeQIE17fPADhjng8nlhOze7xpqAIAUPX9EX3bRZU1kzbth/bQXse+Gd9Dgi3yvH4eZOa+wBUMwQII5My82tzAQDFQA0wJAipSc+05Os5aHuBC5f1gByXk01Me4SIURA3LiOTMuNwnWOEYf6WVX1NoiVTJuUtJrzSzdwyE/eXJMqeGr8WQQmAYP0zONbcpPn/sRPNs1edM0YhkwhII8tEHp4HIOyUJTmSCBRy3TjUTZKfNsyAYASiexKFgJLceN2jhsQAEVmk4Shw3TSAhpdFuHladczdrf0TfCOdObX5yRmRcB6wVu1K7CLy9BjADhL7AkJr7Uj+xqccZ0JxaBWU9gZ1bo15SgaEbAW1jIhAw35gYdHF5iGEnRAQsf50quIknAVRfZN7wgV/s5lMALTqgWLVMEIC2mAR4Z7qgcQjIoKimJkTbzhL29OpbmoOKCtkBVWXYg+NAhmhICPvOB2tVEYJWxEeXHQC3i/gH4fYp2CuaFCcXqCgBSX3DBEUVVeDEN2cEjEkVKDmp6ksyR2qBzoh2jlNPnovBMzzvSUjZBWgwcg+W1yiY0+86FC7fSyAKaibMHOpFrt9i8+6YWxc5pR9yO8QCkbbS2+NKEABSp0zt+6yY3vngf/GkmojEoWZVKvCJh7v7DDok9BmiLjBWFl0S39anEaqc4kogw/7UwpKmaqAqpE2WK+GUN1vVNePxRo4v+hvZ4HUxbNPMx0YLMEglOohrSwf3BsRCimM819q3GdqBEASoTUD49cOwPdmtq+RBiX36ZQQUmCKVOqkEhUY8mJE2qEaWpCpFBXpilqonFHOVACZr1hiRdEtxTwFpSZgnOGBL61s7z8U0OhfhnmhV4zKmW5vkwzGeQqnt7gHfiTzrWE00rhirUMmrSEJbiiu0aCNkXQwoggiETODzCngbFcLVigcM2eJma1R473XWyO1AkCwEe1m9bgjoHSbrtLyAbA6VMOWE2S+yWSSxIH9Wo2qGzcV75DmNUK1k+06t2VY24fPCmQ+wzg525JdYsIBS/a1imwLRLLHVHRspp4jj0in445AmauJBiSJVTuNP5hwCLi4dlPacIAlOdZI8lJb+pzvZEqg50DvaQUjdm1Hrw8GJBoyucZ+L/sx3lu/K17iHZZkuXGZVbKXF+urmkwxpNOP6KV8IHEgkb3KsmxvUDjUKe9G94JXWZIjUWQhkciezTK6H8x3REP/05DqvYCMFS5w1A5TeBNY2dzFpArckyzL20S5NxL67jjPtF5DNqQeTu66wNbOMOEQxidXdjMaxk00vEgjLxDlLulvCDJzZRkU3kwh20+09iGF94Hfr/xqthaQyGMknkBkF4HbELaDXAt2EeMvFKPYD2S+xDi1nuGrATAeW4FbgBv9/0XgPHAO+PtKNvp/ACd2iMQwv1FJAAAAAElFTkSuQmCC',
       'loggedOutRegex': /Cloudflare|Ray ID|security check to access|Please turn JavaScript/,
-      'searchUrl': 'https://limetorrents.unblockit.li/search/movies/%search_string%+%year%/seeds/1/',
+      'searchUrl': 'https://limetorrents.unblockit.uno/search/movies/%search_string%+%year%/seeds/1/',
       'matchRegex': /csprite_dl14/,
       'positiveMatch': true},
   {   'name': 'LimeTor-Proxy',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAAUOSURBVHjanJdLiF1FEIa/iaMRQ6IILozVulDxgbtk0S34AIkuBDdyIi4CiouIEGEmCxdGCARBRXMxS9GFG8GcbARFCUIEkW4JKkhWGhGsWimBiKCYxBkXXedx753MTNJwuPdwurv+rvrrr+qF1dVVFhYWmBuN/4o/1r9vA+4GuZNAALajnAP7jZafKfwCXGKTY3FTs4xrEB6XEJ9tYnpUkBBCQJDRFEMbvVSsnM05f2GtfUTh9EZbL2zogchTMTWvLadm99hgZ3YY09+yZtrSflqOlsMUvrsaADukkXeX4tJzKaT+lDUaepntwgiOYBhZ87+TyeQIE17fPADhjng8nlhOze7xpqAIAUPX9EX3bRZU1kzbth/bQXse+Gd9Dgi3yvH4eZOa+wBUMwQII5My82tzAQDFQA0wJAipSc+05Os5aHuBC5f1gByXk01Me4SIURA3LiOTMuNwnWOEYf6WVX1NoiVTJuUtJrzSzdwyE/eXJMqeGr8WQQmAYP0zONbcpPn/sRPNs1edM0YhkwhII8tEHp4HIOyUJTmSCBRy3TjUTZKfNsyAYASiexKFgJLceN2jhsQAEVmk4Shw3TSAhpdFuHladczdrf0TfCOdObX5yRmRcB6wVu1K7CLy9BjADhL7AkJr7Uj+xqccZ0JxaBWU9gZ1bo15SgaEbAW1jIhAw35gYdHF5iGEnRAQsf50quIknAVRfZN7wgV/s5lMALTqgWLVMEIC2mAR4Z7qgcQjIoKimJkTbzhL29OpbmoOKCtkBVWXYg+NAhmhICPvOB2tVEYJWxEeXHQC3i/gH4fYp2CuaFCcXqCgBSX3DBEUVVeDEN2cEjEkVKDmp6ksyR2qBzoh2jlNPnovBMzzvSUjZBWgwcg+W1yiY0+86FC7fSyAKaibMHOpFrt9i8+6YWxc5pR9yO8QCkbbS2+NKEABSp0zt+6yY3vngf/GkmojEoWZVKvCJh7v7DDok9BmiLjBWFl0S39anEaqc4kogw/7UwpKmaqAqpE2WK+GUN1vVNePxRo4v+hvZ4HUxbNPMx0YLMEglOohrSwf3BsRCimM819q3GdqBEASoTUD49cOwPdmtq+RBiX36ZQQUmCKVOqkEhUY8mJE2qEaWpCpFBXpilqonFHOVACZr1hiRdEtxTwFpSZgnOGBL61s7z8U0OhfhnmhV4zKmW5vkwzGeQqnt7gHfiTzrWE00rhirUMmrSEJbiiu0aCNkXQwoggiETODzCngbFcLVigcM2eJma1R473XWyO1AkCwEe1m9bgjoHSbrtLyAbA6VMOWE2S+yWSSxIH9Wo2qGzcV75DmNUK1k+06t2VY24fPCmQ+wzg525JdYsIBS/a1imwLRLLHVHRspp4jj0in445AmauJBiSJVTuNP5hwCLi4dlPacIAlOdZI8lJb+pzvZEqg50DvaQUjdm1Hrw8GJBoyucZ+L/sx3lu/K17iHZZkuXGZVbKXF+urmkwxpNOP6KV8IHEgkb3KsmxvUDjUKe9G94JXWZIjUWQhkciezTK6H8x3REP/05DqvYCMFS5w1A5TeBNY2dzFpArckyzL20S5NxL67jjPtF5DNqQeTu66wNbOMOEQxidXdjMaxk00vEgjLxDlLulvCDJzZRkU3kwh20+09iGF94Hfr/xqthaQyGMknkBkF4HbELaDXAt2EeMvFKPYD2S+xDi1nuGrATAeW4FbgBv9/0XgPHAO+PtKNvp/ACd2iMQwv1FJAAAAAElFTkSuQmCC',
       'loggedOutRegex': /Cloudflare|Ray ID|security check to access|Please turn JavaScript/,
-      'searchUrl': 'https://limetorrents.unblockit.li/search/tv/%search_string%/seeds/1/',
+      'searchUrl': 'https://limetorrents.unblockit.uno/search/tv/%search_string%/seeds/1/',
       'matchRegex': /csprite_dl14/,
       'positiveMatch': true,
       'TV': true},
@@ -1506,7 +1508,7 @@ var public_sites = [
       'both': true},
   {   'name': 'TorDL-Proxy',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAbFBMVEUFMFwLNmINfsASgcMUP2sYhcYeSXUeicoljc4lmt4oU38tktIwn+AyXYk1l9Y7ZpE8peM9nNtFod9Jq+ZOpuRWq+hXsuldsOxktfBluOxrufRxvPdzv/B2v/qBxvOOzPaa0vml1/uu2/213v9ENtEwAAAAb0lEQVQYGQXBQU7DABAEMCdaBDcKPfP/17XqEaTMDvbxAwCY/QAAv2cBgM4WAOy0nuAbdLa+PNwV7LSIvnCj57btdXX3c5/tThdrY2N1EkQuuUQmQWVlRSbBXSIRmQaoh1v0eHsHAH+zAQB7nACAfwQvUdbdx9fFAAAAAElFTkSuQmCC',
-      'searchUrl': 'https://torrentdownloads.unblockit.li/search/?new=1&s_cat=0&search=%search_string%',
+      'searchUrl': 'https://torrentdownloads.unblockit.uno/search/?new=1&s_cat=0&search=%search_string%',
       'loggedOutRegex': /Cloudflare|Ray ID/,
       'matchRegex': /No results found/,
       'both': true},
@@ -3474,12 +3476,6 @@ var german_sites = [
       'loggedOutRegex': /Cloudflare|Ray ID|Nicht eingelogt/,
       'matchRegex': /keine Torrents/,
       'TV': true},
-  {   'name': 'SW',
-      'searchUrl': 'https://main.starwarez.to/index.php?search/666/&q=%tt%&o=date',
-      'loggedOutRegex': /Cloudflare|Ray ID/,
-      'matchRegex': /search_results/,
-      'positiveMatch': true,
-      'both': true},
   {   'name': 'TNT',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJUAAACVAQMAAABrbCoMAAAABlBMVEXm5uYmLzenm8r7AAAC9klEQVRIx73Tz27TMBgAcIcgBSE074R2GMsLIAHiAIeqZuJF9gZw7KFqslNv9AWQhsQL8ASQnXJj10G7OlMOHJcKafXWLB9tbH92Yrb2Aj641q/x5+/zH/Jv2v1V5zXtUW3xWtup+6Rhz+v+oGHvsTctq/vXNnnSOrb5MvqebYHMgtpG8S/T9jCEaR1cylTWU4NZbCoTaiDM5BeFGvRNdbmO08VKvFRPCXexipEOTT9gFUdoJ1hFiP+msa6ii1Hy5A7r9DGDWaatRLvS1jMmCm0CK0K7Mlbq4cyyngry21jVv932c8s62/XvW9u60nLb1K7ObWNyYWiYuN3sXCJldh13WHRl9qqEQpowJtAqPA9trBygzSBTxvB8z5WFlbEcEmkQ4t1I0UZ4r0ZoKVqojIK5kwxiZTO8u5GyIBJ4x2GuEj0q9fs4h+9qdAL6HaXwUZ8vjFTKo6qPUXIZeYth5IrNZFa7ER5NNBTSdoDqrFhRyTf1UkSZrqjUb/oQdJUUsF6I9a4B4AB3HPTJQIWnBaBOGko86QitQDO7lqGFQLbkGglaADEV9XdIy4WToKpP1ZgHmb8KyUpiWlR4q1ARLisnQbYKYVkAq28CsOjBciYTy/0hMdoWgSIUJBK+MQqhWH4EKRjzIS1p6QHmJ68+BFUgLz1OFmwINJNTcQOHKYQU7DoAzlPYZWDPZZBfwFcGWaOOY4AyBGK3MF5UgiYN65JXcOBnDeuRd/CFFKTZOD8l7TbnvTZ5n6dP2+bvTx47djzZa9u9w8lDJ543uU8cnJCNzJ+6FgR/sZFrlMeOhTxxjPHMsYgXjgEXTsrASyflOR846f0aMSeVE37UToZRPmwnU4b8uL3wmydnyfYmdQzGbh3VWGxiXjUuNzG//+PSuQfXP683mns5dvaKVmOI23u1tMQplzsFR9/4RbtgAA6ibRGft21wc7Zoz2U3Z9BeIwTu5EIXUydnfzGt1t8XfIPr798z/mmjOx7wde8I35vbTsn/bH8ANSe+EaJ+o2YAAAAASUVORK5CYII=',
       'searchUrl': 'https://tntracker.org/api/browse?cats=6,7,17,18,19,20,22,24,34,35,36,37,38,39,43,45,46,48&orderC=4&orderD=desc&start=0&length=1&search=%search_string_orig%+%year%',
@@ -4583,6 +4579,7 @@ function getTVDbID(movie_id) {
   return new Promise(resolve => {
     GM.xmlHttpRequest({
       method: "GET",
+      timeout: 6000,
       url:    "https://thetvdb.com/api/GetSeriesByRemoteID.php?imdbid=tt" + movie_id,
       onload: function(response) {
         if (String(response.responseText).match("seriesid")) {
@@ -4601,7 +4598,9 @@ function getTVDbID(movie_id) {
         resolve("00000000");
       },
       onabort: function() {
-        console.log("IMDb Scout Mod (getTVDbID): Request is aborted.");
+        resolve("00000000");
+      },
+      ontimeout: function() {
         resolve("00000000");
       }
     });
@@ -4612,6 +4611,7 @@ function getTMDbID(movie_id) {
   return new Promise(resolve => {
     GM.xmlHttpRequest({
       method: "GET",
+      timeout: 6000,
       url:    "https://api.themoviedb.org/3/find/tt" + movie_id + "?api_key=d12b33d3f4fb8736dc06f22560c4f8d4&external_source=imdb_id",
       onload: function(response) {
         const result = JSON.parse(response.responseText);
@@ -4635,7 +4635,9 @@ function getTMDbID(movie_id) {
         resolve("00000000");
       },
       onabort: function() {
-        console.log("IMDb Scout Mod (getTMDbID): Request is aborted.");
+        resolve("00000000");
+      },
+      ontimeout: function() {
         resolve("00000000");
       }
     });
@@ -4646,6 +4648,7 @@ function getDoubanID0(movie_id) {
   return new Promise(resolve => {
     GM.xmlHttpRequest({
       method: "GET",
+      timeout: 5000,
       url:    "https://movie.douban.com/j/subject_suggest?q=tt" + movie_id,
       onload: function(response) {
         const result = JSON.parse(response.responseText);
@@ -4663,7 +4666,9 @@ function getDoubanID0(movie_id) {
         resolve("00000000");
       },
       onabort: function() {
-        console.log("IMDb Scout Mod (getDoubanID0): Request is aborted.");
+        resolve("00000000");
+      },
+      ontimeout: function() {
         resolve("00000000");
       }
     });
@@ -4674,6 +4679,7 @@ function getDoubanID1(movie_id) {
   return new Promise(resolve => {
     GM.xmlHttpRequest({
       method: "GET",
+      timeout: 5000,
       url:    "https://www.douban.com/search?cat=1002&q=tt" + movie_id,
       onload: function(response) {
         const parser = new DOMParser();
@@ -4696,7 +4702,9 @@ function getDoubanID1(movie_id) {
         resolve("00000000");
       },
       onabort: function() {
-        console.log("IMDb Scout Mod (getDoubanID1): Request is aborted.");
+        resolve("00000000");
+      },
+      ontimeout: function() {
         resolve("00000000");
       }
     });
@@ -4707,6 +4715,7 @@ function getDoubanID2(movie_id) {
   return new Promise(resolve => {
     GM.xmlHttpRequest({
       method: "GET",
+      timeout: 5000,
       url:    'https://query.wikidata.org/sparql?format=json&query=SELECT * WHERE {?s wdt:P345 "tt' +movie_id+ '". OPTIONAL { ?s wdt:P4529 ?Douban_film_ID. }}',
       onload: function(response) {
         const result = JSON.parse(response.responseText);
@@ -4729,7 +4738,9 @@ function getDoubanID2(movie_id) {
         resolve("00000000");
       },
       onabort: function() {
-        console.log("IMDb Scout Mod (getDoubanID2): Request is aborted.");
+        resolve("00000000");
+      },
+      ontimeout: function() {
         resolve("00000000");
       }
     });
@@ -4740,6 +4751,7 @@ function getDoubanID3(movie_id) {
   return new Promise(resolve => {
     GM.xmlHttpRequest({
       method: "GET",
+      timeout: 5000,
       url:    'https://www.google.com/search?q="tt' +movie_id+ '" site:https://movie.douban.com/subject&safe=off',
       onload: function(response) {
         const result = String(response.responseText);
@@ -4759,7 +4771,9 @@ function getDoubanID3(movie_id) {
         resolve("00000000");
       },
       onabort: function() {
-        console.log("IMDb Scout Mod (getDoubanID3): Request is aborted.");
+        resolve("00000000");
+      },
+      ontimeout: function() {
         resolve("00000000");
       }
     });
@@ -4770,6 +4784,7 @@ function getAllocineID(movie_id) {
   return new Promise(resolve => {
     GM.xmlHttpRequest({
       method: "GET",
+      timeout: 5000,
       url:    'https://query.wikidata.org/sparql?format=json&query=SELECT * WHERE {?s wdt:P345 "tt' +movie_id+ '". OPTIONAL {?s wdt:P1265 ?AlloCin__film_ID.}  OPTIONAL {?s wdt:P1267 ?AlloCin__series_ID.}}',
       onload: function(response) {
         const result = JSON.parse(response.responseText);
@@ -4795,7 +4810,9 @@ function getAllocineID(movie_id) {
         resolve("00000000");
       },
       onabort: function() {
-        console.log("IMDb Scout Mod (getAllocineID): Request is aborted.");
+        resolve("00000000");
+      },
+      ontimeout: function() {
         resolve("00000000");
       }
     });
@@ -5070,13 +5087,16 @@ async function maybeAddLink(elem, site_name, search_url, site, scout_tick, movie
     const post_data = await replaceSearchUrlParams(site, movie_id, movie_title, movie_title_orig, movie_year);
     GM.xmlHttpRequest({
       method: 'POST',
+      timeout: parseInt(GM_config.get('timeout_ms')),
       url: search_url,
       data: post_data,
       headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
       onload: function(response) {
-      //console.log(site_name + " POST Response: " + response.responseText);
-      //console.log(site_name + " POST Response Status: " + response.status);
-      //console.log(site_name + " POST Response Headers: " + response.responseHeaders);
+        if (GM_config.get('debug_sites')) {
+          console.log(site_name + " POST Response Status: " + response.status + "\n ");
+          console.log(site_name + " POST Response Headers: " + response.responseHeaders + "\n ");
+          console.log(site_name + " POST Response: " + response.responseText + "\n ");
+        }
         if (response.responseHeaders.indexOf('efresh: 0; url') > -1 || response.status > 499 || (response.status > 399 && !site.ignore404) || (response.responseText == "" && !site.ignoreEmpty)) {
           addLink(elem, site_name, target, site, 'logged_out', scout_tick, post_data);
         } else if (site['positiveMatch'] && site['loggedOutRegex'] && String(response.responseText).match(site['loggedOutRegex'])) {
@@ -5100,9 +5120,15 @@ async function maybeAddLink(elem, site_name, search_url, site, scout_tick, movie
       },
       onerror: function() {
         addLink(elem, site_name, target, site, 'error', scout_tick, post_data);
+        console.log("IMDb Scout Mod (POST-Error. Site): " +site_name);
       },
       onabort: function() {
         addLink(elem, site_name, target, site, 'error', scout_tick, post_data);
+        console.log("IMDb Scout Mod (POST-Abort:. Site): " +site_name);
+      },
+      ontimeout: function() {
+        addLink(elem, site_name, target, site, 'error', scout_tick, post_data);
+        console.log("IMDb Scout Mod (POST-Timeout. Site): " +site_name);
       }
     });
     return;
@@ -5129,11 +5155,14 @@ async function maybeAddLink(elem, site_name, search_url, site, scout_tick, movie
   GM.xmlHttpRequest({
     method: 'GET',
     headers: reqHeader,
+    timeout: parseInt(GM_config.get('timeout_ms')),
     url: search_url,
     onload: function(response) {
-      //console.log(site_name + " GET Response: " + response.responseText);
-      //console.log(site_name + " GET Response Status: " + response.status);
-      //console.log(site_name + " GET Response Headers: " + response.responseHeaders);
+      if (GM_config.get('debug_sites')) {
+        console.log(site_name + " GET Response Status: " + response.status + "\n ");
+        console.log(site_name + " GET Response Headers: " + response.responseHeaders + "\n ");
+        console.log(site_name + " GET Response: " + response.responseText + "\n ");
+      }
       if (response.responseHeaders.indexOf('efresh: 0; url') > -1 || response.status > 499 || (response.status > 399 && !site.ignore404) || (response.responseText == "" && !site.ignoreEmpty)) {
         addLink(elem, site_name, target, site, 'logged_out', scout_tick);
       } else if (site['positiveMatch'] && site['loggedOutRegex'] && String(response.responseText).match(site['loggedOutRegex'])) {
@@ -5157,9 +5186,15 @@ async function maybeAddLink(elem, site_name, search_url, site, scout_tick, movie
     },
     onerror: function() {
       addLink(elem, site_name, target, site, 'error', scout_tick);
+      console.log("IMDb Scout Mod (GET-Error. Site): " +site_name);
     },
     onabort: function() {
       addLink(elem, site_name, target, site, 'error', scout_tick);
+      console.log("IMDb Scout Mod (GET-Abort. Site): " +site_name);
+    },
+    ontimeout: function() {
+      addLink(elem, site_name, target, site, 'error', scout_tick);
+      console.log("IMDb Scout Mod (GET-Timeout. Site): " +site_name);
     }
   });
 }
@@ -5473,6 +5508,7 @@ function performSearchSecondPart(elem, link, movie_id, showsites, scout_tick) {
 
   GM.xmlHttpRequest({
     method: "GET",
+    timeout: 10000,
     url:    "https://www.imdb.com" + link.attr('href'),
     onload: function(response) {
       var parser = new DOMParser();
@@ -5510,7 +5546,16 @@ function performSearchSecondPart(elem, link, movie_id, showsites, scout_tick) {
         movie_title_orig = movie_title;
       }
       perform(elem, movie_id, movie_title, movie_title_orig, is_tv, is_movie, movie_year, scout_tick);
-    }
+      },
+      onerror: function() {
+        console.log("IMDb Scout Mod (Lists): Request Error.");
+      },
+      onabort: function() {
+        console.log("IMDb Scout Mod (Lists): Abort.");
+      },
+      ontimeout: function() {
+        console.log("IMDb Scout Mod (Lists): Time out.");
+      }
   });
 }
 
@@ -6050,6 +6095,7 @@ function getInfoFromOMDb(key, imdbid, error_icon, button) {
     const url = "http://www.omdbapi.com/?i=tt" +imdbid+ "&apikey=" +key+ "&plot=full";
     GM.xmlHttpRequest({
       method: "GET",
+      timeout: 10000,
       url:    url,
       onload: function(response) {
         if (String(response.responseText).match("limit reached!")) {
@@ -6084,6 +6130,11 @@ function getInfoFromOMDb(key, imdbid, error_icon, button) {
       },
       onabort: function() {
         console.log("IMDb Scout Mod (Copy Info to BBCode): Request is aborted.");
+        $('.CopyInfotoBBcode').find('img').prop("src", error_icon);
+        button.off("click");
+      },
+      ontimeout: function() {
+        console.log("IMDb Scout Mod (Copy Info to BBCode): Request timed out.");
         $('.CopyInfotoBBcode').find('img').prop("src", error_icon);
         button.off("click");
       }
@@ -7572,6 +7623,7 @@ function getIMDbRatings(imdbid, imdb_icon) {
   const url = "https://www.imdb.com/title/tt" +imdbid+ "/ratings";
   GM.xmlHttpRequest({
     method: "GET",
+    timeout: 10000,
     url:    url,
     onload: function(response) {
       const parser = new DOMParser();
@@ -7617,6 +7669,9 @@ function getIMDbRatings(imdbid, imdb_icon) {
     },
     onabort: function() {
       console.log("IMDb Scout Mod (IMDb Ratings): Request is aborted.");
+    },
+    ontimeout: function() {
+      console.log("IMDb Scout Mod (IMDb Ratings): Request timed out.");
     }
   });
 }
@@ -7625,6 +7680,7 @@ function getMetacriticRatings_IMDb(imdbid, meta_icon, meta_badge) {
   const url = "https://www.imdb.com/title/tt" +imdbid+ "/criticreviews";
   GM.xmlHttpRequest({
     method: "GET",
+    timeout: 10000,
     url:    url,
     onload: function(response) {
       const parser = new DOMParser();
@@ -7669,6 +7725,9 @@ function getMetacriticRatings_IMDb(imdbid, meta_icon, meta_badge) {
     },
     onabort: function() {
       console.log("IMDb Scout Mod (Metascore from IMDb): Request is aborted.");
+    },
+    ontimeout: function() {
+      console.log("IMDb Scout Mod (Metascore from IMDb): Request timed out.");
     }
   });
 }
@@ -7676,6 +7735,7 @@ function getMetacriticRatings_IMDb(imdbid, meta_icon, meta_badge) {
 function getMetacritic_User(url) {
   GM.xmlHttpRequest({
     method: "GET",
+    timeout: 10000,
     url:    url,
     onload: function(response) {
       const parser = new DOMParser();
@@ -7699,6 +7759,9 @@ function getMetacritic_User(url) {
     },
     onabort: function() {
       console.log("IMDb Scout Mod (Metacritic user): Request is aborted.");
+    },
+    ontimeout: function() {
+      console.log("IMDb Scout Mod (Metacritic user): Request timed out.");
     }
   });
 }
@@ -7707,6 +7770,7 @@ function getLetterboxdRatings(imdbid, lboxd_icon, lboxd_cust) {
   const url = "https://letterboxd.com/imdb/" + imdbid;
   GM.xmlHttpRequest({
     method: "GET",
+    timeout: 10000,
     url:    url,
     onload: function(response) {
       const parser = new DOMParser();
@@ -7732,6 +7796,9 @@ function getLetterboxdRatings(imdbid, lboxd_icon, lboxd_cust) {
     },
     onabort: function() {
       console.log("IMDb Scout Mod (Letterboxd Ratings 1): Request is aborted.");
+    },
+    ontimeout: function() {
+      console.log("IMDb Scout Mod (Letterboxd Ratings 1): Request timed out.");
     }
   });
 }
@@ -7740,6 +7807,7 @@ function getLetterboxdRatingsCustom(url, lboxd_cust) {
   const newurl = url + "ratings";
   GM.xmlHttpRequest({
     method: "GET",
+    timeout: 10000,
     url:    newurl,
     onload: function(response) {
       const parser = new DOMParser();
@@ -7775,6 +7843,9 @@ function getLetterboxdRatingsCustom(url, lboxd_cust) {
     },
     onabort: function() {
       console.log("IMDb Scout Mod (Letterboxd Ratings 2): Request is aborted.");
+    },
+    ontimeout: function() {
+      console.log("IMDb Scout Mod (Letterboxd Ratings 2): Request timed out.");
     }
   });
 }
@@ -7783,6 +7854,7 @@ function getRTandMetaRatings_OMDb(key, imdbid, meta_icon, rott_rotten, rott_cert
   const url = "http://www.omdbapi.com/?i=tt" +imdbid+ "&apikey=" +key+ "&plot=full&tomatoes=true";
   GM.xmlHttpRequest({
     method: "GET",
+    timeout: 10000,
     url:    url,
     onload: function(response) {
       if (String(response.responseText).match("limit reached!")) {
@@ -7835,6 +7907,9 @@ function getRTandMetaRatings_OMDb(key, imdbid, meta_icon, rott_rotten, rott_cert
     },
     onabort: function() {
       console.log("IMDb Scout Mod (OMDb Ratings): Request is aborted.");
+    },
+    ontimeout: function() {
+      console.log("IMDb Scout Mod (OMDb Ratings): Request timed out.");
     }
   });
 }
@@ -7842,6 +7917,7 @@ function getRTandMetaRatings_OMDb(key, imdbid, meta_icon, rott_rotten, rott_cert
 function getRotten(url, rott_rotten, rott_certified, rott_fresh, rott_user_up, rott_user_down) {
   GM.xmlHttpRequest({
     method: "GET",
+    timeout: 10000,
     url:    url,
     onload: function(response) {
       const parser = new DOMParser();
@@ -7893,6 +7969,9 @@ function getRotten(url, rott_rotten, rott_certified, rott_fresh, rott_user_up, r
     },
     onabort: function() {
       console.log("IMDb Scout Mod (Rotten Tomatoes): Request is aborted.");
+    },
+    ontimeout: function() {
+      console.log("IMDb Scout Mod (Rotten Tomatoes): Request timed out.");
     }
   });
 }
@@ -7915,6 +7994,7 @@ async function getDoubanRatings(imdbid, douban_icon) {
   $('.DoubanUserRatingUrl').attr('href', url);
   GM.xmlHttpRequest({
     method: "GET",
+    timeout: 10000,
     url:    url,
     onload: function(response) {
       const parser = new DOMParser();
@@ -7936,6 +8016,9 @@ async function getDoubanRatings(imdbid, douban_icon) {
     },
     onabort: function() {
       console.log("IMDb Scout Mod (Douban): Request is aborted.");
+    },
+    ontimeout: function() {
+      console.log("IMDb Scout Mod (Douban): Request timed out.");
     }
   });
 }
@@ -7955,6 +8038,7 @@ async function getAllocineRatings(imdbid, allocine_icon) {
   $('.AllocineUserRatingUrl').attr('href', url);
   GM.xmlHttpRequest({
     method: "GET",
+    timeout: 10000,
     url:    url,
     onload: function(response) {
       const parser = new DOMParser();
@@ -7992,6 +8076,9 @@ async function getAllocineRatings(imdbid, allocine_icon) {
     },
     onabort: function() {
       console.log("IMDb Scout Mod (Allocine): Request is aborted.");
+    },
+    ontimeout: function() {
+      console.log("IMDb Scout Mod (Allocine): Request timed out.");
     }
   });
 }
@@ -8172,8 +8259,10 @@ function countSites(task) {
       'mod_icons_size': {'type': 'text'},
       'iconsborder_size': {'type': 'select', 'options': ['2px', '3px', '4px', '5px', '6px']},
       'cfg_iconsize': {'type': 'text'},
+      'timeout_ms': {'type': 'select', 'options': ['10000 ms', '20000 ms', '30000 ms', '45000 ms', '60000 ms']},
       'load_icons_in_settings': {'type': 'checkbox'},
       'remove_ads': {'type': 'checkbox'},
+      'debug_sites': {'type': 'checkbox'},
       'loadmod_on_start_movie': {'type': 'checkbox'},
       'load_second_bar': {'type': 'checkbox'},
       'load_third_bar_movie': {'type': 'checkbox'},
@@ -8343,7 +8432,6 @@ var set_cfg_iconsize_spacing = "&nbsp &nbsp";
 var radarr_url_spacing = "&nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp";
 var radarr_apikey_spacing = "&nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp";
 var radarr_rootfolderpath_spacing = "&nbsp";
-var radarr_customprofileid_spacing = "&nbsp";
 var sonarr_usescenenumbering_spacing = "&nbsp &nbsp";
 var sonarr_monitored_spacing = " &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp";
 var sonarr_languageprofileid_spacing = " &nbsp &nbsp &nbsp &nbsp &nbsp";
@@ -8353,7 +8441,6 @@ if (navigator.userAgent.toLowerCase().indexOf('firefox') > -1) {
   radarr_url_spacing = " &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp";
   radarr_apikey_spacing = "&nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp";
   radarr_rootfolderpath_spacing = "";
-  radarr_customprofileid_spacing = "";
   sonarr_usescenenumbering_spacing = "&nbsp";
   sonarr_monitored_spacing = " &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp";
   sonarr_languageprofileid_spacing = "&nbsp &nbsp &nbsp &nbsp &nbsp";
@@ -8405,6 +8492,12 @@ var config_fields = {
     'type': 'text',
     'default': '22'
   },
+  'timeout_ms': {
+    'label': 'Timeout requests after: &nbsp &nbsp &nbsp' + radarr_rootfolderpath_spacing,
+    'type': 'select',
+    'options': ['10000 ms', '20000 ms', '30000 ms', '45000 ms', '60000 ms'],
+    'default': '30000 ms'
+  },
   'load_icons_in_settings': {
     'type': 'checkbox',
     'label': 'Load icons in settings (most of them are external)?',
@@ -8414,6 +8507,11 @@ var config_fields = {
     'type': 'checkbox',
     'label': 'Remove IMDb ads?',
     'default': true
+  },
+  'debug_sites': {
+    'type': 'checkbox',
+    'label': 'Debug (the searchable sites)?',
+    'default': false
   },
   'loadmod_on_start_movie': {
     'section': 'Title Page:',
@@ -8632,7 +8730,7 @@ var config_fields = {
     'default': 'Any'
   },
   'radarr_customprofileid': {
-    'label': 'Custom Quality ProfileID:' + radarr_customprofileid_spacing,
+    'label': 'Custom Quality ProfileID:' + radarr_rootfolderpath_spacing,
     'type': 'text',
     'default': '1'
   },
@@ -8702,7 +8800,7 @@ var config_fields = {
     'default': 'Any'
   },
   'sonarr_customprofileid': {
-    'label': 'Custom Quality ProfileID:' + radarr_customprofileid_spacing,
+    'label': 'Custom Quality ProfileID:' + radarr_rootfolderpath_spacing,
     'type': 'text',
     'default': '1'
   },
