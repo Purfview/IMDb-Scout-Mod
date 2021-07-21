@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      13.2
+// @version      13.3
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from hundreds various sites. Adds movies/series to Radarr/Sonarr. Adds external ratings from Metacritic, Rotten Tomatoes, Letterboxd, Douban, Allocine. Media Server indicators for Plex, Jellyfin, Emby. Dark theme/style for Reference View. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAMFBMVEUAAAD/AAAcAAA1AABEAABVAAC3AADnAAD2AACFAAClAABlAAB3AADHAACVAADYAABCnXhrAAAD10lEQVRIx73TV4xMURgH8H/OnRmZWe3T7h2sOWaNXu7oJRg9UccuHgTRBatMtAgSg+gJu9q+kFmihcQoD8qLTkK0CIkoy0YJITsRD0rCKTHFrnkSv5e5c88/53znO+fiPwvsvrN038cPNqrG9pJmHkRVnPcpaTlHJY60cfPSpsrzl1LKihrmLvxhCM2i3OHvDx0d+H7e3F6JBv5iZMiJfhFTfPYDMHrMImpwimWWUdSgDQkbno7fFpUPVgh+pHFbZR4SovSctDCM9Hac9IKd9rO8EevtBCkXgY5IMmgquwypP7qqfcp/Tp4KLONDVsWh3RSBB2rnZfit69ocUdqLn2prrRZYM0Jg4JibamKsqe7gfEh5GOAfeYJjVHIPZvil97rcXkMog30byWRwXYRWoxHbzNFHJJpAarO8NdEBBsdCaP3WMJltTmQd4zlnekTq9Z5dgACwAlrpK4BxdV5mvLuspRgMSHbCIFF0iS8MZ5S8oYBYKY7rByC4dDM9uSIUmPOIwxgQBoYeF93auP4qFyPbIVXziWeGTH1EFM57kJo2hqQju6BwIyRf6RmCjdT4JOdiwNgiH/PPD3qoqlsNaXRd+fKtFfECxlZVNVF9SOsgTZEr2TUjJJbyeNX1IZrKIbyGlBABfpQPv2UDrly13LkJXDVhpQ5MhtGwcyF4HKjlU4E8xwB0AvDjd6AGmevZ87EcQRHgcO52e9uNsYELOrAa/Yh81YlmYLQJ5HWyq0+kzQ/DQKEusg6CRI27ryy8nReRS0wsoetkmRwogHSprliCckfEjXG9yAQc74J0WB99vu6DF3i3pMucsXM6tpBbxd2mVJAwXwGogNRBvGRA4jtHKTXkAIwLGCR/mT4Lh75oneQXXP9sAYfGRDCsnw7pX/jRZkU3M44kjw2l5zRIzb4CbZ8dULdL6wbNPZOpK0B6gN1UR1mdoxAaL/GrWiLPL3SEwW9YMTU/d64BtLahAVyucWhj9Mm8ign9IfQaBtd2/GbvCAEBpG5eMcrj2I0ktpKLeaqXQ3Pst42KGIshpdTmQLAeTgFGJ2wvh+tayMOR0n1RZ8B9z13vnOPBnsBq4E1ffgZpPFZHWVpO2cvhjYpOcbBd5TlhpDu5zq9mHGZcVi0y+VFkcFkDdyKJfTt99wEyHSEzDM90KH0nexpwZHJHKYYhjzlwGe0pP/IKfxociaEb7YDbi6KGJY1R2cR76E6NAtXqY4pPH3plLcl8LD7V+cOLUbUWRFZRPTAbVZO3mxK18Xc1ZaAiS8ARJXpZliXAomR94siiiMx8ZBOkXGTlnH0F/9ov1xPtWwEqP9wAAAAASUVORK5CYII=
@@ -937,6 +937,11 @@
         -   Added timeouts for the requests to sites.
         -   New features: Debug and Timeout option.
 
+13.3    -   Removed: HEVCBay.
+        -   Added: TeRaCoD.
+        -   Fixed: Radarr/Sonarr custom profile id wasn't working.
+        -   Differential BTN icons.
+
 */
 //==============================================================================
 //    JSHint directives.
@@ -1821,12 +1826,12 @@ var private_sites = [
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwAgMAAAAqbBEUAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAAAJUExURR9Ayv///x9Ayt39jB8AAAACdFJOUwAAdpPNOAAAAHhJREFUKM+d0MENgCAMBVDi0fFM4MAI3acjcOBPqbYYP9EmRk48Au0vCbZ6PleKUV2O4lCDHRVGDnFdA1eLMTXdGF6Z8S9BGGeMvTIWQ6OmFgIt3XtgoDJAKCGE55HO4KaiETAhh9BP1eYEnK36J/AI+jLp8ejxITu06f0pcsC2EgAAAABJRU5ErkJggg==',
       'searchUrl': 'https://best-core.info/browse.php?search=%search_string_orig%+%year%&c73=1&c70=1&c80=1&c81=1&c83=1&c77=1&c86=1&c76=1&c75=1&c74=1&c25=1&c24=1&c85=1&c21=1&c53=1&c20=1&c34=1&c90=1&c89=1&c82=1&incldead=1',
       'loggedOutRegex': /Cloudflare|Ray ID|Probléma esetén írj nekünk/,
-      'matchRegex': /Nem találtam semmit/},
+      'matchRegex': /Nem találtam semmit|cat_music_eng.png/},
   {   'name': 'BestCore',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwAgMAAAAqbBEUAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAAAJUExURR9Ayv///x9Ayt39jB8AAAACdFJOUwAAdpPNOAAAAHhJREFUKM+d0MENgCAMBVDi0fFM4MAI3acjcOBPqbYYP9EmRk48Au0vCbZ6PleKUV2O4lCDHRVGDnFdA1eLMTXdGF6Z8S9BGGeMvTIWQ6OmFgIt3XtgoDJAKCGE55HO4KaiETAhh9BP1eYEnK36J/AI+jLp8ejxITu06f0pcsC2EgAAAABJRU5ErkJggg==',
       'searchUrl': 'https://best-core.info/browse.php?search=%search_string_orig%&c54=1&c55=1&c58=1&c7=1&incldead=0',
       'loggedOutRegex': /Cloudflare|Ray ID|Probléma esetén írj nekünk/,
-      'matchRegex': /Nem találtam semmit/,
+      'matchRegex': /Nem találtam semmit|cat_music_eng.png/,
       'TV': true},
   {   'name': 'BHD',
       'searchUrl': 'https://beyond-hd.me/torrents/all?search=&doSearch=Search&imdb=%nott%',
@@ -1900,17 +1905,20 @@ var private_sites = [
       'positiveMatch': true,
       'TV': true},
   {   'name': 'BTN-Title',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAMAAABg3Am1AAAAPFBMVEUAAAALodkKfKYJcJcKlMoKc5wKirsKms8Kd58KndMKhbQKga4KfakKkcX//wAKeKIJj8EJl8sJo9wJbpOiaagyAAAAAXRSTlMAQObYZgAAAT9JREFUSMfFkVuWgyAQBbFRJD4Gjfvf6zQ0Q+t10PiV8otLVXJizLdo3u/mkZ94GvQPgv7FPAnWp0HbM+utpr9zXplW59qrLO9yaZkZZ/QFCWZmgRn9/Y37YRbc0cfAycULizK/+MlvZojBUK7kgSCxNhjoXX9477KVTxk10KKBP4op0xSDsQS9cPLbMtDITAaKBoJVhzAxpEEWNBCMBsQEg0KLx0IXGF8P5sgh8EyXD6ocA2cU2zEYMPm0JAajbNG3+0CcfHKJ0Sh+s9b6fSAOBopnzIMAwICGyHUwJDSIuNvAfRy0YIyJi8CBQXKsF5MEuyFB1S+Qe6dLuC7odEsZKOD2n81f+OG4hggxZz8IBLPP1HeAur8bIhjVh6JgKWF1UR8LhQv0EbIV1EfoXsdiQ30D/6YBu9rEaCMyX+EXkcgUNWOYO7EAAAAASUVORK5CYII=',
       'searchUrl': 'https://broadcasthe.net/torrents.php?action=basic&searchstr=%search_string_orig%',
       'loggedOutRegex': /Lost your password\?/,
       'matchRegex': /No search results/,
       'TV': true},
   {   'name': 'BTN-TVDb',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAMAAABg3Am1AAAAOVBMVEUAAAAJcJcKfKYKotsKd6AKm88Kc5wJlcoKirsKkMQKhbQLn9cKga4KfakA/zIKntQKk8gKeqUJbpOFSaBYAAAAAXRSTlMAQObYZgAAAT5JREFUSMfFkUl2wyAQBaEFAk2xrPsfNg0t5zMIEa1cO35Xxc+x+hbLMCyPfA4eFUvAPgjsi3kSOMs8DlxX4y+qhMkxO+aWz5zBzkzFXPs4+Skg89Iohiz4YXy2V/4i1MELh9S3Mjt5ziGYVVq8UMgacUMZ4Gbz/7vw+SsrglDgiCCfthCsCITKx09LK7Op+iMQOOscBrMxbwSngEBQCIgxeLvccHskCUbDZEFmuClQBeP5gJIHXgE9MmXAnC95zAocwdfNwEdWBcyhtTZpIE4ZAHznbgDaAc2B+2COIAj4buD/HbjCWCM3gS8Mkme72CRIhgg1P0DuHou5L6i60sl1cXWkd8Rg6d1MgJjaNwJdzv0dl/FzIUpH+HXxh6aIxgK/LAAXDR+FbgC/k0BvF0epH6nfb2DfNyE6iNRX+AXJHhS442mIQgAAAABJRU5ErkJggg==',
       'searchUrl': 'https://broadcasthe.net/torrents.php?tvdb=%tvdbid%',
       'loggedOutRegex': /Lost your password\?/,
       'matchRegex': /action=download/,
       'positiveMatch': true,
       'TV': true},
   {   'name': 'BTN-Req',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAMAAABg3Am1AAAAPFBMVEUAAAALodkKfKYJcJcKlMoKc5wKirsKms8Kd58KndMKhbQKga4KfakKkcX//wAKeKIJj8EJl8sJo9wJbpOiaagyAAAAAXRSTlMAQObYZgAAAT9JREFUSMfFkVuWgyAQBbFRJD4Gjfvf6zQ0Q+t10PiV8otLVXJizLdo3u/mkZ94GvQPgv7FPAnWp0HbM+utpr9zXplW59qrLO9yaZkZZ/QFCWZmgRn9/Y37YRbc0cfAycULizK/+MlvZojBUK7kgSCxNhjoXX9477KVTxk10KKBP4op0xSDsQS9cPLbMtDITAaKBoJVhzAxpEEWNBCMBsQEg0KLx0IXGF8P5sgh8EyXD6ocA2cU2zEYMPm0JAajbNG3+0CcfHKJ0Sh+s9b6fSAOBopnzIMAwICGyHUwJDSIuNvAfRy0YIyJi8CBQXKsF5MEuyFB1S+Qe6dLuC7odEsZKOD2n81f+OG4hggxZz8IBLPP1HeAur8bIhjVh6JgKWF1UR8LhQv0EbIV1EfoXsdiQ30D/6YBu9rEaCMyX+EXkcgUNWOYO7EAAAAASUVORK5CYII=',
       'searchUrl':  'https://broadcasthe.net/requests.php?search=%search_string%',
       'loggedOutRegex': /Lost your password\?/,
       'matchRegex': /Nothing found/,
@@ -2936,14 +2944,15 @@ var private_sites = [
       'positiveMatch': true,
       'both': true},
   {   'name': 'ST',
-      'searchUrl': 'https://www.scenetime.com/browse.php?c57=1&c59=1&c64=1&c82=1&c16=1&search=%search_string%+%year%&cata=yes',
+      'searchUrl': 'https://www.scenetime.com/browse.php?c47=1&c57=1&c59=1&c64=1&c82=1&c16=1&search=%search_string%+%year%&cata=yes',
       'loggedOutRegex': /Cloudflare|Ray ID|need cookies enabled|Try again/,
       'matchRegex': /Nothing found/,
       'rateLimit': 6000},
   {   'name': 'ST',
-      'searchUrl': 'https://www.scenetime.com/browse.php?c2=1&c9=1&c77=1&search=%search_string%&cata=yes',
+      'searchUrl': 'https://www.scenetime.com/browse.php?c43=1&c2=1&c9=1&c77=1&search=%search_string%&cata=yes',
       'loggedOutRegex': /Cloudflare|Ray ID|need cookies enabled|Try again/,
-      'matchRegex': /Nothing found/,
+      'matchRegex': /tvuhdn.png|tvpackn.png|tvhdn.png|TVsdn.png/,
+      'positiveMatch': true,
       'rateLimit': 6000,
       'TV': true},
   {   'name': 'Swarmazon',
@@ -3060,6 +3069,15 @@ var private_sites = [
       'matchRegex': /label-danger/,
       'positiveMatch': true,
       'both': true},
+  {   'name': 'TeRaCoD',
+      'searchUrl': 'https://teracod.net/browse.php?search=%search_string_orig%+%year%&cat=0&genre=0&incldead=0&blah=0',
+      'loggedOutRegex': /Cloudflare|Ray ID|Nem vagy bejelentkezve/,
+      'matchRegex': /Nincs találat/},
+  {   'name': 'TeRaCoD',
+      'searchUrl': 'https://teracod.net/browse.php?search=%search_string_orig%&c12=1&c13=1&c37=1&c38=1&c39=1&c40=1&genre=0&incldead=0&blah=0',
+      'loggedOutRegex': /Cloudflare|Ray ID|Nem vagy bejelentkezve/,
+      'matchRegex': /Nincs találat/,
+      'TV': true},
   {   'name': 'TG',
       'searchUrl': 'https://thegeeks.click/browse.php?incldead=0&country=&nonboolean=1&search=%tt%',
       'loggedOutRegex': /404 - Not Found|You need cookies enabled/,
@@ -6817,7 +6835,7 @@ function add_movie(movie, imdbid, radarr_url, radarr_apikey, exists_icon) {
   } else if (qProID == "Ultra-HD") {
     movie.ProfileId = 5;
   } else if (qProID == "Custom") {
-    movie.ProfileId = GM_config.get("radarr_customprofileid");
+    movie.ProfileId = parseInt(GM_config.get("radarr_customprofileid"));
   }
   GM.xmlHttpRequest({
     method: "POST",
@@ -7024,7 +7042,7 @@ function add_tvseries(tvseries, tvdbid, sonarr_url, sonarr_apikey, exists_icon) 
   } else if (qProID == "Ultra-HD") {
     tvseries.ProfileId = 5;
   } else if (qProID == "Custom") {
-    tvseries.ProfileId = GM_config.get("sonarr_customprofileid");
+    tvseries.ProfileId = parseInt(GM_config.get("sonarr_customprofileid"));
   }
   const sonMon = GM_config.get("sonarr_monitored");
   if (sonMon == "All Episodes") {
