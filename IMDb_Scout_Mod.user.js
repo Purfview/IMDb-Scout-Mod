@@ -7649,20 +7649,20 @@ function getIMDbRatings(imdbid, imdb_icon) {
 
       let crit_rating, user_rating, fem_rating;
       if ($(result).find('.ratingTable.Selected .bigcell').length) {
-        user_rating = $(result).find('.ratingTable.Selected .bigcell').text().trim();
+        user_rating = $(result).find('.ratingTable.Selected .bigcell').text().trim().replace(',','.');
         if ($.isNumeric(user_rating)) {
           user_rating = user_rating *10;
         } else {
           user_rating = "-";
         }
-        crit_rating = $(result).find('.ratingTable.noLeftBorder .bigcell').text().trim();
+        crit_rating = $(result).find('.ratingTable.noLeftBorder .bigcell').text().trim().replace(',','.');
         if ($.isNumeric(crit_rating)) {
           crit_rating = crit_rating *10;
         } else {
           crit_rating = "-";
         }
         if (GM_config.get("ratings_imdb_fem")) {
-          fem_rating = $(result).find('.ratingTable:eq(10)').find('.bigcell').text().trim();
+          fem_rating = $(result).find('.ratingTable:eq(10)').find('.bigcell').text().trim().replace(',','.');
           if ($.isNumeric(fem_rating)) {
             fem_rating = fem_rating *10;
           } else {
