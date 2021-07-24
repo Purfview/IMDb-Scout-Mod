@@ -4,7 +4,7 @@
 # IMDb Scout Mod:
 
 Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites.    
-Supports Title/Reference pages and does multi auto-search on List/Watchlist/Advanced Title Search pages.   
+Supports new design & reference pages and does multi auto-search on List/Watchlist/Advanced Title Search pages.   
 Adds links to IMDb pages from hundreds various sites.   
 Adds movies/series to Radarr/Sonarr.   
 Adds/Removes movies/series/episodes to/from Trakt's watchlist.   
