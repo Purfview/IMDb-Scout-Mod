@@ -4862,7 +4862,9 @@ function getFavicon(site, hide_on_err) {
     var url = new URL(site['searchUrl']);
     favicon = url.origin + '/favicon.ico';
   }
-  var iconsize = ('matchRegex' in site) ? GM_config.get('mod_icons_size') : GM_config.get('mod_icons_size') - 4;
+  const size = GM_config.get('mod_icons_size');
+  const border = parseInt(GM_config.get('iconsborder_size')) *2;
+  var iconsize = ('matchRegex' in site) ? size : GM_config.get('call_http_mod_movie') ? size - border : size;
   var title = (site['TV']) ? site['name'] + ' (TV)' : site['name'];
   var img = $('<img />').attr({'style': '-moz-opacity: 0.4; border: 0',
                                'width': iconsize,
