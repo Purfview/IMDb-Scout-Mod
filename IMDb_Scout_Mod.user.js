@@ -7883,7 +7883,7 @@ function getRTandMetaRatings_OMDb(key, imdbid, meta_icon, rott_rotten, rott_cert
       if (response.status == 200) {
         responseJSON = JSON.parse(response.responseText);
         GM.setValue("OMDb_last", JSON.stringify(responseJSON));
-        if (responseJSON['Response'] == "False" || responseJSON['Ratings'].length < 2) {
+        if (responseJSON['Response'] == "False" || responseJSON['Ratings'].length < 1) {
           return;
         }
         const rott_url = responseJSON['tomatoURL'];
@@ -7891,7 +7891,18 @@ function getRTandMetaRatings_OMDb(key, imdbid, meta_icon, rott_rotten, rott_cert
           getRotten(rott_url, rott_rotten, rott_certified, rott_fresh, rott_user_up, rott_user_down);
           $('.RottCritRatingUrl').attr('href', rott_url);
         }
-        const x = parseInt(responseJSON['Ratings'][1]['Value'], 10);
+        let x;
+        if (responseJSON['Ratings'][0]['Source'] == 'Rotten Tomatoes') {
+          x = parseInt(responseJSON['Ratings'][0]['Value'], 10);
+        } else if (responseJSON['Ratings'].length > 1) {
+            if (responseJSON['Ratings'][1]['Source'] == 'Rotten Tomatoes') {
+              x = parseInt(responseJSON['Ratings'][1]['Value'], 10);
+            } else if (responseJSON['Ratings'].length > 2) {
+               if (responseJSON['Ratings'][2]['Source'] == 'Rotten Tomatoes') {
+                 x = parseInt(responseJSON['Ratings'][2]['Value'], 10);
+               }
+            }
+        }
         const y = parseInt(responseJSON['Metascore'], 10);
         if ($.isNumeric(x)) {
           rott_crit = x;
