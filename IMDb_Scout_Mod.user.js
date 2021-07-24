@@ -6060,7 +6060,27 @@ async function copyInfoToBBcode(imdbid, movie_title_orig) {
         collect.innerHTML+="[b]Original Title:[/b] " +movie_title_orig+ "\n";
       }
       collect.innerHTML+="[b]Year:[/b] " +x.Year+ "\n";
-      collect.innerHTML+="[b]Runtime:[/b] " +x.Runtime+ "\n";
+      if (x.Runtime != "N/A") {
+        collect.innerHTML+="[b]Runtime:[/b] " +x.Runtime+ "\n";
+      } else if (onReferencePage) {
+          if ($('.ipl-inline-list__item:eq(0)').text().trim().match('min')) {
+            collect.innerHTML+="[b]Runtime:[/b] " +$('.ipl-inline-list__item:eq(0)').text().trim()+ "\n";
+          } else if ($('.ipl-inline-list__item:eq(1)').text().trim().match('min')) {
+            collect.innerHTML+="[b]Runtime:[/b] " +$('.ipl-inline-list__item:eq(1)').text().trim()+ "\n";
+          } else {
+            collect.innerHTML+="[b]Runtime:[/b] N/A\n";
+          }
+      } else {
+          if ($('.ipc-inline-list__item:eq(0)').text().trim().match('min')) {
+            collect.innerHTML+="[b]Runtime:[/b] " +$('.ipc-inline-list__item:eq(0)').text().trim()+ "\n";
+          } else if ($('.ipc-inline-list__item:eq(1)').text().trim().match('min')) {
+            collect.innerHTML+="[b]Runtime:[/b] " +$('.ipc-inline-list__item:eq(1)').text().trim()+ "\n";
+          } else if ($('.ipc-inline-list__item:eq(2)').text().trim().match('min')) {
+            collect.innerHTML+="[b]Runtime:[/b] " +$('.ipc-inline-list__item:eq(2)').text().trim()+ "\n";
+          } else {
+            collect.innerHTML+="[b]Runtime:[/b] N/A\n";
+          }
+      }
       collect.innerHTML+="[b]Genre:[/b] " +x.Genre+ "\n";
       const xLanguage = x.Language.split(',')[0];
       collect.innerHTML+="[b]Language:[/b] " +xLanguage+ "\n";
@@ -6072,8 +6092,22 @@ async function copyInfoToBBcode(imdbid, movie_title_orig) {
       collect.innerHTML+="[b]IMDb link:[/b] https://www.imdb.com/title/" +x.imdbID+ "\n";
       if (x.imdbRating != "N/A") {
         collect.innerHTML+="[b]IMDb Rating:[/b] " +x.imdbRating+ " from " +x.imdbVotes+ " users\n";
+      } else if (onReferencePage) {
+          const imdbRating = $('.ipl-rating-star__rating:eq(0)').text().trim().replace(',','.') *1;
+          const imdbVotes = $('.ipl-rating-star__total-votes:eq(0)').text().trim().replace('(','').replace(')','');
+          if ($.isNumeric(imdbRating)) {
+            collect.innerHTML+="[b]IMDb Rating:[/b] " +imdbRating+ " from " +imdbVotes+ " users\n";
+          } else {
+            collect.innerHTML+="[b]IMDb Rating:[/b] N/A\n";
+          }
       } else {
-        collect.innerHTML+="[b]IMDb Rating:[/b] N/A\n";
+          const imdbRating = $('[class^=AggregateRatingButton__RatingScore]:eq(0)').text().trim().replace(',','.') *1;
+          const imdbVotes = $('[class^=AggregateRatingButton__TotalRatingAmount]:eq(0)').text().trim();
+          if ($.isNumeric(imdbRating)) {
+            collect.innerHTML+="[b]IMDb Rating:[/b] " +imdbRating+ " from " +imdbVotes+ " users\n";
+          } else {
+            collect.innerHTML+="[b]IMDb Rating:[/b] N/A\n";
+          }
       }
       collect.innerHTML+="\n";
       collect.innerHTML+="[b]Plot:[/b] " +x.Plot+ "\n";
