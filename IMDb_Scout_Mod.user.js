@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      13.4.1
+// @version      13.4.2
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from hundreds various sites. Adds movies/series to Radarr/Sonarr. Adds external ratings from Metacritic, Rotten Tomatoes, Letterboxd, Douban, Allocine. Media Server indicators for Plex, Jellyfin, Emby. Dark theme/style for Reference View. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAMFBMVEUAAAD/AAAcAAA1AABEAABVAAC3AADnAAD2AACFAAClAABlAAB3AADHAACVAADYAABCnXhrAAAD10lEQVRIx73TV4xMURgH8H/OnRmZWe3T7h2sOWaNXu7oJRg9UccuHgTRBatMtAgSg+gJu9q+kFmihcQoD8qLTkK0CIkoy0YJITsRD0rCKTHFrnkSv5e5c88/53znO+fiPwvsvrN038cPNqrG9pJmHkRVnPcpaTlHJY60cfPSpsrzl1LKihrmLvxhCM2i3OHvDx0d+H7e3F6JBv5iZMiJfhFTfPYDMHrMImpwimWWUdSgDQkbno7fFpUPVgh+pHFbZR4SovSctDCM9Hac9IKd9rO8EevtBCkXgY5IMmgquwypP7qqfcp/Tp4KLONDVsWh3RSBB2rnZfit69ocUdqLn2prrRZYM0Jg4JibamKsqe7gfEh5GOAfeYJjVHIPZvil97rcXkMog30byWRwXYRWoxHbzNFHJJpAarO8NdEBBsdCaP3WMJltTmQd4zlnekTq9Z5dgACwAlrpK4BxdV5mvLuspRgMSHbCIFF0iS8MZ5S8oYBYKY7rByC4dDM9uSIUmPOIwxgQBoYeF93auP4qFyPbIVXziWeGTH1EFM57kJo2hqQju6BwIyRf6RmCjdT4JOdiwNgiH/PPD3qoqlsNaXRd+fKtFfECxlZVNVF9SOsgTZEr2TUjJJbyeNX1IZrKIbyGlBABfpQPv2UDrly13LkJXDVhpQ5MhtGwcyF4HKjlU4E8xwB0AvDjd6AGmevZ87EcQRHgcO52e9uNsYELOrAa/Yh81YlmYLQJ5HWyq0+kzQ/DQKEusg6CRI27ryy8nReRS0wsoetkmRwogHSprliCckfEjXG9yAQc74J0WB99vu6DF3i3pMucsXM6tpBbxd2mVJAwXwGogNRBvGRA4jtHKTXkAIwLGCR/mT4Lh75oneQXXP9sAYfGRDCsnw7pX/jRZkU3M44kjw2l5zRIzb4CbZ8dULdL6wbNPZOpK0B6gN1UR1mdoxAaL/GrWiLPL3SEwW9YMTU/d64BtLahAVyucWhj9Mm8ign9IfQaBtd2/GbvCAEBpG5eMcrj2I0ktpKLeaqXQ3Pst42KGIshpdTmQLAeTgFGJ2wvh+tayMOR0n1RZ8B9z13vnOPBnsBq4E1ffgZpPFZHWVpO2cvhjYpOcbBd5TlhpDu5zq9mHGZcVi0y+VFkcFkDdyKJfTt99wEyHSEzDM90KH0nexpwZHJHKYYhjzlwGe0pP/IKfxociaEb7YDbi6KGJY1R2cR76E6NAtXqY4pPH3plLcl8LD7V+cOLUbUWRFZRPTAbVZO3mxK18Xc1ZaAiS8ARJXpZliXAomR94siiiMx8ZBOkXGTlnH0F/9ov1xPtWwEqP9wAAAAASUVORK5CYII=
@@ -947,6 +947,9 @@
         -   Fixed: Icons' size inconsistencies.
         -   Improved: "Copy info to BBCode". Gets Runtime & Ratings from imdb if they are not on omdb.
 
+13.4.2  -   Removed: Cilipro.
+        -   Added: ADC, OpenSubtitles.com (EN) & (GR).
+
 */
 //==============================================================================
 //    JSHint directives.
@@ -1148,13 +1151,6 @@ var public_sites = [
       'loggedOutRegex': /Cloudflare|Ray ID/,
       'matchRegex': /About 0 results/,
       'both': true},
-  {   'name': 'Cilipro',
-      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAALxSURBVHja7JcxaxRRFIW/EbNqISJGC9sFf8BUaiHauNsphDOgIAhaGQux0VQJFqaxUCQiqJWKsKcTwWilhdqN+AMsbE1ERBujOBZv4s7Ozkx2NZDGy8Iy+/a+e+655973JsqyjI20TWywbTiAzcWHJEnK608lbbX9HLgHfGzazDYAkqr/IIFNr9erBlCyI/Pz812AOI4Pp2k6Y/s1cB14BXxddwZCBgLckjRbXIvjeHscx500TTvAR9ungafrCqBPnXZIOlDlEMcxwB7bB9YdQG4RMB3HcavOKU3TJds3c7CAy/7ZvwCYkHRuDbE9kLRU4K4IYS9wA3gL3FlLuJtLOwMcRNrRkP0KsDgk8MBDJDgraQqYMlwiCPdlAOPlZhFCSzCnxC168D7Uu2xfgBeVXQYTSNOF5+1IHaADXATuGn8AblcOIsFOQRBfYtozM7TTlHaaAtBO08z2LeBHDUEHBXXsTQKXgX1NGjgpmChSkpeFtoztH8ACKAOHwdK3FjCXf9dpZwl4WDuKBV1QVONNXssvJdWvWm3rFuyW7XdNDBxtcM4c+n6lBGp1iExTZG/YloCbkn42MVDfemH0PqxZ3i37PHbU1LrAp+bTUIBcHR5+AZ9r9j8l2CWMbCpKVNm6ax1G5Sbf5qDylypBE3T69DnPIRepwfbnutatvg9UsCDY0oMrwKQHgx+v1U7OhuFRXetGA1eyKMr+ZOKCKpT/ED7L+YhdAfYDHalpbEMCXeDZHzUXYpZLkOWHCYNA+jQIJjEza6q2b89VCN5YAg/R5EIQlcQ6QujA2LOR74SGN8MCLqp6tJQLnp8M98e5lM4avtVuNw6IkP2CwgCqtQERJlEEMNeD2TGTrRLfkwROUJFQMeamCuDXEnhSPe5HD26YopbNhjmg4DSVwGOPC8IhOCH4yt9eyVZH5zFDF3NB4UIxWH4PxV42LABXNWLwUUbxIrCYQFdwCHMG2FJY/w7cyw+qO4QhNZZF/19ONxrA7wEAeosRLlBGDTwAAAAASUVORK5CYII=',
-      'searchUrl': 'https://www.cilipro1.xyz/search/',
-      'mPOST': 'keyword=%search_string_orig%',
-      'loggedOutRegex': /Cloudflare|Ray ID/,
-      'matchRegex': /显示前0个/,
-      'both': true},
   {   'name': 'CineCalidad',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAAAYUExURQAAAP////////////8AAP///wAAAADMuIrsNr4AAAAGdFJOUwAABgwUPEMWCvsAAAEESURBVEjH3ZUxDsMgDEX/xJ4b9Cg9Qo8QqdLPyhRfv0ML2I6JU3Xr35CfPgjMN5ZEWBYo8a2+9gDpCAsUDq0BoOuN0ICtfwgN0MsBZEQMoATAqgEytOhACYF1AIzVAWUgIsqiAbosIntfe0CaHFB8vXm0M3zqmzgCDhAtfVHlaCCyc4UDxOo+HisykAoPRPU5UHVPFrMDgFEPAABARQBYawPoIyAB6hzYrgH4C+D2w0WdXXX6WBefO20Y23I2BqOmDYBt3tVl3vcnwK5zMtrD5OTk+w/gGCBCks8D4CNoxKALsR5Rj8sxmAZpHsVpmOfjIB0ogcXXQy0di/lgzUfzbLif6wXCRdoSVLccNgAAAABJRU5ErkJggg==',
       'searchUrl': 'https://www.cine-calidad.com/?s=%search_string_orig%+%year%',
@@ -1353,8 +1349,8 @@ var public_sites = [
       'matchRegex': 'Не найдено',
       'TV': true},
   {   'name': 'OxTor',
-      'icon': 'https://www.oxtorrent.tv/themes/default/img/favicon.ico',
-      'searchUrl': 'https://www.oxtorrent.tv/recherche/%search_string_orig%',
+      'icon': 'https://www.oxtorrent.pe/themes/default/img/favicon.ico',
+      'searchUrl': 'https://www.oxtorrent.pe/recherche/%search_string_orig%',
       'loggedOutRegex': /Cloudflare|Ray ID/,
       'matchRegex': /Pas de torrents disponibles/,
       'both': true},
@@ -1668,6 +1664,12 @@ var private_sites = [
       'searchUrl': 'https://asiancinema.me/requests/filter?tmdb=%tmdbid%&unfilled=1',
       'loggedOutRegex': /Forgot Your Password|Ray ID/,
       'matchRegex': /<tbody>\s*<\/tbody>/,
+      'both': true},
+  {   'name': 'ADC',
+      'icon': 'https://asiandvdclub.org/images/favicon/favicon.ico',
+      'searchUrl': 'https://asiandvdclub.org/torrents/?searchbox=%tt%&search_desc=1&search=Search',
+      'matchRegex': /No torrents found/,
+      'loggedOutRegex': /Forgotten your password/,
       'both': true},
   {   'name': 'AE',
       'icon': 'data:image/gif;base64,R0lGODlhEAAQAJEAAP58fP+VrgAAAP///yH/C05FVFNDQVBFMi4wAwEAAAAh/wtYTVAgRGF0YVhNUDw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoV2luZG93cykiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6MUQ2RjU5Q0FCRDQyMTFFQkJGRjVEN0ZENTc4N0Y4Q0UiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6MUQ2RjU5Q0JCRDQyMTFFQkJGRjVEN0ZENTc4N0Y4Q0UiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDoxRDZGNTlDOEJENDIxMUVCQkZGNUQ3RkQ1Nzg3RjhDRSIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDoxRDZGNTlDOUJENDIxMUVCQkZGNUQ3RkQ1Nzg3RjhDRSIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PgH//v38+/r5+Pf29fTz8vHw7+7t7Ovq6ejn5uXk4+Lh4N/e3dzb2tnY19bV1NPS0dDPzs3My8rJyMfGxcTD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',
@@ -2499,6 +2501,7 @@ var private_sites = [
       'positiveMatch': true,
       'both': true},
   {   'name': 'M-T',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgAgMAAACf9p+rAAAACVBMVEUAAAD2yl8AAABwY/xKAAAAAXRSTlMAQObYZgAAAM5JREFUSMft1jEOwyAMBdAvRm5S7kOGnCDiFFHv4J0FCXzKyolpVOSoS7fiCfMcIowSgdtwbMYOb0NGoGjEUhGiGRUPG7YJE/4PuOkXw+UDVtaJpBUdUvbnBINJQXPwsVKGLwqaw0vlusO1CySHk8oEgC3YAIQOWgiBCsCPIGtnAbpgE3gouN/C+HIbigGr5O990LBz6ju3mpgErLaP3Y1p9+2ACl+Go6XzUR10WLhF88xj6n9ZjhMmTPgKwYaKQBYs9f6K43TAGs9+KbqLFzcxCeYxF3pcAAAAAElFTkSuQmCC',
       'searchUrl': 'https://kp.m-team.cc/torrents.php?incldead=0&spstate=0&inclbookmarked=0&search=%tt%&search_area=4&search_mode=0',
       'loggedOutRegex': /Cloudflare|Ray ID|type="password" name="password"|An error occurred|Please input the 6-digit code/,
       'matchRegex': /download.php/,
@@ -3917,6 +3920,20 @@ var subs_sites = [
       'loggedOutRegex': /Guru Meditation/,
       'matchRegex': /div itemscope/,
       'positiveMatch': true,
+      'inSecondSearchBar': true,
+      'both': true},
+  {   'name': 'OpenSubtitles.com (EN)',
+      'icon': 'https://www.opensubtitles.com/assets/ui/favicons/favicon-64x64-e8e9f196985f98cfaa08b1e0159a1030cfc9b014c464fab6693cd0573382a702.png',
+      'searchUrl': 'https://www.opensubtitles.com/en/en/search-all/q-%tt%/hearing_impaired-hearing_impaired-1/machine_translated-machine_translated-0/trusted_sources-trusted_sources-0',
+      'loggedOutRegex': /Cloudflare|Ray ID/,
+      'matchRegex': /No results found/,
+      'inSecondSearchBar': true,
+      'both': true},
+  {   'name': 'OpenSubtitles.com (GR)',
+      'icon': 'https://www.opensubtitles.com/assets/ui/favicons/favicon-64x64-e8e9f196985f98cfaa08b1e0159a1030cfc9b014c464fab6693cd0573382a702.png',
+      'searchUrl': 'https://www.opensubtitles.com/en/el/search-all/q-%tt%/hearing_impaired-hearing_impaired-1/machine_translated-machine_translated-0/trusted_sources-trusted_sources-0',
+      'loggedOutRegex': /Cloudflare|Ray ID/,
+      'matchRegex': /No results found/,
       'inSecondSearchBar': true,
       'both': true},
   {   'name': 'Pipocas (BR)',
