@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      13.4.2
+// @version      13.5
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from hundreds various sites. Adds movies/series to Radarr/Sonarr. Adds external ratings from Metacritic, Rotten Tomatoes, Letterboxd, Douban, Allocine. Media Server indicators for Plex, Jellyfin, Emby. Dark theme/style for Reference View. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAMFBMVEUAAAD/AAAcAAA1AABEAABVAAC3AADnAAD2AACFAAClAABlAAB3AADHAACVAADYAABCnXhrAAAD10lEQVRIx73TV4xMURgH8H/OnRmZWe3T7h2sOWaNXu7oJRg9UccuHgTRBatMtAgSg+gJu9q+kFmihcQoD8qLTkK0CIkoy0YJITsRD0rCKTHFrnkSv5e5c88/53znO+fiPwvsvrN038cPNqrG9pJmHkRVnPcpaTlHJY60cfPSpsrzl1LKihrmLvxhCM2i3OHvDx0d+H7e3F6JBv5iZMiJfhFTfPYDMHrMImpwimWWUdSgDQkbno7fFpUPVgh+pHFbZR4SovSctDCM9Hac9IKd9rO8EevtBCkXgY5IMmgquwypP7qqfcp/Tp4KLONDVsWh3RSBB2rnZfit69ocUdqLn2prrRZYM0Jg4JibamKsqe7gfEh5GOAfeYJjVHIPZvil97rcXkMog30byWRwXYRWoxHbzNFHJJpAarO8NdEBBsdCaP3WMJltTmQd4zlnekTq9Z5dgACwAlrpK4BxdV5mvLuspRgMSHbCIFF0iS8MZ5S8oYBYKY7rByC4dDM9uSIUmPOIwxgQBoYeF93auP4qFyPbIVXziWeGTH1EFM57kJo2hqQju6BwIyRf6RmCjdT4JOdiwNgiH/PPD3qoqlsNaXRd+fKtFfECxlZVNVF9SOsgTZEr2TUjJJbyeNX1IZrKIbyGlBABfpQPv2UDrly13LkJXDVhpQ5MhtGwcyF4HKjlU4E8xwB0AvDjd6AGmevZ87EcQRHgcO52e9uNsYELOrAa/Yh81YlmYLQJ5HWyq0+kzQ/DQKEusg6CRI27ryy8nReRS0wsoetkmRwogHSprliCckfEjXG9yAQc74J0WB99vu6DF3i3pMucsXM6tpBbxd2mVJAwXwGogNRBvGRA4jtHKTXkAIwLGCR/mT4Lh75oneQXXP9sAYfGRDCsnw7pX/jRZkU3M44kjw2l5zRIzb4CbZ8dULdL6wbNPZOpK0B6gN1UR1mdoxAaL/GrWiLPL3SEwW9YMTU/d64BtLahAVyucWhj9Mm8ign9IfQaBtd2/GbvCAEBpG5eMcrj2I0ktpKLeaqXQ3Pst42KGIshpdTmQLAeTgFGJ2wvh+tayMOR0n1RZ8B9z13vnOPBnsBq4E1ffgZpPFZHWVpO2cvhjYpOcbBd5TlhpDu5zq9mHGZcVi0y+VFkcFkDdyKJfTt99wEyHSEzDM90KH0nexpwZHJHKYYhjzlwGe0pP/IKfxociaEb7YDbi6KGJY1R2cR76E6NAtXqY4pPH3plLcl8LD7V+cOLUbUWRFZRPTAbVZO3mxK18Xc1ZaAiS8ARJXpZliXAomR94siiiMx8ZBOkXGTlnH0F/9ov1xPtWwEqP9wAAAAASUVORK5CYII=
@@ -949,6 +949,8 @@
 
 13.4.2  -   Removed: Cilipro.
         -   Added: ADC, OpenSubtitles.com (EN) & (GR).
+
+13.5    -   Fixed: POST links stopped working on the redesigned pages (missing jQuery).
 
 */
 //==============================================================================
@@ -4909,7 +4911,7 @@ function addLink(elem, site_name, target, site, state, scout_tick, post_data) {
   var link = $('<a />').attr('href', target).attr('target', '_blank');
   // Link and add Form element for POST method.
   if ('mPOST' in site) {
-    var form_name = (site['TV']) ? site['name'] + '-TV-form' + scout_tick : site['name'] + '-form' + scout_tick;
+    var form_name = (site['TV']) ? site['name'] + '-TV-form-' + scout_tick : site['name'] + '-form-' + scout_tick;
     var placebo_url = new URL(target).origin;
     link = $('<a />').attr('href', placebo_url).attr('onclick', "$('#" + form_name + "').submit(); return false;").attr('target', '_blank');
 
@@ -5133,9 +5135,10 @@ async function maybeAddLink(elem, site_name, search_url, site, scout_tick, movie
       headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
       onload: function(response) {
         if (GM_config.get('debug_sites')) {
-          console.log(site_name + " POST Response Status: " + response.status + "\n ");
-          console.log(site_name + " POST Response Headers: " + response.responseHeaders + "\n ");
-          console.log(site_name + " POST Response: " + response.responseText + "\n ");
+          const name = (site['TV']) ? site['name'] + ' (TV)' : site['name'];
+          console.log(name + " POST Response Status: " + response.status + "\n ");
+          console.log(name + " POST Response Headers: " + response.responseHeaders + "\n ");
+          console.log(name + " POST Response: " + response.responseText + "\n ");
         }
         if (response.responseHeaders.indexOf('efresh: 0; url') > -1 || response.status > 499 || (response.status > 399 && !site.ignore404) || (response.responseText == "" && !site.ignoreEmpty)) {
           addLink(elem, site_name, target, site, 'logged_out', scout_tick, post_data);
@@ -5199,9 +5202,10 @@ async function maybeAddLink(elem, site_name, search_url, site, scout_tick, movie
     url: search_url,
     onload: function(response) {
       if (GM_config.get('debug_sites')) {
-        console.log(site_name + " GET Response Status: " + response.status + "\n ");
-        console.log(site_name + " GET Response Headers: " + response.responseHeaders + "\n ");
-        console.log(site_name + " GET Response: " + response.responseText + "\n ");
+        const name = (site['TV']) ? site['name'] + ' (TV)' : site['name'];
+        console.log(name + " GET Response Status: " + response.status + "\n ");
+        console.log(name + " GET Response Headers: " + response.responseHeaders + "\n ");
+        console.log(name + " GET Response: " + response.responseText + "\n ");
       }
       if (response.responseHeaders.indexOf('efresh: 0; url') > -1 || response.status > 499 || (response.status > 399 && !site.ignore404) || (response.responseText == "" && !site.ignoreEmpty)) {
         addLink(elem, site_name, target, site, 'logged_out', scout_tick);
@@ -9340,5 +9344,11 @@ if ($('html[xmlns\\:og="http://ogp.me/ns#"]').length) {
   document.addEventListener('DOMContentLoaded', adsRemovalReference);
   document.addEventListener('DOMContentLoaded', startIMDbScout);
 } else {
+  // Redesigned pages stopped using jQuery(?). It's needed for POST links.
+  const addJquery = document.createElement("script");
+  addJquery.setAttribute("type","text/javascript");
+  addJquery.setAttribute("src","https://code.jquery.com/jquery-3.5.1.min.js");
+  document.getElementsByTagName("head")[0].appendChild(addJquery);
+  // Start for redesigned page
   document.addEventListener('DOMContentLoaded', startObserver);
 }
