@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      13.5.1
+// @version      13.6
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from hundreds various sites. Adds movies/series to Radarr/Sonarr. Adds external ratings from Metacritic, Rotten Tomatoes, Letterboxd, Douban, Allocine. Media Server indicators for Plex, Jellyfin, Emby. Dark theme/style for Reference View. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAMFBMVEUAAAD/AAAcAAA1AABEAABVAAC3AADnAAD2AACFAAClAABlAAB3AADHAACVAADYAABCnXhrAAAD10lEQVRIx73TV4xMURgH8H/OnRmZWe3T7h2sOWaNXu7oJRg9UccuHgTRBatMtAgSg+gJu9q+kFmihcQoD8qLTkK0CIkoy0YJITsRD0rCKTHFrnkSv5e5c88/53znO+fiPwvsvrN038cPNqrG9pJmHkRVnPcpaTlHJY60cfPSpsrzl1LKihrmLvxhCM2i3OHvDx0d+H7e3F6JBv5iZMiJfhFTfPYDMHrMImpwimWWUdSgDQkbno7fFpUPVgh+pHFbZR4SovSctDCM9Hac9IKd9rO8EevtBCkXgY5IMmgquwypP7qqfcp/Tp4KLONDVsWh3RSBB2rnZfit69ocUdqLn2prrRZYM0Jg4JibamKsqe7gfEh5GOAfeYJjVHIPZvil97rcXkMog30byWRwXYRWoxHbzNFHJJpAarO8NdEBBsdCaP3WMJltTmQd4zlnekTq9Z5dgACwAlrpK4BxdV5mvLuspRgMSHbCIFF0iS8MZ5S8oYBYKY7rByC4dDM9uSIUmPOIwxgQBoYeF93auP4qFyPbIVXziWeGTH1EFM57kJo2hqQju6BwIyRf6RmCjdT4JOdiwNgiH/PPD3qoqlsNaXRd+fKtFfECxlZVNVF9SOsgTZEr2TUjJJbyeNX1IZrKIbyGlBABfpQPv2UDrly13LkJXDVhpQ5MhtGwcyF4HKjlU4E8xwB0AvDjd6AGmevZ87EcQRHgcO52e9uNsYELOrAa/Yh81YlmYLQJ5HWyq0+kzQ/DQKEusg6CRI27ryy8nReRS0wsoetkmRwogHSprliCckfEjXG9yAQc74J0WB99vu6DF3i3pMucsXM6tpBbxd2mVJAwXwGogNRBvGRA4jtHKTXkAIwLGCR/mT4Lh75oneQXXP9sAYfGRDCsnw7pX/jRZkU3M44kjw2l5zRIzb4CbZ8dULdL6wbNPZOpK0B6gN1UR1mdoxAaL/GrWiLPL3SEwW9YMTU/d64BtLahAVyucWhj9Mm8ign9IfQaBtd2/GbvCAEBpG5eMcrj2I0ktpKLeaqXQ3Pst42KGIshpdTmQLAeTgFGJ2wvh+tayMOR0n1RZ8B9z13vnOPBnsBq4E1ffgZpPFZHWVpO2cvhjYpOcbBd5TlhpDu5zq9mHGZcVi0y+VFkcFkDdyKJfTt99wEyHSEzDM90KH0nexpwZHJHKYYhjzlwGe0pP/IKfxociaEb7YDbi6KGJY1R2cR76E6NAtXqY4pPH3plLcl8LD7V+cOLUbUWRFZRPTAbVZO3mxK18Xc1ZaAiS8ARJXpZliXAomR94siiiMx8ZBOkXGTlnH0F/9ov1xPtWwEqP9wAAAAASUVORK5CYII=
@@ -953,6 +953,8 @@
 13.5    -   Fixed: POST links stopped working on the redesigned pages (missing jQuery).
 
 13.5.1  -   Updated: ACM, ACM-Req.
+
+13.6    -   New feature: Add Top Review to the Reference View pages in compact mode.
 
 */
 //==============================================================================
@@ -4619,7 +4621,7 @@ function getTVDbID(movie_id) {
   return new Promise(resolve => {
     GM.xmlHttpRequest({
       method: "GET",
-      timeout: 6000,
+      timeout: 10000,
       url:    "https://thetvdb.com/api/GetSeriesByRemoteID.php?imdbid=tt" + movie_id,
       onload: function(response) {
         if (String(response.responseText).match("seriesid")) {
@@ -4651,7 +4653,7 @@ function getTMDbID(movie_id) {
   return new Promise(resolve => {
     GM.xmlHttpRequest({
       method: "GET",
-      timeout: 6000,
+      timeout: 10000,
       url:    "https://api.themoviedb.org/3/find/tt" + movie_id + "?api_key=d12b33d3f4fb8736dc06f22560c4f8d4&external_source=imdb_id",
       onload: function(response) {
         const result = JSON.parse(response.responseText);
@@ -4688,7 +4690,7 @@ function getDoubanID0(movie_id) {
   return new Promise(resolve => {
     GM.xmlHttpRequest({
       method: "GET",
-      timeout: 5000,
+      timeout: 6000,
       url:    "https://movie.douban.com/j/subject_suggest?q=tt" + movie_id,
       onload: function(response) {
         const result = JSON.parse(response.responseText);
@@ -4720,7 +4722,7 @@ function getDoubanID1(movie_id) {
   return new Promise(resolve => {
     GM.xmlHttpRequest({
       method: "GET",
-      timeout: 5000,
+      timeout: 6000,
       url:    "https://www.douban.com/search?cat=1002&q=tt" + movie_id,
       onload: function(response) {
         const parser = new DOMParser();
@@ -4757,7 +4759,7 @@ function getDoubanID2(movie_id) {
   return new Promise(resolve => {
     GM.xmlHttpRequest({
       method: "GET",
-      timeout: 5000,
+      timeout: 6000,
       url:    'https://query.wikidata.org/sparql?format=json&query=SELECT * WHERE {?s wdt:P345 "tt' +movie_id+ '". OPTIONAL { ?s wdt:P4529 ?Douban_film_ID. }}',
       onload: function(response) {
         const result = JSON.parse(response.responseText);
@@ -4794,7 +4796,7 @@ function getDoubanID3(movie_id) {
   return new Promise(resolve => {
     GM.xmlHttpRequest({
       method: "GET",
-      timeout: 5000,
+      timeout: 6000,
       url:    'https://www.google.com/search?q="tt' +movie_id+ '" site:https://movie.douban.com/subject&safe=off',
       onload: function(response) {
         const result = String(response.responseText);
@@ -4827,7 +4829,7 @@ function getAllocineID(movie_id) {
   return new Promise(resolve => {
     GM.xmlHttpRequest({
       method: "GET",
-      timeout: 5000,
+      timeout: 10000,
       url:    'https://query.wikidata.org/sparql?format=json&query=SELECT * WHERE {?s wdt:P345 "tt' +movie_id+ '". OPTIONAL {?s wdt:P1265 ?AlloCin__film_ID.}  OPTIONAL {?s wdt:P1267 ?AlloCin__series_ID.}}',
       onload: function(response) {
         const result = JSON.parse(response.responseText);
@@ -6297,7 +6299,7 @@ function getAuthFromJellyfin(jelly_url, jelly_user, jelly_pass, debug) {
     const post_data = '{"Username":"' +jelly_user+ '","Pw":"' +jelly_pass+ '"}';
     GM.xmlHttpRequest({
       method: "POST",
-      timeout: 3000,
+      timeout: 5000,
       url:    url,
       headers: {
         "Accept": "application/json",
@@ -6358,7 +6360,7 @@ function searchJellyfin(jelly_url, title, movie_id, user_id, access_token, debug
     const imdbid = "tt" +movie_id;
     GM.xmlHttpRequest({
       method: "GET",
-      timeout: 3000,
+      timeout: 5000,
       url: url,
       headers: {
         "Accept": "application/json",
@@ -6483,7 +6485,7 @@ function getAuthFromEmby(emb_url, emb_user, emb_pass, debug) {
     const post_data = '{"Username":"' +emb_user+ '","Pw":"' +emb_pass+ '"}';
     GM.xmlHttpRequest({
       method: "POST",
-      timeout: 3000,
+      timeout: 5000,
       url:    url,
       headers: {
         "Accept": "application/json",
@@ -6543,7 +6545,7 @@ function searchEmby(emb_url, movie_id, user_id, access_token, debug) {
     const url = url_p1 + url_p2;
     GM.xmlHttpRequest({
       method: "GET",
-      timeout: 3000,
+      timeout: 5000,
       url: url,
       headers: {
         "Accept": "application/json",
@@ -6669,7 +6671,7 @@ function machineIdentifierFromPlex(plex_url) {
     const url = plex_url+ "/identity";
     GM.xmlHttpRequest({
       method: "GET",
-      timeout: 3000,
+      timeout: 5000,
       url:    url,
       onload: function(response) {
         if (response.status == 200) {
@@ -6708,7 +6710,7 @@ function getInfoFromPlex(title, movie_id, tvdb_id, plex_url, plex_token) {
     const url = plex_url+ "/search?query=" +titleUri+ "&X-Plex-Token=" +plex_token;
     GM.xmlHttpRequest({
       method: "GET",
-      timeout: 3000,
+      timeout: 5000,
       url:    url,
       onload: function(response) {
         if (response.status == 200) {
@@ -8261,6 +8263,77 @@ function compactReferenceElemRemoval() {
   $('.titlereference-section-did-you-know').remove();
   $('#contribute-main-section').remove();
   $('.recently-viewed').remove();
+
+  // Inject Top Review
+  if ($('.titlereference-overview-review-list').length) {
+    if ($('.titlereference-overview-review-list').text().match('User')) {
+      getIMDbTopReview();
+    }
+  }
+}
+
+function getIMDbTopReview() {
+  const imdbid = document.URL.match(/\/tt([0-9]+)\//)[1].trim('tt');
+  const url = "https://www.imdb.com/title/tt" +imdbid+ "/reviews?spoiler=hide&sort=helpfulnessScore";
+  GM.xmlHttpRequest({
+    method: "GET",
+    timeout: 10000,
+    url:    url,
+    onload: function(response) {
+      const parser = new DOMParser();
+      const result = parser.parseFromString(response.responseText, "text/html");
+
+      const xTitle = $(result).find('.imdb-user-review:eq(0)').find('.title').text().trim();
+      const xRevLink = $(result).find('.imdb-user-review:eq(0)').find('.title').attr('href');
+      const xReview = $(result).find('.imdb-user-review:eq(0)').find('.text').html();
+      const xUser = $(result).find('.imdb-user-review:eq(0)').find('.display-name-link').text().trim();
+      const xUsrLink = $(result).find('.imdb-user-review:eq(0)').find('.display-name-link a').attr('href');
+      const xDate = $(result).find('.imdb-user-review:eq(0)').find('.review-date').text().trim();
+      const xRating = $(result).find('.imdb-user-review:eq(0)').find('.ipl-star-icon').next().text().trim();
+
+      let x = '' +
+              '<section class="scout_review">' +
+              '  <div><h4 class="ipl-list-title">Top Review</h4></div>' +
+              '  <table class="titlereference-list ipl-zebra-list">' +
+              '    <tbody>' +
+              '      <tr class="ipl-zebra-list__item">' +
+              '        <td>' +
+              '          <a class="scout_review_rating">' +
+              '            <span class="ipl-rating-star__star">' +
+              '              <svg class="ipl-icon ipl-star-icon" xmlns="http://www.w3.org/2000/svg" fill="#000000" height="24" viewBox="0 0 24 24" width="24">' +
+              '                <path d="M0 0h24v24H0z" fill="none"></path>' +
+              '                <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>' +
+              '                <path d="M0 0h24v24H0z" fill="none"></path>' +
+              '              </svg></span>' +
+              '            <span class="point-scale"> xRating</span><span> |</span></a>' +
+              '          <a class="scout_review_title" href="xRevLink"> xTitle</a>' +
+              '          <div class="display-name-date" style="font-size:11px">' +
+              '            <span class="display-name-link">' +
+              '              <a href="xUsrLink">xUser</a></span>' +
+              '            <span class="review-date"> xDate</span></div>' +
+              '          <p>xReview</p></td></tr></tbody></table></section>' +
+              '';
+      x = x.replace('xTitle', xTitle);
+      x = x.replace('xRevLink', xRevLink);
+      x = x.replace('xReview', xReview);
+      x = x.replace('xUser', xUser);
+      x = x.replace('xUsrLink', xUsrLink);
+      x = x.replace('xDate', xDate);
+      x = x.replace('xRating', xRating);
+
+      let y = jQuery.parseHTML(x);
+      $('.titlereference-section-media').after(y);
+    },
+    onerror: function() {
+      console.log("IMDb Scout Mod (Review): Request Error.");
+    },
+    onabort: function() {
+      console.log("IMDb Scout Mod (Review): Request is aborted.");
+    },
+    ontimeout: function() {
+      console.log("IMDb Scout Mod (Review): Request timed out.");
+    }
+  });
 }
 
 //==============================================================================
