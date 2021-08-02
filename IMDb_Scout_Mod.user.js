@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      13.7
+// @version      13.8
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from hundreds various sites. Adds movies/series to Radarr/Sonarr. Adds external ratings from Metacritic, Rotten Tomatoes, Letterboxd, Douban, Allocine. Media Server indicators for Plex, Jellyfin, Emby. Dark theme/style for Reference View. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAMFBMVEUAAAD/AAAcAAA1AABEAABVAAC3AADnAAD2AACFAAClAABlAAB3AADHAACVAADYAABCnXhrAAAD10lEQVRIx73TV4xMURgH8H/OnRmZWe3T7h2sOWaNXu7oJRg9UccuHgTRBatMtAgSg+gJu9q+kFmihcQoD8qLTkK0CIkoy0YJITsRD0rCKTHFrnkSv5e5c88/53znO+fiPwvsvrN038cPNqrG9pJmHkRVnPcpaTlHJY60cfPSpsrzl1LKihrmLvxhCM2i3OHvDx0d+H7e3F6JBv5iZMiJfhFTfPYDMHrMImpwimWWUdSgDQkbno7fFpUPVgh+pHFbZR4SovSctDCM9Hac9IKd9rO8EevtBCkXgY5IMmgquwypP7qqfcp/Tp4KLONDVsWh3RSBB2rnZfit69ocUdqLn2prrRZYM0Jg4JibamKsqe7gfEh5GOAfeYJjVHIPZvil97rcXkMog30byWRwXYRWoxHbzNFHJJpAarO8NdEBBsdCaP3WMJltTmQd4zlnekTq9Z5dgACwAlrpK4BxdV5mvLuspRgMSHbCIFF0iS8MZ5S8oYBYKY7rByC4dDM9uSIUmPOIwxgQBoYeF93auP4qFyPbIVXziWeGTH1EFM57kJo2hqQju6BwIyRf6RmCjdT4JOdiwNgiH/PPD3qoqlsNaXRd+fKtFfECxlZVNVF9SOsgTZEr2TUjJJbyeNX1IZrKIbyGlBABfpQPv2UDrly13LkJXDVhpQ5MhtGwcyF4HKjlU4E8xwB0AvDjd6AGmevZ87EcQRHgcO52e9uNsYELOrAa/Yh81YlmYLQJ5HWyq0+kzQ/DQKEusg6CRI27ryy8nReRS0wsoetkmRwogHSprliCckfEjXG9yAQc74J0WB99vu6DF3i3pMucsXM6tpBbxd2mVJAwXwGogNRBvGRA4jtHKTXkAIwLGCR/mT4Lh75oneQXXP9sAYfGRDCsnw7pX/jRZkU3M44kjw2l5zRIzb4CbZ8dULdL6wbNPZOpK0B6gN1UR1mdoxAaL/GrWiLPL3SEwW9YMTU/d64BtLahAVyucWhj9Mm8ign9IfQaBtd2/GbvCAEBpG5eMcrj2I0ktpKLeaqXQ3Pst42KGIshpdTmQLAeTgFGJ2wvh+tayMOR0n1RZ8B9z13vnOPBnsBq4E1ffgZpPFZHWVpO2cvhjYpOcbBd5TlhpDu5zq9mHGZcVi0y+VFkcFkDdyKJfTt99wEyHSEzDM90KH0nexpwZHJHKYYhjzlwGe0pP/IKfxociaEb7YDbi6KGJY1R2cR76E6NAtXqY4pPH3plLcl8LD7V+cOLUbUWRFZRPTAbVZO3mxK18Xc1ZaAiS8ARJXpZliXAomR94siiiMx8ZBOkXGTlnH0F/9ov1xPtWwEqP9wAAAAASUVORK5CYII=
@@ -958,6 +958,9 @@
 
 13.7    -   Added: Haidan, Haidan-Req.
         -   Improved: "13.5" fix.
+
+13.8    -   Added: EMP.
+        -   Removed imdb's old layput code.
 
 */
 //==============================================================================
@@ -2099,6 +2102,10 @@ var private_sites = [
       'searchUrl': 'https://www.dvdseed.eu/browse2.php?search=%tt%&wheresearch=2&incldead=1&polish=0&nuke=0&rodzaj=0',
       'loggedOutRegex': /Nie masz konta|Nie zalogowany!/,
       'matchRegex': /Nic tutaj nie ma!/},
+  {   'name': 'EMP',
+      'searchUrl': 'https://www.empornium.is/torrents.php?title=%search_string%+%year%',
+      'loggedOutRegex': /Cloudflare|Ray ID|Authorization error|forgotten password/,
+      'matchRegex': /did not match anything/},
   {   'name': 'EUC',
       'searchUrl': 'https://eliteunitedcrew.org/browse.php?search=%tt%&cat=0&incldead=1&btn=Search',
       'loggedOutRegex': /Not logged in/,
@@ -5324,11 +5331,6 @@ function displayButton() {
     $('#sidebar').prepend(p);
   } else if ($('[class^=SubNav__SubNavContainer]').length) {
     $('[class^=SubNav__SubNavContainer]').append(p);
-  // oldlayout
-  } else if ($('.button_panel.navigation_panel').length) {
-    $('.button_panel.navigation_panel').after(p);
-  } else if ($('.title_block').length) {
-    $('.title_block').after(p);
   // reference
   } else if ($('.titlereference-header').length) {
     $('.titlereference-header').append(p);
@@ -5343,9 +5345,6 @@ function displayButton() {
 function addIconBar(movie_id, movie_title, movie_title_orig) {
   var iconbar;
   if ($('[class^=TitleBlock__TitleContainer]').length) {
-    iconbar = getIconsLinkArea();
-  // oldlayout
-  } else if ($('h1.header:first').length || $('.title_wrapper h1').length) {
     iconbar = getIconsLinkArea();
   // reference + remove "Reference View" txt and a link to settings
   } else if ($('.titlereference-header div script').length) {
@@ -5477,18 +5476,8 @@ function getIconsLinkArea() {
   // reference
   } else if ($('.titlereference-header div hr').first().length) {
     $('.titlereference-header div hr').first().after(p);
-  // oldlayout
-  } else if ($('h1.header:first').length) {
-    $('h1.header:first').append(p);
-  // oldlayout
-  } else if ($('.title_wrapper h1').length) {
-    $('.title_wrapper h1').append(p);
   }
   var styles = '#imdbscout_iconsheader {line-height: 16px;} ';
-  // oldlayout
-  if ($('h1.header:first').length || $('.title_wrapper h1').length) {
-    styles = '#imdbscout_iconsheader {line-height: 16px; width: 575px;} ';
-  }
   GM.addStyle(styles);
   return $('#imdbscout_iconsheader');
 }
@@ -5581,10 +5570,10 @@ function performSearchSecondPart(elem, link, movie_id, showsites, scout_tick) {
       var result = parser.parseFromString(response.responseText, "text/html");
 
       var is_tv    = Boolean($(result).find('title').text().match('TV Series'));
-      // newLayout || reference || oldLayout : check if 'title' has just a year in brackets, eg. "(2009)"
-      var is_movie = (Boolean($(result).find('[class^=TitleBlock__TitleMetaDataContainer]').text().match('TV')) || Boolean($(result).find('li.ipl-inline-list__item').text().match('TV Special')) || Boolean($(result).find('.subtext').text().match('TV Special'))) ? false : Boolean($(result).find('title').text().match(/.*? \(([0-9]*)\)/));
-      // newLayout || reference || oldLayout
-      if (Boolean($(result).find('[class^=GenresAndPlot__Genre]').text().match('Documentary')) || Boolean($(result).find('li.ipl-inline-list__item').text().match('Documentary')) || Boolean($(result).find('.subtext').text().match('Documentary'))) {
+      // newLayout || reference : check if 'title' has just a year in brackets, eg. "(2009)"
+      var is_movie = (Boolean($(result).find('[class^=TitleBlock__TitleMetaDataContainer]').text().match('TV')) || Boolean($(result).find('li.ipl-inline-list__item').text().match('TV Special'))) ? false : Boolean($(result).find('title').text().match(/.*? \(([0-9]*)\)/));
+      // newLayout || reference
+      if (Boolean($(result).find('[class^=GenresAndPlot__Genre]').text().match('Documentary')) || Boolean($(result).find('li.ipl-inline-list__item').text().match('Documentary'))) {
         is_tv    = false;
         is_movie = false;
       }
@@ -5594,18 +5583,11 @@ function performSearchSecondPart(elem, link, movie_id, showsites, scout_tick) {
       if (movie_title === "") {
         movie_title = $(result).find('h3[itemprop="name"]').text().trim();
         movie_title = movie_title.substring(movie_title.lastIndexOf("\n") + 1, -1 ).trim();
-        // oldLayout
-        if (movie_title === "") {
-          movie_title = $(result).find('.title_wrapper>h1').clone().children().remove().end().text();
-        }
       }
       var movie_title_orig = $(result).find('[class^=OriginalTitle__OriginalTitleText]').text().trim().replace("Original title: ", "");
       // reference
       if (movie_title_orig === "" && $(result).find('h3[itemprop="name"]').length) {
         movie_title_orig = $.trim($($(result).find('h3[itemprop="name"]')[0].nextSibling).text());
-        // oldLayout
-      } else if (movie_title_orig === "" && $(result).find('.originalTitle').length) {
-        movie_title_orig = $(result).find('.originalTitle').clone().children().remove().end().text().trim();
       }
       // not found
       if (movie_title_orig === "") {
@@ -5635,18 +5617,11 @@ function performPage() {
   if (movie_title === "") {
     movie_title = $('h3[itemprop="name"]').text().trim();
     movie_title = movie_title.substring(movie_title.lastIndexOf("\n") + 1, -1 ).trim();
-    // oldLayout
-    if (movie_title === "") {
-      movie_title = $('.title_wrapper>h1').clone().children().remove().end().text();
-    }
   }
   var movie_title_orig = $('[class^=OriginalTitle__OriginalTitleText]').text().trim().replace("Original title: ", "");
   // reference
   if (movie_title_orig === "" && $('h3[itemprop="name"]').length) {
     movie_title_orig = $.trim($($('h3[itemprop="name"]')[0].nextSibling).text());
-    // oldLayout
-  } else if (movie_title_orig === "" && $('.originalTitle').length) {
-    movie_title_orig = $('.originalTitle').clone().children().remove().end().text().trim();
   }
   // not found
   if (movie_title_orig === "") {
@@ -5655,10 +5630,10 @@ function performPage() {
 
   var movie_id = document.URL.match(/\/tt([0-9]+)\//)[1].trim('tt');
   var is_tv    = Boolean($('title').text().match('TV Series'));
-  // newLayout || reference || oldLayout : check if 'title' has just a year in brackets, eg. "(2009)"
-  var is_movie = (Boolean($('[class^=TitleBlock__TitleMetaDataContainer]').text().match('TV')) || Boolean($('li.ipl-inline-list__item').text().match('TV Special')) || Boolean($('.subtext').text().match('TV Special'))) ? false : Boolean($('title').text().match(/.*? \(([0-9]*)\)/));
-  // newLayout || reference || oldLayout
-  if (Boolean($('[class^=GenresAndPlot__Genre]').text().match('Documentary')) || Boolean($('li.ipl-inline-list__item').text().match('Documentary')) || Boolean($('.subtext').text().match('Documentary'))) {
+  // newLayout || reference : check if 'title' has just a year in brackets, eg. "(2009)"
+  var is_movie = (Boolean($('[class^=TitleBlock__TitleMetaDataContainer]').text().match('TV')) || Boolean($('li.ipl-inline-list__item').text().match('TV Special'))) ? false : Boolean($('title').text().match(/.*? \(([0-9]*)\)/));
+  // newLayout || reference
+  if (Boolean($('[class^=GenresAndPlot__Genre]').text().match('Documentary')) || Boolean($('li.ipl-inline-list__item').text().match('Documentary'))) {
     is_tv    = false;
     is_movie = false;
   }
@@ -5671,36 +5646,18 @@ function performPage() {
   iconSorterCount(is_tv, is_movie);
 
   // Create areas to put links in
-  // oldlayout
-  if ($('.button_panel.navigation_panel').length || $('.title_block').length) {
-    if (GM_config.get('load_second_bar') && !GM_config.get('load_third_bar_movie')) {
-      getLinkAreaSecond();
-    } else if (!GM_config.get('load_second_bar') && GM_config.get('load_third_bar_movie')) {
-      getLinkAreaThird();
-    } else if (GM_config.get('load_second_bar') && GM_config.get('load_third_bar_movie') && !GM_config.get('switch_bars')) {
-      getLinkAreaThird();
-      getLinkAreaSecond();
-    } else if (GM_config.get('load_second_bar') && GM_config.get('load_third_bar_movie') && GM_config.get('switch_bars')) {
-      getLinkAreaSecond();
-      getLinkAreaThird();
-    }
-  perform(getLinkArea(), movie_id, movie_title, movie_title_orig, is_tv, is_movie);
   addIconBar(movie_id, movie_title, movie_title_orig);
-
-  } else {
-    addIconBar(movie_id, movie_title, movie_title_orig);
-    perform(getLinkArea(), movie_id, movie_title, movie_title_orig, is_tv, is_movie);
-    if (GM_config.get('load_second_bar') && !GM_config.get('load_third_bar_movie')) {
-      getLinkAreaSecond();
-    } else if (!GM_config.get('load_second_bar') && GM_config.get('load_third_bar_movie')) {
-      getLinkAreaThird();
-    } else if (GM_config.get('load_second_bar') && GM_config.get('load_third_bar_movie') && !GM_config.get('switch_bars')) {
-      getLinkAreaSecond();
-      getLinkAreaThird();
-    } else if (GM_config.get('load_second_bar') && GM_config.get('load_third_bar_movie') && GM_config.get('switch_bars')) {
-      getLinkAreaThird();
-      getLinkAreaSecond();
-    }
+  perform(getLinkArea(), movie_id, movie_title, movie_title_orig, is_tv, is_movie);
+  if (GM_config.get('load_second_bar') && !GM_config.get('load_third_bar_movie')) {
+    getLinkAreaSecond();
+  } else if (!GM_config.get('load_second_bar') && GM_config.get('load_third_bar_movie')) {
+    getLinkAreaThird();
+  } else if (GM_config.get('load_second_bar') && GM_config.get('load_third_bar_movie') && !GM_config.get('switch_bars')) {
+    getLinkAreaSecond();
+    getLinkAreaThird();
+  } else if (GM_config.get('load_second_bar') && GM_config.get('load_third_bar_movie') && GM_config.get('switch_bars')) {
+    getLinkAreaThird();
+    getLinkAreaSecond();
   }
 }
 
@@ -5745,11 +5702,6 @@ function getLinkArea() {
 
   if ($('[class^=SubNav__SubNavContainer]').length) {
     $('[class^=SubNav__SubNavContainer]').append(p);
-  // oldlayout
-  } else if ($('.button_panel.navigation_panel').length) {
-    $('.button_panel.navigation_panel').after(p);
-  } else if ($('.title_block').length) {
-    $('.title_block').after(p);
   // reference
   } else if ($('.titlereference-header').length) {
     $('.titlereference-header').append(p);
@@ -5801,11 +5753,6 @@ function getLinkAreaSecond() {
   });
   if ($('[class^=SubNav__SubNavContainer]').length) {
     $('[class^=SubNav__SubNavContainer]').append(p);
-  // oldlayout
-  } else if ($('.button_panel.navigation_panel').length) {
-    $('.button_panel.navigation_panel').after(p);
-  } else if ($('.title_block').length) {
-    $('.title_block').after(p);
   // reference
   } else if ($('.titlereference-header').length) {
     $('.titlereference-header').append(p);
@@ -5857,11 +5804,6 @@ function getLinkAreaThird() {
   });
   if ($('[class^=SubNav__SubNavContainer]').length) {
     $('[class^=SubNav__SubNavContainer]').append(p);
-  // oldlayout
-  } else if ($('.button_panel.navigation_panel').length) {
-    $('.button_panel.navigation_panel').after(p);
-  } else if ($('.title_block').length) {
-    $('.title_block').after(p);
   // reference
   } else if ($('.titlereference-header').length) {
     $('.titlereference-header').append(p);
@@ -6641,8 +6583,8 @@ async function start_plex(movie_id, movie_title, movie_title_orig) {
   }
 
   let tvdb_id = "00000000";
-  // newLayout || reference || oldLayout : check if 'title' has just a year in brackets, eg. "(2009)"
-  const is_movie = (Boolean($('[class^=TitleBlock__TitleMetaDataContainer]').text().match('TV')) || Boolean($('li.ipl-inline-list__item').text().match('TV Special')) || Boolean($('.subtext').text().match('TV Special'))) ? false : Boolean($('title').text().match(/.*? \(([0-9]*)\)/));
+  // newLayout || reference : check if 'title' has just a year in brackets, eg. "(2009)"
+  const is_movie = (Boolean($('[class^=TitleBlock__TitleMetaDataContainer]').text().match('TV')) || Boolean($('li.ipl-inline-list__item').text().match('TV Special'))) ? false : Boolean($('title').text().match(/.*? \(([0-9]*)\)/));
   if (!is_movie) {
     tvdb_id = await getTVDbID(movie_id);
   }
@@ -7581,11 +7523,6 @@ function addRatingsElements(imdbid, title, title_orig) {
   if ($('.titlereference-header').length) {
     $('#main').children().first().prepend(table);
     $('#scout_rating_table').after(hr);
-  // oldlayout
-  } else if ($('.title_block').length) {
-    const hr = $('<hr />').css({'margin-top':'3px', 'margin-bottom':'3px', 'border-color': 'grey' });
-    $('.title_block').prepend(table);
-    $('#scout_rating_table').after(hr);
   // new layout
   } else if ($('[class^=TitleBlock__Container]').length) {
    $('[class^=TitleBlock__Container]').parent().prepend(table);
@@ -8361,13 +8298,6 @@ function adsRemovalReference() {
   if (!GM_config.get('remove_ads')) {
     return;
   }
-// oldlayout?
-  $('#top_ad_wrapper').remove();
-  $('#top_rhs_wrapper').remove();
-  $('.pro_logo_main_title').remove();
-  $('#promoted-partner-bar').remove();
-
-// reference
   if (Boolean($('.aux-content-widget-2').first().text().match("IMDb Answers"))) {
     $('.aux-content-widget-2').first().remove();
   }
