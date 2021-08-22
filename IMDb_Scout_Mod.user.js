@@ -2980,6 +2980,7 @@ var private_sites = [
       'positiveMatch': true,
       'both': true},
   {   'name': 'Snahp',
+      'icon': 'https://forum.snahp.it/favicon.ico',
       'searchUrl': 'https://forum.snahp.it/search.php?keywords=%tt%&sk=x',
       'loggedOutRegex': />Register<|you cannot use search at this time/,
       'matchRegex': /Search found 0|No suitable matches/,
