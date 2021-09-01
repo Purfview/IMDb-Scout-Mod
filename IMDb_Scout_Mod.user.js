@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      13.8.1
+// @version      13.8.2
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from hundreds various sites. Adds movies/series to Radarr/Sonarr. Adds external ratings from Metacritic, Rotten Tomatoes, Letterboxd, Douban, Allocine. Media Server indicators for Plex, Jellyfin, Emby. Dark theme/style for Reference View. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAMFBMVEUAAAD/AAAcAAA1AABEAABVAAC3AADnAAD2AACFAAClAABlAAB3AADHAACVAADYAABCnXhrAAAD10lEQVRIx73TV4xMURgH8H/OnRmZWe3T7h2sOWaNXu7oJRg9UccuHgTRBatMtAgSg+gJu9q+kFmihcQoD8qLTkK0CIkoy0YJITsRD0rCKTHFrnkSv5e5c88/53znO+fiPwvsvrN038cPNqrG9pJmHkRVnPcpaTlHJY60cfPSpsrzl1LKihrmLvxhCM2i3OHvDx0d+H7e3F6JBv5iZMiJfhFTfPYDMHrMImpwimWWUdSgDQkbno7fFpUPVgh+pHFbZR4SovSctDCM9Hac9IKd9rO8EevtBCkXgY5IMmgquwypP7qqfcp/Tp4KLONDVsWh3RSBB2rnZfit69ocUdqLn2prrRZYM0Jg4JibamKsqe7gfEh5GOAfeYJjVHIPZvil97rcXkMog30byWRwXYRWoxHbzNFHJJpAarO8NdEBBsdCaP3WMJltTmQd4zlnekTq9Z5dgACwAlrpK4BxdV5mvLuspRgMSHbCIFF0iS8MZ5S8oYBYKY7rByC4dDM9uSIUmPOIwxgQBoYeF93auP4qFyPbIVXziWeGTH1EFM57kJo2hqQju6BwIyRf6RmCjdT4JOdiwNgiH/PPD3qoqlsNaXRd+fKtFfECxlZVNVF9SOsgTZEr2TUjJJbyeNX1IZrKIbyGlBABfpQPv2UDrly13LkJXDVhpQ5MhtGwcyF4HKjlU4E8xwB0AvDjd6AGmevZ87EcQRHgcO52e9uNsYELOrAa/Yh81YlmYLQJ5HWyq0+kzQ/DQKEusg6CRI27ryy8nReRS0wsoetkmRwogHSprliCckfEjXG9yAQc74J0WB99vu6DF3i3pMucsXM6tpBbxd2mVJAwXwGogNRBvGRA4jtHKTXkAIwLGCR/mT4Lh75oneQXXP9sAYfGRDCsnw7pX/jRZkU3M44kjw2l5zRIzb4CbZ8dULdL6wbNPZOpK0B6gN1UR1mdoxAaL/GrWiLPL3SEwW9YMTU/d64BtLahAVyucWhj9Mm8ign9IfQaBtd2/GbvCAEBpG5eMcrj2I0ktpKLeaqXQ3Pst42KGIshpdTmQLAeTgFGJ2wvh+tayMOR0n1RZ8B9z13vnOPBnsBq4E1ffgZpPFZHWVpO2cvhjYpOcbBd5TlhpDu5zq9mHGZcVi0y+VFkcFkDdyKJfTt99wEyHSEzDM90KH0nexpwZHJHKYYhjzlwGe0pP/IKfxociaEb7YDbi6KGJY1R2cR76E6NAtXqY4pPH3plLcl8LD7V+cOLUbUWRFZRPTAbVZO3mxK18Xc1ZaAiS8ARJXpZliXAomR94siiiMx8ZBOkXGTlnH0F/9ov1xPtWwEqP9wAAAAASUVORK5CYII=
@@ -962,8 +962,11 @@
 13.8    -   Added: EMP.
         -   Removed imdb's old layout code.
 
-13.8.1  -   Added: Arrow Films, CBT, CBT-Re, TBL, TMV, iBit.
+13.8.1  -   Added: Arrow Films, CBT, CBT-Req, TBL, TMV, iBit.
         -   Removed: Hon3yHD.
+
+13.8.2  -   Added: Uniongang, SunXDCC.
+        -   Removed: HDMonkey, Team-HuSh, ixIRC.
 
 */
 //==============================================================================
@@ -1098,12 +1101,12 @@ var public_sites = [
       'TV': true},
   {   'name': '1337x-Proxy',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADgAAAA4BAMAAABaqCYtAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAAAPUExURdY2AN9iOP///9Y2AN9iOE1iXmMAAAADdFJOUwAAAPp2xN4AAADRSURBVDjLtdXtDQIhDAbgxmMBDAP4NcDFOoAI+8/kQXsmV6DgRfuL8KTlhT/ARSkYwHNMZZdyafHS8LhFN4SxhZ7Rf4OW0TUxjqCVyHFjG30ffYG07fZi5FgF5v34c7Sr+f+glXgCAEMWluVhF85VBGqclU5UMOCjiQERq5iHKpga8VnHbClRgYatjmwpboETrlXBoCF2caJEEk3ebuDUR6C7SOSXo0QSOaeKNECg4YejowVyHh1pgsDASGcL5DwdDCXePpgPv2/wyjep4o7f4Q1FlOJhL4s2tAAAAABJRU5ErkJggg==',
-      'searchUrl': 'https://1337x.unblockit.uno/category-search/%search_string%+%year%/Movies/1/',
+      'searchUrl': 'https://1337x.unblockit.ch/category-search/%search_string%+%year%/Movies/1/',
       'loggedOutRegex': /Cloudflare|Ray ID/,
       'matchRegex': /No results were returned/},
   {   'name': '1337x-Proxy',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADgAAAA4BAMAAABaqCYtAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAAAPUExURdY2AN9iOP///9Y2AN9iOE1iXmMAAAADdFJOUwAAAPp2xN4AAADRSURBVDjLtdXtDQIhDAbgxmMBDAP4NcDFOoAI+8/kQXsmV6DgRfuL8KTlhT/ARSkYwHNMZZdyafHS8LhFN4SxhZ7Rf4OW0TUxjqCVyHFjG30ffYG07fZi5FgF5v34c7Sr+f+glXgCAEMWluVhF85VBGqclU5UMOCjiQERq5iHKpga8VnHbClRgYatjmwpboETrlXBoCF2caJEEk3ebuDUR6C7SOSXo0QSOaeKNECg4YejowVyHh1pgsDASGcL5DwdDCXePpgPv2/wyjep4o7f4Q1FlOJhL4s2tAAAAABJRU5ErkJggg==',
-      'searchUrl': 'https://1337x.unblockit.uno/category-search/%search_string%/TV/1/',
+      'searchUrl': 'https://1337x.unblockit.ch/category-search/%search_string%/TV/1/',
       'loggedOutRegex': /Cloudflare|Ray ID/,
       'matchRegex': /No results were returned/,
       'TV': true},
@@ -1293,15 +1296,6 @@ var public_sites = [
       'searchUrl': 'https://archive.org/details/moviesandfilms?query=%search_string_orig%&and[]=mediatype:%22movies%22&and[]=subject:%22Movie%22',
       'loggedOutRegex': /Cloudflare|Ray ID/,
       'matchRegex': /No results matched/},
-  {   'name': 'ixIRC',
-      'icon': 'https://ixirc.com/favicon.png',
-      'searchUrl': 'https://ixirc.com/?q=%search_string_orig%+%year%',
-      'matchRegex': /No results/},
-  {   'name': 'ixIRC',
-      'icon': 'https://ixirc.com/favicon.png',
-      'searchUrl': 'https://ixirc.com/?q=%search_string_orig%',
-      'matchRegex': /No results/,
-      'TV': true},
   {   'name': 'KZ',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAABCFBMVEUAAAARFSY7R4A8SIFAS4JKVIZPWIhdZI5pd6FwfKNwfaNxfqR1gKV5hKZ7haeDjKmJAACKmLiQnLqSnrqVCwiVGBWVobqXHBiYoruZDgmbpbydEAyeEw6fEw6kGRGoGhSoHBSpQDeqHRSsSUCssr+xKh+yVEjANCPCPC3Cyc7Dys7ESTbEys7FQzDFXErHSDfIz9LLgW/Lh3TOj3vSlYDU1c7V1s7V19jYXUPYcFzY2dHY2djZpY7bf2jbqJHcZk7h3c7khmfk4dXomnrqpoHq487q5NPt7d7w587w7N/x6M7x7dry2Lr269D37ND47dD53rr57dH64b767tH77tH87cz9787978+9KzODAAAAAXRSTlMAQObYZgAAAMlJREFUGBlFwdciA1EABNCZ0S4JFldfyeqi96jREgRBiMn//4n15BxQIiiJoERA+82p/qHL1+pc3+jLhQA1252Oc92P96dnAZz5jjn7ZmmjFQhA7VoWaz5fmF5uCQB7u86ir9aPbQ8QCBN2KZ7NLjo3HgBV7VJMDv2nIkCPdhbLk9fO3QoI93Ya73aSrTd7MwAcsdPoz9Vk98fDBCDX07Tuh/lkzwLAomPOXwdryVEgoIb/nQjQWKPQU9huVIoaPF0RQIlgUCAoEb/q0ya7wj1izQAAAABJRU5ErkJggg==',
       'searchUrl': 'http://kinozal.tv/browse.php?s=%search_string%+%year%&g=0&c=1002&v=0&d=0&w=0&t=0&f=0',
@@ -1327,13 +1321,13 @@ var public_sites = [
   {   'name': 'LimeTor-Proxy',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAAUOSURBVHjanJdLiF1FEIa/iaMRQ6IILozVulDxgbtk0S34AIkuBDdyIi4CiouIEGEmCxdGCARBRXMxS9GFG8GcbARFCUIEkW4JKkhWGhGsWimBiKCYxBkXXedx753MTNJwuPdwurv+rvrrr+qF1dVVFhYWmBuN/4o/1r9vA+4GuZNAALajnAP7jZafKfwCXGKTY3FTs4xrEB6XEJ9tYnpUkBBCQJDRFEMbvVSsnM05f2GtfUTh9EZbL2zogchTMTWvLadm99hgZ3YY09+yZtrSflqOlsMUvrsaADukkXeX4tJzKaT+lDUaepntwgiOYBhZ87+TyeQIE17fPADhjng8nlhOze7xpqAIAUPX9EX3bRZU1kzbth/bQXse+Gd9Dgi3yvH4eZOa+wBUMwQII5My82tzAQDFQA0wJAipSc+05Os5aHuBC5f1gByXk01Me4SIURA3LiOTMuNwnWOEYf6WVX1NoiVTJuUtJrzSzdwyE/eXJMqeGr8WQQmAYP0zONbcpPn/sRPNs1edM0YhkwhII8tEHp4HIOyUJTmSCBRy3TjUTZKfNsyAYASiexKFgJLceN2jhsQAEVmk4Shw3TSAhpdFuHladczdrf0TfCOdObX5yRmRcB6wVu1K7CLy9BjADhL7AkJr7Uj+xqccZ0JxaBWU9gZ1bo15SgaEbAW1jIhAw35gYdHF5iGEnRAQsf50quIknAVRfZN7wgV/s5lMALTqgWLVMEIC2mAR4Z7qgcQjIoKimJkTbzhL29OpbmoOKCtkBVWXYg+NAhmhICPvOB2tVEYJWxEeXHQC3i/gH4fYp2CuaFCcXqCgBSX3DBEUVVeDEN2cEjEkVKDmp6ksyR2qBzoh2jlNPnovBMzzvSUjZBWgwcg+W1yiY0+86FC7fSyAKaibMHOpFrt9i8+6YWxc5pR9yO8QCkbbS2+NKEABSp0zt+6yY3vngf/GkmojEoWZVKvCJh7v7DDok9BmiLjBWFl0S39anEaqc4kogw/7UwpKmaqAqpE2WK+GUN1vVNePxRo4v+hvZ4HUxbNPMx0YLMEglOohrSwf3BsRCimM819q3GdqBEASoTUD49cOwPdmtq+RBiX36ZQQUmCKVOqkEhUY8mJE2qEaWpCpFBXpilqonFHOVACZr1hiRdEtxTwFpSZgnOGBL61s7z8U0OhfhnmhV4zKmW5vkwzGeQqnt7gHfiTzrWE00rhirUMmrSEJbiiu0aCNkXQwoggiETODzCngbFcLVigcM2eJma1R473XWyO1AkCwEe1m9bgjoHSbrtLyAbA6VMOWE2S+yWSSxIH9Wo2qGzcV75DmNUK1k+06t2VY24fPCmQ+wzg525JdYsIBS/a1imwLRLLHVHRspp4jj0in445AmauJBiSJVTuNP5hwCLi4dlPacIAlOdZI8lJb+pzvZEqg50DvaQUjdm1Hrw8GJBoyucZ+L/sx3lu/K17iHZZkuXGZVbKXF+urmkwxpNOP6KV8IHEgkb3KsmxvUDjUKe9G94JXWZIjUWQhkciezTK6H8x3REP/05DqvYCMFS5w1A5TeBNY2dzFpArckyzL20S5NxL67jjPtF5DNqQeTu66wNbOMOEQxidXdjMaxk00vEgjLxDlLulvCDJzZRkU3kwh20+09iGF94Hfr/xqthaQyGMknkBkF4HbELaDXAt2EeMvFKPYD2S+xDi1nuGrATAeW4FbgBv9/0XgPHAO+PtKNvp/ACd2iMQwv1FJAAAAAElFTkSuQmCC',
       'loggedOutRegex': /Cloudflare|Ray ID|security check to access|Please turn JavaScript/,
-      'searchUrl': 'https://limetorrents.unblockit.uno/search/movies/%search_string%+%year%/seeds/1/',
+      'searchUrl': 'https://limetorrents.unblockit.ch/search/movies/%search_string%+%year%/seeds/1/',
       'matchRegex': /csprite_dl14/,
       'positiveMatch': true},
   {   'name': 'LimeTor-Proxy',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAAUOSURBVHjanJdLiF1FEIa/iaMRQ6IILozVulDxgbtk0S34AIkuBDdyIi4CiouIEGEmCxdGCARBRXMxS9GFG8GcbARFCUIEkW4JKkhWGhGsWimBiKCYxBkXXedx753MTNJwuPdwurv+rvrrr+qF1dVVFhYWmBuN/4o/1r9vA+4GuZNAALajnAP7jZafKfwCXGKTY3FTs4xrEB6XEJ9tYnpUkBBCQJDRFEMbvVSsnM05f2GtfUTh9EZbL2zogchTMTWvLadm99hgZ3YY09+yZtrSflqOlsMUvrsaADukkXeX4tJzKaT+lDUaepntwgiOYBhZ87+TyeQIE17fPADhjng8nlhOze7xpqAIAUPX9EX3bRZU1kzbth/bQXse+Gd9Dgi3yvH4eZOa+wBUMwQII5My82tzAQDFQA0wJAipSc+05Os5aHuBC5f1gByXk01Me4SIURA3LiOTMuNwnWOEYf6WVX1NoiVTJuUtJrzSzdwyE/eXJMqeGr8WQQmAYP0zONbcpPn/sRPNs1edM0YhkwhII8tEHp4HIOyUJTmSCBRy3TjUTZKfNsyAYASiexKFgJLceN2jhsQAEVmk4Shw3TSAhpdFuHladczdrf0TfCOdObX5yRmRcB6wVu1K7CLy9BjADhL7AkJr7Uj+xqccZ0JxaBWU9gZ1bo15SgaEbAW1jIhAw35gYdHF5iGEnRAQsf50quIknAVRfZN7wgV/s5lMALTqgWLVMEIC2mAR4Z7qgcQjIoKimJkTbzhL29OpbmoOKCtkBVWXYg+NAhmhICPvOB2tVEYJWxEeXHQC3i/gH4fYp2CuaFCcXqCgBSX3DBEUVVeDEN2cEjEkVKDmp6ksyR2qBzoh2jlNPnovBMzzvSUjZBWgwcg+W1yiY0+86FC7fSyAKaibMHOpFrt9i8+6YWxc5pR9yO8QCkbbS2+NKEABSp0zt+6yY3vngf/GkmojEoWZVKvCJh7v7DDok9BmiLjBWFl0S39anEaqc4kogw/7UwpKmaqAqpE2WK+GUN1vVNePxRo4v+hvZ4HUxbNPMx0YLMEglOohrSwf3BsRCimM819q3GdqBEASoTUD49cOwPdmtq+RBiX36ZQQUmCKVOqkEhUY8mJE2qEaWpCpFBXpilqonFHOVACZr1hiRdEtxTwFpSZgnOGBL61s7z8U0OhfhnmhV4zKmW5vkwzGeQqnt7gHfiTzrWE00rhirUMmrSEJbiiu0aCNkXQwoggiETODzCngbFcLVigcM2eJma1R473XWyO1AkCwEe1m9bgjoHSbrtLyAbA6VMOWE2S+yWSSxIH9Wo2qGzcV75DmNUK1k+06t2VY24fPCmQ+wzg525JdYsIBS/a1imwLRLLHVHRspp4jj0in445AmauJBiSJVTuNP5hwCLi4dlPacIAlOdZI8lJb+pzvZEqg50DvaQUjdm1Hrw8GJBoyucZ+L/sx3lu/K17iHZZkuXGZVbKXF+urmkwxpNOP6KV8IHEgkb3KsmxvUDjUKe9G94JXWZIjUWQhkciezTK6H8x3REP/05DqvYCMFS5w1A5TeBNY2dzFpArckyzL20S5NxL67jjPtF5DNqQeTu66wNbOMOEQxidXdjMaxk00vEgjLxDlLulvCDJzZRkU3kwh20+09iGF94Hfr/xqthaQyGMknkBkF4HbELaDXAt2EeMvFKPYD2S+xDi1nuGrATAeW4FbgBv9/0XgPHAO+PtKNvp/ACd2iMQwv1FJAAAAAElFTkSuQmCC',
       'loggedOutRegex': /Cloudflare|Ray ID|security check to access|Please turn JavaScript/,
-      'searchUrl': 'https://limetorrents.unblockit.uno/search/tv/%search_string%/seeds/1/',
+      'searchUrl': 'https://limetorrents.unblockit.ch/search/tv/%search_string%/seeds/1/',
       'matchRegex': /csprite_dl14/,
       'positiveMatch': true,
       'TV': true},
@@ -1506,6 +1500,21 @@ var public_sites = [
       'loggedOutRegex': /Cloudflare|Ray ID/,
       'matchRegex': /value":0/,
       'TV': true},
+  {   'name': 'SunXDCC',
+      'icon': 'https://sunxdcc.com/images/favicon.png',
+      'searchUrl': 'https://sunxdcc.com/deliver.php?sterm=%search_string_orig% %year%',
+      'goToUrl': 'https://sunxdcc.com/?sterm=%search_string_orig% %year%',
+      'loggedOutRegex': /Cloudflare|Ray ID/,
+      'matchRegex': /botrec":\[]/,
+      'spaceEncode': ' '},
+  {   'name': 'SunXDCC',
+      'icon': 'https://sunxdcc.com/images/favicon.png',
+      'searchUrl': 'https://sunxdcc.com/deliver.php?sterm=%search_string_orig%',
+      'goToUrl': 'https://sunxdcc.com/?sterm=%search_string_orig%',
+      'loggedOutRegex': /Cloudflare|Ray ID/,
+      'matchRegex': /botrec":\[]/,
+      'spaceEncode': ' ',
+      'TV': true},
   {   'name': 'T2K',
       'searchUrl': 'https://torrentz2k.xyz/search/',
       'loggedOutRegex': /Ray ID|security check to access|Please turn JavaScript|equiv="refresh/,
@@ -1556,7 +1565,7 @@ var public_sites = [
       'both': true},
   {   'name': 'TorDL-Proxy',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAbFBMVEUFMFwLNmINfsASgcMUP2sYhcYeSXUeicoljc4lmt4oU38tktIwn+AyXYk1l9Y7ZpE8peM9nNtFod9Jq+ZOpuRWq+hXsuldsOxktfBluOxrufRxvPdzv/B2v/qBxvOOzPaa0vml1/uu2/213v9ENtEwAAAAb0lEQVQYGQXBQU7DABAEMCdaBDcKPfP/17XqEaTMDvbxAwCY/QAAv2cBgM4WAOy0nuAbdLa+PNwV7LSIvnCj57btdXX3c5/tThdrY2N1EkQuuUQmQWVlRSbBXSIRmQaoh1v0eHsHAH+zAQB7nACAfwQvUdbdx9fFAAAAAElFTkSuQmCC',
-      'searchUrl': 'https://torrentdownloads.unblockit.uno/search/?new=1&s_cat=0&search=%search_string%',
+      'searchUrl': 'https://torrentdownloads.unblockit.ch/search/?new=1&s_cat=0&search=%search_string%',
       'loggedOutRegex': /Cloudflare|Ray ID/,
       'matchRegex': /No results found/,
       'both': true},
@@ -2367,15 +2376,6 @@ var private_sites = [
       'loggedOutRegex': /You need cookies enabled/,
       'matchRegex': /Try again with a refined search string./,
       'TV': true},
-  {   'name': 'HDMonkey',
-      'searchUrl': 'https://hdmonkey.org/torrents-search.php?c75=1&c26=1&c42=1&c50=1&c74=1&c49=1&c46=1&c24=1&c28=1&search=%search_string_orig%+%year%',
-      'loggedOutRegex': /Cloudflare|Ray ID|Recover Account/,
-      'matchRegex': /Nothing Found|Nu a fost gasit nimic/},
-  {   'name': 'HDMonkey',
-      'searchUrl': 'https://hdmonkey.org/torrents-search.php?c41=1&c52=1&c48=1&c9=1&search=%search_string_orig%',
-      'loggedOutRegex': /Cloudflare|Ray ID|Recover Account/,
-      'matchRegex': /Nothing Found|Nu a fost gasit nimic/,
-      'TV': true},
   {   'name': 'HDS',
       'searchUrl': 'https://hdsky.me/torrents.php?incldead=1&search=%tt%&search_area=4&search_mode=0',
       'loggedOutRegex': /SSL \(HTTPS\)/,
@@ -3109,18 +3109,6 @@ var private_sites = [
       'loggedOutRegex': /404 - Not Found|You need cookies enabled/,
       'matchRegex': /Try again with a refined search string/,
       'TV': true},
-  {   'name': 'Team-HuSh',
-      'icon': 'data:image/png;base64,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',
-      'searchUrl': 'https://team-hush.org/filterTorrents?imdb=%tt%',
-      'loggedOutRegex': /Cloudflare|Ray ID|Mot de passe oublié/,
-      'matchRegex': /<tbody>\s*<\/tbody>/,
-      'both': true},
-  {   'name': 'Team-HuSh-Req',
-      'icon': 'data:image/png;base64,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',
-      'searchUrl': 'https://team-hush.org/filterRequests?imdb=%nott%&unfilled=1',
-      'loggedOutRegex': /Cloudflare|Ray ID|Mot de passe oublié/,
-      'matchRegex': /<tbody>\s*<\/tbody>/,
-      'both': true},
   {   'name': 'Telly',
       'searchUrl': 'https://telly.wtf/torrents?imdbId=%nott%',
       'loggedOutRegex': /Cloudflare|Ray ID|Forgot Your Password/,
@@ -3368,6 +3356,11 @@ var private_sites = [
       'searchUrl': 'https://uhdbits.org/requests.php?submit=true&search=%search_string_orig%&showall=on&filter_cat[1]=1&filter_cat[3]=1',
       'loggedOutRegex': /Lost your password/,
       'matchRegex': /Nothing found/,
+      'both': true},
+  {   'name': 'Uniongang',
+      'searchUrl': 'https://www.uniongang.tv/browse.php?search=&incldead=1&cat=0&dsearch=%tt%',
+      'loggedOutRegex': /Cloudflare|Ray ID|Ещё не зарегистрированы/,
+      'matchRegex': /Ничего не найдено/,
       'both': true},
   {   'name': 'Unlimitz',
       'searchUrl': 'https://www.unlimitz.biz/browse.php?search=%search_string%&cat=0&blah=0',
