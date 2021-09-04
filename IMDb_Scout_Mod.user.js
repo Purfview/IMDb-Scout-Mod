@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      13.8.3
+// @version      13.8.4
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from hundreds various sites. Adds movies/series to Radarr/Sonarr. Adds external ratings from Metacritic, Rotten Tomatoes, Letterboxd, Douban, Allocine. Media Server indicators for Plex, Jellyfin, Emby. Dark theme/style for Reference View. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAMFBMVEUAAAD/AAAcAAA1AABEAABVAAC3AADnAAD2AACFAAClAABlAAB3AADHAACVAADYAABCnXhrAAAD10lEQVRIx73TV4xMURgH8H/OnRmZWe3T7h2sOWaNXu7oJRg9UccuHgTRBatMtAgSg+gJu9q+kFmihcQoD8qLTkK0CIkoy0YJITsRD0rCKTHFrnkSv5e5c88/53znO+fiPwvsvrN038cPNqrG9pJmHkRVnPcpaTlHJY60cfPSpsrzl1LKihrmLvxhCM2i3OHvDx0d+H7e3F6JBv5iZMiJfhFTfPYDMHrMImpwimWWUdSgDQkbno7fFpUPVgh+pHFbZR4SovSctDCM9Hac9IKd9rO8EevtBCkXgY5IMmgquwypP7qqfcp/Tp4KLONDVsWh3RSBB2rnZfit69ocUdqLn2prrRZYM0Jg4JibamKsqe7gfEh5GOAfeYJjVHIPZvil97rcXkMog30byWRwXYRWoxHbzNFHJJpAarO8NdEBBsdCaP3WMJltTmQd4zlnekTq9Z5dgACwAlrpK4BxdV5mvLuspRgMSHbCIFF0iS8MZ5S8oYBYKY7rByC4dDM9uSIUmPOIwxgQBoYeF93auP4qFyPbIVXziWeGTH1EFM57kJo2hqQju6BwIyRf6RmCjdT4JOdiwNgiH/PPD3qoqlsNaXRd+fKtFfECxlZVNVF9SOsgTZEr2TUjJJbyeNX1IZrKIbyGlBABfpQPv2UDrly13LkJXDVhpQ5MhtGwcyF4HKjlU4E8xwB0AvDjd6AGmevZ87EcQRHgcO52e9uNsYELOrAa/Yh81YlmYLQJ5HWyq0+kzQ/DQKEusg6CRI27ryy8nReRS0wsoetkmRwogHSprliCckfEjXG9yAQc74J0WB99vu6DF3i3pMucsXM6tpBbxd2mVJAwXwGogNRBvGRA4jtHKTXkAIwLGCR/mT4Lh75oneQXXP9sAYfGRDCsnw7pX/jRZkU3M44kjw2l5zRIzb4CbZ8dULdL6wbNPZOpK0B6gN1UR1mdoxAaL/GrWiLPL3SEwW9YMTU/d64BtLahAVyucWhj9Mm8ign9IfQaBtd2/GbvCAEBpG5eMcrj2I0ktpKLeaqXQ3Pst42KGIshpdTmQLAeTgFGJ2wvh+tayMOR0n1RZ8B9z13vnOPBnsBq4E1ffgZpPFZHWVpO2cvhjYpOcbBd5TlhpDu5zq9mHGZcVi0y+VFkcFkDdyKJfTt99wEyHSEzDM90KH0nexpwZHJHKYYhjzlwGe0pP/IKfxociaEb7YDbi6KGJY1R2cR76E6NAtXqY4pPH3plLcl8LD7V+cOLUbUWRFZRPTAbVZO3mxK18Xc1ZaAiS8ARJXpZliXAomR94siiiMx8ZBOkXGTlnH0F/9ov1xPtWwEqP9wAAAAASUVORK5CYII=
@@ -969,6 +969,8 @@
         -   Removed: HDMonkey, Team-HuSh, ixIRC.
 
 13.8.3  -   Added: GPW.
+
+13.8.4  -   Added: TvRoad, Netflix-DVD, Blu-ray (moved to searchable, Other).
 
 */
 //==============================================================================
@@ -3336,6 +3338,12 @@ var private_sites = [
       'loggedOutRegex': /Forgot Your Password/,
       'matchRegex': /<tbody>\s*<\/tbody>/,
       'both': true},
+  {   'name': 'TvRoad',
+      'icon': 'https://tvroad.info/themes/Nouveau/images/favicon.ico',
+      'searchUrl': 'https://tvroad.info/TvRoad/Torrents/Recherche?recherche=%search_string_orig%&type=tout&endroit=nomtorrent&tl=peuimporte',
+      'loggedOutRegex': /Cloudflare|Ray ID|Les Cookies Doivent être/,
+      'matchRegex': /Aucun Résultat Pour Votre Recherche/,
+      'TV': true},
   {   'name': 'TVV',
       'searchUrl': 'https://tv-vault.me/torrents.php?action=advanced&imdbid=%tt%&order_by=s3&order_way=desc',
       'loggedOutRegex': /Lost your password\?|Browse quota exceeded|Cloudflare Ray ID/,
@@ -4255,6 +4263,11 @@ var pre_databases = [
 ];
 
 var other_sites = [
+  {   'name': 'Blu-ray',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAADeUExURVO29Vq59Vu59Vy59V269WC79W6/9W+/9XDA9XDB9nDC93HC93PC9nXE93bG9njF93vF9n3I94DH9oHG9oLH9oTI9oXJ9orK9orN+IvK94zM94zO+I3L943O+JDN95HP+JHQ+JPP95XQ+JbQ95jU+ZnR+JzR+JzS95zT+J3S+J3T+J3U+J7S+J/T+J/U+KDT+KPV+KTX+anX+K7Z+q/a+bHc+bbf+rrf+cTk+sXk+8jk+svl+svm+8zn+9vt/Nvu/Nzu/Nzv/N3v/ODv/OHw/Ojz/Onz/er0/er1/f///532i+4AAAC+SURBVDjLtdNFDsNADEDRFFxmZmZmZs79L9TUo1ZZOGOpamdlK0/K6EdRgDnK74CqO9cRA7RT54DapMFpf3wLEvTsNkdmKkCBAi5chzhXKODH0ceBEs55CrhfU/yBc4gCk1qnvxB3LJulHbYRMElBCsAqL3lgU58DFPACWJJzIZYGHbRXd/UfgwKw5sAYl7RhatjgkjVKDQ1xhwQBquForD0Tzy8eqsPt/glRZEIN5CV3OVnqVSvo/Mev9zV4Aq22bvwYC8iHAAAAAElFTkSuQmCC',
+      'searchUrl': 'https://www.blu-ray.com/search/?quicksearch=1&quicksearch_country=all&quicksearch_keyword=%tt%&section=theatrical',
+      'matchRegex': /return any results/,
+      'inSecondSearchBar': true},
   {   'name': 'Fist of B-List',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAACRElEQVQoz42SvU/bUBTFz/uIyWCRxGkSjJWSFqkMURgqUCu1U4qExEC7MLLyDzBUdOvHWjpkQYgl3VgZWok5U4UEEkNKqQIqcqDEFeHFke1n49chDBSWXt3hDudcnZ/uBQAAUQSl8D/F36wgkPz8HJp27b0rWl5eppT2+/39/X0yWEyIBsi70vn5+ZmZGSGEUsp1Xdu26e8zXFzwdx/weoUD/KZ6dHR0enp6c3MzCIJsNut5npSSDIIpFQEghN+MtLi4uLe3NzU1Va1WLy8vGWOO4/ClJfgBDn9yjUe3AAzDmJubW1hY2Nracl23UqmYpnnN8PARjg55oTDieUIIMTDU6/WJiYnj42Pf923bzmQytm3zk19wvbExs/igmNQ0zjnvdDqWZZVKpXK53Gg0hBC6rhuGEYZhr9fj98cAaLr+I5/XU6lUEASe53W73Z2dHSFEqVRqNpuWZRFCcrmcUorVarXh4XB391sikej1emEY+r4vpZRShmGYz+cBtNttSqnjOGtra9QwjNnZWQBSSs55EARKKUopY6zVajHGdF0fHx8HsLGxAYBKKRuNxoDS9wNKKSEkjhHHJI7jg4ODoaHk6enZ+vr6PxdNI43rzgH5VMoERoDi5OTj278EJD+tDlVfyNYRvZfF9jZ9/ix0/iSePvHfvs98rjvN72jbaaX8L1/V6seAAsl+X0VXMEcolLKKKpslnQ5jPCoUrl6+wlU8nEgq01SUKgAknU53uwRgQARQgAAU4IMhqRFfEkABJwAHor/pPAicVESz8wAAAABJRU5ErkJggg==',
       'searchUrl': 'http://www.fistofblist.com/search?q=%search_string%+%year%',
@@ -4357,10 +4370,6 @@ var icon_sites_main = [
   {   'name': 'BeyazPerde (TR)',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFoAAABaAQMAAAACZtNBAAAABlBMVEU9Wbr///9a8YjqAAABLElEQVQ4y7WTza0CMQyE3xMHjpRAKVsaKc2lpIQcc7BiJv5ZWwhuEGmzfF57YpLJ34/HRUbCIdLi979IfroCOLMwAh4bKEtEugsrzLM+FW7CCKwQQ75IiDVEvAdZmksGUyW7LTN81hid36HaVMYAoluOdU2IIfGOF2aEOmIGSB6WjWTAhKgBwoyFVPSBglVhpwhtwCTNARMeDXq0A3rAgGp3FZkOqsQVFto6QQDjhGawFKhCrzAqzAr8EeZHgV47oNd23ja63vw524NZYcTukG8VKcQTe90q6P75+awKHCd3t2O8GrAd8AofdLwMxEzBxTsHu6vcSGk7GWG+CCHGWknu3r2au/dQFxggOFGywv7SDuF6MWben7x0ClTvHMRCIcTQStZjeEletO+PJ5WePxWsKLQ5AAAAAElFTkSuQmCC',
       'searchUrl': 'https://www.beyazperde.com/aramak/?q=%search_string_orig%',
-      'showByDefault': false},
-  {   'name': 'Blu-ray',
-      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAADeUExURVO29Vq59Vu59Vy59V269WC79W6/9W+/9XDA9XDB9nDC93HC93PC9nXE93bG9njF93vF9n3I94DH9oHG9oLH9oTI9oXJ9orK9orN+IvK94zM94zO+I3L943O+JDN95HP+JHQ+JPP95XQ+JbQ95jU+ZnR+JzR+JzS95zT+J3S+J3T+J3U+J7S+J/T+J/U+KDT+KPV+KTX+anX+K7Z+q/a+bHc+bbf+rrf+cTk+sXk+8jk+svl+svm+8zn+9vt/Nvu/Nzu/Nzv/N3v/ODv/OHw/Ojz/Onz/er0/er1/f///532i+4AAAC+SURBVDjLtdNFDsNADEDRFFxmZmZmZs79L9TUo1ZZOGOpamdlK0/K6EdRgDnK74CqO9cRA7RT54DapMFpf3wLEvTsNkdmKkCBAi5chzhXKODH0ceBEs55CrhfU/yBc4gCk1qnvxB3LJulHbYRMElBCsAqL3lgU58DFPACWJJzIZYGHbRXd/UfgwKw5sAYl7RhatjgkjVKDQ1xhwQBquForD0Tzy8eqsPt/glRZEIN5CV3OVnqVSvo/Mev9zV4Aq22bvwYC8iHAAAAAElFTkSuQmCC',
-      'searchUrl': 'https://www.blu-ray.com/search/?quicksearch=1&quicksearch_country=all&quicksearch_keyword=%search_string%+&section=bluraymovies',
       'showByDefault': false},
   {   'name': 'Box Office Mojo',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACABAMAAAAxEHz4AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAAAPUExURQAAAACe/4CAgJKSkv///3TPSakAAAI/SURBVGje7dZrjoQgDADgQjgA3oD0BHsEf3D/M608CgWqo84k7mZoNj5QPmjFcQFmzJgx45+EX8/dZ/wWq9i8xh1sR2F3CHi5GULnm8A2fphCRNZXKUCe7doAsaEB0jimA02+NSVtwkkF0vRyCmmmpi+ZKWP5eJTHGYFc7SHjCsAIQK6DIY/uG2oA6UK4JU2Q18BTofaAmFSu5TlgPQD8AZAvCEBJAWjJHAB+AKhU9wFzCRBW4ieB4yLuPIUGWLuFdAqoRTQM8BfWgbSU1w4wRytxfJnKDwoDytvopR+U7nWGsj4JoPqKv4DfHkuK5qgJJbZOQADsLnDyKXwAUC0gSkpolQFF0+I1UOIURUDVxBiwiElKAB2yE95qLwCWAcsiTkECFglQx8DCM2QNHWDVkIMAKDalCrDd88CyB6i7gM0VFgB7BbBfDcAEMgATeAtQewD8TcDKgH0UAN7l+ndBBK58mfYBOPdt7IHmOzwCdgeAAjT/CdSsxf4ywP81Y52k/i9D3er1eQDeBOx7wDvdvyN0c4bxbwsHGl29nk/OAzoAGHoRgHgaCGNtm80Ip5ru0u4GoBkAuAeEydFcA4Ap5Qi4cN1VwKXrDRBT5UAYVlcAKRHMzRqHFFwpXgQ2jwG0hVKWEcCwdeUp9ADELdJxVzYB0BoGgB5pbh0BpxmAHYDtw5SAbdJsITkQUjgCXAcAAQg9INQgj4UCEBrzEZ8tDusAyrQK8FMuxF0FUjmFBek++lY/AODjGcyYMePB+AUzahMgDu5KYgAAAABJRU5ErkJggg==',
@@ -4502,6 +4511,11 @@ var icon_sites_main = [
   {   'name': 'Netflix',
       'icon': 'data:image/png;base64,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',
       'searchUrl': 'https://www.netflix.com/search/%search_string%',
+      'showByDefault': false},
+  {   'name': 'Netflix-DVD',
+      'icon': 'https://dvd.netflix.com/apple-touch-icon-180x180.png',
+      'searchUrl': 'https://dvd.netflix.com/Search?v1=%search_string% %year%',
+      'spaceEncode': ' ',
       'showByDefault': false},
   {   'name': 'NextEpisode',
       'icon': 'https://static.next-episode.net/favicon_comb.ico',
@@ -4767,9 +4781,11 @@ function getDoubanID0(movie_id) {
         resolve("00000000");
       },
       onabort: function() {
+        console.log("IMDb Scout Mod (getDoubanID0): Request Aborted.");
         resolve("00000000");
       },
       ontimeout: function() {
+        console.log("IMDb Scout Mod (getDoubanID0): Request Timeout.");
         resolve("00000000");
       }
     });
@@ -4781,7 +4797,7 @@ function getDoubanID1(movie_id) {
   return new Promise(resolve => {
     GM.xmlHttpRequest({
       method: "GET",
-      timeout: 6000,
+      timeout: 8000,
       url:    "https://www.douban.com/search?cat=1002&q=tt" + movie_id,
       onload: function(response) {
         const parser = new DOMParser();
@@ -4804,9 +4820,11 @@ function getDoubanID1(movie_id) {
         resolve("00000000");
       },
       onabort: function() {
+        console.log("IMDb Scout Mod (getDoubanID1): Request Aborted.");
         resolve("00000000");
       },
       ontimeout: function() {
+        console.log("IMDb Scout Mod (getDoubanID1): Request Timeout.");
         resolve("00000000");
       }
     });
@@ -4818,7 +4836,7 @@ function getDoubanID2(movie_id) {
   return new Promise(resolve => {
     GM.xmlHttpRequest({
       method: "GET",
-      timeout: 6000,
+      timeout: 8000,
       url:    'https://query.wikidata.org/sparql?format=json&query=SELECT * WHERE {?s wdt:P345 "tt' +movie_id+ '". OPTIONAL { ?s wdt:P4529 ?Douban_film_ID. }}',
       onload: function(response) {
         const result = JSON.parse(response.responseText);
@@ -4841,9 +4859,11 @@ function getDoubanID2(movie_id) {
         resolve("00000000");
       },
       onabort: function() {
+        console.log("IMDb Scout Mod (getDoubanID2): Request Aborted.");
         resolve("00000000");
       },
       ontimeout: function() {
+        console.log("IMDb Scout Mod (getDoubanID2): Request Timeout.");
         resolve("00000000");
       }
     });
@@ -4855,7 +4875,7 @@ function getDoubanID3(movie_id) {
   return new Promise(resolve => {
     GM.xmlHttpRequest({
       method: "GET",
-      timeout: 6000,
+      timeout: 10000,
       url:    'https://www.google.com/search?q="tt' +movie_id+ '" site:https://movie.douban.com/subject&safe=off',
       onload: function(response) {
         const result = String(response.responseText);
@@ -4875,9 +4895,11 @@ function getDoubanID3(movie_id) {
         resolve("00000000");
       },
       onabort: function() {
+        console.log("IMDb Scout Mod (getDoubanID3): Request Aborted.");
         resolve("00000000");
       },
       ontimeout: function() {
+        console.log("IMDb Scout Mod (getDoubanID3): Request Timeout.");
         resolve("00000000");
       }
     });
@@ -8000,7 +8022,7 @@ function getRTandMetaRatings_OMDb(key, imdbid, meta_icon, rott_rotten, rott_cert
 function getRotten(url, rott_rotten, rott_certified, rott_fresh, rott_user_up, rott_user_down) {
   GM.xmlHttpRequest({
     method: "GET",
-    timeout: 10000,
+    timeout: 14000,
     url:    url,
     onload: function(response) {
       const parser = new DOMParser();
