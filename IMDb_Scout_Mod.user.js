@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      13.8.4
+// @version      13.8.5
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from hundreds various sites. Adds movies/series to Radarr/Sonarr. Adds external ratings from Metacritic, Rotten Tomatoes, Letterboxd, Douban, Allocine. Media Server indicators for Plex, Jellyfin, Emby. Dark theme/style for Reference View. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAMFBMVEUAAAD/AAAcAAA1AABEAABVAAC3AADnAAD2AACFAAClAABlAAB3AADHAACVAADYAABCnXhrAAAD10lEQVRIx73TV4xMURgH8H/OnRmZWe3T7h2sOWaNXu7oJRg9UccuHgTRBatMtAgSg+gJu9q+kFmihcQoD8qLTkK0CIkoy0YJITsRD0rCKTHFrnkSv5e5c88/53znO+fiPwvsvrN038cPNqrG9pJmHkRVnPcpaTlHJY60cfPSpsrzl1LKihrmLvxhCM2i3OHvDx0d+H7e3F6JBv5iZMiJfhFTfPYDMHrMImpwimWWUdSgDQkbno7fFpUPVgh+pHFbZR4SovSctDCM9Hac9IKd9rO8EevtBCkXgY5IMmgquwypP7qqfcp/Tp4KLONDVsWh3RSBB2rnZfit69ocUdqLn2prrRZYM0Jg4JibamKsqe7gfEh5GOAfeYJjVHIPZvil97rcXkMog30byWRwXYRWoxHbzNFHJJpAarO8NdEBBsdCaP3WMJltTmQd4zlnekTq9Z5dgACwAlrpK4BxdV5mvLuspRgMSHbCIFF0iS8MZ5S8oYBYKY7rByC4dDM9uSIUmPOIwxgQBoYeF93auP4qFyPbIVXziWeGTH1EFM57kJo2hqQju6BwIyRf6RmCjdT4JOdiwNgiH/PPD3qoqlsNaXRd+fKtFfECxlZVNVF9SOsgTZEr2TUjJJbyeNX1IZrKIbyGlBABfpQPv2UDrly13LkJXDVhpQ5MhtGwcyF4HKjlU4E8xwB0AvDjd6AGmevZ87EcQRHgcO52e9uNsYELOrAa/Yh81YlmYLQJ5HWyq0+kzQ/DQKEusg6CRI27ryy8nReRS0wsoetkmRwogHSprliCckfEjXG9yAQc74J0WB99vu6DF3i3pMucsXM6tpBbxd2mVJAwXwGogNRBvGRA4jtHKTXkAIwLGCR/mT4Lh75oneQXXP9sAYfGRDCsnw7pX/jRZkU3M44kjw2l5zRIzb4CbZ8dULdL6wbNPZOpK0B6gN1UR1mdoxAaL/GrWiLPL3SEwW9YMTU/d64BtLahAVyucWhj9Mm8ign9IfQaBtd2/GbvCAEBpG5eMcrj2I0ktpKLeaqXQ3Pst42KGIshpdTmQLAeTgFGJ2wvh+tayMOR0n1RZ8B9z13vnOPBnsBq4E1ffgZpPFZHWVpO2cvhjYpOcbBd5TlhpDu5zq9mHGZcVi0y+VFkcFkDdyKJfTt99wEyHSEzDM90KH0nexpwZHJHKYYhjzlwGe0pP/IKfxociaEb7YDbi6KGJY1R2cR76E6NAtXqY4pPH3plLcl8LD7V+cOLUbUWRFZRPTAbVZO3mxK18Xc1ZaAiS8ARJXpZliXAomR94siiiMx8ZBOkXGTlnH0F/9ov1xPtWwEqP9wAAAAASUVORK5CYII=
@@ -971,6 +971,8 @@
 13.8.3  -   Added: GPW.
 
 13.8.4  -   Added: TvRoad, Netflix-DVD, Blu-ray (moved to searchable, Other).
+
+13.8.5  -   Added: OshenPT, Itzmx.
 
 */
 //==============================================================================
@@ -2501,6 +2503,11 @@ var private_sites = [
       'matchRegex': />No</,
       'positiveMatch': true,
       'both': true},
+  {   'name': 'Itzmx',
+      'searchUrl': 'https://pt.itzmx.com/torrents.php?incldead=0&spstate=0&search=%tt%&search_area=1&search_mode=0',
+      'loggedOutRegex': /Cloudflare|Ray ID|SSL \(HTTPS\)/,
+      'matchRegex': /Nothing found|没有种子|沒有種子/,
+      'both': true},
   {   'name': 'JoyHD',
       'icon': 'data:image/png;base64,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',
       'searchUrl': 'https://www.joyhd.net/torrents.php?search_area=4&search=%tt%',
@@ -2720,6 +2727,11 @@ var private_sites = [
       'loggedOutRegex': /Cloudflare|Ray ID|Compte Oublié/,
       'matchRegex': /Aucun Résultat/,
       'TV': true},
+  {   'name': 'OshenPT',
+      'searchUrl': 'http://www.oshen.win/torrents.php?incldead=1&spstate=0&search=%tt%&search_area=1&search_mode=0',
+      'loggedOutRegex': /Cloudflare|Ray ID|SSL \(HTTPS\)/,
+      'matchRegex': /Nothing found|没有种子|沒有種子/,
+      'both': true},
   {   'name': 'OurBits',
       'searchUrl': 'https://ourbits.club/torrents.php?search_area=4&search=%tt%',
       'loggedOutRegex': /SSL \(HTTPS\)/,
