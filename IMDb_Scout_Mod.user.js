@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      13.8.5
+// @version      13.8.6
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from hundreds various sites. Adds movies/series to Radarr/Sonarr. Adds external ratings from Metacritic, Rotten Tomatoes, Letterboxd, Douban, Allocine. Media Server indicators for Plex, Jellyfin, Emby. Dark theme/style for Reference View. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAMFBMVEUAAAD/AAAcAAA1AABEAABVAAC3AADnAAD2AACFAAClAABlAAB3AADHAACVAADYAABCnXhrAAAD10lEQVRIx73TV4xMURgH8H/OnRmZWe3T7h2sOWaNXu7oJRg9UccuHgTRBatMtAgSg+gJu9q+kFmihcQoD8qLTkK0CIkoy0YJITsRD0rCKTHFrnkSv5e5c88/53znO+fiPwvsvrN038cPNqrG9pJmHkRVnPcpaTlHJY60cfPSpsrzl1LKihrmLvxhCM2i3OHvDx0d+H7e3F6JBv5iZMiJfhFTfPYDMHrMImpwimWWUdSgDQkbno7fFpUPVgh+pHFbZR4SovSctDCM9Hac9IKd9rO8EevtBCkXgY5IMmgquwypP7qqfcp/Tp4KLONDVsWh3RSBB2rnZfit69ocUdqLn2prrRZYM0Jg4JibamKsqe7gfEh5GOAfeYJjVHIPZvil97rcXkMog30byWRwXYRWoxHbzNFHJJpAarO8NdEBBsdCaP3WMJltTmQd4zlnekTq9Z5dgACwAlrpK4BxdV5mvLuspRgMSHbCIFF0iS8MZ5S8oYBYKY7rByC4dDM9uSIUmPOIwxgQBoYeF93auP4qFyPbIVXziWeGTH1EFM57kJo2hqQju6BwIyRf6RmCjdT4JOdiwNgiH/PPD3qoqlsNaXRd+fKtFfECxlZVNVF9SOsgTZEr2TUjJJbyeNX1IZrKIbyGlBABfpQPv2UDrly13LkJXDVhpQ5MhtGwcyF4HKjlU4E8xwB0AvDjd6AGmevZ87EcQRHgcO52e9uNsYELOrAa/Yh81YlmYLQJ5HWyq0+kzQ/DQKEusg6CRI27ryy8nReRS0wsoetkmRwogHSprliCckfEjXG9yAQc74J0WB99vu6DF3i3pMucsXM6tpBbxd2mVJAwXwGogNRBvGRA4jtHKTXkAIwLGCR/mT4Lh75oneQXXP9sAYfGRDCsnw7pX/jRZkU3M44kjw2l5zRIzb4CbZ8dULdL6wbNPZOpK0B6gN1UR1mdoxAaL/GrWiLPL3SEwW9YMTU/d64BtLahAVyucWhj9Mm8ign9IfQaBtd2/GbvCAEBpG5eMcrj2I0ktpKLeaqXQ3Pst42KGIshpdTmQLAeTgFGJ2wvh+tayMOR0n1RZ8B9z13vnOPBnsBq4E1ffgZpPFZHWVpO2cvhjYpOcbBd5TlhpDu5zq9mHGZcVi0y+VFkcFkDdyKJfTt99wEyHSEzDM90KH0nexpwZHJHKYYhjzlwGe0pP/IKfxociaEb7YDbi6KGJY1R2cR76E6NAtXqY4pPH3plLcl8LD7V+cOLUbUWRFZRPTAbVZO3mxK18Xc1ZaAiS8ARJXpZliXAomR94siiiMx8ZBOkXGTlnH0F/9ov1xPtWwEqP9wAAAAASUVORK5CYII=
@@ -973,6 +973,8 @@
 13.8.4  -   Added: TvRoad, Netflix-DVD, Blu-ray (moved to searchable, Other).
 
 13.8.5  -   Added: OshenPT, Itzmx.
+
+13.8.6  -   Added: CRT, CRT-Req.
 
 */
 //==============================================================================
@@ -2083,6 +2085,16 @@ var private_sites = [
       'loggedOutRegex': /Cloudflare|Ray ID|Popular Topics/,
       'matchRegex': />No</,
       'positiveMatch': true,
+      'both': true},
+  {   'name': 'CRT',
+      'searchUrl': 'https://www.cathode-ray.tube/torrents.php?searchtext=%tt%',
+      'loggedOutRegex': /Cloudflare|Ray ID|insufficient privileges|forgotten password/,
+      'matchRegex': /did not match anything/,
+      'both': true},
+  {   'name': 'CRT-Req',
+      'searchUrl': 'https://www.cathode-ray.tube/requests.php?search=%search_string%+%year%',
+      'loggedOutRegex': /Cloudflare|Ray ID|insufficient privileges|forgotten password/,
+      'matchRegex': /No requests/,
       'both': true},
   {   'name': 'CT',
       'icon': 'data:image/gif;base64,R0lGODlhEAAQAPfWAPHy9Pz8/f39/YuRpPX198DEy4iOn5KXpnF7km92jJuhtLa7yN7g5G53kNnb4bC1w15nf0ZQbEdRbnJ6kXF4i0dQZb/CyKuxv6iuvMDCyExWcHp/iU1VcayywIuRoX2Ai3l9iI+WqXyBjbO3xX2DkZKYqExYd5KYp8XHzcTHzFhdbXuBlauttWpxhW91hTpDX3R8jz5JZnZ8jHuDmz1JZ5GWpDtFXLzBzGJoecLEy0BLaGFsh3mDmfT09jtEVzQ9VGx1i5qfqYiPnklVc3Z/l4eOnYuTpZKarG93jJygq4SMn1Vfe3yEmFFceGtziXl/kUxVbUlRaFVcb2RthFVbbU9XaT9KZ1VefKmuvv39/m5zg/X2+PDx9GBqgHZ7hp2jtLW7x05WcI2TpJmdpqitvNTW2vP09oGGk2Bofl5mfnuEmH6ElkFNbJKYqd3g5aSquaCmtpeesGtzh5edsL/ByEJJXXN7kEJLZYKJnJGWqN/h50RQcYiPn5aer5CXqn6El8THzXR9loCFmTlCW42VqGNuiXB2hIiMlzpFYTtFYKSotZKYq/z8/JWcr6+ywX+GmKmstbi8xWJoeGx1j6etvVJefNbZ4JCWnlFXaIiPpGBrhtLU2mVqfNze4oKLoKmvvoCHn9HS2N3g5klRZkhRZW10hEZQZ8DDyVFYa1xlfpqhsj5IZJ2ktU5Yc9jZ3fv8/EdPYXuDmbO5xlRZap+irKmuvW10hYWJlpOZp4+VpfLz9V5ngTM9VtbY3kJNbEFLZtja34GJm6yyv5icq62zwXqAkD1HYl9mdqqvvqCnt2tyhsPFzIqSpn6Gm2RrgYCGmHh9jrK3xEdScz9IXoeOnv///////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAANYALAAAAAAQABAAAAj/AKsJDKDHkZ9YPAjVcvNKoEMzxIh4UoUBiwJQk97octiDFYI4YKI9GLFgwRFNzABUE4AMwacOyRR8eXBD1gU4leYIENWgD5kBwTKFEBZJkYETzaQ5oBRomCERZyQl8DLm0q1DIJq0maHkg6syQTZp4ZSEAQNaGxLsKgQtw5ZjYXCMWlIBEAoqgphI2FEqFIE6JnzpGGKjwLIqeFZEaCCHBQFbg6S4QMTLQg5M1JCkanSFBKROBej4sPLjVAoVBzjksrRnggxUpKaZ0hAF1qxiMFY5CLCIjZEBdqZASOOMghADxnBlqcZFDQ0gJfg8e1SkRosXT1QKBJAnRisnf9YoFYOS6IB2h4x6ieny6w4aD8ACCLQWEAA7',
