@@ -3013,7 +3013,7 @@ var private_sites = [
       'positiveMatch': true,
       'both': true},
   {   'name': 'Snahp',
-      'searchUrl': 'https://forum.snahp.it/search.php?keywords=%tt%&sk=x',
+      'searchUrl': 'https://fora.snahp.eu/search.php?keywords=%tt%&sk=x',
       'loggedOutRegex': />Register<|you cannot use search at this time/,
       'matchRegex': /Search found 0|No suitable matches/,
       'rateLimit': 20100,
