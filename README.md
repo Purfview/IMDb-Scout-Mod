@@ -17,7 +17,7 @@ Compact mode for Reference View.
 Removes ads.   
 Supports mobile: [Firefox Nightly](https://play.google.com/store/apps/details?id=org.mozilla.fenix) for Android.   
 Supports browsers: Firefox, Chrome, Opera, Safari, Waterfox, Brave, Pale Moon, Edge.    
-Supports [Violentmonkey](https://violentmonkey.github.io/), [Tampermonkey](https://www.tampermonkey.net/), [Greasemonkey](https://www.greasespot.net/), [Greasemonkey v3](https://github.com/greasemonkey/greasemonkey/releases?after=4.0) & [Greasemonkey for Pale Moon](https://github.com/janekptacijarabaci/greasemonkey/releases).  
+Supports: [Violentmonkey](https://violentmonkey.github.io/), [Tampermonkey](https://www.tampermonkey.net/), [Greasemonkey](https://www.greasespot.net/), [Greasemonkey v3](https://github.com/greasemonkey/greasemonkey/releases?after=4.0) & [Greasemonkey for Pale Moon](https://github.com/janekptacijarabaci/greasemonkey/releases).  
 
 Meanings of the color borders around the icons:  
 ![#008000](https://via.placeholder.com/15/008000/000000?text=+) - `Search completed. Results found.`  
