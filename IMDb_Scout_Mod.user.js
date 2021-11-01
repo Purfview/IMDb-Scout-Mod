@@ -4357,7 +4357,20 @@ var streaming_sites = [
       'searchUrl': 'https://v2.vidsrc.me/embed/%tt%/',
       'matchRegex': /Not Found!/,
       'ignore404': true,
-      'inThirdSearchBar': true}
+      'inThirdSearchBar': true
+  {   'name': 'FlixTV Movies',
+      'icon': 'https://flixtv.club/favicon.ico', // Not sure how to get Icon to work???
+      'searchUrl': 'https://flixtv.club/movie/%tt%',
+      'loggedOutRegex': /dummy/,
+      'matchRegex': /dummy/,
+      'inThirdSearchBar': true,}
+/*{   'name': 'FlixTV TV',
+      'icon': 'https://flixtv.club/favicon.ico', 
+      'searchUrl': 'https://flixtv.club/tv-show/%tmdbid%-S#-E#, //Format needs to be /TMDBID-S#-E#/
+      'loggedOutRegex': /dummy/,
+      'matchRegex': /dummy/,
+      'inThirdSearchBar': true,
+      'TV': true}*/
 ];
 
 var sites = public_sites.concat(private_sites, german_sites, usenet_sites, custom_sites, subs_sites, pre_databases, other_sites, streaming_sites);
