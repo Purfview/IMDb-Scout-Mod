@@ -1418,7 +1418,7 @@ var public_sites = [
       'matchRegex': /сообщений не найдено/},
   {   'name': 'RARBG',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAMAAABg3Am1AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAADMUExURQAAADhgu/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////7+/zhgu1d5xlt8x2GByWiGzHCNz3aS0XqV0oCa1Iig1o+l2Zar25yw3qK14Ky947DA5LXE5rnH6MbS7MvW7tDa79ff8tzj8+Pp9uzw+fT2+/7+/////0INwLoAAAAodFJOUwAAAAMIDRQZHSIqMzpAR09dY251foaPl6CmrbO7wMfQ19re5Orx9/zZOpCWAAAB3ElEQVRIx5XVWVvaQBSA4ZlhsewoBapVlqFZKqKtiFAkZfn+/3/yIhAmkJDxXOQiOe8zmeXMEUopJYQolOsNM+q1armYE/FQSqnwUah1B65nhOs4o/5dp1X/lgxqmuRw7m/KCeDqjvTo1c9Bw70AGDULp6AF8D6LxXyxXHuhcFv5E9AG8BNi8s8DcJpSSivg+79XAKOKNfD9BcB9zh74S8CpfAH4W6Arw3wr8Ab0ZJifBObz+Wz2OjYmDuh8Knjc79dH7J+cciZgGYEAaGSDXQQ+gGY24OnwamU3whEE4FYsgDnpUTEbrCMADKTKAt7k8OYV+JkJ1lG+/x+863TgT6fTvy/GRv8BdFGlg9OK2AJtZQ/WgC5Zg/EGcJvSFrx5gNuW1mAD0JP24GkHjKqXQRAE41i10S/nLoDH2KnwVwC3VxmARXwaTjcL8HK8/XYAmWB7HGJmBcw7IDBF+vGexm+ybOAd1/bZGMKq4vx3YHMJuD2AedI0ksEw7JLP8aK4BOS1B2yMsjuIZDCQYWNdGt3LBC3z2pqEB7oyOFlbE5y13Y4QouGcNeAIlB7iH35VhRD57+lA1Aax/BshhBClH855/h6IUvthqLXWWg97neq+8eert319DGPjvhKfLLE8ejIzVGgAAAAASUVORK5CYII=',
-      'searchUrl': 'https://rarbgweb.org/torrents.php?imdb=%tt%&order=size&by=DESC',
+      'searchUrl': 'https://rarbgweb.org/torrents.php?imdb=%tt%',
       'loggedOutRegex': /something wrong|Please wait|enter the captcha|too many requests/,
       'matchRegex': /imdb_thumb.gif/,
       'positiveMatch': true,
