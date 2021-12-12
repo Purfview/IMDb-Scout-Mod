@@ -41,7 +41,6 @@
 // @grant        GM.openInTab
 // @grant        GM.xmlHttpRequest
 // @grant        GM.registerMenuCommand
-// @grant        GM.info
 // @grant        GM.notification
 //
 // @run-at       document-start
