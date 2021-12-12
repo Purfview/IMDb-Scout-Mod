@@ -36,7 +36,6 @@
 // @grant        GM_openInTab
 // @grant        GM_xmlhttpRequest
 // @grant        GM_registerMenuCommand
-// @grant        GM_info
 // @grant        GM.getValue
 // @grant        GM.setValue
 // @grant        GM.addStyle
