@@ -38,7 +38,6 @@
 // @grant        GM_registerMenuCommand
 // @grant        GM.getValue
 // @grant        GM.setValue
-// @grant        GM.addStyle
 // @grant        GM.openInTab
 // @grant        GM.xmlHttpRequest
 // @grant        GM.registerMenuCommand
@@ -5548,7 +5547,7 @@ function getIconsLinkArea() {
     $('.titlereference-header div hr').first().after(p);
   }
   var styles = '#imdbscout_iconsheader {line-height: 16px;} ';
-  GM.addStyle(styles);
+  GM_addStyle(styles);
   return $('#imdbscout_iconsheader');
 }
 
@@ -5563,7 +5562,7 @@ function performSearch() {
       styles += '.result_box a:visited { color: #551A8B; } ';
       styles += '#content-2-wide #main, #content-2-wide ';
       styles += '.maindetails_center {margin-left: 5px; width: 1001px;} ';
-  GM.addStyle(styles);
+  GM_addStyle(styles);
 
   if (getPageSetting('load_third_bar')) {
     var styles3  = '.result_box_3rd {width: 975px} ';
@@ -5571,7 +5570,7 @@ function performSearch() {
         styles3 += '.result_box_3rd a:visited { color: #551A8B; } ';
         styles3 += '#content-2-wide #main, #content-2-wide ';
         styles3 += '.maindetails_center {margin-left: 5px; width: 1001px;} ';
-    GM.addStyle(styles3);
+    GM_addStyle(styles3);
   }
   var showsites = public_sites.concat(private_sites, german_sites, usenet_sites).reduce(function (n, site) {
       return n + (site['show'] == true); }, 0);
