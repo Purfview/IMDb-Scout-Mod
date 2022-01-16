@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      15.0
+// @version      15.0.1
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from hundreds various sites. Adds movies/series to Radarr/Sonarr. Adds external ratings from Metacritic, Rotten Tomatoes, Letterboxd, Douban, Allocine. Media Server indicators for Plex, Jellyfin, Emby. Dark theme/style for Reference View. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAMFBMVEUAAAD/AAAcAAA1AABEAABVAAC3AADnAAD2AACFAAClAABlAAB3AADHAACVAADYAABCnXhrAAAD10lEQVRIx73TV4xMURgH8H/OnRmZWe3T7h2sOWaNXu7oJRg9UccuHgTRBatMtAgSg+gJu9q+kFmihcQoD8qLTkK0CIkoy0YJITsRD0rCKTHFrnkSv5e5c88/53znO+fiPwvsvrN038cPNqrG9pJmHkRVnPcpaTlHJY60cfPSpsrzl1LKihrmLvxhCM2i3OHvDx0d+H7e3F6JBv5iZMiJfhFTfPYDMHrMImpwimWWUdSgDQkbno7fFpUPVgh+pHFbZR4SovSctDCM9Hac9IKd9rO8EevtBCkXgY5IMmgquwypP7qqfcp/Tp4KLONDVsWh3RSBB2rnZfit69ocUdqLn2prrRZYM0Jg4JibamKsqe7gfEh5GOAfeYJjVHIPZvil97rcXkMog30byWRwXYRWoxHbzNFHJJpAarO8NdEBBsdCaP3WMJltTmQd4zlnekTq9Z5dgACwAlrpK4BxdV5mvLuspRgMSHbCIFF0iS8MZ5S8oYBYKY7rByC4dDM9uSIUmPOIwxgQBoYeF93auP4qFyPbIVXziWeGTH1EFM57kJo2hqQju6BwIyRf6RmCjdT4JOdiwNgiH/PPD3qoqlsNaXRd+fKtFfECxlZVNVF9SOsgTZEr2TUjJJbyeNX1IZrKIbyGlBABfpQPv2UDrly13LkJXDVhpQ5MhtGwcyF4HKjlU4E8xwB0AvDjd6AGmevZ87EcQRHgcO52e9uNsYELOrAa/Yh81YlmYLQJ5HWyq0+kzQ/DQKEusg6CRI27ryy8nReRS0wsoetkmRwogHSprliCckfEjXG9yAQc74J0WB99vu6DF3i3pMucsXM6tpBbxd2mVJAwXwGogNRBvGRA4jtHKTXkAIwLGCR/mT4Lh75oneQXXP9sAYfGRDCsnw7pX/jRZkU3M44kjw2l5zRIzb4CbZ8dULdL6wbNPZOpK0B6gN1UR1mdoxAaL/GrWiLPL3SEwW9YMTU/d64BtLahAVyucWhj9Mm8ign9IfQaBtd2/GbvCAEBpG5eMcrj2I0ktpKLeaqXQ3Pst42KGIshpdTmQLAeTgFGJ2wvh+tayMOR0n1RZ8B9z13vnOPBnsBq4E1ffgZpPFZHWVpO2cvhjYpOcbBd5TlhpDu5zq9mHGZcVi0y+VFkcFkDdyKJfTt99wEyHSEzDM90KH0nexpwZHJHKYYhjzlwGe0pP/IKfxociaEb7YDbi6KGJY1R2cR76E6NAtXqY4pPH3plLcl8LD7V+cOLUbUWRFZRPTAbVZO3mxK18Xc1ZaAiS8ARJXpZliXAomR94siiiMx8ZBOkXGTlnH0F/9ov1xPtWwEqP9wAAAAASUVORK5CYII=
@@ -3434,10 +3434,12 @@ var french_sites = [
       'spaceEncode': ' ',
       'TV': true},
   {   'name': 'G-Free',
+      'icon': 'https://generation-free.biz/themes/TT-CFR/images/favicon.ico',
       'searchUrl': 'https://generation-free.biz/torrents-search.php?search=%search_string_orig%+%year%&cat=0&genre=&incldead=1&freeleech=0&lang=0',
       'loggedOutRegex': /Cloudflare|Ray ID|Les cookies doivent/,
       'matchRegex': /a été trouvé/},
   {   'name': 'G-Free',
+      'icon': 'https://generation-free.biz/themes/TT-CFR/images/favicon.ico',
       'searchUrl': 'https://generation-free.biz/torrents-search.php?search=%search_string_orig%&cat=0&genre=&incldead=1&freeleech=0&lang=0',
       'loggedOutRegex': /Cloudflare|Ray ID|Les cookies doivent/,
       'matchRegex': /a été trouvé/,
@@ -4468,7 +4470,7 @@ var streaming_sites = [
       'inThirdSearchBar': true,
       'TV': true},
   {   'name': 'HDSS (FR)',
-      'icon': 'https://hdss.nu/wp-content/uploads/2020/11/cropped-favicon-1-32x32.png',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAn1BMVEUAAAD/aQD/aQD/aQD/aQD/aQD/aQD/aAD/aQD/aQD/aAD/aQD/aQD/aQD/aQD/agD/aQD/aQD/aAD/aQD/aAD/aAD/aQD/aAD/aAD/aQD/aQD/aQD/aQD/aQD/aQD/aQD/aQD/aAD/aQD/aQD/aQD/aQD/aQD/aQD/aQD/aQD/aQD/aQD/aAD/aQD/aQD/aQD/aQD/aQD/aQD/aQD/aQApCZHfAAAANXRSTlMAKubX7aLNcxfiiPUfeQydRhkRmn1T3nAPXtCwpYI9CHZrWCS6k03UxY9BBWY0776nNqwx+e6nRBgAAAGnSURBVDjLfdNrm3JAGMBxxhRDGI3zKbRCOaSe7//Znnto7a5c/V+N+l2D6U4QjJG2uSe/5Xl5QX0BwNXRE3WrpHWOAJS82btoKzdSLQ7sGGl4I62vdwcAh3LocbRbZ94lQoYzB6zWUKOvyuRkqFAtchCHmnRVeNYSXIjJHYULEIWTYSk3YWpeK7KJqgns9gBOIrUz5fW9mMJayUy0/wFGWsTsMANjdGC9AsfCluByyr/IsFZkRn6DQEXSAnRYr4FjL8C45oQD8w10xpRCPVKtAWxL3CCdonKJNkBGkB5MtQ0c0Rrw+2r111wo9fs3APfVhoj3iOoQ77ce0qXnKfEiLw+5/Zpj4EofAdzuI/BnAL/Fxx2s5IGr30Bf7yCz8Ou8DMx0/s95YubdbgfxQv1v0MH5AzjNoEiQNPpHSxSPBgCz1tyA6gxL3Q8gLR27Z5deX1OdeCz6A5DqBYVTtLkgWGrU/0MEYy18npaBgU9cHhEEeF8X4x5jMoi3GdC8wt9x3zbm43Hflbo1A5hwlcX3OIb/F+MDVtgqY2WT5MoLnNNMLaGmUdX/qJ40ksjVldMAAAAASUVORK5CYII=',
       'searchUrl': 'https://hdss.nu/?s=%search_string_orig%',
       'loggedOutRegex': /Cloudflare|Ray ID/,
       'matchRegex': /we have nothing to/,
