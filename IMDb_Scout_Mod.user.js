@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      15.0.3
+// @version      15.1
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from hundreds various sites. Adds movies/series to Radarr/Sonarr. Adds external ratings from Metacritic, Rotten Tomatoes, Letterboxd, Douban, Allocine. Media Server indicators for Plex, Jellyfin, Emby. Dark theme/style for Reference View. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAMFBMVEUAAAD/AAAcAAA1AABEAABVAAC3AADnAAD2AACFAAClAABlAAB3AADHAACVAADYAABCnXhrAAAD10lEQVRIx73TV4xMURgH8H/OnRmZWe3T7h2sOWaNXu7oJRg9UccuHgTRBatMtAgSg+gJu9q+kFmihcQoD8qLTkK0CIkoy0YJITsRD0rCKTHFrnkSv5e5c88/53znO+fiPwvsvrN038cPNqrG9pJmHkRVnPcpaTlHJY60cfPSpsrzl1LKihrmLvxhCM2i3OHvDx0d+H7e3F6JBv5iZMiJfhFTfPYDMHrMImpwimWWUdSgDQkbno7fFpUPVgh+pHFbZR4SovSctDCM9Hac9IKd9rO8EevtBCkXgY5IMmgquwypP7qqfcp/Tp4KLONDVsWh3RSBB2rnZfit69ocUdqLn2prrRZYM0Jg4JibamKsqe7gfEh5GOAfeYJjVHIPZvil97rcXkMog30byWRwXYRWoxHbzNFHJJpAarO8NdEBBsdCaP3WMJltTmQd4zlnekTq9Z5dgACwAlrpK4BxdV5mvLuspRgMSHbCIFF0iS8MZ5S8oYBYKY7rByC4dDM9uSIUmPOIwxgQBoYeF93auP4qFyPbIVXziWeGTH1EFM57kJo2hqQju6BwIyRf6RmCjdT4JOdiwNgiH/PPD3qoqlsNaXRd+fKtFfECxlZVNVF9SOsgTZEr2TUjJJbyeNX1IZrKIbyGlBABfpQPv2UDrly13LkJXDVhpQ5MhtGwcyF4HKjlU4E8xwB0AvDjd6AGmevZ87EcQRHgcO52e9uNsYELOrAa/Yh81YlmYLQJ5HWyq0+kzQ/DQKEusg6CRI27ryy8nReRS0wsoetkmRwogHSprliCckfEjXG9yAQc74J0WB99vu6DF3i3pMucsXM6tpBbxd2mVJAwXwGogNRBvGRA4jtHKTXkAIwLGCR/mT4Lh75oneQXXP9sAYfGRDCsnw7pX/jRZkU3M44kjw2l5zRIzb4CbZ8dULdL6wbNPZOpK0B6gN1UR1mdoxAaL/GrWiLPL3SEwW9YMTU/d64BtLahAVyucWhj9Mm8ign9IfQaBtd2/GbvCAEBpG5eMcrj2I0ktpKLeaqXQ3Pst42KGIshpdTmQLAeTgFGJ2wvh+tayMOR0n1RZ8B9z13vnOPBnsBq4E1ffgZpPFZHWVpO2cvhjYpOcbBd5TlhpDu5zq9mHGZcVi0y+VFkcFkDdyKJfTt99wEyHSEzDM90KH0nexpwZHJHKYYhjzlwGe0pP/IKfxociaEb7YDbi6KGJY1R2cR76E6NAtXqY4pPH3plLcl8LD7V+cOLUbUWRFZRPTAbVZO3mxK18Xc1ZaAiS8ARJXpZliXAomR94siiiMx8ZBOkXGTlnH0F/9ov1xPtWwEqP9wAAAAASUVORK5CYII=
@@ -1005,6 +1005,9 @@
 15.0.2  -   Updated: SubDivX (ES).
 
 15.0.3  -   Updated: WoT.
+
+15.1    -   Disabled referer on links.
+            Added: STC, STC-Req.
 
 */
 //==============================================================================
@@ -2870,6 +2873,18 @@ var private_sites = [
       'positiveMatch': true,
       'rateLimit': 6000,
       'TV': true},
+  {   'name': 'STC',
+      'searchUrl': 'https://skipthecommericals.xyz/torrents?imdbId=%tt%',
+      'loggedOutRegex': /Cloudflare|Forgot Your Password|Service Unavailable/,
+      'matchRegex': /"Download">/,
+      'positiveMatch': true,
+      'both': true},
+  {   'name': 'STC-Req',
+      'searchUrl': 'https://skipthecommericals.xyz/requests?unfilled=1&imdbId=%tt%',
+      'loggedOutRegex': /Cloudflare|Forgot Your Password|Service Unavailable/,
+      'matchRegex': /label-danger/,
+      'positiveMatch': true,
+      'both': true},
   {   'name': 'Swarmazon',
       'icon': 'https://swarmazon.club/forum/assets/favicon-xurteib6.png',
       'searchUrl': 'https://swarmazon.club/en/search/search.php?category=1&query=%search_string_orig%',
@@ -5186,12 +5201,12 @@ function addLink(elem, site_name, target, site, state, scout_tick, post_data) {
     console.log("Unknown state: " + state);
   }
 
-  var link = $('<a />').attr('href', target).attr('target', '_blank');
+  var link = $('<a />').attr('href', target).attr('target', '_blank').attr('rel', 'noreferrer');
   // Link and add Form element for POST method.
   if ('mPOST' in site) {
     var form_name = (site['TV']) ? site['name'] + '-TV-form-' + scout_tick : site['name'] + '-form-' + scout_tick;
     var placebo_url = new URL(target).origin;
-    link = $('<a />').attr('href', placebo_url).attr('onclick', "$('#" + form_name + "').submit(); return false;").attr('target', '_blank');
+    link = $('<a />').attr('href', placebo_url).attr('onclick', "$('#" + form_name + "').submit(); return false;").attr('target', '_blank').attr('rel', 'noreferrer');
 
     var data = (post_data.match('{')) ? post_data : '{"' + post_data.replace(/&/g, '","').replace(/=/g, '":"').replace(/\+/g, ' ') + '"}';
     var addform = $('<form></form>');
@@ -5200,6 +5215,7 @@ function addLink(elem, site_name, target, site, state, scout_tick, post_data) {
         addform.attr('method', 'post');
         addform.attr('style', 'display: none;');
         addform.attr('target', '_blank');
+        addform.attr('rel', 'noreferrer');
 
     if (post_data.match('},{')) {
       const dataArray = (new Function("return [" +data+ "];")());
@@ -5317,25 +5333,6 @@ function addLink(elem, site_name, target, site, state, scout_tick, post_data) {
         GM.openInTab(link);
       });
     }
-
-    if (site['name'] == "WoT" && site['TV'] == false) {
-      const button = $('span[id*='+ scout_tick +']').find('img[title="WoT"]').parent();
-      const link = button.attr('href');
-            button.prop("href", "javascript: void(0)");
-            button.removeAttr("target");
-      button.click(function() {
-        GM.openInTab(link);
-      });
-    }
-    if (site['name'] == "WoT" && site['TV'] == true) {
-      const button = $('span[id*='+ scout_tick +']').find('img[title="WoT (TV)"]').parent();
-      const link = button.attr('href');
-            button.prop("href", "javascript: void(0)");
-            button.removeAttr("target");
-      button.click(function() {
-        GM.openInTab(link);
-      });
-    }
   }
   // Hack: Same-origin problem with POST, so remove 'onclick' form (icons mode only).
   if (site['name'] == "SFP-Req") {
@@ -5362,25 +5359,6 @@ function iconToButtonHack() {
   }
   if ($('img[title="TorSyndikat-Req"]').length) {
     const button = $('img[title="TorSyndikat-Req"]').parent();
-    const link = button.attr('href');
-          button.prop("href", "javascript: void(0)");
-          button.removeAttr("target");
-    button.click(function() {
-      GM.openInTab(link);
-    });
-  }
-
-  if ($('img[title="WoT"]').length) {
-    const button = $('img[title="WoT"]').parent();
-    const link = button.attr('href');
-          button.prop("href", "javascript: void(0)");
-          button.removeAttr("target");
-    button.click(function() {
-      GM.openInTab(link);
-    });
-  }
-  if ($('img[title="WoT (TV)"]').length) {
-    const button = $('img[title="WoT (TV)"]').parent();
     const link = button.attr('href');
           button.prop("href", "javascript: void(0)");
           button.removeAttr("target");
@@ -5649,12 +5627,12 @@ function addIconBar(movie_id, movie_title, movie_title_orig) {
     if (site['show']) {
       var search_url = ('mPOST' in site) ? site['searchUrl'] : await replaceSearchUrlParams(site, movie_id, movie_title, movie_title_orig);
       var image = getFavicon(site);
-      var html = $('<span />').append("&nbsp;").attr('style', 'font-size: 11px;').append($('<a />').attr('href', search_url).attr('target', '_blank').addClass('iconbar_icon').append(image));
+      var html = $('<span />').append("&nbsp;").attr('style', 'font-size: 11px;').append($('<a />').attr('href', search_url).attr('target', '_blank').attr('rel', 'noreferrer').addClass('iconbar_icon').append(image));
       // Link and add Form element for POST method.
       if ('mPOST' in site) {
         var form_name = site['name'] + '-iconform';
         var placebo_url = new URL(site['searchUrl']).origin;
-        html = $('<span />').append("&nbsp;").attr('style', 'font-size: 11px;').append($('<a />').attr('href', placebo_url).attr('onclick', "$('#" + form_name + "').submit(); return false;").attr('target', '_blank').addClass('iconbar_icon').append(image));
+        html = $('<span />').append("&nbsp;").attr('style', 'font-size: 11px;').append($('<a />').attr('href', placebo_url).attr('onclick', "$('#" + form_name + "').submit(); return false;").attr('target', '_blank').attr('rel', 'noreferrer').addClass('iconbar_icon').append(image));
 
         var post_data = await replaceSearchUrlParams(site, movie_id, movie_title, movie_title_orig);
         var data = (post_data.match('{')) ? post_data : '{"' + post_data.replace(/&/g, '","').replace(/=/g, '":"').replace(/\+/g, ' ') + '"}';
@@ -5664,6 +5642,7 @@ function addIconBar(movie_id, movie_title, movie_title_orig) {
             addform.attr('method', 'post');
             addform.attr('style', 'display: none;');
             addform.attr('target', '_blank');
+            addform.attr('rel', 'noreferrer');
 
         if (post_data.match('},{')) {
           const dataArray = (new Function("return [" +data+ "];")());
@@ -9512,79 +9491,79 @@ GM_config.init({
 
       $('#imdb_scout').contents().find('#imdb_scout_section_11').find('.field_label').each(function(index, label) {
         var url = new URL(custom_sites[index].searchUrl);
-        $(label).append(' ' + '<a class="grey_link" target="_blank" style="color: gray; text-decoration : none" href="' + url.origin + '">'
+        $(label).append(' ' + '<a class="grey_link" target="_blank" rel="noreferrer" style="color: gray; text-decoration : none" href="' + url.origin + '">'
                         + (/www./.test(url.hostname) ? url.hostname.match(/www.(.*)/)[1] : url.hostname) + '</a>');
         $(label).prepend(getFavicon(custom_sites[index], iconsInSettings));
       });
       $('#imdb_scout').contents().find('#imdb_scout_section_12').find('.field_label').each(function(index, label) {
         var url = new URL(public_sites[index].searchUrl);
-        $(label).append(' ' + '<a class="grey_link" target="_blank" style="color: gray; text-decoration : none" href="' + url.origin + '">'
+        $(label).append(' ' + '<a class="grey_link" target="_blank" rel="noreferrer" style="color: gray; text-decoration : none" href="' + url.origin + '">'
                         + (/www./.test(url.hostname) ? url.hostname.match(/www.(.*)/)[1] : url.hostname) + '</a>');
         $(label).prepend(getFavicon(public_sites[index], iconsInSettings));
       });
       $('#imdb_scout').contents().find('#imdb_scout_section_13').find('.field_label').each(function(index, label) {
         var url = new URL(private_sites[index].searchUrl);
-        $(label).append(' ' + '<a class="grey_link" target="_blank" style="color: gray; text-decoration : none" href="' + url.origin + '">'
+        $(label).append(' ' + '<a class="grey_link" target="_blank" rel="noreferrer" style="color: gray; text-decoration : none" href="' + url.origin + '">'
                         + (/www./.test(url.hostname) ? url.hostname.match(/www.(.*)/)[1] : url.hostname) + '</a>');
         $(label).prepend(getFavicon(private_sites[index], iconsInSettings));
       });
       $('#imdb_scout').contents().find('#imdb_scout_section_14').find('.field_label').each(function(index, label) {
         var url = new URL(chinese_sites[index].searchUrl);
-        $(label).append(' ' + '<a class="grey_link" target="_blank" style="color: gray; text-decoration : none" href="' + url.origin + '">'
+        $(label).append(' ' + '<a class="grey_link" target="_blank" rel="noreferrer" style="color: gray; text-decoration : none" href="' + url.origin + '">'
                         + (/www./.test(url.hostname) ? url.hostname.match(/www.(.*)/)[1] : url.hostname) + '</a>');
         $(label).prepend(getFavicon(chinese_sites[index], iconsInSettings));
       });
       $('#imdb_scout').contents().find('#imdb_scout_section_15').find('.field_label').each(function(index, label) {
         var url = new URL(french_sites[index].searchUrl);
-        $(label).append(' ' + '<a class="grey_link" target="_blank" style="color: gray; text-decoration : none" href="' + url.origin + '">'
+        $(label).append(' ' + '<a class="grey_link" target="_blank" rel="noreferrer" style="color: gray; text-decoration : none" href="' + url.origin + '">'
                         + (/www./.test(url.hostname) ? url.hostname.match(/www.(.*)/)[1] : url.hostname) + '</a>');
         $(label).prepend(getFavicon(french_sites[index], iconsInSettings));
       });
       $('#imdb_scout').contents().find('#imdb_scout_section_16').find('.field_label').each(function(index, label) {
         var url = new URL(german_sites[index].searchUrl);
-        $(label).append(' ' + '<a class="grey_link" target="_blank" style="color: gray; text-decoration : none" href="' + url.origin + '">'
+        $(label).append(' ' + '<a class="grey_link" target="_blank" rel="noreferrer" style="color: gray; text-decoration : none" href="' + url.origin + '">'
                         + (/www./.test(url.hostname) ? url.hostname.match(/www.(.*)/)[1] : url.hostname) + '</a>');
         $(label).prepend(getFavicon(german_sites[index], iconsInSettings));
       });
       $('#imdb_scout').contents().find('#imdb_scout_section_17').find('.field_label').each(function(index, label) {
         var url = new URL(usenet_sites[index].searchUrl);
-        $(label).append(' ' + '<a class="grey_link" target="_blank" style="color: gray; text-decoration : none" href="' + url.origin + '">'
+        $(label).append(' ' + '<a class="grey_link" target="_blank" rel="noreferrer" style="color: gray; text-decoration : none" href="' + url.origin + '">'
                         + (/www./.test(url.hostname) ? url.hostname.match(/www.(.*)/)[1] : url.hostname) + '</a>');
         $(label).prepend(getFavicon(usenet_sites[index], iconsInSettings));
       });
       $('#imdb_scout').contents().find('#imdb_scout_section_18').find('.field_label').each(function(index, label) {
         var url = new URL(subs_sites[index].searchUrl);
-        $(label).append(' ' + '<a class="grey_link" target="_blank" style="color: gray; text-decoration : none" href="' + url.origin + '">'
+        $(label).append(' ' + '<a class="grey_link" target="_blank" rel="noreferrer" style="color: gray; text-decoration : none" href="' + url.origin + '">'
                         + (/www./.test(url.hostname) ? url.hostname.match(/www.(.*)/)[1] : url.hostname) + '</a>');
         $(label).prepend(getFavicon(subs_sites[index], iconsInSettings));
       });
       $('#imdb_scout').contents().find('#imdb_scout_section_19').find('.field_label').each(function(index, label) {
         var url = new URL(pre_databases[index].searchUrl);
-        $(label).append(' ' + '<a class="grey_link" target="_blank" style="color: gray; text-decoration : none" href="' + url.origin + '">'
+        $(label).append(' ' + '<a class="grey_link" target="_blank" rel="noreferrer" style="color: gray; text-decoration : none" href="' + url.origin + '">'
                         + (/www./.test(url.hostname) ? url.hostname.match(/www.(.*)/)[1] : url.hostname) + '</a>');
         $(label).prepend(getFavicon(pre_databases[index], iconsInSettings));
       });
       $('#imdb_scout').contents().find('#imdb_scout_section_20').find('.field_label').each(function(index, label) {
         var url = new URL(other_sites[index].searchUrl);
-        $(label).append(' ' + '<a class="grey_link" target="_blank" style="color: gray; text-decoration : none" href="' + url.origin + '">'
+        $(label).append(' ' + '<a class="grey_link" target="_blank" rel="noreferrer" style="color: gray; text-decoration : none" href="' + url.origin + '">'
                         + (/www./.test(url.hostname) ? url.hostname.match(/www.(.*)/)[1] : url.hostname) + '</a>');
         $(label).prepend(getFavicon(other_sites[index], iconsInSettings));
       });
       $('#imdb_scout').contents().find('#imdb_scout_section_21').find('.field_label').each(function(index, label) {
         var url = new URL(streaming_sites[index].searchUrl);
-        $(label).append(' ' + '<a class="grey_link" target="_blank" style="color: gray; text-decoration : none" href="' + url.origin + '">'
+        $(label).append(' ' + '<a class="grey_link" target="_blank" rel="noreferrer" style="color: gray; text-decoration : none" href="' + url.origin + '">'
                         + (/www./.test(url.hostname) ? url.hostname.match(/www.(.*)/)[1] : url.hostname) + '</a>');
         $(label).prepend(getFavicon(streaming_sites[index], iconsInSettings));
       });
       $('#imdb_scout').contents().find('#imdb_scout_section_22').find('.field_label').each(function(index, label) {
         var url = new URL(icon_sites_main[index].searchUrl);
-        $(label).append(' ' + '<a class="grey_link" target="_blank" style="color: gray; text-decoration : none" href="' + url.origin + '">'
+        $(label).append(' ' + '<a class="grey_link" target="_blank" rel="noreferrer" style="color: gray; text-decoration : none" href="' + url.origin + '">'
                         + (/www./.test(url.hostname) ? url.hostname.match(/www.(.*)/)[1] : url.hostname) + '</a>');
         $(label).prepend(getFavicon(icon_sites_main[index], iconsInSettings));
       });
       $('#imdb_scout').contents().find('#imdb_scout_section_23').find('.field_label').each(function(index, label) {
         var url = new URL(special_buttons[index].searchUrl);
-        $(label).append(' ' + '<a class="grey_link" target="_blank" style="color: gray; text-decoration : none" href="' + url.origin + '">'
+        $(label).append(' ' + '<a class="grey_link" target="_blank" rel="noreferrer" style="color: gray; text-decoration : none" href="' + url.origin + '">'
                         + (/www./.test(url.hostname) ? url.hostname.match(/www.(.*)/)[1] : url.hostname) + '</a>');
         $(label).prepend(getFavicon(special_buttons[index], iconsInSettings));
       });
