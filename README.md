@@ -5,7 +5,8 @@
 
 Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites.    
 Supports Re-designed/Reference pages and does multi auto-search on List/Watchlist/Advanced Title Search pages.   
-Adds links to IMDb pages from hundreds various sites.   
+Adds links to IMDb pages from hundreds various sites.    
+Auto search local HDDs/filelists using Voidtools Everything search engine.    
 Adds movies/series to Radarr/Sonarr.   
 Adds/Removes movies/series/episodes to/from Trakt's watchlist.   
 Adds external ratings from Metacritic, Rotten Tomatoes, Letterboxd, Douban, Allocine.   
