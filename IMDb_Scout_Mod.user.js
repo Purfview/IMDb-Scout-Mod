@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      15.2.2
+// @version      16.0
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from hundreds various sites. Adds movies/series to Radarr/Sonarr. Adds external ratings from Metacritic, Rotten Tomatoes, Letterboxd, Douban, Allocine. Media Server indicators for Plex, Jellyfin, Emby. Dark theme/style for Reference View. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAMFBMVEUAAAD/AAAcAAA1AABEAABVAAC3AADnAAD2AACFAAClAABlAAB3AADHAACVAADYAABCnXhrAAAD10lEQVRIx73TV4xMURgH8H/OnRmZWe3T7h2sOWaNXu7oJRg9UccuHgTRBatMtAgSg+gJu9q+kFmihcQoD8qLTkK0CIkoy0YJITsRD0rCKTHFrnkSv5e5c88/53znO+fiPwvsvrN038cPNqrG9pJmHkRVnPcpaTlHJY60cfPSpsrzl1LKihrmLvxhCM2i3OHvDx0d+H7e3F6JBv5iZMiJfhFTfPYDMHrMImpwimWWUdSgDQkbno7fFpUPVgh+pHFbZR4SovSctDCM9Hac9IKd9rO8EevtBCkXgY5IMmgquwypP7qqfcp/Tp4KLONDVsWh3RSBB2rnZfit69ocUdqLn2prrRZYM0Jg4JibamKsqe7gfEh5GOAfeYJjVHIPZvil97rcXkMog30byWRwXYRWoxHbzNFHJJpAarO8NdEBBsdCaP3WMJltTmQd4zlnekTq9Z5dgACwAlrpK4BxdV5mvLuspRgMSHbCIFF0iS8MZ5S8oYBYKY7rByC4dDM9uSIUmPOIwxgQBoYeF93auP4qFyPbIVXziWeGTH1EFM57kJo2hqQju6BwIyRf6RmCjdT4JOdiwNgiH/PPD3qoqlsNaXRd+fKtFfECxlZVNVF9SOsgTZEr2TUjJJbyeNX1IZrKIbyGlBABfpQPv2UDrly13LkJXDVhpQ5MhtGwcyF4HKjlU4E8xwB0AvDjd6AGmevZ87EcQRHgcO52e9uNsYELOrAa/Yh81YlmYLQJ5HWyq0+kzQ/DQKEusg6CRI27ryy8nReRS0wsoetkmRwogHSprliCckfEjXG9yAQc74J0WB99vu6DF3i3pMucsXM6tpBbxd2mVJAwXwGogNRBvGRA4jtHKTXkAIwLGCR/mT4Lh75oneQXXP9sAYfGRDCsnw7pX/jRZkU3M44kjw2l5zRIzb4CbZ8dULdL6wbNPZOpK0B6gN1UR1mdoxAaL/GrWiLPL3SEwW9YMTU/d64BtLahAVyucWhj9Mm8ign9IfQaBtd2/GbvCAEBpG5eMcrj2I0ktpKLeaqXQ3Pst42KGIshpdTmQLAeTgFGJ2wvh+tayMOR0n1RZ8B9z13vnOPBnsBq4E1ffgZpPFZHWVpO2cvhjYpOcbBd5TlhpDu5zq9mHGZcVi0y+VFkcFkDdyKJfTt99wEyHSEzDM90KH0nexpwZHJHKYYhjzlwGe0pP/IKfxociaEb7YDbi6KGJY1R2cR76E6NAtXqY4pPH3plLcl8LD7V+cOLUbUWRFZRPTAbVZO3mxK18Xc1ZaAiS8ARJXpZliXAomR94siiiMx8ZBOkXGTlnH0F/9ov1xPtWwEqP9wAAAAASUVORK5CYII=
@@ -1026,6 +1026,8 @@
 15.2.2  -   Added: DokuJunkies, SerienJunkies, FilmFans, SerienFans, Tor911, YesAsia,
                    KMDb (KR), KoFiC (KR), KoreanFilm.org (KR), Eiga (JP), HKMDb (CN), Kinenote (JP).
             Removed: OxTor, RlsBB-Proxy.
+
+16.0    -   Updated script to work with new IMDb layout changes.
 
 */
 //==============================================================================
@@ -4872,7 +4874,7 @@ var icon_sites_main = [
       'showByDefault': false},
   {   'name': 'TMDB',
       'icon': 'https://www.themoviedb.org/assets/2/apple-touch-icon-57ed4b3b0450fd5e9a0c20f34e814b82adaa1085c79bdde2f00ca8787b63d2c4.png',
-      'searchUrl': 'https://www.themoviedb.org/search?query=%search_string%+y:2021'},
+      'searchUrl': 'https://www.themoviedb.org/search?query=%search_string%+y:%year%'},
   {   'name': 'TrailerAddict',
       'icon': 'https://cdn.traileraddict.com/icons/favicon-32x32.png',
       'searchUrl': 'https://www.traileraddict.com/search/%search_string%',
@@ -5701,8 +5703,8 @@ function displayButton() {
   }));
   if (onSearchPage) {
     $('#sidebar').prepend(p);
-  } else if ($('[class^=SubNav__SubNavContainer]').length) {
-    $('[class^=SubNav__SubNavContainer]').append(p);
+  } else if ($('.ipc-page-section').length) {
+    $('.ipc-page-section:eq(0)').children('div:eq(1)').append(p);
   // reference
   } else if ($('.titlereference-header').length) {
     $('.titlereference-header').append(p);
@@ -5716,7 +5718,7 @@ function displayButton() {
 // Unlike the other URLs, they aren't checked to see if the movie exists.
 function addIconBar(movie_id, movie_title, movie_title_orig) {
   var iconbar;
-  if ($('[class^=TitleBlock__TitleContainer]').length) {
+  if ($('.ipc-page-section').length) {
     iconbar = getIconsLinkArea();
   // reference + remove "Reference View" txt and a link to settings
   } else if ($('.titlereference-header div script').length) {
@@ -5838,15 +5840,15 @@ function getIconsLinkArea() {
     return $('#imdbscout_iconsheader');
   }
   var p = $('<p />').attr('id', 'imdbscout_iconsheader').css({
-    'padding': '0px 0px',
+    'padding': '0px 0px 4px 22px',
     'margin-left': '0px',
     'margin-right': '0px',
     'margin-top': '0px',
     'margin-bottom': '0px',
     'overflow': 'hidden',
   });
-  if ($('[class^=TitleBlock__TitleContainer]').length) {
-    $('[class^=TitleBlock__TitleContainer]').append(p);
+  if ($('.ipc-page-section').length) {
+    $('.ipc-page-section:eq(0)').children('div:eq(0)').after(p);
   // reference
   } else if ($('.titlereference-header div hr').first().length) {
     $('.titlereference-header div hr').first().after(p);
@@ -5944,21 +5946,21 @@ function performSearchSecondPart(elem, link, movie_id, showsites, scout_tick) {
       var result = parser.parseFromString(response.responseText, "text/html");
 
       var is_tv    = Boolean($(result).find('title').text().match('TV Series'));
-      // newLayout || reference : check if 'title' has just a year in brackets, eg. "(2009)"
-      var is_movie = (Boolean($(result).find('[class^=TitleBlock__TitleMetaDataContainer]').text().match('TV')) || Boolean($(result).find('li.ipl-inline-list__item').text().match('TV Special'))) ? false : Boolean($(result).find('title').text().match(/.*? \(([0-9]*)\)/));
+      // newLayout || reference : check if 'title' has just a year in brackets, eg. "(2009)" // Note: 'title' is fail-safe measure if other checks fail.
+      var is_movie = (Boolean($(result).find('[data-testid=hero-title-block__metadata]').text().match('TV')) || Boolean($(result).find('li.ipl-inline-list__item').text().match('TV Special'))) ? false : Boolean($(result).find('title').text().match(/.*? \(([0-9]*)\)/));
       // newLayout || reference
-      if (Boolean($(result).find('[class^=GenresAndPlot__Genre]').text().match('Documentary')) || Boolean($(result).find('li.ipl-inline-list__item').text().match('Documentary'))) {
+      if (Boolean($(result).find('[data-testid=genres]').text().match('Documentary')) || Boolean($(result).find('li.ipl-inline-list__item').text().match('Documentary'))) {
         is_tv    = false;
         is_movie = false;
       }
       var movie_year  = result.title.replace(/^(.+) \((\D*|)(\d{4})(.*)$/gi, '$3');
-      var movie_title = $(result).find('[class^=TitleHeader__TitleText]').text().trim();
+      var movie_title = $(result).find('[data-testid=hero-title-block__title]').text().trim();
       // reference
       if (movie_title === "") {
         movie_title = $(result).find('h3[itemprop="name"]').text().trim();
         movie_title = movie_title.substring(movie_title.lastIndexOf("\n") + 1, -1 ).trim();
       }
-      var movie_title_orig = $(result).find('[class^=OriginalTitle__OriginalTitleText]').text().trim().replace("Original title: ", "");
+      var movie_title_orig = $(result).find('[data-testid=hero-title-block__original-title]').text().trim().replace("Original title: ", "");
       // reference
       if (movie_title_orig === "" && $(result).find('h3[itemprop="name"]').length) {
         movie_title_orig = $.trim($($(result).find('h3[itemprop="name"]')[0].nextSibling).text());
@@ -5977,9 +5979,9 @@ function performSearchSecondPart(elem, link, movie_id, showsites, scout_tick) {
           season_id  = $(result).find('.titlereference-overview-season-episode-numbers li').first().text().trim().match(/(\d+)/)[0];
           episode_id = $(result).find('.titlereference-overview-season-episode-numbers li').last().text().trim().match(/(\d+)/)[0];
         } else {
-          series_id  = $(result).find('[class*=SeriesParentLink__Parent]').prop('href').match(/\/tt([0-9]+)\//)[0].replace(/\//g, "");
-          season_id  = $(result).find('[class*=SeasonEpisodeNumbersItem]').first().text().trim().match(/(\d+)/)[0];
-          episode_id = $(result).find('[class*=SeasonEpisodeNumbersItem]').last().text().trim().match(/(\d+)/)[0];
+          series_id  = $(result).find('[data-testid=hero-title-block__series-link]').prop('href').match(/\/tt([0-9]+)\//)[0].replace(/\//g, "");
+          season_id  = $(result).find('[data-testid=hero-subnav-bar-season-episode-numbers-section]').children().first().text().trim().match(/(\d+)/)[0];
+          episode_id = $(result).find('[data-testid=hero-subnav-bar-season-episode-numbers-section]').children().last().text().trim().match(/(\d+)/)[0];
         }
       }
 
@@ -6002,13 +6004,13 @@ function performSearchSecondPart(elem, link, movie_id, showsites, scout_tick) {
 //==============================================================================
 
 function performPage() {
-  var movie_title = $('[class^=TitleHeader__TitleText]').text().trim();
+  var movie_title = $('[data-testid=hero-title-block__title]').text().trim();
   // reference
   if (movie_title === "") {
     movie_title = $('h3[itemprop="name"]').text().trim();
     movie_title = movie_title.substring(movie_title.lastIndexOf("\n") + 1, -1 ).trim();
   }
-  var movie_title_orig = $('[class^=OriginalTitle__OriginalTitleText]').text().trim().replace("Original title: ", "");
+  var movie_title_orig = $('[data-testid=hero-title-block__original-title]').text().trim().replace("Original title: ", "");
   // reference
   if (movie_title_orig === "" && $('h3[itemprop="name"]').length) {
     movie_title_orig = $.trim($($('h3[itemprop="name"]')[0].nextSibling).text());
@@ -6020,10 +6022,10 @@ function performPage() {
 
   var movie_id = document.URL.match(/\/tt([0-9]+)\//)[1].trim('tt');
   var is_tv    = Boolean($('title').text().match('TV Series'));
-  // newLayout || reference : check if 'title' has just a year in brackets, eg. "(2009)"
-  var is_movie = (Boolean($('[class^=TitleBlock__TitleMetaDataContainer]').text().match('TV')) || Boolean($('li.ipl-inline-list__item').text().match('TV Special'))) ? false : Boolean($('title').text().match(/.*? \(([0-9]*)\)/));
+  // newLayout || reference : check if 'title' has just a year in brackets, eg. "(2009)" // Note: 'title' is fail-safe measure if other checks fail.
+  var is_movie = (Boolean($('[data-testid=hero-title-block__metadata]').text().match('TV')) || Boolean($('li.ipl-inline-list__item').text().match('TV Special'))) ? false : Boolean($('title').text().match(/.*? \(([0-9]*)\)/));
   // newLayout || reference
-  if (Boolean($('[class^=GenresAndPlot__Genre]').text().match('Documentary')) || Boolean($('li.ipl-inline-list__item').text().match('Documentary'))) {
+  if (Boolean($('[data-testid=genres]').text().match('Documentary')) || Boolean($('li.ipl-inline-list__item').text().match('Documentary'))) {
     is_tv    = false;
     is_movie = false;
   }
@@ -6037,9 +6039,9 @@ function performPage() {
       season_id  = $('.titlereference-overview-season-episode-numbers li').first().text().trim().match(/(\d+)/)[0];
       episode_id = $('.titlereference-overview-season-episode-numbers li').last().text().trim().match(/(\d+)/)[0];
     } else {
-      series_id  = $('[class*=SeriesParentLink__Parent]').prop('href').match(/\/tt([0-9]+)\//)[0].replace(/\//g, "");
-      season_id  = $('[class*=SeasonEpisodeNumbersItem]').first().text().trim().match(/(\d+)/)[0];
-      episode_id = $('[class*=SeasonEpisodeNumbersItem]').last().text().trim().match(/(\d+)/)[0];
+      series_id  = $('[data-testid=hero-title-block__series-link]').prop('href').match(/\/tt([0-9]+)\//)[0].replace(/\//g, "");
+      season_id  = $('[data-testid=hero-subnav-bar-season-episode-numbers-section]').children().first().text().trim().match(/(\d+)/)[0];
+      episode_id = $('[data-testid=hero-subnav-bar-season-episode-numbers-section]').children().last().text().trim().match(/(\d+)/)[0];
     }
   }
 
@@ -6105,8 +6107,8 @@ function getLinkArea() {
     }
   });
 
-  if ($('[class^=SubNav__SubNavContainer]').length) {
-    $('[class^=SubNav__SubNavContainer]').append(p);
+  if ($('.ipc-page-section').length) {
+    $('.ipc-page-section:eq(0)').children('div:eq(1)').append(p);
   // reference
   } else if ($('.titlereference-header').length) {
     $('.titlereference-header').append(p);
@@ -6156,8 +6158,9 @@ function getLinkAreaSecond() {
       p.append($('<div />').attr('id', 'imdbscoutsecondbar_' + name).append(title));
     }
   });
-  if ($('[class^=SubNav__SubNavContainer]').length) {
-    $('[class^=SubNav__SubNavContainer]').append(p);
+
+  if ($('.ipc-page-section').length) {
+    $('.ipc-page-section:eq(0)').children('div:eq(1)').append(p);
   // reference
   } else if ($('.titlereference-header').length) {
     $('.titlereference-header').append(p);
@@ -6207,8 +6210,9 @@ function getLinkAreaThird() {
       p.append($('<div />').attr('id', 'imdbscoutthirdbar_' + name).append(title));
     }
   });
-  if ($('[class^=SubNav__SubNavContainer]').length) {
-    $('[class^=SubNav__SubNavContainer]').append(p);
+
+  if ($('.ipc-page-section').length) {
+    $('.ipc-page-section:eq(0)').children('div:eq(1)').append(p);
   // reference
   } else if ($('.titlereference-header').length) {
     $('.titlereference-header').append(p);
@@ -6988,8 +6992,8 @@ async function start_plex(movie_id, movie_title, movie_title_orig) {
   }
 
   let tvdb_id = "00000000";
-  // newLayout || reference : check if 'title' has just a year in brackets, eg. "(2009)"
-  const is_movie = (Boolean($('[class^=TitleBlock__TitleMetaDataContainer]').text().match('TV')) || Boolean($('li.ipl-inline-list__item').text().match('TV Special'))) ? false : Boolean($('title').text().match(/.*? \(([0-9]*)\)/));
+  // newLayout || reference : check if 'title' has just a year in brackets, eg. "(2009)" // Note: 'title' is fail-safe measure if other checks fail.
+  const is_movie = (Boolean($('[data-testid=hero-title-block__metadata]').text().match('TV')) || Boolean($('li.ipl-inline-list__item').text().match('TV Special'))) ? false : Boolean($('title').text().match(/.*? \(([0-9]*)\)/));
   if (!is_movie) {
     tvdb_id = await getTVDbID(movie_id);
   }
@@ -7919,8 +7923,8 @@ function addRatingsElements(imdbid, title, title_orig) {
     $('#main').children().first().prepend(table);
     $('#scout_rating_table').after(hr);
   // new layout
-  } else if ($('[class^=TitleBlock__Container]').length) {
-   $('[class^=TitleBlock__Container]').parent().prepend(table);
+  } else if ($('.ipc-page-section:eq(0)').length) {
+    $('.ipc-page-section:eq(0)').parent().prepend(table);
   } else {
     return;
   }
@@ -9740,11 +9744,12 @@ const traktCodePage = Boolean(location.href.match(/tt0052077\/reference\?code=/)
 //==============================================================================
 
 function startObserver() {
-  if ($('[class^=TitleBlock__TitleContainer]').length) {
+  if ($('.ipc-page-section').length) {
     addDummyElem();
     const obscfg = { childList: true};
     const obs = new MutationObserver(checkDummyElem);
-    obs.observe($('[class^=TitleBlock__TitleContainer]')[0], obscfg);
+    obs.observe($('.ipc-page-section')[0], obscfg);
+    console.log("TEST 000");
   } else {
     console.log("IMDb Scout Mod (Start Error): Element not found! Please report it.");
   }
@@ -9752,14 +9757,16 @@ function startObserver() {
 
 function addDummyElem() {
   const temp = $('<temp />').attr('id','temp_scout').css({'display':'none'});
-  $('[class^=TitleBlock__TitleContainer]').append(temp);
+  $('.ipc-page-section:eq(0)').append(temp);
   setTimeout(function(){
     temp.remove();
   }, 2000);
 }
 
 function checkDummyElem(mutation, observer) {
+  console.log("TEST 111");
   if (!$('#temp_scout').length) {
+    console.log("TEST 222");
     observer.disconnect();
     adsRemoval();
     startIMDbScout();
@@ -9803,3 +9810,4 @@ if ($('html[xmlns\\:og="http://ogp.me/ns#"]').length) {
   // Start for redesigned page
   document.addEventListener('DOMContentLoaded', startObserver);
 }
+
