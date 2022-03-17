@@ -9749,7 +9749,6 @@ function startObserver() {
     const obscfg = { childList: true};
     const obs = new MutationObserver(checkDummyElem);
     obs.observe($('.ipc-page-section')[0], obscfg);
-    console.log("TEST 000");
   } else {
     console.log("IMDb Scout Mod (Start Error): Element not found! Please report it.");
   }
@@ -9764,9 +9763,7 @@ function addDummyElem() {
 }
 
 function checkDummyElem(mutation, observer) {
-  console.log("TEST 111");
   if (!$('#temp_scout').length) {
-    console.log("TEST 222");
     observer.disconnect();
     adsRemoval();
     startIMDbScout();
