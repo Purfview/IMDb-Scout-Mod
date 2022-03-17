@@ -9751,6 +9751,7 @@ function startObserver() {
     obs.observe($('.ipc-page-section')[0], obscfg);
   } else {
     console.log("IMDb Scout Mod (Start Error): Element not found! Please report it.");
+    GM.notification("Element not found! Please report it.", "IMDb Scout Mod (Start Error)");
   }
 }
 
