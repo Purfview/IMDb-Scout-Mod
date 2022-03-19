@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      16.1
+// @version      16.2
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from hundreds various sites. Adds movies/series to Radarr/Sonarr. Adds external ratings from Metacritic, Rotten Tomatoes, Letterboxd, Douban, Allocine. Media Server indicators for Plex, Jellyfin, Emby. Dark theme/style for Reference View. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAMFBMVEUAAAD/AAAcAAA1AABEAABVAAC3AADnAAD2AACFAAClAABlAAB3AADHAACVAADYAABCnXhrAAAD10lEQVRIx73TV4xMURgH8H/OnRmZWe3T7h2sOWaNXu7oJRg9UccuHgTRBatMtAgSg+gJu9q+kFmihcQoD8qLTkK0CIkoy0YJITsRD0rCKTHFrnkSv5e5c88/53znO+fiPwvsvrN038cPNqrG9pJmHkRVnPcpaTlHJY60cfPSpsrzl1LKihrmLvxhCM2i3OHvDx0d+H7e3F6JBv5iZMiJfhFTfPYDMHrMImpwimWWUdSgDQkbno7fFpUPVgh+pHFbZR4SovSctDCM9Hac9IKd9rO8EevtBCkXgY5IMmgquwypP7qqfcp/Tp4KLONDVsWh3RSBB2rnZfit69ocUdqLn2prrRZYM0Jg4JibamKsqe7gfEh5GOAfeYJjVHIPZvil97rcXkMog30byWRwXYRWoxHbzNFHJJpAarO8NdEBBsdCaP3WMJltTmQd4zlnekTq9Z5dgACwAlrpK4BxdV5mvLuspRgMSHbCIFF0iS8MZ5S8oYBYKY7rByC4dDM9uSIUmPOIwxgQBoYeF93auP4qFyPbIVXziWeGTH1EFM57kJo2hqQju6BwIyRf6RmCjdT4JOdiwNgiH/PPD3qoqlsNaXRd+fKtFfECxlZVNVF9SOsgTZEr2TUjJJbyeNX1IZrKIbyGlBABfpQPv2UDrly13LkJXDVhpQ5MhtGwcyF4HKjlU4E8xwB0AvDjd6AGmevZ87EcQRHgcO52e9uNsYELOrAa/Yh81YlmYLQJ5HWyq0+kzQ/DQKEusg6CRI27ryy8nReRS0wsoetkmRwogHSprliCckfEjXG9yAQc74J0WB99vu6DF3i3pMucsXM6tpBbxd2mVJAwXwGogNRBvGRA4jtHKTXkAIwLGCR/mT4Lh75oneQXXP9sAYfGRDCsnw7pX/jRZkU3M44kjw2l5zRIzb4CbZ8dULdL6wbNPZOpK0B6gN1UR1mdoxAaL/GrWiLPL3SEwW9YMTU/d64BtLahAVyucWhj9Mm8ign9IfQaBtd2/GbvCAEBpG5eMcrj2I0ktpKLeaqXQ3Pst42KGIshpdTmQLAeTgFGJ2wvh+tayMOR0n1RZ8B9z13vnOPBnsBq4E1ffgZpPFZHWVpO2cvhjYpOcbBd5TlhpDu5zq9mHGZcVi0y+VFkcFkDdyKJfTt99wEyHSEzDM90KH0nexpwZHJHKYYhjzlwGe0pP/IKfxociaEb7YDbi6KGJY1R2cR76E6NAtXqY4pPH3plLcl8LD7V+cOLUbUWRFZRPTAbVZO3mxK18Xc1ZaAiS8ARJXpZliXAomR94siiiMx8ZBOkXGTlnH0F/9ov1xPtWwEqP9wAAAAASUVORK5CYII=
@@ -23,12 +23,13 @@
 // @require      https://code.jquery.com/jquery-3.5.1.min.js
 // @require      https://greasemonkey.github.io/gm4-polyfill/gm4-polyfill.js
 //
-// @include      http*://*.imdb.tld/title/tt*
-// @include      http*://*.imdb.tld/search/title*
-// @include      http*://*.imdb.tld/user/ur*/watchlist*
-// @include      http*://*.imdb.tld/list/ls*
+// @include      https://*.imdb.tld/title/tt*
+// @include      https://*.imdb.tld/search/title*
+// @include      https://*.imdb.tld/user/ur*/watchlist*
+// @include      https://*.imdb.tld/list/ls*
 //
 // @exclude      /title\/tt\d+\/\w(?!(eference))/
+// @exclude      /anon/
 //
 // @connect      *
 // @grant        GM_getValue
@@ -1033,6 +1034,16 @@
             Added: PuZo, BTDigg.
             Updated: ARAMovie, TBL, TheRostrum, TorParadise, xTorrenty.
             Removed: T2K, TMV.
+
+16.2    -   Fixed: The icons bar wasn't smooth if icons occupied the few lines.
+            Fixed: Script running on anon.to urls with imdb url (anonymous redirect website).
+            Possible fix for a rare bug when the script runs before page transfers to a reference page if set on imdb's settings.
+            Added other sites/tools: MRI, Voidtools ES: URL protocol.
+            Added the icon sites:
+            45worlds, ADP, AFI Catalog (US), BAMPFA - CineFiles, BBFC, Common Sense Media, ČSFD (CZ), eBay,
+            Eiga chirashi (JP), FFF Movie Posters, Filmový přehled (CZ), Google Scholar, HRC - Movie Posters Collection,
+            Heritage Auctions - Movie Posters, Kinorium (RU), LaserDisc Database, Media History Digital Library,
+            MyDramaList (Asia), Posteritati, VHS Collector, WorldCat, Yahoo! Japan - Movies (JP).
 
 */
 //==============================================================================
@@ -4478,6 +4489,12 @@ var other_sites = [
       'searchUrl': 'http://www.fistofblist.com/search?q=%search_string%+%year%',
       'matchRegex': /No posts matching/,
       'inSecondSearchBar': true},
+  {   'name': 'MRI',
+      'searchUrl': 'https://www.moviereviewindex.com/index.php',
+      'mPOST': 'search=%search_string%&page=searchresults&Submit=search',
+      'matchRegex': /No films found with given search string/,
+      'inSecondSearchBar': true,
+      'both': true},
   {   'name': 'Scripts On Screen',
       'searchUrl': 'https://scripts-onscreen.com/?s=%tt%',
       'matchRegex': /nothing matched/,
@@ -4506,6 +4523,22 @@ var other_sites = [
   {   'name': 'Voidtools-Title',
       'icon': 'https://www.voidtools.com/favicon.ico',
       'searchUrl': 'http://localhost:8080/?search=%search_string%',
+      'loggedOutRegex': /invalid request/,
+      'matchRegex': />0 results</,
+      'inSecondSearchBar': true,
+      'both': true},
+  {   'name': 'Voidtools-ID-ES',
+      'icon': 'https://www.voidtools.com/favicon.ico',
+      'searchUrl': 'http://localhost:8080/?search=%tt%',
+      'goToUrl': 'es:%tt%',
+      'loggedOutRegex': /invalid request/,
+      'matchRegex': />0 results</,
+      'inSecondSearchBar': true,
+      'both': true},
+  {   'name': 'Voidtools-Title-ES',
+      'icon': 'https://www.voidtools.com/favicon.ico',
+      'searchUrl': 'http://localhost:8080/?search=%search_string%',
+      'goToUrl': 'es:%search_string%',
       'loggedOutRegex': /invalid request/,
       'matchRegex': />0 results</,
       'inSecondSearchBar': true,
@@ -4628,6 +4661,18 @@ var icon_sites_main = [
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAQAAAD9CzEMAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAADsSURBVHja3NhbFoMwCEVR5j9p+ltr4B7Io0v1L6nslGSZoLntve0IIK/kefWY+hUcZg8o5qIKNNLNgfaMCiBeWKNrjPzGs2GDDJ4xKVALHiLhHIjgcR8D0vAqdSMiAch0auIKlEYPCA7c2ynxDYDxk1bXAF05JJ1XpTR+Z4v5DvgLAfVyyHoXAF4D1ox/GtD/dwog6ZwA2GwtALwH2JLwzwfsr4BtAhovC3KEgTtaG4i2TJtIUbwn2wogP1UAgvUiwMoAOdnhs2kb2H66PlAfVCocr1c40zWa8yrT91aZR+rkA5U+Qdi3ip33ZwAb5/CcnuFpKAAAAABJRU5ErkJggg==',
       'searchUrl': 'http://www.omdbapi.com/?i=%tt%&apikey=8c967f70&plot=short&tomatoes=true',
       'showByDefault': false},
+  {   'name': '45worlds',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgBAMAAACBVGfHAAAAGFBMVEVmle38/f+RsvJ2oO/q8f2txvXH2PjZ5fv8btQOAAAAq0lEQVQoz8WQywqDMBBFB0M/IOJjq5OWbqWKrlsC3RZq9lUhXYv/D52Mxj4+oJ5Nck9yBxLYFAVQEoXPwQUCTdy8aEIIJLGKjkSMiIVvnEPXetO0P8JWXFE+76aKh0b9IqrMCa1llHEWFkgIVR7ltDRI8MnIC+x7bBMEIo9nL4mUhyXgMMa0iWHBN3g3l/PwW4ju8SFOBdSpf1w9RkNzfeph/R9EJQ72Dn/jBdATGCXKRXJwAAAAAElFTkSuQmCC',
+      'searchUrl': 'https://www.45worlds.com/45worlds/45w_search.php?sq="%search_string%"',
+      'showByDefault': false},
+  {   'name': 'ADP',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgBAMAAACBVGfHAAAAGFBMVEUBAEH3+f8EBSdJSm0jJEaoqcpzdJSNjrH8KmoVAAAArklEQVQoz33QTQvCMAwG4DIRr2bd1mvJhmfn8N7OgVcr7AdMoXc/2O+3CkpSx95bHsIbiJhK1UYAis8rAA5WwYnBkN0yOidwsTmFJVz3YGgFhJwJONk0jpQs4K7RAoGx0lh6gz9B/enJn5r01BCypSDbCtYMEOsiAqtiIBvJGwZJocAS0vis9775wrHvx50LKOlfnDzUwCDFDYes4xv/Hco/jCAJHVpwEGIeOjGZF55LGoVIzTuWAAAAAElFTkSuQmCC',
+      'searchUrl': 'https://adp.acb.org/findavideo.html?title=%search_string%',
+      'showByDefault': false},
+  {   'name': 'AFI Catalog (US)',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgAgMAAAAOFJJnAAAADFBMVEUAAAG7wcI7Pj2DhIdAOfQDAAAAkElEQVQY02NAAAUYQwfG4IcxOBugDOYEKIMpAiZ3DcaYClNkClOkClG0atXSsFWrVjAw6IaCQAwDAzeYAZRl2gpiFDBAhRIYoEIHQPr0gYwGsGVTQ8OhJsIYvKHhEOs4Q0MfQJwWGloBcVpoZRxE0VWv6xBFogfWQhSZNnBDFKkzMOwBM9gYGDiAFJhkYsAAAPQ7I8T9ZIABAAAAAElFTkSuQmCC',
+      'searchUrl': 'https://catalog.afi.com/Search?searchField=MovieName&searchText=%search_string%',
+      'showByDefault': false},
   {   'name': 'AllMovie',
       'icon': 'https://cdn-gce.allmovie.com/images/ios/AppIcon57x57.png',
       'searchUrl': 'https://www.allmovie.com/search/movies/%search_string%',
@@ -4647,6 +4692,14 @@ var icon_sites_main = [
       'icon': 'https://www.arrowfilms.com/apple-touch-icon.png',
       'searchUrl': 'https://www.arrowfilms.com/elysium.search?search=%search_string%',
       'spaceEncode': ' ',
+      'showByDefault': false},
+  {   'name': 'BAMPFA - CineFiles',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgBAMAAAAQtmoLAAAAMFBMVEUXbr4neMJWyPHpqRVNw5T1aBXbT6/yJTRaZpg5n9osjrWidlJFr+NGt5qMR3XENFJdayYeAAACPUlEQVRYw+3UPWjbQBQA4KcWN/IPsRwItG6H5jYXDy5ZApkMNxUKyXBg8NKpZMx2nmx1CBYEiuvNm226RHQoFEHBi/HWrUOmgsGbOwVvHtN3kk6qfPLgLYF7SA/pcR/o9J4EpR0DLNgpDA000EADDTTYAsqu6/rsemJjvhl8wfpg0ANzMvmJFdPBAIC7OzsAXyml7wXw2DnmPqkCZAmZwtNjDBuefcRAx/kiBvS3DxoqeJsG5nNaBwAWAgJQiMCpBPucryQAg77zQTMAlgQ1wwcfABIAN3CLwIzAEA5CAD+OJShyfrkN9LaAVhLkGWMSjFXQ5WsFeMzywRSTCjrr9ia4ZjaCKnmNSQHL9nIDZEJQmR3B7FcK6HZCQK2c6MMhe8m+B8AgKlj/B+a3otNXLB+AfsUggxiIxl0gaO3x5CxdNU12JsC4kpPAiDvNEdgRoEMAD8G5AAfVLLmRo3ESApNfFiMwKtO6AAZrBKBAXkhQQ3DhfEKwKvJF4i15DQjAE/IqAqdWuOl9vsIjAXC11xSgQL5Vsz44cSyIwGID4AZCkCX9ENQAJMDnMTdBw5FgVkkBfz/zVhKIECBHyBsF7HGMBMj7wALRNnKkgK4A7SRoTjxmI4A0sOT39xLQUhk/0QwuzgRgRqYq6Igz7nQdDnExDpMAfRXg7CXBEGfPikEvFXR5BP4AAkBwJsCYDBXAWwLYAuRcd4SV5w6A4dhQHmEFDNcCE+9AFC3MeI2Fh/q710ADDTTQ4PGB0o7xD+J9O9xnt0dGAAAAAElFTkSuQmCC',
+      'searchUrl': 'https://cinefiles.bampfa.berkeley.edu/?q="%search_string%"',
+      'showByDefault': false},
+  {   'name': 'BBFC',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgAgMAAACf9p+rAAAADFBMVEXm5uYCAgJLS0uioqLkzWL0AAABfUlEQVRIx+3SMU7DMBQGYBOLoUPaU+QIGdqBInGBSPR30hCJSEzAUokdReIMPkIlpDLkAAyReobsLAwwcQAG3vNLSENVcYDmDXmJPzvx84saYohjijdJpST93I7ryCVvJY/vcQu+wEhA4xdCgUDA76AWsAJhB1YAAgFe+6AbqGXBPtjsEESHIN+BybeDyZdSM6QbpeaVg0uLkuDBmkIFQKzGSB0sgSuCWyBRIV9qIGcARaX5ahgiDzSzhdwBioBuRzzFgVkjI0jXyOe4rgLcWVmx0nZBUI6R8HZrU01LBloWGHfc9YKhLd4m1Axo0GNoCNpS3QQPW96hz+ChaCDnup943gkqhkp1HSIoaCHDiVG7cMGgGfz/Yf9V/Y+ft4AWom676G034ZEtF3jaL9BQyXIkQUygkAlw/2ysXU/kEKmHhYP0A4kGp4ghwL3N/jRqxSCNaqAQqBi4tTHDkrODRKqyzc9wYznjESgFpjBywGcbl2YvqonPUg0xxBHFD/G1szdpCKQqAAAAAElFTkSuQmCC',
+      'searchUrl': 'https://www.bbfc.co.uk/search?q=%search_string%',
       'showByDefault': false},
   {   'name': 'BCDB',
       'icon': 'data:image/png;base64,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',
@@ -4668,6 +4721,10 @@ var icon_sites_main = [
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAMAAAAp4XiDAAABOFBMVEUAAADzWELzWELzWELzWELzWELzWELzWELzWELzWELzWELzWELzWELzWELzWEIWhsrzWELzWELzWEJusd1usd3zWEJNm8dNsd0LbrHzWEJ5vN3zWEIWY6bzWEJjsdJusd15vN0LXKDzWELzWEILY6YUj70TWJtusd1usd1jsdJNm8cQXZshhbyFvN15vN1usd3zWEJusdILY6bzWEIskLzzWEJCm8d5vN0hbrFCm8cLY5shebELXJs6m8vzWEJCm8d5vN0LY5shbrFNm8c3kMcLY5sLWJshebxNptILY5sWWJs3kMdusd0hebELY6YhebFjptJYptJjsdIskLwWbqYLWJsLWJvzWEJ5vN0WY6Zusd1usdJjsdJYptIWWJtCm8dNm8chebEskMcWbrEshbwhhbwhbrFNptKbqUhfAAAAV3RSTlMACmgx7OKPdWFXwvc3gyUUsZxOF+GkVw0K28zMwLp3aUM0GBIPBvLsxq6loZqYi4FEIx0d3tfBv7OKd2pSRz0zMifq5+fa1MG1sJdlXV078fDgwreNiGDeTbgzAAAC+ElEQVRIx9WVaVvaQBDHJwQI4b4UUEABQYFWFO+73lqrvQtBErz9/t+gMxvWhBzVPk/f9P9q2PDbOXZ2B/6hZuAvtLOxunx397B8ulWCtyi2cXgzGBxt7MTgbUo11Oebm9VxNCsLnohfCoivEJ++qOrzIQKCJ9gZKhQPCK5Atd7vq2ojAyB5O2Z5JRcoM3eNSBEgOumN+z0ofyE0hHJhFwIRDEqUjPgFOTgML+CAzPUQQcKqhZwO2Zn5HiJFNMhNfCUUWilIUd1TQvdjje1DF5E6WfKkkXdchzzsh89SgwlEZlMASwW9RolAWBTDslQGUoAtRkYPpIvIFBbLx/ZjcZs3lVholREniKTRByMSAlQiOfIVlzk3Rh+kkUwQwdxZRT24kMRDYT988rDatNmkuVyEpCAwGnGFNYEfmJL0bclA0oisAdBOcTCpHDQYMmWjf7uoFtvIWwGzBPrjLneDNNc0IdMsRQ+MqoyxBXUTrTHgmiIkBTl0YmtZyi/Ki2bk/54QAKov2OTjrj2EZE1IGqKOvQcRnsICBfbLhEwwJOzQydy3SGzTjLDARDsimhAZTvaNk0yzqMOOSIQb5RmtZKoYlsQxl3Cnk2SGjNXeRsQ4lwwkKVibJF75CG7Y1NrDa8+Okg5rxY4E+T6FHMzUNFPvd+fZrYjaUuG3UQjJsKmd8PUWIrNV6vCIFSnwOy/HIVvTPvL1RUToUiZtHSP7eBETZfipadvAtYYIXX2/pS+Fl3dyaRdKmlbLmnu516sDMhi5owTIHmsUl+GGHqUWGrui24udVzRt3/qOXU+Bq6rniqI1wawWIf2i6xjMK4pSizm8yf16xpEoHSuobesASyOiql93HFz8UEhNsGpxFr3gFDvbs0zPzQNG5KtgZ9KE0Ky8eAm6fbl+f68TWcdp/E1HBoPB8vd3qNOD26cnHTlHwlFFjuDcf3h8vL0lhJhNcNXimQOi5PfhT9prWJH1K3hNsfHGEUc+r2+14W2K7Y1fbF1eteF/0m8ceNWfw2T0aAAAAABJRU5ErkJggg==',
       'searchUrl': 'https://www.cinematerial.com/search?q=%tt%',
       'showByDefault': false},
+  {   'name': 'Common Sense Media',
+      'icon': 'https://www.commonsensemedia.org/themes/custom/common_sense/images/favicons/favicon-96x96.png',
+      'searchUrl': 'https://www.commonsensemedia.org/search/category/movie+tv/%search_string%',
+      'showByDefault': false},
   {   'name': 'Criterion',
       'icon': 'https://www.criterion.com/assets/img/icons/favicon-32x32.png',
       'searchUrl': 'https://www.criterion.com/search#stq=%search_string%',
@@ -4679,6 +4736,10 @@ var icon_sites_main = [
   {   'name': 'Criticker',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABAAQMAAACQp+OdAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAAAGUExURQEwX////1zK6woAAADMSURBVCjPddKxCsIwEAbgKx3USdwcxL5GhYKvpKMgpKODjyB9tpS+QNwihJx3l1xpKc1yH+G/JG0CmAesIEKGXaB3GcMMPWIoKRMLDACCCAl3yLhRKd0UXAcr2KPjTF1hwgMn+DpZGfHnFTyzY9ic8TAFZ/ys66C4CEyCBwNYjPB8VELNNRCaBeRrvEn/Q7qOipNsSjgzvM4EDTO2hMDhj6JTtAyv4PBLMWa6SsNwVcAmdekJ3zM0BLkKDtNoFVGB9pkhe6UXYGD9kfwB9L1rtmDnK5kAAAAASUVORK5CYII=',
       'searchUrl': 'https://www.criticker.com/?search=%search_string%&type=films'},
+  {   'name': 'ČSFD (CZ)',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAF4AAABeBAMAAABY/L5dAAAAGFBMVEWqAwSEAQH///+nNTXmv7/RlJS/YGH04+MSjMyfAAAECUlEQVRYw+1UTZfSQBDMKLtcZx67etUhH9eEKFwhgF4hAl53o4vXJbvK37e6e5IIyfOpRx/1gHQm1dU91RO8Cy644J8wsWVZHrueYD2KhuerhQX8DvpLS2jxM3+xsGEH/8o+Lz7aaavqCjld/F4Ue9d21ap6B/5jB7/vo0Z5d7oIhRg50w7+KEANG593GVGOv2jDhlSj3eVy+9l2wt9us6BV1f4WYZf93ei2P+fK+zYemN8yLmOVznEBtXFauY993myYr2m5+VU9u1x+tHfgtMZVTj0sIt39csbIpxoJYiUSjFvYP7CrSkMhcIxR6OmerXQ1taSw4nv6yt4zU6uX+y98pSr5UPO4tFR1iv1Aezc25nLqPTb/vTbijaeLgMjMFXk9ipaLLGJBdVVa4IeSRyXOSBmCyvp0pSo8roDrDTLLuFP0qHpbmAhorCHKmc/tTazgieiV/dQD3UsGqjoVCHIo2dij8FfgyN64Iy1VH0m/Zx2imMbV5/geHNHXXOiVPR6PdoZk0xy8mEgj+/xc2licYLfZEohd2zXV5HZElB4VsGYScWsydQ5ufK1ubaw1KtVYkRLGpUa+1uJuVWMUat2PEspkatN0OVWqCBG4nUo0Gir1wqfN9Bs+ysGtmTY5jKvPB0e5v99lgUHc8KkcxvX94cG+YVWSc+CRhrriN/7fcjhDCDR8GZeq+fVtT3aiBJ67vhSVhiAzBfqdfKm61uJn0z6M4LjqQ67UZXSkAwkMyqodDZjcYu6+OdPv+0nctwkvF7W8xn02jOMiUBXfKE0fjMu8jrDAtRhzZ8TMmCJ0NHJJNJ8Mho6QFr/J26Xp2cCuUePJ0cA3TMkPGiqiYQa59T9RBNa1vTe6PFBIC57QTfljvy+HUvXhI5rfKUPrMG6HP8QZllnMk7SBvH9cDN1IP5z82tkPHuvLPoQ/Ra4BXTAXIzhOSIn1pQU3LohcNaeNSKbgkGoZ1ejfSFUjw3IYEkP+5U2jTz24LnE/waUpgAQ5t6A4ffIJXQZpWvjGNPJy/LDwIU2zUAvdQJ+RPxrkGEV9nTQ0QJMmOxihy36pKg8deSd8FLzFmdKwX3Pblb4u11AZwtZTJPomMuYVGQcofDwl9n9K0/IAm06xxhlM03fUE3cj+lCQ7cHsU8xkXBG3wjkevujS2Z+d8Q9uXI4s+gjkHd2N7RnCMfsbOPmqH1T9LWDcX/GHoFwnv/DzEEPspMK4sT1gh9tN0vCzNXL8bRs5xjWg4Xwdj2cNv6ShvzVtvOZx4el8+7RzfFpBLZjdxiSQI2EOm1nNx8qX9D2G2UaBczuxBvrz+YeKX78tbbi3Bf0n75v+5W3poMvAA2p5uWn8HKSELj4/SJhT+f/HuPAv/P+O/xPX7k8uOdDYkQAAAABJRU5ErkJggg==',
+      'searchUrl': 'https://www.csfd.cz/hledat/?q=%search_string%',
+      'showByDefault': false},
   {   'name': 'DDU',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAYFBMVEUAAAAkKVk4SGWr1vAsLpA0NcNaYHXZ5PFBb+1KSdhlarAWFjZSV+eKuPB6pO92g+hFVaw5TuR3gLpgiKmtu/BXZupRkOxoaeldfOOHeuuMmrKSk+6gssFxwPFVsO9XncQeP7MVAAAAAXRSTlMAQObYZgAAARdJREFUOMvlzstyhCAQQNHmLQqiAoKoM///l2mZqMlUVlkmd6NVfaob+DPJo7ad2iOACau/07TVecuPhDaLMYaCi8klrYVOK1MF50RgXAitlyUh6E2MRmttXFBq8wBmxDm8WhYK1ukOakwpRQGaZuRwgiBBhQHBSzAmKyAnWFUF5AIBwTi+gfUC1lo8IUZzgbxRIO7e0Dt6bGgo/FzfJ7RNM/8a5GwquE9sxcM2+fMNMeq3DcxKUPYCRvMOWe7lDSjYG2hOEAxfAaPQz/7cKHiHgA9Zlm+g/QREEAT45cMwFVlKUSrgif3pn37wfoqCV9ARjsQ5t4aAgDG2Px5znm0cBc6rQCJ0SotbKUjF9v0xN7l3sYP/0geplRBUFRcD9gAAAABJRU5ErkJggg==',
       'searchUrl': 'https://ddunlimited.net/search.php?keywords=%search_string_orig%&terms=all&gsearch=0&sv=0&fid[]=1381&fid[]=1572&fid[]=1573&fid[]=1577&fid[]=1582&fid[]=1583&fid[]=1925&fid[]=1926&sc=1&sf=firstpost&sr=topics&sk=t&sd=d&st=0&ch=300&t=0&submit=Search',
@@ -4702,9 +4763,17 @@ var icon_sites_main = [
   {   'name': 'DVDTalk',
       'searchUrl': 'https://www.dvdtalk.com/reviews/search?orderBy=Date&reviewType=All&NReviews=50&searchText=%search_string%&searchType=advanced',
       'showByDefault': false},
+  {   'name': 'eBay',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPQAAAD0BAMAAABeARbNAAAAMFBMVEUAAAAAAACZzAD/zAEBZt7+AABDQ0OGkn5mZgEzMwBgAABATaf+QEAAGjgBM28nJyijxz+KAAAAAXRSTlMAQObYZgAAAjFJREFUeNrslrFywyAQREljlYYGSn4Nmqg0asRviyptZtJk4ksG7rJHY14vLewuB2axWCxenPpFMZOpD/fNPlH+dE/E3UzhbI4SZ+z8cL/zYZTZmvsLTzaupkwh2hrK87WJ8jTt7HpEo8Ph+nijwc2NEAxBO2gaN97u+XFvbhRrCHrtppYrd+x9r7WeD62m0Y7RO3oj6skAuT/dUuVnD7Li4c6dME+1tG/dV8HWlNI+BtzMKtvehl5CTeNsv5H9dIeOwsm6BhuR4H770UoEuN9l2B6033Z88lxgvxmjJ2D9tpzZg/WbNXEvpN+WNXID0u/Cu2gA85u3jTtwqnB/NZgPJ7zIdcnDorbsux32Pinsw5hQUQt8Ap3qwG9HAD1FE84obl8l3xRIy7zEqQvSMivph4W0LEnuOg9pmawgiFkWZROwAAoeMDFJUrPa5aQIl5/F0tS5gsqJP44B7RT+wgOWLJQO2kFRDmld/i+dpeezkQ/Bi8fbRaUBSUnbotlPNxe/pD/Zm0MCAGEoCoBkoQIVqICiAJ4SZMGQgjrLMDn1vpi+K3AltVqtVqvV6oJarZ6u3+xr2fVMWob/iM49u7dsrajVarVarVar1Wp1b98OagAGgQAI1kJNtpZaCyRIQgg/FHAPQgghswZGwaLRaDQajUaj0Wg0Go1Go9FoNBqNRqPRaDQajUajj6NTv1z61X+sb48X4A5Do9FoNBqNDkKj0Wg0Go0OQk+nn7W9lySdUwPQF080xci5zgAAAABJRU5ErkJggg==',
+      'searchUrl': 'https://www.ebay.com/sch/11232/i.html?_nkw=%search_string%&_sop=15',
+      'showByDefault': false},
   {   'name': 'Eiga (JP)',
       'icon': 'https://eiga.k-img.com/apple-touch-icon.png',
       'searchUrl': 'https://eiga.com/search/%search_string_orig%/',
+      'showByDefault': false},
+  {   'name': 'Eiga chirashi (JP)',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQBAMAAADt3eJSAAAAElBMVEWhjHMPEBB9bVozLihFPTSMemVSmNT2AAAANklEQVQI12MQhAIGYQUGIGAyZBBiYGAVFBRRZBAAcgUFhRlxMkRADDCAMxBSeLTDrYBbCncGAG67BR2ovDFTAAAAAElFTkSuQmCC',
+      'searchUrl': 'https://www.google.com/search?q=%search_string%+site:eiga-chirashi.jp&tbm=isch',
       'showByDefault': false},
   {   'name': 'EkşiSözlük (TR)',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgBAMAAACBVGfHAAAAKlBMVEUAAACCwkqCwkqCwkqCwkqCwkqCwkqCwkqCwkqCwkqCwkqCwkqCwkqCwkq8qML+AAAADXRSTlMA5zcNeWQltsmMU9Wbyr8SygAAALhJREFUKM9jgAIWBwZUoCiEymfrvZGAImBz9+5hFIHYu3evIvOZZO/evaiAJGB+FwiKkQR8QQJXUHVA9CB0oOqJBfMR9rDthQjchrmN8y4UTID5AyYA889cmMBNqBGyMIGLEENY7sIBJFAsEALNYAFdhMAlhLOQneaLELiCXWAtQuAWWCARISCE8DxyALAiBALAAsy1MP51Axy+5ZKF+i0AFmSrIQK7EDE7EcSXSUCKBw/Zi52QWAAAlBTMPY2+wdQAAAAASUVORK5CYII=',
@@ -4713,6 +4782,10 @@ var icon_sites_main = [
   {   'name': 'Facebook',
       'icon': 'data:image/png;base64,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',
       'searchUrl': 'https://www.facebook.com/search/pages/?q=%search_string_orig%',
+      'showByDefault': false},
+  {   'name': 'FFF Movie Posters',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGEAAABhAgMAAAC7aCcwAAAADFBMVEXHIyj+/PzRS0/rsbM4OElsAAAAeUlEQVRIx+2RMQ6AIBAEN94HbVBjjPEJ1FY+hZLcK4XDBCxspFCUaaaY6vZQuUujPC1EA4mWosvMzAZBpFan7SiTOIiU9vpd8bMAQbKORVy0B4LIqyu7nC8dme17vlDL8wVsEjVOlUzYRsmi6ReiSLWXRX+jIJZKBjtcBNFDmPNP9wAAAABJRU5ErkJggg==',
+      'searchUrl': 'https://fffmovieposters.com/?post_type=product&s=%search_string%',
       'showByDefault': false},
   {   'name': 'FilmAffinity',
       'icon': 'https://www.filmaffinity.com/favicon.png',
@@ -4723,6 +4796,10 @@ var icon_sites_main = [
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABAAgMAAADXB5lNAAAACVBMVEUAAABmq+s2N2ioz71FAAAAAXRSTlMAQObYZgAAAJhJREFUOMvd1DEOwyAMhWHPPUrv4ww5Avdh74JU/lMWqDBxUNNmyFIPSP6E9AwSiIBagcjNw0PuHp4z4AGDAGkLK6UaZA0VQoPSdKBWHLDsYd1DGIBioGiNNcgKA3JZjyF9gho7oDSXwBT7MwBxQDt8JRudd6Ueu5wHncBSTo7+N7d+CLoF5drRo59j9dA2d/j6sufPQDzIC/gi6JgsG1QlAAAAAElFTkSuQmCC',
       'mPOST': 'keres0=1&gyorskeres=0&szo0=%search_string_orig%&sbmt=Keress!',
       'showByDefault': false},
+  {   'name': 'Filmový přehled (CZ)',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgBAMAAAAQtmoLAAAAD1BMVEUAAAABAQH9/f2AgIC+vr4nyb2FAAAAAXRSTlMAQObYZgAAAYNJREFUWMPtlFGOgzAMRK2UC7T0AKnJAdrAAQrk/mda70pbCwQl76MfK+379jAzNopsELTMfT8UjVJDSN+zhqlKhST1RV+kfjr6/DzognmI7+cnXZGGWDnvsfYVPr9g16Pz+VWqnf1k3SHlzQKD7tJNW4X1DSWCQB7qOJAzx7oNORkZGF1EBm7hBsgimQGy8BvU3SJkrSA9vbIaJFPRKrpFIpLppJVklMjoUCK/XTNpLXdfKilhFVgJq4BKhJ8K4BKNKitxOwMuJhiJoDXBAwmiBBMATHBGPKVhgrucmCBTwUVuHxZcuWBkgvZf8FcFH/+X+O99+rAg40cAPzP4IeNPJX+Mb+xuwvaaTdCwrQpbUxRjRJ2NG+psNKiCEVgFY0QVyCUuIizTUwRlauWXDiUyAkgEMrVRWKYsTnjUXQ1ZWGVmYQbAwg3c4nhFyCLLmjAeGpBQk2zQHQQCiqvsMNYW8Bpg3lcF5k0xr+eHKO9Ji1jt5PP7Ji9JO6jUELT0Rtn8+hfH004lM+7fYgAAAABJRU5ErkJggg==',
+      'searchUrl': 'https://www.filmovyprehled.cz/en/databaze?q=%search_string%',
+      'showByDefault': false},
   {   'name': 'Filmow (BR)',
       'searchUrl': 'https://filmow.com/buscar/?year_start=%year%&q=%search_string_orig%',
       'showByDefault': false},
@@ -4732,14 +4809,25 @@ var icon_sites_main = [
       'showByDefault': false},
   {   'name': 'Google',
       'searchUrl': 'https://www.google.com/search?q=%search_string%'},
+  {   'name': 'Google Scholar',
+      'searchUrl': 'https://scholar.google.com/scholar?q="%search_string%"+%year%',
+      'showByDefault': false},
   {   'name': 'Hancinema (KR)',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAGFBMVEUAAAD////Dw77LJC4Ac6D29vXt7eugmqJM5zFZAAAAAXRSTlMAQObYZgAAAbxJREFUSMellT1uwzAMhdMbpALk3Wzs7HGA7I4AzzKQ7BLgC6RDrl+Srn6IyGqLPsBZ9Ok9Uo6p3e69qj2u1/UnQHtALZuAgm+5DWAOQLsFkL2+F4AkfbvZSpEeWN0GoCHKloAGMtkCAAC9DU69AEKAy9opObisYeGQxIewVNqc40GWAR966AQg9n8Ow0V4yHP4GFin8jl4Wg9E9woogCGKLWYnAE/5woKeBGgKyC0QgBxQZJBbtNiVzQCsQAj9FUIExAShB/onQCacjTHDCf2hz4FsnXTB7R4S4I8RMKwrV5mAVMI5AFhlDTCPHgFbAEwA4GegAUcARWnqUgIjAQDt7wARIQFXA1SswSbgLADugkE4CkCcA79WOIgEFLTxJDUf+1UamPxdMGykwUS2Eeixo4NBDxM1UuXdCrAVAkIAHM0AV+tBrE/8tl0AqAhpMYJj4xWgMA3CQn4X/Oebc4uR4vEJAGU0mcXEmxsbAQ09WRwDIAYEAhTnkCKC95OBBBR09IPI81metDwk58p9odayXuZw/nV366BcNq4DhUT9UpslUZ72sNQAneZwdRR3tYv1XnT4/939Vl/ffwGwigOGhP6IUQAAAABJRU5ErkJggg==',
       'searchUrl': 'https://www.hancinema.net/hancinema-search.php?q=%search_string%',
+      'showByDefault': false},
+  {   'name': 'Heritage Auctions - Movie Posters',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwAgMAAAAqbBEUAAAADFBMVEUAAAACAgLz8/ODg4NBiE38AAAAAXRSTlMAQObYZgAAAPZJREFUKM9dkjuOwjAQhq1dbbFClByBkjL3oOCPEUJAnYoSpYFL5AgIZaKU1HAJ99TpERWIcQbbGn658GfNw/MwXj+X18EEnYFVuE/A2hkxch6sGP6j16aHTGAZrKLdAB/dGIYBtuKSnKoAOfsj6mB+E1wlZUjLwVK4P/vE+u4Ppmac11gc/cHcZAJl6xONBIoamJlKoGPIAzSNB9eDrTvAMhARQ+Ei5G1RRVgdyzOD+Cz4IUJJ1DJI6IKojnk6AfkOOdvwdzIBgLCUEk4N0Lm5FPd4Ans3VWWrhqhWqSbq9urGp5HoYekxpgHr0eulSOvyvUhqxd7dysarfbjCmgAAAABJRU5ErkJggg==',
+      'searchUrl': 'https://movieposters.ha.com/c/search-results.zx?N=54&Nty=1&Ntt=%search_string%',
       'showByDefault': false},
   {   'name': 'HKMDb (CN)',
       'icon': 'https://hkmdb.com/common/hkmdb_db_logo.png',
       'searchUrl': 'https://hkmdb.com/db/search/simple_search_results.mhtml',
       'mPOST': 'display_set=eng&search_for=movies&search_string=%search_string%',
+      'showByDefault': false},
+  {   'name': 'HRC - Movie Posters Collection',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwBAMAAAClLOS0AAAALVBMVEXw8OvY19MkICHq6uVWU1Th4d2wrqt5d3e7urempaPDwr7R0c2XlpXKycY/PD1os5axAAAA+ElEQVQ4y2MYBaQDYyhAF2c8Xg4GNQLoEk5KYKCCKfFOyeXRExcsEu5KU47UPcEm8e7cSSdsRvm4zKkBS2AadeT4IewSde7lLirEO7fEBQzc0SWYBaHAgJJwZTU2MAhlDQ4IMDUwMGY1NRZlZoCYxyaxMSFtR9aqBdsaEmWibkRs2xa1ACLReetgpsRcG4GdrcciZ0iu5M3MbIDq6FiR0ZZmFnAt4+bdNRErd9yYkQDxgqmoobBgYKBBaLSpKGug6VZTYwEkF9yVirWWuLh0Fbo/2IK3RWZZSCdnBqBLXN0WtZJDMDVzA3qQbIwOZGU03SwqwDAKqAYAfspQpC9k5YQAAAAASUVORK5CYII=',
+      'searchUrl': 'https://hrc.contentdm.oclc.org/digital/collection/p15878coll84/search/searchterm/%search_string%',
       'showByDefault': false},
   {   'name': 'iCheckMovies',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIwAAACMAgMAAADTrqmtAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAAAMUExURf///xwcHMImKf////Y3wksAAAABdFJOUwBA5thmAAACVElEQVRYw+3YPXKzQAwG4KTIEXKfHCGF8c6koc8lOEWa9CmyFD4Cp+AS9DQ7ExTD/kkr7U++ceHio/Q8Rq8WG7Q8PNzd8dSVjtfDdOVjJ48V81ItZYs9V8yp0XRdPfQ9mXODeWsw73Vz1rcxum7ODeatwbxLRsFMS3HTA0DFwHH8oK6Y6a2J5bjxJJS7dqW/qBmCWXNGASQn2kvR38+AzOzNNzWI2NaOUsT02IA3H8QMxKy+FDaKkL3YmRlaai9m42AzJGber3liEnINdKwONio1Py4OMmkcgE9bqmo+iEkjw+biIAN1wyKDcXFKZnFxouGRfalo8pELxrgVREaM81UxoVQw6l/MFuLkjeHn6W1MGvkyM3P96oXEmagZbIKRrCA3+9k1McDM/mkoZo6TrsS4b4ZiR+SM0ThyzkwoMjM2jwtkI7v7IjILCmQjc2NQIBuZGgU0kM4YV+wS2yoaF1kwcRVNxejYlmBcsSm0VTQ6bzYf2q9B1oyhLcm4SxYii2YpmQ79YfTk2xKNCx0uW97oooFoIGsWT0b0xPyLGXBj4Wctmo2auWgmwfRJYyWz4NabjHyvM7j1srngESe9P2/tZhLNQJqf8ICTMWSaYs+vpWAUNqR1bgxriz+XDWuLP9+3GGctmZEOiXyWCKWA7wtiY2MykPL5ZxvpGFmZo7jh8xg3fK4T9jLA5kNuBjkOMUoulZ9p14zppa7S/ZdYqqvM89I+TkjDjBJOw/aDKg0j7hkHst+5wz3sf3Mb83wDc2p433JqeG/z2vhupxao+V3TXR2/bieEjYde6F4AAAAASUVORK5CYII=',
@@ -4758,6 +4846,10 @@ var icon_sites_main = [
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJYAAACWAQMAAAAGz+OhAAAABlBMVEUAAAD+VQGq9n6SAAAAAXRSTlMAQObYZgAAAb9JREFUSMfN1k1qxiAQBuAJFtwUvEDBixS8WEGP5lFyhCyzkNgYw0zmZ5FVaZYPfN/7kqgj/OXzCUXZN6zKfmCXtDRo0nyDLi2eVoWl0zZh/TQR4oYdImJYLzximAjJw3jI0i9rLGIaax0u4yHptpVFTNtZxLSDzE9jIRGtUgQate5oGOLQKCSgUeuIRq3zwzZsTNYwgqxTxDQKSWgU0pltGEFW50vR/xeYHaBtN2w1rBgG2pq02bhIq7AoA/DMZuPIbDbOzGbjLq2AUwYQpDWAxC2Pxl3YaCwsjcbC4mgszI/G3OY31OYMC4Ylw7q2xTBvWDQsG9a1LS/N/XOzOsNbSy/fqX/5jcCyZFg0zEtbql5rgdYkW7uJ27U1grEXnLJthOi9laWNEGlXiN7TTtkGIGyGvDg3rhBuM6RY59Wbc61bVgxbX567TRiFOG5VzAAKyXpWQFS/tWePI6NBqDsDJGMOxofV2/zDcJyTNRr7aLsxu1e0gFbQnHE/AFob+m6xPSzeVh/mbyvqTiMuTtN2ZumylVm4rBp3LkawDGvcIJ+2G3e9VVg4rQhzDQ6QT4Nm3EU3ZV9QlX1AgT98fgEn+llzp3SK7QAAAABJRU5ErkJggg==',
       'searchUrl': 'http://www.kinenote.com/main/public/cinema/search_result.aspx?key_search=%search_string%',
       'showByDefault': false},
+  {   'name': 'Kinorium (RU)',
+      'icon': 'https://images.kinorium.com/web/favicon/favicon_120.png',
+      'searchUrl': 'https://en.kinorium.com/search/?q=%search_string%+%year%',
+      'showByDefault': false},
   {   'name': 'KMDb (KR)',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACABAMAAAAxEHz4AAAAGFBMVEVTTL/+/v9HQLuno97Z1/GBfNBnYcc8NLYv8SczAAABz0lEQVRo3u3VsW+jMBTHcctKu/9kw2yRpnPAaW6Nc1HnQi43F9rup+u1/ffvGYnwaAUtW4f3lQyxgY8QComSJEmSJEmSJEn61uksc3FzXojzdpWtUI5f4hiw8v5OP3jfzS+937p2VXV56kb31x/9lgFLoNA5TIdeI36+AnaqX6F+ngU6O3FDwAWkDLBKLTgQEFtPACsaigFa1x+BxI0DC6Dq5oSh0eUQSJ4C7Pgd/CjpKAcqnQ+B9K0mdhyIz5ADhQ4EOAZkj8Qy4K9yDFgDtwNg7z4B0ofDmgE+PkMO7K4xDRjAuB7YAA0DLNIX2txOALGqB+IT5kBInnGYBOwRKHoASBwDTDD/sJkEkj8BOw6YAZCbxVzANhwobYlfc4ADUA2B3D4i/TpwA+w5UCPYxRygiC8jA65A43Ng9KtsnkFjFsBfpmULJPMA/jovkbwA6XugnnwGcTDgFdjRjgNvJWwzDqzYq7Nsj+6HgDnScAx4BQoGqICEAVlAEYHxnzS7GQJxiQM5qo9ApXqAsg0HaqBhQInmPWC3jgGG3fLl6XSvLmhznv+mabvrOlH3mTr3dLq78M3YX5tup+2uK4vRnp0SD0uSJEmSJEmSJH3r/gP8coRX+bDIBAAAAABJRU5ErkJggg==',
       'searchUrl': 'https://www.kmdb.or.kr/db/search/movieSearch?collection=ALL&query=%search_string%+%year%',
@@ -4774,6 +4866,10 @@ var icon_sites_main = [
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgAgMAAACf9p+rAAAACVBMVEX///8AOLifn59X4NuiAAAAvklEQVRIx+3VMYpDMQwE0EHVopMsuk/u46OoFHPKSAgcufhVCITwp7Hlh5Htxvj5PC5yw0fhzjsR7zEAXRM0eiRgV8ADxPHXIKxi5r9BA3pCNJjDDhA2cIEMXbAVgIkrWZBeYAWs2q1B4wLMUc0HoHtwgEEiIRpiwBoQfIEu9Q0+wQfk/g3itjbU6oY4IDbgAOEA4gVo8H60CXWaNCmIA1wZSiZYFJANGsKQBt8QyGlCVn2hBCPu3N/Et8Ov5wlQlnG+tD7IKgAAAABJRU5ErkJggg==',
       'searchUrl': 'https://www.ktuvit.me/search.aspx?q=%search_string_orig%',
       'showByDefault': false},
+  {   'name': 'LaserDisc Database',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGAgMAAAD09RfOAAAADFBMVEX///8AAABpaWmdnZ264cFnAAABnUlEQVRo3u2XMWqEQBiFjYOFhaVHsElv7xEsMnGLLTyCR/AS9imDVY7gJTxPAtEgvGF4/FlHlP2/TuSB7Mens5GiKIqiKE/L67jwsV6bEfhyJoNdqNfrFwu0zsSudOt1hpMKFzHeSXDSw2J7jilaKHESISneyWHxDoPtOZpoZYbJmzMp8Y4FbjDYnuP+pwUnd2cyMy21V0vr09LhwlAtlVdL75tMOMlQS0FNJigMTTZcy0BNFiiMa8nh14+5lgG0/COw9JDAipMEVgQIrCaBybQcGlgpDyw/SWC5PLA5QGCd12QlD6w/e2DDSQI75GBhghwsQgQ2ywOz4sBMkMCsODATIrDJazISBCZ+7yUBDhY8sFgeGAcD4+DBgoOBcTAwDr73OBgYB7VQ3MB80MA45gEtfUAtbmCchGrhgXFygRY8WFw/sFQD+9Vy/cASuzJ6+PRpQfgXDOF/jRH+BUP4yR3hBwuEHywYnsAAcnIPoOW2h5aZTdodtBg66XfQkgXQ0uwRWC4PbJabtE8UWHOdwAZ5YN+MKVIURVEUJTA/mzfhn3x5gqcAAAAASUVORK5CYII=',
+      'searchUrl': 'https://www.lddb.com/search/IMDb/%nott%',
+      'showByDefault': false},
   {   'name': 'Letterboxd',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAA5FBMVEUAAABEVWZAvPQA4FT+gAAKDA9CU2M3RFIpMz4DBAT/gABBUWI+Tl4+TV0lLjcXHSNDWGtKVmL///9DVWdAWmVArd9DaYHjeQ5iyfT++fNGvvNAtu1BmsVCg6VW6YtS6YtDYXY/ZnRDXHAl5Gsg42hCV2U/XWQ5aWM1cmJRWF4fnlwbp1tUYFlaWVkPwFgMxlcE1lUC21RkXFOXaDf/mC/rewr/hQn2/P3z+/xAseVAseRBnstx2Mpm08VBk7xBiq9Cf5+9wG21umRtXk+QZjykazG1byjBcSHAcSHKcxzzfQX3fgRDkLFHAAAAAXRSTlMAQObYZgAAATtJREFUOMuFk2d7gjAUhTkEElBkKGJbtXXvbe3ee/z//1NC8rRSS/Pm4znJSW7u1X6wPYs5lDrM8mxtF9PK45u8Zf6SbZciBXXt1HaGHZi5pRfwBwUzrWc7bIYMmLiHi0zcJIAiE8pDLPyDFd8gqc90FYDT7fe74PhRo8QrZmsegPUmZ3y+DBGOFoQsRiFaN1VdP6/HFo8nvBkJlcmMJMyaZT2hVoozGJ6MnFgPRHKtS+7ANAcVQ3Cy3xF65+xAGspwNBoY8oTj4qEwHBX3dIlPuUGQYeAR4oQ4oi0M7dPtCIa1IbknkitdUgfjz3wXJ2wmc6HPmxdCv+TP9IDg+SPe/zpFb7wkZDnuoVGL5eqtD3ii1MHqcQhOOBiE4LSiyBelVnyW8rtVDaNsOVXTKttePTjq0VMPr3L8vwCrIxmNWEgYQAAAAABJRU5ErkJggg==',
       'searchUrl': 'https://letterboxd.com/imdb/%nott%',
@@ -4782,6 +4878,10 @@ var icon_sites_main = [
       'icon': 'https://lumiere.obs.coe.int/assets/favicon.03b96b55.ico',
       'searchUrl': 'https://lumiere.obs.coe.int/web/search/',
       'mPOST': 'search=search&title=%search_string%&search.x=0&search.y=0',
+      'showByDefault': false},
+  {   'name': 'Media History Digital Library',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQBAMAAADt3eJSAAAAMFBMVEX////d7v/u//+qzO7M3fCIu927zO673e6Iqt3u7v+Zu+6Zu910qt1mmdKZzO7M7v+n2SNhAAAAbElEQVQI12NgYGCZwAAFgTDGcQcFEMWieCXQACwQfD3CKgHEMHUQThVOYuAUFGdgzLrIwMBYc4iBYdcToAyTJVC2xYGBQf81A2MySL9E+kbhVJAmB+2lPavB5ogwS1RCrGCSgVmmAWNwAjUBANCnEycINOX5AAAAAElFTkSuQmCC',
+      'searchUrl': 'https://lantern.mediahist.org/?q="%search_string%"',
       'showByDefault': false},
   {   'name': 'Metacritic',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAMAAACdt4HsAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAAJeUExURefy/+jt/unt+unu/+n0/+n1/+rp5+rq6urr7urs8ert+Ort+urz/+r0/+vn1+vq6evr6+vs8uvt8+vt9uv2/+v3/+zp3+zs7Ozs7uzu8+zx/+zz/+z0/+z1/+z3/+3t7e3u8O3v7+3y/+31/+35/+7s4e7t7e7u7u7u7+71/e73/+/v7+/y7e/y/u/3/+/7//Dt4fDv7/Dw7/Dw8PDy9vDz9/D3//D6//Hv4fHv5vHw7vHw7/Hx8PHx8fHy9vHz9/H0+fH5//H8//H9//Lt3/Lx8/Ly8PLy8vLy8/Ly9PL0+vL3//L8//L9//PouvPquvPqvvPy8fPz8vPz8/Pz9PPz9fP1/PP2/vP3//P4/fP4//P///TryPTryvTy6PTz8vTz8/T08/T09PT2/fT4/vT9//T+//T///XprvX08/X09PX09fX19fX2+vX+//X///bqufbw2fby5/b07vb19fb29vb2+Pb4+fb5//b8//b///f16vf29vf39/f4/Pf4//f5//f6//f7//f8//f+//f///jsuPj4+Pj4+fj4/Pj5+/j5/Pj5/vj6//j+//j///nvyfny2fnzxvnz4/n5+fn5+vn5+/n6//n8/fn8//n+//n///ruv/r43/r6+fr6+vr///v6+/v7+/v99vv9//v+//v///z6+/z7+/z8+/z8/Pz8/fz+//z///39/P39/f39/v3///710v732P789f79/P7+/v7+//7////vt//ztf/zv//0uP/2yf/30f/4zP/40f/42P/87v/97v/99f///v///wIjMP/KAP///9PJig8AAADHdFJOUwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAC4lQUvAAAD00lEQVRYw62X+X/URBjGCxYiKBABWdHCIiiLKCJWUI6CgLJoFWwDKCJCV0q1BJAjHIVwSJdwSVGnaq0yJWqVtWVVoBY5PTrN/lfMvMlustmZbHrMD+/ns7t5vnlnnjfZ9y0hA1wlgwBASFV05ERDYfF05cvJb76wcuurlh1L3zuDkK4kEIsqQlhTVIzsDLoikkJIKiKphGBJOkxI42irYE1oI2SzJKcIUaQoVZVDBEA6KjNAVNZoOvK4BmLx1w1SOzbCAHKsi5AKOeYAFA0jlGDRUKqOtLZYAeu7tn1VSjZ/GgEgVUD+9AMa/kDdLffq3uzyEO4uGzqGJlEuwy5kAMhxyJ8Cmkc9V6j2Q5554leafwR2EQEAxkpcMzHatKThS4E6j/HDzjdqMDbVeMLEziFC/pcnlgbKXcTHpVN68l2Isfx/erSY3E3iqb+YC886gArVNFH14roQ+hxiw8oabNJduC48Nkyoz9DlJ6wune66EKGcXya9I9BnnOUjvDLtOs09CgATxxcc/JGvz3hWPqF9y0Illcq6MOKtIvfnEGY/mHPhyozJYfQ+wsayrAvl9b91hNK7BLhfZzpRYbvwOrFCAvIIf5M5tgvR9f8HGBhAIG/GAJBuCk6A6wVTfNqWtg+xMzABfy4ewh+OC38GAQp34wKu2YDnOfrCTfsJsO2ZAHi8EMDznkd4GADz/QB+8fgJTDULAFYgQEhgqqs5QJj69Z8MlAIHIKwd/7MdGpDhl0YfABn+6ykYIPCSfdsbAMgVvrAafC9HHyCg/EIBAssvBKBI8fQTEEDIA/SDwFQfAOBfziFwCbwE4IXCsYFH6BUBOvIKQUjg/cn+DICyVWEIvCN8bSoARr7qLWaBmVwT5z0CgEVbraIEfptQu8I+xPYX8p6nUASmmNvtuPB7qdVXAgjGO3+u+GLlh/mPdFEC6Nd9ZJq5PtHqG4FdfZP0OH0i65E6+0SAi7tzPVJcw7hxl4gg0m/7FptOr8y69TXE4hNE+juebp3NC9WETxA2it5O1e71v27iEIT6pmbPxOJ06+8W5iC+/0sRln95xDsvVGV3UbTZpvm/6J0XEhoykJrQ0edJK0y7fzJ5FmtMRGPWBRi6otJ28o8Ykf3lP7JWgvwlrwu5qa3V4ow83pmnnZBq39RmGFpCN5x4fPmhoKFr/9vnDEOHTUO0DzGeHbro0LiXkOTTIvmTrWxolGHoirmH6E5tFEB3cWpIyYHbhep775c8dMkFeFxQdUM3NIiqqus01h9rTH62+3tXfGHPieT5o59o9BJdhajpEAdn+B7Yug9mOH/a+PzQFgAAAABJRU5ErkJggg==',
@@ -4816,6 +4916,10 @@ var icon_sites_main = [
       'icon': 'https://mubi.com/apple-touch-icon.png',
       'searchUrl': 'https://mubi.com/search/films?query=%search_string_orig%',
       'showByDefault': false},
+  {   'name': 'MyDramaList (Asia)',
+      'icon': 'https://mydramalist.com/assets/img/apple-touch-icon-iphone.png',
+      'searchUrl': 'https://mydramalist.com/search?q=%search_string%',
+      'showByDefault': false},
   {   'name': 'MyMovieRack',
       'icon': 'https://www.mymovierack.com/sys_images/icon/apple-icon-57x57.png',
       'searchUrl': 'https://www.mymovierack.com/title/topResultFor?q=%tt%',
@@ -4835,6 +4939,10 @@ var icon_sites_main = [
       'showByDefault': false},
   {   'name': 'OFDb (DE)',
       'searchUrl': 'https://www.ofdb.de/view.php?page=suchergebnis&SText=%tt%&Kat=IMDb',
+      'showByDefault': false},
+  {   'name': 'Posteritati',
+      'icon': 'https://posteritati.com/icons/apple-touch-icon.png',
+      'searchUrl': 'https://posteritati.com/search?query=%search_string%',
       'showByDefault': false},
   {   'name': 'ratehouse',
       'icon': 'https://rate.house/favicon-32x32.png',
@@ -4907,10 +5015,22 @@ var icon_sites_main = [
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFQAAABUAQMAAAAmpYKCAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAAAGUExURcIuFP///1hzcc8AAACXSURBVCjP5dHBDcMgDAVQIw4cGYFNwmIVsEFWYoOuwAblyMEqjalSWxEskH7pS+9o+QPcLf7o43QSzguXhatwWxjZWxCOwn5YF7Bpc2lum9mmzK0rW7W5AYXfwkHYL+wS2+a5TWHrOrdqbMCv3dUB2fRGVY+1LnbkBpFsyaj6aej7i2yG+/Pn2HeyJrs+blBki4YMDf45H2h2eZI+A8LwAAAAAElFTkSuQmCC',
       'searchUrl': 'https://unogs.com/?q=%search_string%',
       'showByDefault': false},
+  {   'name': 'VHS Collector',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACAAgMAAAC+UIlYAAAADFBMVEUAAAD5+fmUlJRPT09kaVR8AAACCUlEQVRYw+3VMY6bUBAG4MHIBQVJxREcKQegSMcRUMIA0aKIOhVH8CWQIqWOFKEUe4R3CY6QFKn2ACt5Z8Z+zABau1l3/JKFn/iM3/Dm6cGWLVu23DEjXklFoL8GSgI/T1fyj8APuJIPbwN2w/CHrv9/05cjXWUUDhx3BogFl1sHiBmXXdPoL3LOIDyDpDEgvhQpABCrOfAPqC6gJ0ogVxAiPtBbeL6AEZFBqyBCdECZg07BAQswIBE/KqBPbgB5pPr7TAFitwAZgeMEdvILBancQAXBAuz5iSG6CcSIzgAuqiUArwIa57AzINK/UBCUM5AZwDcaCKoZaC2gqmqI56C2IORxVMwmWS5AAVE9A9gZIA2xNyAgUDoF0hBpo2CHLB4V8HqnuQJAEW4GDq0Bo4jGA2mIxIIUJc4DboixMyA+g84DXm8L/JZvDOj6zIJIQOEBNwQeYbWzSg/ItwsQ/mLhQYz4BZ0BLHouQ8FnBAbfh8Gv5CcCRwFy51vJF44HoQJuiK8EIplYT0AyKmBc8fui1KMH6RwUAB95Dm4CkQIQYKqQxAb0MrM1cB6MrwDwIEFsViDC0oJ8BfZYecAFtitwwHoC6QrIzHMLuiV4ZzoK9gvQowQmILt11dW1gnhRRSLgUUGweA+ybA+gIDydnsDk/YkCAu5/JN08Fm8erLeP5i1btmy5X14AdyCxIih+5IwAAAAASUVORK5CYII=',
+      'searchUrl': 'https://vhscollector.com/artwork?search_api_title=%search_string%',
+      'showByDefault': false},
   {   'name': 'Wikipedia',
       'searchUrl': 'https://en.wikipedia.org/w/index.php?search=%search_string%&go=Go'},
   {   'name': 'WhatsOnMubi',
       'searchUrl': 'https://whatsonmubi.com/?q=%search_string%',
+      'showByDefault': false},
+  {   'name': 'WorldCat',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACABAMAAAAxEHz4AAAAMFBMVEUAAACpMG8gebU+mjxgSJT1gh/6+fjc5OfuzcityMv5rGt0tnOZaqGilMHQjrBcncm6xbD9AAAAAXRSTlMAQObYZgAABQ9JREFUaN7VmE3ITFEYx8/qzFDUbLCYLGZBVha3SLaTj2I5yOr4mmF8XV+vrzCKl5WESBIblK0iWSn5KAsLkaLYyELSuyA789479/3dM88557pmw2/l7e38Pc///5znnl71X6A7h65+SHh39Yopf/zQ9SdNeFZSQR9+37R5o8qwLTsOq8uUcKzp4Ly32nZbWWjO51nmO3+jsfCnEeclyz0Cext9fijY2XSz0lPAxKTAAkqoPCknsLuREE8JXmqWE9ibCswraAAPZAcJ87OfRQMFKehGygKVsqPppecUqAwEFroLKJ7EbVTgcqD4Lmxs4IErglUv+zT7vA2MESlU7MMfroy1EzoHx5R3jFLSm7I53/NbcSgQQiN16DXnXwjPwiGYRI7zzzkfZJoVwg7Gtvg8N4EQTk3ZV3BepviDKSq3/y7kQ6gEhq4oRcMY2gXoyRloh1IkBKYgK6C99dzXWp/6tzPGnyIhZHO8YvDLby9rU9S/mNBVmmd5+DSt7lPN4rkJpPjD8jBOh6I2xFzjTJEQppEBBRQo7M0L7LR2X7Umee4ViPODvCzrQPLZMUeMwX5rCva4BOqxspnIj8Epa3merLmYPTyICLAMDAKS2CmwID8GqwwtSOb4Pwo6S1ElbKi5Ma5Jnp/8wCATo2SWV6DKGDBIBSVU8ldhGmMQ7OGzT2AnV4kS6t++nD14Nr3U2OgW2DG8TfS5b2fag38eF0lKgRkDgVfKxS4Envo8CL/mjtODJwXNNnChGU3jFlCXwhu5Sg6e58nO8CeB4Z7tuUz6NQUES6gb92dBdZ40VwU+6cymEQtlYFybd0Qwys9ipX1Xf4LGBOcDJ/CaN/Rgr+fdfNr8HGm17hr7fsW8L9jrPra2+qyxc/jIJBX3cLo1SRr0Y64DORb0oFsJt9m0wkW+ji66qcA6TBAuhkvY0koxlgkGEzLmG58FKT3LhJ5lQsplvwA5nMRFTMiaGPMKSBNmKSYBhdjnASbMFFtJN2CB8aSACVVioIecwph7DpgE7Vlr+BA2gfvUE48MuvCYsN7kY/gsnnqE6TPBuGNQ2iphvt+EniMGSmCkg6NEDAr03ryCywQEiEGBHYScpunEYAvAiaBAVeSIAD4GBDQ58n2q2387qUyE9sItkWNioj4aLb1isiTkbsuWOTHExDC51I5Gfe6rAZ3h7brtXvTQ2DH0ciaMK31vUmCpYRosC3TU54E9izdZCf3buD1KWIzCRH6xbUp+G0/liID+lF6FfVEKw9+ZaPwyFECHVS704PE1rpS6F6UsjZW0LatviRCAKGOJDC4xCIuCAqlVgAOYUCSADRRQJIAHSaH2IhuMCAJdhwApYCS3k98YOQd5n91G6osom+FJBB1ZCnShaSBaJD+P0ml8kKWdTxS5jcJqSG8m/z8d5PeBTSeyeXT14MGrjyKRbze/kYSPXriqW6QAdvvgKmHBGiXo3AsXQAfMkc224gLUgRYbTYLnwHCRgQyh2IZ46IWyVjmp+GxYzEdBWBC0AQexUA5yscKYIkMsKFYgAQpgCrwKwocHhgJkB8UD9YCPWrgDFC46z29tFXQA+vBUEY/Se00DjGGBxLVH/fQepsdpgJtYTLuPAhpgispQoQEsLIE+PWIB3dYIBWBA+QJIcLQCqq0c46o8W1qwzozYQazKo0dwEAEaGEmgp0YTuKOgrIk0MEKM4+ov6ZLAKD3QQHm63IG/Q5+9e3dc/dP8BpiVd1yLonswAAAAAElFTkSuQmCC',
+      'searchUrl': 'https://www.worldcat.org/search?q=kw:%search_string%+%year%&fq=x0:video',
+      'showByDefault': false},
+  {   'name': 'Yahoo! Japan - Movies (JP)',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABAAQMAAACQp+OdAAAABlBMVEUAAAD/ADOkL+w0AAAAAXRSTlMAQObYZgAAAJNJREFUKM/N0DEOwyAMBdCPGFgqcQQuEjXX6hZ6M46C1Au4UxkQ7k+Qh1bKHk/P/n8yrjabav5F1GLZAV7XukOAVNl7D5aEvacSDa45InR4cYx8Ryie4BIzN0CR4Bux5QVh4oEgxFpkIr0qYiXipyAWImg2MM6EH4ZO4B93w2K4GXAKl3eEAS/zDf2AU6JONFRcZL68HUrWMWSBQwAAAABJRU5ErkJggg==',
+      'searchUrl': 'https://movies.yahoo.co.jp/find/?query=%search_string%',
       'showByDefault': false},
   {   'name': 'YouTube',
       'icon': 'https://www.youtube.com/s/desktop/640aba68/img/favicon_32.png',
@@ -5735,15 +5855,15 @@ function addIconBar(movie_id, movie_title, movie_title_orig) {
   $.each(icon_sites, async function(index, site) {
     if (site['show']) {
       var search_url = ('mPOST' in site) ? site['searchUrl'] : await replaceSearchUrlParams(site, movie_id, movie_title, movie_title_orig);
-      var image = getFavicon(site);
-      var html = $('<span />').append("&nbsp;").attr('style', 'font-size: 11px;').append($('<a />').attr('href', search_url).attr('target', '_blank').attr('rel', 'noreferrer').addClass('iconbar_icon').append(image));
+      var image = getFavicon(site).css('margin', '2px 2px 2px');
+      var html = $('<a />').attr('href', search_url).attr('target', '_blank').attr('rel', 'noreferrer').addClass('iconbar_icon').append(image);
+
       // Link and add Form element for POST method.
       if ('mPOST' in site) {
         var form_name = site['name'] + '-iconform';
             form_name = form_name.replace(/\s|\.|\(|\)/g, '-');
         var placebo_url = new URL(site['searchUrl']).origin;
-        html = $('<span />').append("&nbsp;").attr('style', 'font-size: 11px;').append($('<a />').attr('href', placebo_url).attr('onclick', "$('#" + form_name + "').submit(); return false;").attr('target', '_blank').attr('rel', 'noreferrer').addClass('iconbar_icon').append(image));
-
+        html = $('<a />').attr('href', placebo_url).attr('onclick', "$('#" + form_name + "').submit(); return false;").attr('target', '_blank').attr('rel', 'noreferrer').addClass('iconbar_icon').append(image);
         var post_data = await replaceSearchUrlParams(site, movie_id, movie_title, movie_title_orig);
         var data = (post_data.match('{')) ? post_data : '{"' + post_data.replace(/&/g, '","').replace(/=/g, '":"').replace(/\+/g, ' ') + '"}';
         var addform = $('<form></form>');
@@ -9745,6 +9865,11 @@ const traktCodePage = Boolean(location.href.match(/tt0052077\/reference\?code=/)
 //==============================================================================
 
 function startObserver() {
+  // Double check if still on a redesigned page. Possible fix for a rare bug when the script runs before page transfers to a reference page if set on imdb's settings.
+  if ($('html[xmlns\\:og="http://ogp.me/ns#"]').length) {
+    return;
+  }
+
   if ($('.ipc-page-section').length) {
     addDummyElem();
     const obscfg = { childList: true};
