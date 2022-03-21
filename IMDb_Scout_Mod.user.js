@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      16.2
+// @version      16.2.1
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from hundreds various sites. Adds movies/series to Radarr/Sonarr. Adds external ratings from Metacritic, Rotten Tomatoes, Letterboxd, Douban, Allocine. Media Server indicators for Plex, Jellyfin, Emby. Dark theme/style for Reference View. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAMFBMVEUAAAD/AAAcAAA1AABEAABVAAC3AADnAAD2AACFAAClAABlAAB3AADHAACVAADYAABCnXhrAAAD10lEQVRIx73TV4xMURgH8H/OnRmZWe3T7h2sOWaNXu7oJRg9UccuHgTRBatMtAgSg+gJu9q+kFmihcQoD8qLTkK0CIkoy0YJITsRD0rCKTHFrnkSv5e5c88/53znO+fiPwvsvrN038cPNqrG9pJmHkRVnPcpaTlHJY60cfPSpsrzl1LKihrmLvxhCM2i3OHvDx0d+H7e3F6JBv5iZMiJfhFTfPYDMHrMImpwimWWUdSgDQkbno7fFpUPVgh+pHFbZR4SovSctDCM9Hac9IKd9rO8EevtBCkXgY5IMmgquwypP7qqfcp/Tp4KLONDVsWh3RSBB2rnZfit69ocUdqLn2prrRZYM0Jg4JibamKsqe7gfEh5GOAfeYJjVHIPZvil97rcXkMog30byWRwXYRWoxHbzNFHJJpAarO8NdEBBsdCaP3WMJltTmQd4zlnekTq9Z5dgACwAlrpK4BxdV5mvLuspRgMSHbCIFF0iS8MZ5S8oYBYKY7rByC4dDM9uSIUmPOIwxgQBoYeF93auP4qFyPbIVXziWeGTH1EFM57kJo2hqQju6BwIyRf6RmCjdT4JOdiwNgiH/PPD3qoqlsNaXRd+fKtFfECxlZVNVF9SOsgTZEr2TUjJJbyeNX1IZrKIbyGlBABfpQPv2UDrly13LkJXDVhpQ5MhtGwcyF4HKjlU4E8xwB0AvDjd6AGmevZ87EcQRHgcO52e9uNsYELOrAa/Yh81YlmYLQJ5HWyq0+kzQ/DQKEusg6CRI27ryy8nReRS0wsoetkmRwogHSprliCckfEjXG9yAQc74J0WB99vu6DF3i3pMucsXM6tpBbxd2mVJAwXwGogNRBvGRA4jtHKTXkAIwLGCR/mT4Lh75oneQXXP9sAYfGRDCsnw7pX/jRZkU3M44kjw2l5zRIzb4CbZ8dULdL6wbNPZOpK0B6gN1UR1mdoxAaL/GrWiLPL3SEwW9YMTU/d64BtLahAVyucWhj9Mm8ign9IfQaBtd2/GbvCAEBpG5eMcrj2I0ktpKLeaqXQ3Pst42KGIshpdTmQLAeTgFGJ2wvh+tayMOR0n1RZ8B9z13vnOPBnsBq4E1ffgZpPFZHWVpO2cvhjYpOcbBd5TlhpDu5zq9mHGZcVi0y+VFkcFkDdyKJfTt99wEyHSEzDM90KH0nexpwZHJHKYYhjzlwGe0pP/IKfxociaEb7YDbi6KGJY1R2cR76E6NAtXqY4pPH3plLcl8LD7V+cOLUbUWRFZRPTAbVZO3mxK18Xc1ZaAiS8ARJXpZliXAomR94siiiMx8ZBOkXGTlnH0F/9ov1xPtWwEqP9wAAAAASUVORK5CYII=
@@ -1036,7 +1036,7 @@
             Removed: T2K, TMV.
 
 16.2    -   Fixed: The icons bar wasn't smooth if icons occupied the few lines.
-            Fixed: Script running on anon.to urls with imdb url (anonymous redirect website).
+            Fixed: Script was running on anon.to urls with imdb url (anonymous redirect website).
             Possible fix for a rare bug when the script runs before page transfers to a reference page if set on imdb's settings.
             Added other sites/tools: MRI, Voidtools ES: URL protocol.
             Added the icon sites:
@@ -1044,6 +1044,9 @@
             Eiga chirashi (JP), FFF Movie Posters, Filmový přehled (CZ), Google Scholar, HRC - Movie Posters Collection,
             Heritage Auctions - Movie Posters, Kinorium (RU), LaserDisc Database, Media History Digital Library,
             MyDramaList (Asia), Posteritati, VHS Collector, WorldCat, Yahoo! Japan - Movies (JP).
+
+16.2.1  -   Added: Pahe, Nyaa, Filmboards.
+            Updated: Movie-Censorship.
 
 */
 //==============================================================================
@@ -1428,6 +1431,12 @@ var public_sites = [
       'searchUrl': 'https://nnmclub.to/forum/tracker.php?f[]=658&f[]=232&f[]=1221&f[]=1220&f[]=768&f[]=1300&f[]=922&f[]=770&f[]=1320&f[]=780&f[]=781&f[]=1322&f[]=769&f[]=706&f[]=577&f[]=894&f[]=578&f[]=580&f[]=579&f[]=953&f[]=581&f[]=806&f[]=714&f[]=761&f[]=809&f[]=924&f[]=812&f[]=591&f[]=588&f[]=589&f[]=598&f[]=652&f[]=593&f[]=587&f[]=584&f[]=586&f[]=585&f[]=596&f[]=614&f[]=623&f[]=622&f[]=621&f[]=632&f[]=627&f[]=626&f[]=625&f[]=644&f[]=635&f[]=634&f[]=638&f[]=646&nm=%search_string_orig%+%year%',
       'matchRegex': 'Не найдено',
       'TV': true},
+  {   'name': 'Nyaa',
+      'icon': 'https://nyaa.si/static/favicon.png',
+      'searchUrl': 'https://nyaa.si/?q=%search_string%',
+      'loggedOutRegex': /Cloudflare|Ray ID|the security check/,
+      'matchRegex': /No results found/,
+      'both': true},
   {   'name': 'oMgWtFtrackr',
       'searchUrl': 'https://omg.wtftrackr.xyz/torrents.php?searchstr=%search_string_orig%+%year%',
       'loggedOutRegex': /Cloudflare|Ray ID|Remember me/,
@@ -1437,6 +1446,12 @@ var public_sites = [
       'loggedOutRegex': /Cloudflare|Ray ID|Remember me/,
       'matchRegex': /Your search did not match/,
       'TV': true},
+  {   'name': 'Pahe',
+      'icon': 'https://pahe.li/wp-content/uploads/2017/12/favicon.ico',
+      'searchUrl': 'https://pahe.li/?s=%tt%',
+      'loggedOutRegex': /Cloudflare|Ray ID|the security check/,
+      'matchRegex': /Please try again/,
+      'both': true},
   {   'name': 'Partis',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEYAAABGAgMAAAAMQAoXAAAACVBMVEUAAAB1dnbkmQdwRkMRAAAAAXRSTlMAQObYZgAAANZJREFUOMvN0sENhCAQBdAPWS/cbYIqLIFNoB9K4Wimyl1AYXDUeNv9xxfnO07Er/KSNJ3QIkg5SV5SkF3hWDaH4I7PfDNSlnFSFfJD0xUtosrLKnekd57TkW3l6zcmRku9xMoIqrzPdvLbVW1s5DYyidGr0sqoRlM/3zWB4iWpTjbdkGu0b3FLhvZDn5AXNHXqi7X6G0JYBM2FNECNJle6OalCFroTyhYEy2iuJyWi4bc3RJzgAJtl7ZTnchInI4lKoiSIwQRRjzG2CzuyyDMyj0jjj/IBZ05ftNQK2woAAAAASUVORK5CYII=',
       'searchUrl': 'https://www.partis.si/?p=search',
@@ -4791,6 +4806,10 @@ var icon_sites_main = [
       'icon': 'https://www.filmaffinity.com/favicon.png',
       'searchUrl': 'https://www.filmaffinity.com/en/advsearch.php?stext=%search_string%&stype[]=title&fromyear=%year%&toyear=%year%',
       'showByDefault': false},
+  {   'name': 'Filmboards',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgBAMAAAAQtmoLAAAALVBMVEX///8yMjJdXV06OjppaWkCAgJiYmJDQ0NYWFhLS0tSUlIfHx/MzMyRkZHo6OgDkeZ1AAAFEElEQVRYw+2Wyw/MUBTGT8SGIBmT8RoLKkaxqoaJ2FgwG7EY3IgMm8lkNhJBI82woRtVsRCRam08Ijq18SphRESChUdI2CE2bIS/wTm9r5qaiIXHwtfXPY9fv3s7M83Ahl/UHwNaKtFT5+JAdwElBaBAPSpz0KKop7BeS5Z7nGrxE1Ul0MOdDr23ihHWiiHwFO661usj0qOIlPMY9DfkKejnavGLCiYLWrn6/CKDyfojDr8o6Ha7/W6/31XiQb/RaOBRFvQpTw16o1a8CSZ/sAG20u3oIg9uoAvFgxzKCJ4nImAYRqNrCDUMo09nVJeOLs/SLgWiSNJYSV2VhnJxMquByforgJdvRh9lGJ5Ju2ngroaYFRvFwCsNM3TdQYIJgg1OyjHiqt8A06TofMZQnVUe6nSWZfMMz6PKgQy1xhOiVvB80/OWMK45puk1DuBgCwJYaazOswYOTcM36R7ge75vZuzG5s2bNxyZn3h+enY0Gl1PTSok60aoBQn2UoicDz5ed7MTH4C0cbu5gp37+vXro7aBheVs/VfUm+2mr0SAWbsHXFgK2CIcPGr7HKBsCTjeeSCAjQQcJqBDPccEsPV7wKvtBO1wTDhw4CXP+loQ+EcxrRx87UCV9QJIAgwT3H1IgpXsg3YIpIOfJIkEtmIvxcRAklzaAaQZr9+92LQ9EIvurAgChBWAk0lQaQDphQO78v4aY2xVkkqHIE1T7RBEUeynJEiHtRyYwlDzMCMcvgOWjRjrzPU5cInlD+kz9o8QGMopESCeUjtjpLs5kAjgI2ZmBwQcVg6XhQPe/mB6lrEzBFhr+nso+wl/DyfnK4f2d8DNFwCzHrPbmITsKoB+qj922Maf+5NOTMD9ArBVORSBV/Kbs3RHCdAOqQZeyPo0Fn8PbBSAdngJRc3K7pYcYjmlNI5j4VBsGAeGw8vC4dgQx+PA504M7r76QhpPrdfrzcEwjoTDMIqiUADPF995D3kTOwjpabaTL4ixBdh1WQDHELjIgYdY6uSrmcHuQnyoAEQo+ZRwqD441H2xaoiiTABxRJJrGGqHN51oWNsGpNM7IIo5MF0Cag3aYeswOtsWP8kCEOUKi4uW39ZhdIU94GwBGHCiMKVT0iGKTgqgrdegHMpAGwFpVnKQQFR0UMCjyQ7RJIcwUg4oN5SLjtywAAxKADm4hEiHMAxdBYThWbXowUA6rB24JDkltNOAe5Z94D8AcAfSIcz7T4kpUaSBwQH+tlu9AwG1BjfXj4Ao5C+vWdmdgoMrgMMKkCvtjDK2l0Yz2VztIACn4ODob2v7g2gqOZwqA0+x/z0AT4PrCofSlBQAz96KF82l7a4AtIMjAFcCWrQEt+DQlGtQwL4x4ClmwdEOTZJywHAMmJHdcBxoNqWD7ZBsATgYCkAbYB1sPSXbsfFgiwRg2/v457CBv4u/sBuYA8euzzNQy65h1MRDroHGo/1Uym7R2/55hgbkYLsHGKrt2k4TiX1iStju4PpYrs4gOsTYbRsFeCMOODbJkQ4Oxc0cqGRMdwCdKqiqzbUPAe5AiEUl2xph/zXXVoDdpAULqUXrCoF40UBRlnQoaSJw+PcCP5+SNSYJWBMEtmXZVZS8qCnlgUXp/CQF1TFVKnX8I3mtohNjDpZIVHDLLzZ9rlvzvuJtFICNpCpuKIyqNfpYMRSiuo6qkOes76tVi3doaQZKKS26jyWGec3SQFllD+kwUf+Bfxn4BqrPs4posMpbAAAAAElFTkSuQmCC',
+      'searchUrl': 'https://filmboards.com/board/1%nott%/',
+      'showByDefault': false},
   {   'name': 'FilmKatalogus (HU)',
       'searchUrl': 'https://www.filmkatalogus.hu/kereses',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABAAgMAAADXB5lNAAAACVBMVEUAAABmq+s2N2ioz71FAAAAAXRSTlMAQObYZgAAAJhJREFUOMvd1DEOwyAMhWHPPUrv4ww5Avdh74JU/lMWqDBxUNNmyFIPSP6E9AwSiIBagcjNw0PuHp4z4AGDAGkLK6UaZA0VQoPSdKBWHLDsYd1DGIBioGiNNcgKA3JZjyF9gho7oDSXwBT7MwBxQDt8JRudd6Ueu5wHncBSTo7+N7d+CLoF5drRo59j9dA2d/j6sufPQDzIC/gi6JgsG1QlAAAAAElFTkSuQmCC',
@@ -4889,7 +4908,7 @@ var icon_sites_main = [
       'showByDefault': false},
   {   'name': 'Movie-Censorship',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAIAAAD8GO2jAAAAB3RJTUUH5AoDEjQAvYzAkgAABHxJREFUSMftVU1sE1cQfru209ACSQ9pK4HUSBFcoBERlzYVbQNqD4AQ7blRe0BqSISEaCWQ2qTcilo5OLEd2/k1IaUQBxCiCEcYK06kNiiFUCfkp0pShO3E+XHW9nrX6/X+dN57seum1/aW1Wj1dmbe972ZNzOLpP/5QVsEWwT/CUEanlSKigjvdHqTE3YQhA2rKEj/NouiSK3YQQSNlANBYM3Isqrreclks4UcsAE0eWtW1/8BLgiAlS3YLmta7lAYBAF6Mhab8Xgm3G6QoNu9+uKFBBxwEIIOm+PR6MzAALUuBAICNZGwFOBTlNDo6MQVvH2yry8SDPIQDXiQgyJd14fPnfseoVaEWhBqRmig5oM1bh2Chv1yNrsUDF7du4daW4jblKdfUVWB54H7T5/vZk2N86Wi1py1Y+eO3vJyT3V1aHJSlGWUkaQ5v7+v8i2HyeQqwgJOQ02NKVWFnEqZzK1DhywIuUxGMLUZDQOffLy0uJgRRVnXn1gsNpa1IuRAyE7EhlAbETiot66OV1WU4jhI3MMzZyiKg2XaGKajtHRhfFxWlD/u3IH9LqPBwSCnAWMNNZsTsgwRzHnvAxz4O40G1/ZXvOfP/+p236391GEwOI1GR1FR7949S+EwEuJxRVH8p+ssFAhhIAji3uefpXT97tGjrUSD9SyDCS5d4mUZbu72kcNgai8yAc3PdV9E0um4KCY07ZHDAZrLCPXu2xcJhTCBqmn++tM5AgYOCzG6thXfP3WqvbjYwWBNIYGgadHZ2c6SnW2EG+CGra2cIIjJJFxbSlF+v3Hdd/HiRCDAJZObCdpIQqnQ5OY1eYKUpk15vVRP8+b/timekaEJaOGmNY1XlATPC6lUnqAegup8tXTg5Em8k8HiZFmnyXjjow83UkTvAFIEBD7fRlhE2f/+e2sQAc+T6k/DAsoXJPV3BA31FlJhY16ve/cuqAe4Ooj9p3erhzs6KCVoCMF3SUVZWpjveeN1O8NAWE6GsRvYMXePpOv5rhy328aazeuxGLnkbJYSQDnPTk/7v/qylVQUwI24XI/7PbYCgoDZnIBEaJqvHm+B2nWyOI3tO7Y/sloBkYtGf2lqAlPXa2URXEUcB702dPZsC8u6Xt42+/RpeGGho6QECrynvPz56uposxnWtA9g8eDCBYgAKFYWF69VHYDmchlYpwGXH5zjakXFld27Wsj6QWPjMsch6NVxm62zrMxKbtVdUfF8airwzdc/4NqwTgcCdqKnTURlfmQkC2Mgk4nMz3mOHLbmHOy5bu8ufzPQYgmvriUTCSSr6mBtrXv//msHD/ZVVfVWVk4ODq4sL//W1RWORMLPnt0+dgz0P2I5cP2dt+81NIRmZoAAz05ZjsXjY93dt44fBwdwu3niRMByeTYYXOV5PpHAswiPLFWF76X1dZDlZBKKV4BS03XwAQjo2yjHUSssYjCYc7M2TQe1psHkAhPISiLBSRJPRnfB/wAqDBCJ4AWZ5ngOEwxxk5U6FP4MCkz0LRU4bP2Ttwi2CCTpLw+PfGOkBCRRAAAAAElFTkSuQmCC',
-      'searchUrl': 'https://www.movie-censorship.com/list.php?s=%search_string%',
+      'searchUrl': 'https://www.google.com/search?q="%search_string%"+site:www.movie-censorship.com',
       'showByDefault': false},
   {   'name': 'MovieBuff',
       'searchUrl': 'https://www.moviebuff.com/search?q=%search_string_orig%',
