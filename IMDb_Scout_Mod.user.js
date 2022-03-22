@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      16.2.1
+// @version      17.0
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from hundreds various sites. Adds movies/series to Radarr/Sonarr. Adds external ratings from Metacritic, Rotten Tomatoes, Letterboxd, Douban, Allocine. Media Server indicators for Plex, Jellyfin, Emby. Dark theme/style for Reference View. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAMFBMVEUAAAD/AAAcAAA1AABEAABVAAC3AADnAAD2AACFAAClAABlAAB3AADHAACVAADYAABCnXhrAAAD10lEQVRIx73TV4xMURgH8H/OnRmZWe3T7h2sOWaNXu7oJRg9UccuHgTRBatMtAgSg+gJu9q+kFmihcQoD8qLTkK0CIkoy0YJITsRD0rCKTHFrnkSv5e5c88/53znO+fiPwvsvrN038cPNqrG9pJmHkRVnPcpaTlHJY60cfPSpsrzl1LKihrmLvxhCM2i3OHvDx0d+H7e3F6JBv5iZMiJfhFTfPYDMHrMImpwimWWUdSgDQkbno7fFpUPVgh+pHFbZR4SovSctDCM9Hac9IKd9rO8EevtBCkXgY5IMmgquwypP7qqfcp/Tp4KLONDVsWh3RSBB2rnZfit69ocUdqLn2prrRZYM0Jg4JibamKsqe7gfEh5GOAfeYJjVHIPZvil97rcXkMog30byWRwXYRWoxHbzNFHJJpAarO8NdEBBsdCaP3WMJltTmQd4zlnekTq9Z5dgACwAlrpK4BxdV5mvLuspRgMSHbCIFF0iS8MZ5S8oYBYKY7rByC4dDM9uSIUmPOIwxgQBoYeF93auP4qFyPbIVXziWeGTH1EFM57kJo2hqQju6BwIyRf6RmCjdT4JOdiwNgiH/PPD3qoqlsNaXRd+fKtFfECxlZVNVF9SOsgTZEr2TUjJJbyeNX1IZrKIbyGlBABfpQPv2UDrly13LkJXDVhpQ5MhtGwcyF4HKjlU4E8xwB0AvDjd6AGmevZ87EcQRHgcO52e9uNsYELOrAa/Yh81YlmYLQJ5HWyq0+kzQ/DQKEusg6CRI27ryy8nReRS0wsoetkmRwogHSprliCckfEjXG9yAQc74J0WB99vu6DF3i3pMucsXM6tpBbxd2mVJAwXwGogNRBvGRA4jtHKTXkAIwLGCR/mT4Lh75oneQXXP9sAYfGRDCsnw7pX/jRZkU3M44kjw2l5zRIzb4CbZ8dULdL6wbNPZOpK0B6gN1UR1mdoxAaL/GrWiLPL3SEwW9YMTU/d64BtLahAVyucWhj9Mm8ign9IfQaBtd2/GbvCAEBpG5eMcrj2I0ktpKLeaqXQ3Pst42KGIshpdTmQLAeTgFGJ2wvh+tayMOR0n1RZ8B9z13vnOPBnsBq4E1ffgZpPFZHWVpO2cvhjYpOcbBd5TlhpDu5zq9mHGZcVi0y+VFkcFkDdyKJfTt99wEyHSEzDM90KH0nexpwZHJHKYYhjzlwGe0pP/IKfxociaEb7YDbi6KGJY1R2cR76E6NAtXqY4pPH3plLcl8LD7V+cOLUbUWRFZRPTAbVZO3mxK18Xc1ZaAiS8ARJXpZliXAomR94siiiMx8ZBOkXGTlnH0F/9ov1xPtWwEqP9wAAAAASUVORK5CYII=
@@ -1047,6 +1047,10 @@
 
 16.2.1  -   Added: Pahe, Nyaa, Filmboards.
             Updated: Movie-Censorship.
+
+17.0    -   Updated script to work with new IMDb layout changes.
+            Removed MutationObserver (probably not needed anymore).
+            Added: TV Guide, EpisodeCalendar.
 
 */
 //==============================================================================
@@ -4794,6 +4798,10 @@ var icon_sites_main = [
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgBAMAAACBVGfHAAAAKlBMVEUAAACCwkqCwkqCwkqCwkqCwkqCwkqCwkqCwkqCwkqCwkqCwkqCwkqCwkq8qML+AAAADXRSTlMA5zcNeWQltsmMU9Wbyr8SygAAALhJREFUKM9jgAIWBwZUoCiEymfrvZGAImBz9+5hFIHYu3evIvOZZO/evaiAJGB+FwiKkQR8QQJXUHVA9CB0oOqJBfMR9rDthQjchrmN8y4UTID5AyYA889cmMBNqBGyMIGLEENY7sIBJFAsEALNYAFdhMAlhLOQneaLELiCXWAtQuAWWCARISCE8DxyALAiBALAAsy1MP51Axy+5ZKF+i0AFmSrIQK7EDE7EcSXSUCKBw/Zi52QWAAAlBTMPY2+wdQAAAAASUVORK5CYII=',
       'searchUrl': 'https://eksisozluk.com/?q=%search_string_orig%',
       'showByDefault': false},
+  {   'name': 'EpisodeCalendar',
+      'icon': 'https://episodecalendar.com/favicon.png',
+      'searchUrl': 'https://episodecalendar.com/en/shows?q[name_cont]=%search_string%',
+      'showByDefault': false},
   {   'name': 'Facebook',
       'icon': 'data:image/png;base64,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',
       'searchUrl': 'https://www.facebook.com/search/pages/?q=%search_string_orig%',
@@ -5022,6 +5030,10 @@ var icon_sites_main = [
       'searchUrl': 'https://tubitv.com/search/%search_string_orig%',
       'spaceEncode': ' ',
       'showByDefault': false},
+  {   'name': 'TV Guide',
+      'icon': 'https://www.tvguide.com/a/www/img/favicon_32.png',
+      'searchUrl': 'https://www.google.com/search?q=%search_string%+site:tvguide.com',
+      'showByDefault': false},
   {   'name': 'TVmaze',
       'icon': 'https://static.tvmaze.com/images/favico/favicon-96x96.png',
       'searchUrl': 'https://www.tvmaze.com/search?q=%search_string%',
@@ -5039,6 +5051,7 @@ var icon_sites_main = [
       'searchUrl': 'https://vhscollector.com/artwork?search_api_title=%search_string%',
       'showByDefault': false},
   {   'name': 'Wikipedia',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwBAMAAAClLOS0AAAAGFBMVEUAAAD+/v4FBQVFRUXQ0NBvb2+Ojo6vr6/DA8rxAAAAAXRSTlMAQObYZgAAAUpJREFUOMu9lE1ugzAQhdMbdMJP1pkEvMahBzBRugf1AqCoe+j9pc7Mk1OBQJWqKrMwY39+8zQYvJN4oUW87ixoJVb3Rw2tBgRrkj8A2ojngIvGW6Jj/fVIBdw8M98PHXMxvns+WXrXUhnzkejA3BNddci5gofXhDpuiZKCdE8AmAxcVdfUJIqSADJ2Nsp8GElkNYBITzKmninVhKYWQE2CmfSZs+kYwWAmDR8beUIGkPDZTArbm7sHyGAiLepsXwFgCVZnK9wDYKmFiU5EDYAls7K+ywhsqYRVkPwYAVo0nVZs2gg07NX6iWsZQwSxxbSQimjvB+zZSfFUTLLzDORiMvXkuUd7ADAJF7WvhjAHHX86OxPBM9AwV3bwbgES5hHHvwAp3uzE/QKQdxCGBcBBU17QEtyw9ePXj/o/f84Nk80rY/uS2byWvgGb7GoMA0DhoQAAAABJRU5ErkJggg==',
       'searchUrl': 'https://en.wikipedia.org/w/index.php?search=%search_string%&go=Go'},
   {   'name': 'WhatsOnMubi',
       'searchUrl': 'https://whatsonmubi.com/?q=%search_string%',
@@ -5843,7 +5856,7 @@ function displayButton() {
   if (onSearchPage) {
     $('#sidebar').prepend(p);
   } else if ($('.ipc-page-section').length) {
-    $('.ipc-page-section:eq(0)').children('div:eq(1)').append(p);
+    $('.ipc-page-section:eq(0)').before(p);
   // reference
   } else if ($('.titlereference-header').length) {
     $('.titlereference-header').append(p);
@@ -5978,7 +5991,7 @@ function getIconsLinkArea() {
   if ($('#imdbscout_iconsheader').length) {
     return $('#imdbscout_iconsheader');
   }
-  const pad = onReferencePage ? '0px 0px 0px 0px' : '0px 0px 4px 22px';
+  const pad = onReferencePage ? '0px 0px 0px 0px' : '0px 0px 0px 0px';
   var p = $('<p />').attr('id', 'imdbscout_iconsheader').css({
     'padding': pad,
     'margin-left': '0px',
@@ -5987,8 +6000,10 @@ function getIconsLinkArea() {
     'margin-bottom': '0px',
     'overflow': 'hidden',
   });
+  const hr = $('<hr />').css({'margin-top':'7px', 'margin-bottom':'7px', 'color':'#0d0d0d' });
   if ($('.ipc-page-section').length) {
-    $('.ipc-page-section:eq(0)').children('div:eq(0)').after(p);
+    $('#scout_rating_table').after(hr);
+    $('.ipc-page-section:eq(0)').before(p);
   // reference
   } else if ($('.titlereference-header div hr').first().length) {
     $('.titlereference-header div hr').first().after(p);
@@ -6247,8 +6262,10 @@ function getLinkArea() {
     }
   });
 
+  const hr = $('<hr />').css({'margin-top':'7px', 'margin-bottom':'7px', 'color':'#0d0d0d' });
   if ($('.ipc-page-section').length) {
-    $('.ipc-page-section:eq(0)').children('div:eq(1)').append(p);
+    $('#imdbscout_iconsheader').after(hr);
+    $('.ipc-page-section:eq(0)').before(p);
   // reference
   } else if ($('.titlereference-header').length) {
     $('.titlereference-header').append(p);
@@ -6300,7 +6317,7 @@ function getLinkAreaSecond() {
   });
 
   if ($('.ipc-page-section').length) {
-    $('.ipc-page-section:eq(0)').children('div:eq(1)').append(p);
+    $('.ipc-page-section:eq(0)').before(p);
   // reference
   } else if ($('.titlereference-header').length) {
     $('.titlereference-header').append(p);
@@ -6352,7 +6369,7 @@ function getLinkAreaThird() {
   });
 
   if ($('.ipc-page-section').length) {
-    $('.ipc-page-section:eq(0)').children('div:eq(1)').append(p);
+    $('.ipc-page-section:eq(0)').before(p);
   // reference
   } else if ($('.titlereference-header').length) {
     $('.titlereference-header').append(p);
@@ -8063,7 +8080,7 @@ function addRatingsElements(imdbid, title, title_orig) {
     $('#main').children().first().prepend(table);
     $('#scout_rating_table').after(hr);
   // new layout
-  } else if ($('.ipc-page-section:eq(0)').length) {
+  } else if ($('.ipc-page-section').length) {
     $('.ipc-page-section:eq(0)').parent().prepend(table);
   } else {
     return;
@@ -9917,6 +9934,25 @@ function checkDummyElem(mutation, observer) {
 }
 
 //==============================================================================
+//    Stuff for the new IMDb design (alternative to startObserver)
+//==============================================================================
+
+function startRedesign() {
+  // Double check if still on a redesigned page. Possible fix for a rare bug when the script runs before page transfers to a reference page if set on imdb's settings.
+  if ($('html[xmlns\\:og="http://ogp.me/ns#"]').length) {
+    return;
+  }
+
+  if ($('.ipc-page-section').length) {
+    adsRemoval();
+    startIMDbScout();
+  } else {
+    console.log("IMDb Scout Mod (Start Error): Element not found! Please report it.");
+    GM.notification("Element not found! Please report it.", "IMDb Scout Mod (Start Error)");
+  }
+}
+
+//==============================================================================
 //    Start: Display 'Load' button or add links to sites
 //==============================================================================
 
@@ -9951,6 +9987,7 @@ if ($('html[xmlns\\:og="http://ogp.me/ns#"]').length) {
     document.getElementsByTagName("head")[0].appendChild(addJquery);
   });
   // Start for redesigned page
-  document.addEventListener('DOMContentLoaded', startObserver);
+  // document.addEventListener('DOMContentLoaded', startObserver);  // replaced with startRedesign in v17.0, probably not needed anymore as elements were moved out of a reflow area
+  document.addEventListener('DOMContentLoaded', startRedesign);
 }
 
