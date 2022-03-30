@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      17.0
+// @version      17.0.1
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from hundreds various sites. Adds movies/series to Radarr/Sonarr. Adds external ratings from Metacritic, Rotten Tomatoes, Letterboxd, Douban, Allocine. Media Server indicators for Plex, Jellyfin, Emby. Dark theme/style for Reference View. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAMFBMVEUAAAD/AAAcAAA1AABEAABVAAC3AADnAAD2AACFAAClAABlAAB3AADHAACVAADYAABCnXhrAAAD10lEQVRIx73TV4xMURgH8H/OnRmZWe3T7h2sOWaNXu7oJRg9UccuHgTRBatMtAgSg+gJu9q+kFmihcQoD8qLTkK0CIkoy0YJITsRD0rCKTHFrnkSv5e5c88/53znO+fiPwvsvrN038cPNqrG9pJmHkRVnPcpaTlHJY60cfPSpsrzl1LKihrmLvxhCM2i3OHvDx0d+H7e3F6JBv5iZMiJfhFTfPYDMHrMImpwimWWUdSgDQkbno7fFpUPVgh+pHFbZR4SovSctDCM9Hac9IKd9rO8EevtBCkXgY5IMmgquwypP7qqfcp/Tp4KLONDVsWh3RSBB2rnZfit69ocUdqLn2prrRZYM0Jg4JibamKsqe7gfEh5GOAfeYJjVHIPZvil97rcXkMog30byWRwXYRWoxHbzNFHJJpAarO8NdEBBsdCaP3WMJltTmQd4zlnekTq9Z5dgACwAlrpK4BxdV5mvLuspRgMSHbCIFF0iS8MZ5S8oYBYKY7rByC4dDM9uSIUmPOIwxgQBoYeF93auP4qFyPbIVXziWeGTH1EFM57kJo2hqQju6BwIyRf6RmCjdT4JOdiwNgiH/PPD3qoqlsNaXRd+fKtFfECxlZVNVF9SOsgTZEr2TUjJJbyeNX1IZrKIbyGlBABfpQPv2UDrly13LkJXDVhpQ5MhtGwcyF4HKjlU4E8xwB0AvDjd6AGmevZ87EcQRHgcO52e9uNsYELOrAa/Yh81YlmYLQJ5HWyq0+kzQ/DQKEusg6CRI27ryy8nReRS0wsoetkmRwogHSprliCckfEjXG9yAQc74J0WB99vu6DF3i3pMucsXM6tpBbxd2mVJAwXwGogNRBvGRA4jtHKTXkAIwLGCR/mT4Lh75oneQXXP9sAYfGRDCsnw7pX/jRZkU3M44kjw2l5zRIzb4CbZ8dULdL6wbNPZOpK0B6gN1UR1mdoxAaL/GrWiLPL3SEwW9YMTU/d64BtLahAVyucWhj9Mm8ign9IfQaBtd2/GbvCAEBpG5eMcrj2I0ktpKLeaqXQ3Pst42KGIshpdTmQLAeTgFGJ2wvh+tayMOR0n1RZ8B9z13vnOPBnsBq4E1ffgZpPFZHWVpO2cvhjYpOcbBd5TlhpDu5zq9mHGZcVi0y+VFkcFkDdyKJfTt99wEyHSEzDM90KH0nexpwZHJHKYYhjzlwGe0pP/IKfxociaEb7YDbi6KGJY1R2cR76E6NAtXqY4pPH3plLcl8LD7V+cOLUbUWRFZRPTAbVZO3mxK18Xc1ZaAiS8ARJXpZliXAomR94siiiMx8ZBOkXGTlnH0F/9ov1xPtWwEqP9wAAAAASUVORK5CYII=
@@ -1051,6 +1051,9 @@
 17.0    -   Updated script to work with new IMDb layout changes.
             Removed MutationObserver (probably not needed anymore).
             Added: TV Guide, EpisodeCalendar.
+
+17.0.1  -   Moved: Tubi to the streaming sites.
+            Removed: Bit-Titan.
 
 */
 //==============================================================================
@@ -3623,12 +3626,6 @@ var german_sites = [
       'loggedOutRegex': /Cloudflare|Ray ID|SQL Error|Passwort vergessen/,
       'matchRegex': /keine Torrents/,
       'TV': true},
-  {   'name': 'Bit-Titan',
-      'searchUrl': 'https://bit-titan.net/moviebase.php?text=%tt%',
-      'loggedOutRegex': /eingeschaltet haben um dich|jscheck.php|JavaScript aktivieren/,
-      'matchRegex': /download\.php/,
-      'positiveMatch': true,
-      'both': true},
   {   'name': 'BTF',
       'searchUrl': 'https://bittorrentfiles.me/browse.php?search=%tt%&search_where=4',
       'loggedOutRegex': /Cloudflare|Ray ID|Server nicht zur Verfügung/,
@@ -4658,6 +4655,16 @@ var streaming_sites = [
       'matchRegex': /No search results found/,
       'inThirdSearchBar': true,
       'both': true},
+  {   'name': 'Tubi',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHgAAAB4BAMAAADLSivhAAAAGFBMVEUmJi34Mzf1KWT8PCH4TyGqMS3XPyexKFH+E2IbAAAB4klEQVRYw+3Vv1PCMBQH8IqHrMZenWkWV70H7h7IHPXAtRzQmWPx3zdfLj/oC8SDTX3foYQ0nzyaQCgkEolEIpFIJPn053OTuX2llDp9fzqdzro9N6o6A0+7PUsMvxD37fDb34fPf+bLV3uWdP4JXM0Ruw+4uizadhNw6EZzbjoYQf03pcj3r61zq73AFBu+zykuOQ55gc5jVZ7A9n7zI1bH8Yu9c38pVkhzEUZhlM7gIsG4IvSkXGmOw7tTeDTZmP4SuOK4p+7qbQ5P6BXvoe8TrLXO45H7KdqYDH6vj+FxOAVUk8O6TjE1cXHyWNcp9kcIWB5r379ymJ790XcOHh3BFa7l40lsPCaaWTzhuCRiOGkDg62JY+J4eASXYJiis2AMDyx44BOhDpHd4A8iMnGrHhNswyfC0BL4Oo7FMdMwXABvHY5tWwaDbsg/NBQZjneuHKJ9+wrYONKg5wOtguOeE4MtJnJtpdxxBoJZFngdJ3igXYaYaJ+7GrgKBaldEUEluNA+BxP5IwsPHWNS3PPCfW4Epf2XJWRcBJyWHqK0x/j6s9Im4rT0A9Y+4PALiYVTHIU+aCuUiRvstjvgVG9Z2+vV3hqGYwY7/eXbn6Hd+bt1adu2KSQSiUQikUj+fb4B4n/CsDtPLf0AAAAASUVORK5CYII=',
+      'searchUrl': 'https://tubitv.com/oz/search/"%search_string%" %year%',
+      'goToUrl': 'https://tubitv.com/search/"%search_string%" %year%',
+      'loggedOutRegex': /in your area/,
+      'matchRegex': /title/,
+      'positiveMatch': true,
+      'spaceEncode': ' ',
+      'both': true,
+      'inThirdSearchBar': true},
   {   'name': 'VidSource',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABD0lEQVQ4ja2TvUoEMRSFv3sns7nbC4KtheAKNhZbW4mlpY0P4FYWgiLoFgpa2/kYvpwussciM+P+2TiekHCS+3cuSUwSfWDjoF+GcSBJSPoT917V2xZyDPj8mC0ZcgzWnBd9Wru9P08E8DWb8fL0xt30EgyaZQFCgsf7V24fJt1pAjArM4Y1XhlgG8INSUTUuIPmICC5gzUZIhLu/psAhJGjxt1RM5K7YWZFQdS0+02QROSEuyEaBWaOexEduWRvW1quDtJPEQFzWWmhDcqRqKoSuaqi3L2RGwVzwCXs+uTo/17i1fFux29O9zo+PTvYyM/3t+Sj0U6XbJCrjg+H6w9pFSlV2MXhdq8WrO93/gaUmJF4CshtQwAAAABJRU5ErkJggg==',
       'searchUrl': 'https://v2.vidsrc.me/embed/%tt%/',
@@ -5024,11 +5031,6 @@ var icon_sites_main = [
   {   'name': 'TVRopes',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABIBAMAAACnw650AAAAMFBMVEUAAAAxRmP57Df5vyj8+/egqrfn6e15h5lZaX/Jz9ZFWHH875v50Df988362W+ulkBC9VAnAAAAAXRSTlMAQObYZgAAAkhJREFUSMfEk60OwkAQhCvOEbD4Da6AuLFNaAKGkPCgWM7xI4o9QUIlYPoQSMiGNMult1fJpydfZ+fS7H+sHmVfxKwbuL7MAbB5WjU8AqD5Nek5A0VFNEl59gA8Ec3LpAeWGFVlnhegoC+aatN6GKcUarhPi7LCE6hIcIrITy+UVg2994HLxU1SXDvQBCFtK16bZxLqyHWd0Kz7wSUYEmIvOABTkZCrofSeBozVK8lQhTSqsy4mDOUui7EPzjuV0dC9NUmhLrcfk/pTbWWDvM4UlhI6RQNisnJYjBGYIjhMeRcrr6GbFi/xaKb3blz2mD7VkjFOw0AQRbdwErmg2ALF+DQubNI6EigKlQsUEiqQUIzpXIBMKtOR0gUguAwVp0BC4gbMeBL/lbNOz7e0O1699cwfz+dvpfdDBz/fX1rr4fmMHuXwyjyiWmHQ06RVsSruVY/WouRjV6JGBIkOVb+i7aqGKPASO3RN25IPR1xDYIXUmLZXPpxTcKTs0GW9kZ4oeLdDyMJ5b1qQPyFNNzHV288piE0INYq9GOaskLNJM8DZLqTOxN4FzO1CYk/MPXRCkbyMufOdkFuxvdpc2Qk5OUGxiyMbVCdaDqSyTmjO9uplDzTij7C5E2VqWwAqH1JLfbNu/C8RjxTLC9pfknvoOfptJtAZz35TudlvtEZ72Wn6EmC8MCdoDcrgUcKcQM9bKMEdtBI/VVQ2g6Af25Bzp806IoSmotyE3Bx9M+Qsbj98/22ayNskTTNl0fFivZ41d8IwUP9efyK8ybskjbpNAAAAAElFTkSuQmCC',
       'searchUrl': 'https://tvtropes.org/pmwiki/search_result.php?q=%search_string_orig%',
-      'showByDefault': false},
-  {   'name': 'Tubi',
-      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHgAAAB4BAMAAADLSivhAAAAGFBMVEUmJi34Mzf1KWT8PCH4TyGqMS3XPyexKFH+E2IbAAAB4klEQVRYw+3Vv1PCMBQH8IqHrMZenWkWV70H7h7IHPXAtRzQmWPx3zdfLj/oC8SDTX3foYQ0nzyaQCgkEolEIpFIJPn053OTuX2llDp9fzqdzro9N6o6A0+7PUsMvxD37fDb34fPf+bLV3uWdP4JXM0Ruw+4uizadhNw6EZzbjoYQf03pcj3r61zq73AFBu+zykuOQ55gc5jVZ7A9n7zI1bH8Yu9c38pVkhzEUZhlM7gIsG4IvSkXGmOw7tTeDTZmP4SuOK4p+7qbQ5P6BXvoe8TrLXO45H7KdqYDH6vj+FxOAVUk8O6TjE1cXHyWNcp9kcIWB5r379ymJ790XcOHh3BFa7l40lsPCaaWTzhuCRiOGkDg62JY+J4eASXYJiis2AMDyx44BOhDpHd4A8iMnGrHhNswyfC0BL4Oo7FMdMwXABvHY5tWwaDbsg/NBQZjneuHKJ9+wrYONKg5wOtguOeE4MtJnJtpdxxBoJZFngdJ3igXYaYaJ+7GrgKBaldEUEluNA+BxP5IwsPHWNS3PPCfW4Epf2XJWRcBJyWHqK0x/j6s9Im4rT0A9Y+4PALiYVTHIU+aCuUiRvstjvgVG9Z2+vV3hqGYwY7/eXbn6Hd+bt1adu2KSQSiUQikUj+fb4B4n/CsDtPLf0AAAAASUVORK5CYII=',
-      'searchUrl': 'https://tubitv.com/search/%search_string_orig%',
-      'spaceEncode': ' ',
       'showByDefault': false},
   {   'name': 'TV Guide',
       'icon': 'https://www.tvguide.com/a/www/img/favicon_32.png',
