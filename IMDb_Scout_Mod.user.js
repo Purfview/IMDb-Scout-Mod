@@ -4870,7 +4870,7 @@ var icon_sites_main = [
       'searchUrl': 'https://www.intersinema.com/ara.asp?ara=%search_string_orig%',
       'showByDefault': false},
   {   'name': 'JustWatch',
-      'icon': 'https://www.justwatch.com/appassets/img/favicon.ico',
+      'icon': 'https://www.justwatch.com/appassets/favicon.ico',
       'searchUrl': 'https://justwatch.com/us/search?q=%search_string%',
       'showByDefault': false},
   {   'name': 'КиноПоиск (RU)',
