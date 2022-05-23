@@ -4876,7 +4876,7 @@ var icon_sites_main = [
       'searchUrl': 'https://www.intersinema.com/ara.asp?ara=%search_string_orig%',
       'showByDefault': false},
   {   'name': 'JustWatch',
-      'icon': 'https://www.justwatch.com/appassets/favicon.ico',
+      'icon': 'https://www.justwatch.com/appassets/img/favicon.ico',
       'searchUrl': 'https://justwatch.com/us/search?q=%search_string%',
       'showByDefault': false},
   {   'name': 'КиноПоиск (RU)',
@@ -7793,4 +7793,2209 @@ function get_trakt_watchlist(imdbid, title, access_token, button, error_icon, mi
         GM.setValue("IMDb_Scout_Mod_Trakt_access_token", "none");
         location.reload();
       } else if (response.status > 499) {
-        button.fi
+        button.find('img').prop("src", error_icon);
+        button.off("click");
+        GM.notification("Server/CF Error or Overloaded.", "IMDb Scout Mod (Trakt-Watchlist)");
+      } else if (response.status > 399) {
+        button.find('img').prop("src", error_icon);
+        button.off("click");
+        GM.notification("Sync Error " + response.status + ", please report it.", "IMDb Scout Mod (Trakt-Watchlist)");
+      } else {
+        button.find('img').prop("src", error_icon);
+        button.off("click");
+        console.log("IMDb Scout Mod (Trakt Sync status): " + response.status);
+        console.log("IMDb Scout Mod (Trakt Sync response): " + response.responseText);
+      }
+    }
+  });
+}
+
+function trakt_watchlist_add(imdbid, title, access_token, button, error_icon, missing_icon, exists_icon) {
+  const body = {'movies': [{'ids': {'imdb': imdbid}}], 'shows': [{'ids': {'imdb': imdbid}}], 'episodes': [{'ids': {'imdb': imdbid}}]};
+
+  GM.xmlHttpRequest({
+    method: "POST",
+    url: "https://api.trakt.tv/sync/watchlist",
+    data: JSON.stringify(body),
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer " + access_token,
+      "trakt-api-version": "2",
+      'trakt-api-key': '325c09f8f8d6e3466c7ced12c11cc32d4af00e1af1f6310da4f6dfb702c7b8c2'
+    },
+    onload: function(response) {
+      if (response.status == 201) {
+        const responseJSON   = JSON.parse(response.responseText);
+        const resultAdded    = JSON.stringify(responseJSON["added"]);
+        const resultExisting = JSON.stringify(responseJSON["existing"]);
+        const countAdded     = (resultAdded.match(/1/g) || []).length;
+        const countExisting  = (resultExisting.match(/1/g) || []).length;
+
+        if (countAdded == 0 && countExisting == 0) {
+          button.find('img').prop("src", error_icon);
+          button.off("click");
+          GM.notification('"' + title + '"' + " \nNot Found on Trakt.", "IMDb Scout Mod (Trakt-Watchlist)");
+        } else if (countAdded == 0 && countExisting !== 0) {
+          button.find('img').prop("src", exists_icon);
+          button.off("click");
+          button.click(function() {
+            trakt_watchlist_remove(imdbid, title, access_token, button, error_icon, missing_icon, exists_icon);
+          });
+          GM.notification('"' + title + '"' + " \nAlready exists in Trakt's watchlist!", "IMDb Scout Mod (Trakt-Watchlist)");
+        } else if (countAdded > 1) {
+          button.find('img').prop("src", exists_icon);
+          button.off("click");
+          button.click(function() {
+            trakt_watchlist_remove(imdbid, title, access_token, button, error_icon, missing_icon, exists_icon);
+          });
+          GM.notification('"' + title + '"' + " \nAdded to Trakt's watchlist. \nDetected incorrect data on Trakt!", "IMDb Scout Mod (Trakt-Watchlist)");
+        } else {
+          button.find('img').prop("src", exists_icon);
+          button.off("click");
+          button.click(function() {
+            trakt_watchlist_remove(imdbid, title, access_token, button, error_icon, missing_icon, exists_icon);
+          });
+          GM.notification('"' + title + '"' + " \nAdded to Trakt's watchlist.", "IMDb Scout Mod (Trakt-Watchlist)");
+        }
+      } else if (response.status == 401) {
+        GM.setValue("IMDb_Scout_Mod_Trakt_access_token", "none");
+        location.reload();
+      } else if (response.status == 429) {
+          button.find('img').prop("src", error_icon);
+          button.off("click");
+          GM.notification("API rate limit exceeded.", "IMDb Scout Mod (Trakt-Watchlist)");
+      } else if (response.status > 499) {
+        button.find('img').prop("src", error_icon);
+        button.off("click");
+        GM.notification("Server/CF Error or Overloaded.", "IMDb Scout Mod (Trakt-Watchlist)");
+      } else if (response.status > 399) {
+        button.find('img').prop("src", error_icon);
+        button.off("click");
+        GM.notification("Add Error " + response.status + ", please report it.", "IMDb Scout Mod (Trakt-Watchlist)");
+      } else {
+        button.find('img').prop("src", error_icon);
+        button.off("click");
+        console.log("IMDb Scout Mod (Trakt Add status): " + response.status);
+        console.log("IMDb Scout Mod (Trakt Add response): " + response.responseText);
+      }
+    },
+    onerror: function() {
+      button.find('img').prop("src", error_icon);
+      button.off("click");
+      console.log("IMDb Scout Mod (Trakt-Watchlist): Add Request Error.");
+    },
+    onabort: function() {
+      button.find('img').prop("src", error_icon);
+      button.off("click");
+      console.log("IMDb Scout Mod (Trakt-Watchlist): Add Request is aborted.");
+    }
+  });
+}
+
+function trakt_watchlist_remove(imdbid, title, access_token, button, error_icon, missing_icon, exists_icon) {
+  const body = {'movies': [{'ids': {'imdb': imdbid}}], 'shows': [{'ids': {'imdb': imdbid}}], 'episodes': [{'ids': {'imdb': imdbid}}]};
+  GM.xmlHttpRequest({
+    method: "POST",
+    url: "https://api.trakt.tv/sync/watchlist/remove",
+    data: JSON.stringify(body),
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer " + access_token,
+      "trakt-api-version": "2",
+      'trakt-api-key': '325c09f8f8d6e3466c7ced12c11cc32d4af00e1af1f6310da4f6dfb702c7b8c2'
+    },
+    onload: function(response) {
+      if (response.status == 200) {
+        button.find('img').prop("src", missing_icon);
+        button.off("click");
+        button.click(function() {
+          trakt_watchlist_add(imdbid, title, access_token, button, error_icon, missing_icon, exists_icon);
+        });
+        GM.notification('"' + title + '"' + " \nRemoved from Trakt's watchlist.", "IMDb Scout Mod (Trakt-Watchlist)");
+      } else if (response.status == 401) {
+        GM.setValue("IMDb_Scout_Mod_Trakt_access_token", "none");
+        location.reload();
+      } else if (response.status == 429) {
+          button.find('img').prop("src", error_icon);
+          button.off("click");
+          GM.notification("API rate limit exceeded.", "IMDb Scout Mod (Trakt-Watchlist)");
+      } else if (response.status > 499) {
+        button.find('img').prop("src", error_icon);
+        button.off("click");
+        GM.notification("Server/CF Error or Overloaded.", "IMDb Scout Mod (Trakt-Watchlist)");
+      } else if (response.status > 399) {
+        button.find('img').prop("src", error_icon);
+        button.off("click");
+        GM.notification("Remove Error " + response.status + ", please report it.", "IMDb Scout Mod (Trakt-Watchlist)");
+
+      } else {
+        button.find('img').prop("src", error_icon);
+        button.off("click");
+        console.log("IMDb Scout Mod (Trakt Remove status): " + response.status);
+        console.log("IMDb Scout Mod (Trakt Remove response): " + response.responseText);
+      }
+    },
+    onerror: function() {
+      button.find('img').prop("src", error_icon);
+      button.off("click");
+      console.log("IMDb Scout Mod (Trakt-Watchlist): Remove Request Error.");
+    },
+    onabort: function() {
+      button.find('img').prop("src", error_icon);
+      button.off("click");
+      console.log("IMDb Scout Mod (Trakt-Watchlist): Remove Request is aborted.");
+    }
+  });
+}
+
+function traktCatchToken() {
+  const code = location.href.replace('https://www.imdb.com/title/tt0052077/reference?code=','');
+  var body = {
+    'code': code,
+    'client_id': '325c09f8f8d6e3466c7ced12c11cc32d4af00e1af1f6310da4f6dfb702c7b8c2',
+    'client_secret': 'ee4204782a908e201ae22da35fbd19f08362e99ba158b04f1931caf8eea55fe4',
+    'redirect_uri': 'https://www.imdb.com/title/tt0052077/reference',
+    'grant_type': 'authorization_code'
+  };
+  GM.xmlHttpRequest({
+    method: "POST",
+    url: "https://api.trakt.tv/oauth/token",
+    data: JSON.stringify(body),
+    headers: {
+      "Content-Type": "application/json"
+    },
+    onload: function(response) {
+      if (response.status == 200) {
+        let responseJSON = JSON.parse(response.responseText);
+        const access_token  = responseJSON.access_token;
+        const refresh_token = responseJSON.refresh_token;
+        const created_at    = responseJSON.created_at;
+        GM.setValue("IMDb_Scout_Mod_Trakt_access_token", access_token);
+        GM.setValue("IMDb_Scout_Mod_Trakt_refresh_token", refresh_token);
+        GM.setValue("IMDb_Scout_Mod_Trakt_created_at", created_at);
+        window.close();
+      } else {
+        console.log("IMDb Scout Mod (Trakt Get Token status): " + response.status);
+        console.log("IMDb Scout Mod (Trakt Get Token response): " + response.responseText);
+      }
+    }
+  });
+}
+
+async function trakt_refresh_token() {
+  const refresh_token = await GM.getValue("IMDb_Scout_Mod_Trakt_refresh_token", "none");
+  var body = {
+    'refresh_token': refresh_token,
+    'client_id': '325c09f8f8d6e3466c7ced12c11cc32d4af00e1af1f6310da4f6dfb702c7b8c2',
+    'client_secret': 'ee4204782a908e201ae22da35fbd19f08362e99ba158b04f1931caf8eea55fe4',
+    'redirect_uri': 'https://www.imdb.com/title/tt0052077/reference',
+    'grant_type': 'refresh_token'
+  };
+  GM.xmlHttpRequest({
+    method: "POST",
+    url: "https://api.trakt.tv/oauth/token",
+    data: JSON.stringify(body),
+    headers: {
+      "Content-Type": "application/json"
+    },
+    onload: function(response) {
+      if (response.status == 200) {
+        let responseJSON = JSON.parse(response.responseText);
+        const access_token  = responseJSON.access_token;
+        const refresh_token = responseJSON.refresh_token;
+        const created_at    = responseJSON.created_at;
+        GM.setValue("IMDb_Scout_Mod_Trakt_access_token", access_token);
+        GM.setValue("IMDb_Scout_Mod_Trakt_refresh_token", refresh_token);
+        GM.setValue("IMDb_Scout_Mod_Trakt_created_at", created_at);
+        GM.notification("Trakt's access token is refreshed. \nNext refresh after 2 months.", "IMDb Scout Mod (Trakt-Watchlist)");
+        location.reload();
+      } else {
+        GM.setValue("IMDb_Scout_Mod_Trakt_access_token", "none");
+        console.log("IMDb Scout Mod (Trakt Refresh Token status): " + response.status);
+        console.log("IMDb Scout Mod (Trakt Refresh Token response): " + response.responseText);
+      }
+    }
+  });
+}
+
+//==============================================================================
+//    External ratings
+//==============================================================================
+
+function externalRatings(imdbid, title, title_orig) {
+  const imdb_icon = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACABAMAAAAxEHz4AAAAGFBMVEUAAADmuR4AAADovi7xwiA0Kge0kBh1Xg/if3xnAAAAAXRSTlMAQObYZgAAAb5JREFUaN7t2s2OgjAQB3CSfYJxq3ebQK9u9gmaIJwlImeJumcJ6usvneI28lGQmmxM5p84trT9pQmHkoDnfXw7ZOV53hc45LPaADhlpTbgtAUCCCCAAAIIIIAAAt4XYGEY2oE4Van/0p1kF906QKpzO7H7tKwLWHMViDlGSJbo1iHi92QM9LjfC/gGgDbAd3I04EvgDQA74wGIuoDtaICzTiCQo4FD3AWI6cC1wPHxQNkAynrleGDdAKJHIAylHdjObQCTP7e9tAKbmQ2IiqqcpQ1Y5l0Ar4EcK7MBQS9gsnUFAmkBRMF5MgCIXiDVQNoLZMkg4FdTLr0Am9mBrPrZAB/WQwDmOBnYaSD/P2DDsTObDiSOwBYB4QAULwECByB/CbB0AHDpxuE2zpFxALBTtgF/LBC3gdgROB+fAiJcagCMOdo4m08ERA1ciwEAVGXdgElgAZKq3QEsIX7o9QJMAbINlA9AaQEKzkUbEFKPi0JPfhLw/x7zgiipauNwXZxUAFTdwwKLuYKtUEI9zhaX9No43lmoAqCqBIbFXMGWihkP3+1pnQACCCCAAAIIIICApwDnV+fOL++dPx/4BflDKTOe3dGdAAAAAElFTkSuQmCC";
+  const rott_rotten = "data:image/png;base64,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";
+  const rott_certified = "data:image/png;base64,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";
+  const rott_fresh = "data:image/png;base64,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";
+  const rott_user_up = "data:image/png;base64,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";
+  const rott_user_down = "data:image/png;base64,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";
+  const meta_icon = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACABAMAAAAxEHz4AAAAElBMVEUAAAAzMzP/zDT+/v5oX0elmG641eaPAAAAAXRSTlMAQObYZgAAA3ZJREFUaN69mVFym0AQBVO6ARL8WxQ5gGulAyzGBwDL979K4tjmie2dmVKo8nxZpKbV83YFBH65dej/lv3PYbPqf9tVTw/29yggwq9nPfL1uwi9Xfv6GUTcz4r7owrzD2tHP2KIB3j/qMVQCPtvU/NZ7bSAEA9wy81dCaEhfIHcFDVCwRP43bBeQ0LRj+qCIQ7oB8FXYD8JnsKB+bFGRwH9PuHJFBjQNE3T+ndrKpgBtG8ppeuqdSwUIDCX/emz1uOLC6BASgWhq89gJfiS1spFjk81gQEDqC7KEYBYQENIgQAuYbqvq61wMARO6qYCAVyCtwSF+4XABGdjAihoBn+CLqW6wkiAImQEVGiLGbSLsYiGwlIFNMzQUjhqBq4BM6RCWwOcLcC1oqAQBMgGIG9muW7WgRHwl/SsNO4UjgQMBiDrTykoBC+C9k75VCoQkBvU/Vlgq6AQBCguhB/yawRQ2ISAXaDQBIBCVwIG7GEBoLBNkRl2CQAqlIC5NoBCpMLyDdAiUEDLSIWxAJg/wlxX0DIIwGuBZqBCJ4BWEechKOhguwUMmKCqoGMCYBuk5Cno0BZwRgSGgo4QwEWkwnpAG0H7iBlSQZ8dgKugj+MGAEtLQZ8CwPX1zVLIDuA0fwEu64aAwqVxACl9AbSgUMh1wLff5aSzQAcFFQDrIv0Tn7GrcwRQft8TQCEGpAIAhQBwAgAKNmCWgABQ8AEnABwF/Rb0a3wBAAo+oEuqOVLg+QDXo1ABpzTeBEhBWBVOqhuFeaOgg6oWp3VPQcd0GBcWR4ECvDJlV4ECBIQKMzYiLu+uwtXYiNoIngIEeIMxNJ4CBLSKulF1FSDQCaAUHYVSoDkCMLsKOB8tAAyNo6BihrrTtBVYHQF94yk4ESiERxTGCmB4RKEXADNAIYhAgOwpcAICzoECJzD+8x4rdABoHajgTsAHGFSIJ5BCU1F4NnYRANb9asNa+Binp4IEGKENmKUQCvTmkzApxAJSYAq2gABU6LMU/CXow+eRbVWg7SWAGbAdKwKjBKDAXwT7OwhQYTBOxXikCgUSuAICsHrGwH5MAAUQECAFqEAC+32F/sb85M8BqND/LpZgwjsSS0ESGV8vAVdBFrfpo3l6f+g1T1z7X1TtJOx+WRdV1B9X1B+XG+A+wk+9NiaB+nGh/Wde3hMSN/8BSXUWJsXAq8kAAAAASUVORK5CYII=";
+  const meta_badge = "data:image/png;base64,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";
+  const lboxd_icon = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACABAMAAAAxEHz4AAAALVBMVEUAAAAgKDD/gABAvPQA4FT8/v1Dw/0E6ViwYRE5msej6OIFx09I54QLokj/zZqk8vmhAAAAAXRSTlMAQObYZgAAArJJREFUaN7tmT1r21AUhuN/oNctwaZ0sKBQSimYC4KOBYGhydaqg+liBBc8FlQ0FA/O1NUUCpn7sQcKHkK3tHugkMFz/keva8tH55hYco6KnJBnNLyPz8H3y/fu/T/AUGQJr1y6gQ145eIKBUqg+HoqQpHnBpnXGbAFyrxD0QA1IfO6ErAtnq4Ah1rg6TpwiAJ0JeBaqAWsA10PqEkA6qAugVeVANemIkGjRoG3IwIouCWCBhR4d4JqBKhVAC5o+Y7HIGY/0vTgHMRxYO3zyVWCI3/BOPtgmoaO9ABL2oE1xgS2KwSU54ZpEv6j92GZt2YBGfKCpk9gzoXLLw0jzAlMRjDJCah/ogPggcuvDCcA9mOzIhYCaoCamIY55k3EhggGUtDyGZ2sACph3+QJpKDpc1wBjBFiLugKgS/oJFzQu8cFZsgFLSl4Egq+G06QCRrUQZ5LUcFhXwq6THAkBdFXLngZxcIwYAKZfxa95oL30RchGG4UPIrecsGvNUGQF7TWBX0u+Ba92UpwKQS9KOobguaDtxA01wVRUqngUAoc3QLB2c0XJFpByZ9x8zggoisGkld+JL6SgoLJVDgXjHo2FqwHZ3I9MIJBwYoUcnrrP8LmRfVpKPgtBeAC2cM4EYK2XJWL9oULnn+HQHQgBJA700O+HpzT1kibIxPwEgBewghAwBd1KYDYnVkJKRz5vWkIIaDhTKec+0l+d3d8XhksuIAMlHf8yU4oLwBmsBMpIAPlHbM0deWnJ8j4ZK2xNp6AC4iPLj5Gjtnp6U/kaB8bdkhDJefE2s/Kd4IqBLX/8bzZgl25wdAIduQiag+1X8YpBfobTb1Af6vbqP1iWnG3rhGonwf0DxTKErSvPJ72maeKly5NE16Vr32EIq998SSDIl+6DeW78V4ZdHGSyPCu8hfYVeoYJ6xJswAAAABJRU5ErkJggg==";
+  const lboxd_cust = "data:image/png;base64,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";
+  const douban_icon = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACAAgMAAAC+UIlYAAAADFBMVEUAAAABdhD9/v16t4L0Izp4AAAAAXRSTlMAQObYZgAAARhJREFUWMPt2D0OgjAUB/A6eATv4xEcKE0YcOcI3qNHcABjnDhKL8HuYqK1EuA988orUQeI/S8Q8iNtXstHK4SQTITLmgM7BzYcSEgLtI0VD7akC6QTGx4kYSADiQCBvPLmHMHPgbLeXGc1HxYCPLW8A/CPRhnBp8CiND5gJKSIIAIEmrnO6j8Ae/tw19Cje4H3ZJfUATRUNXkVKwTcqfYCA8AAoLcpAqBh6M50gKfhcSjKyQMOr29xm2wCKCmAy0AxwC0XfpAOoOm6S0HFAqifO6kpgBFQDNA90BRArVMHDAVQ63wKkBRAATMKbJubq1R7HKav6UE1Eh3BO7AjMfP6l1s6+HrFGlwUh5fVggfBpX14cyC4vfAEQ6sYUOFLXfsAAAAASUVORK5CYII=";
+  const allocine_icon = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHYAAAB2BAMAAADviXoiAAAAGFBMVEUAAAAmJib/////ywBcUzPIoQmUehKRkZFw3PDCAAAAAXRSTlMAQObYZgAAA2BJREFUWMPdmU1P20AQQKv+AzeOe3WjSD1HG+fuptBz5JS7lY87qBJ/vxCyed6ZHS94b8wBiOTHzL7xLvbw5VPF18Vb1B8mF8OYQhIfqFZHPRUFTqNTYdA0nEaBk+hkOIoQ70Wf2+I1ymcBpyv+VxB/gqpTaX8WYTwlE8uk0dSJih8LHd/HqxaoBY+lXRbx+DWSGE1hlIc+FGanVWjnVtcfzcTGYu+dcxuxZIOVFZ/cSzSizUbJraz3Eq3/HC866njr3qIXru20xOzKrgojMaxq7fzKrmlyhCWtYpFFYp0WybDIQjWJYektrpBFj2Ep+VaYv/Tg2R2/j6KH7A9/K3XejfOxhv0Gq0u+e7mW5SIrUjTsdddQ48HdoiAES3OrDjl3jujlPob1JVfOx/n36fL94dxRyKBoUTIrJI7X/GtVNOz1xigFuvf2NvLArXWHOkegt0MWXQqW69USO+6vVi8YtmXXqa7OAlklLKqELARtDVmokrKo02lZsNzMsZIrPiBLsELWipIpAjbQzHXiPrTuLDQrWTevVKFEozm4ozeDDglZmkUWie57r6AxWY65Q7Dczh19Ja1o0rC9yOLaSm9hGuzZpT6T5S26Etu/lu0l1YYF6PPOYIvhpWJnJNmOEktIZJkssnbUj6xRFj+9Or52abaC3QbsOsGyyFaxzTiLLFgiwdJUfkLWOIsslCMrzVYWu06z5Y0tTwG7gY3tBWTxdEbE9gJ7EFksnmjVIavYGdeFt9YOVp85XB9l16PnFbJ6WCVLn7EE9YVsEz9jH6WsFayQxdlOg4kt9altaP89Amhi7EqyusEVsugvsmgvf7sJGgKLrAVsRPTBJ4ZFFpqlaM67po1vYf2sgiwM/T2fXhd5+YponpFMWTyf8fkoVBmy0BMsAlXmgjuqvN3iD/KJAXYZyvJxM78Xz8Bm0TO5dea9eDKzX1MqsWXtZ37dpZI7WAQdghVFd6gixDuOVfQB1ijZfqebGTU/wZrvklXMFe+S9jssspo+Nqio7XdnZG3aaNrafGdH1t6Yj1izAmQ1RyCRNjGjmDeiXmYU6dmIPQ6yZzJ2MJNJz4KM4VnODCpj9pUzc8ub9eXPGPNnm/kzVWA78mfI+bPr/Jl5/qwe2EKnwnXe/0Sm0Rn/A/pM8R8w2HBWwA4YRgAAAABJRU5ErkJggg==";
+
+  let key;
+  if (GM_config.get("ratings_cfg_omdb_apikey") == '') {
+    const keys = ['8c967f70', 'dd37e5a4', '3fdb9c5a'];
+    key = keys[Math.floor(Math.random() * keys.length)];
+  } else {
+    key = GM_config.get("ratings_cfg_omdb_apikey");
+  }
+
+  if (GM_config.get("ratings_cfg_imdb") || GM_config.get("ratings_cfg_letterboxd") || GM_config.get("ratings_cfg_rotten") || GM_config.get("ratings_cfg_metacritic") || GM_config.get("ratings_cfg_douban") || GM_config.get("ratings_cfg_allocine")) {
+    addRatingsElements(imdbid, title, title_orig);
+  }
+
+  // Get IMDb ratings.
+  if (GM_config.get("ratings_cfg_imdb")) {
+    getIMDbRatings(imdbid, imdb_icon);
+  }
+  // Get Letterboxd ratings.
+  if (GM_config.get("ratings_cfg_letterboxd")) {
+    getLetterboxdRatings(imdbid, lboxd_icon, lboxd_cust);
+  }
+  // Get Metacritic's Metascore & RT's Tomatometer. Link for RT Audience score & "Certified" badge.
+  // Running for Metascore without RT enabled is currently disabled, GM_config.get("ratings_cfg_metacritic")
+  if (GM_config.get("ratings_cfg_rotten")) {
+    getRTandMetaRatings_OMDb(key, imdbid, meta_icon, rott_rotten, rott_certified, rott_fresh, rott_user_up, rott_user_down);
+  }
+  // Get Metacritic's Metascore & "Must-See" Badge. Link for Metacritic's User Score.
+  if (GM_config.get("ratings_cfg_metacritic")) {
+    getMetacriticRatings_IMDb(imdbid, meta_icon, meta_badge);
+  }
+  // Get Douban ratings.
+  if (GM_config.get("ratings_cfg_douban")) {
+    getDoubanRatings(imdbid, douban_icon);
+  }
+  // Get Allocine ratings.
+  if (GM_config.get("ratings_cfg_allocine")) {
+    getAllocineRatings(imdbid, allocine_icon);
+  }
+}
+
+function addRatingsElements(imdbid, title, title_orig) {
+  const img_px = GM_config.get("ratings_img_px");
+  // Main ratings table element
+  const table = $('<table>').attr('id', 'scout_rating_table').attr('style', 'display: flex; justify-content:center; align-items:center; text-align:center;').append(
+                  $('<tbody>').append(
+                    $('<tr>')
+  ));
+  const hr = $('<hr />').css({'margin-top':'3px', 'margin-bottom':'3px'});
+  // reference
+  if ($('.titlereference-header').length) {
+    $('#main').children().first().prepend(table);
+    $('#scout_rating_table').after(hr);
+  // new layout
+  } else if ($('.ipc-page-section').length) {
+    $('.ipc-page-section:eq(0)').parent().prepend(table);
+  } else {
+    return;
+  }
+
+  // IMDb ratings
+  if (GM_config.get("ratings_cfg_imdb")) {
+    const img = "data:image/png;base64,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";
+    const url = "https://www.imdb.com/title/tt" +imdbid+ "/ratings";
+    const td1 = $('<td>').append(
+                  $('<center>').append(
+                    $('<a>').addClass('IMDbUserRatingUrl').attr({'href': url, 'title':'IMDb ratings', 'target': '_blank'}).css('display','flex').append(
+                      $('<img>').addClass('IMDbUserRatingImg').attr('src', img).css({'height':img_px, 'width':img_px})
+    )));
+    $('#scout_rating_table').find('tr').append(td1);
+
+    const td = $('<td>').attr('style', 'width:30px; vertical-align:middle;');
+          td.append($('<span>').addClass('IMDbCritRating scoutRatings').attr('title','Top 1000 users rating').css('font-weight', 'bold').text("-"));
+          td.append('<br>');
+          td.append($('<span>').addClass('IMDbUserRating scoutRatings').attr('title','All users rating').css('font-weight', 'bold').text("-"));
+          td.append('<br>');
+    if (GM_config.get("ratings_imdb_fem")) {
+          td.append($('<span>').addClass('IMDbFemRating scoutRatings').attr('title','Females rating').css('font-weight', 'bold').text("-"));
+          td.append('<br>');
+    }
+    $('#scout_rating_table').find('tr').append(td);
+  }
+
+  // Metacritic ratings
+  if (GM_config.get("ratings_cfg_metacritic")) {
+    const img = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACABAMAAAAxEHz4AAAAElBMVEUAAABQUFDAwMDf399ubm6WlpaIZZrQAAAAAXRSTlMAQObYZgAAA3ZJREFUaN69mVFym0AQBVO6ARL8WxQ5gGulAyzGBwDL979K4tjmie2dmVKo8nxZpKbV83YFBH65dej/lv3PYbPqf9tVTw/29yggwq9nPfL1uwi9Xfv6GUTcz4r7owrzD2tHP2KIB3j/qMVQCPtvU/NZ7bSAEA9wy81dCaEhfIHcFDVCwRP43bBeQ0LRj+qCIQ7oB8FXYD8JnsKB+bFGRwH9PuHJFBjQNE3T+ndrKpgBtG8ppeuqdSwUIDCX/emz1uOLC6BASgWhq89gJfiS1spFjk81gQEDqC7KEYBYQENIgQAuYbqvq61wMARO6qYCAVyCtwSF+4XABGdjAihoBn+CLqW6wkiAImQEVGiLGbSLsYiGwlIFNMzQUjhqBq4BM6RCWwOcLcC1oqAQBMgGIG9muW7WgRHwl/SsNO4UjgQMBiDrTykoBC+C9k75VCoQkBvU/Vlgq6AQBCguhB/yawRQ2ISAXaDQBIBCVwIG7GEBoLBNkRl2CQAqlIC5NoBCpMLyDdAiUEDLSIWxAJg/wlxX0DIIwGuBZqBCJ4BWEechKOhguwUMmKCqoGMCYBuk5Cno0BZwRgSGgo4QwEWkwnpAG0H7iBlSQZ8dgKugj+MGAEtLQZ8CwPX1zVLIDuA0fwEu64aAwqVxACl9AbSgUMh1wLff5aSzQAcFFQDrIv0Tn7GrcwRQft8TQCEGpAIAhQBwAgAKNmCWgABQ8AEnABwF/Rb0a3wBAAo+oEuqOVLg+QDXo1ABpzTeBEhBWBVOqhuFeaOgg6oWp3VPQcd0GBcWR4ECvDJlV4ECBIQKMzYiLu+uwtXYiNoIngIEeIMxNJ4CBLSKulF1FSDQCaAUHYVSoDkCMLsKOB8tAAyNo6BihrrTtBVYHQF94yk4ESiERxTGCmB4RKEXADNAIYhAgOwpcAICzoECJzD+8x4rdABoHajgTsAHGFSIJ5BCU1F4NnYRANb9asNa+Binp4IEGKENmKUQCvTmkzApxAJSYAq2gABU6LMU/CXow+eRbVWg7SWAGbAdKwKjBKDAXwT7OwhQYTBOxXikCgUSuAICsHrGwH5MAAUQECAFqEAC+32F/sb85M8BqND/LpZgwjsSS0ESGV8vAVdBFrfpo3l6f+g1T1z7X1TtJOx+WRdV1B9X1B+XG+A+wk+9NiaB+nGh/Wde3hMSN/8BSXUWJsXAq8kAAAAASUVORK5CYII=";
+    const url = "https://www.metacritic.com/search/all/" +title+ "/results?cats[movie]=1&cats[tv]=1&search_type=advanced&sort=relevancy";
+    const td1 = $('<td>').append(
+                  $('<center>').append(
+                    $('<a>').addClass('MetaCritRatingUrl').attr({'href': url, 'title':'Metacritic', 'target': '_blank'}).css('display','flex').append(
+                      $('<img>').addClass('MetaCritRatingImg').attr('src', img).css({'height':img_px, 'width':img_px})
+    )));
+    $('#scout_rating_table').find('tr').append(td1);
+
+    const td = $('<td>').attr('style', 'width:30px; vertical-align:middle;');
+          td.append($('<span>').addClass('MetaCritRating scoutRatings').attr('title','Metascore').css('font-weight', 'bold').text("-"));
+          td.append('<br>');
+          td.append($('<span>').addClass('MetaUserRating scoutRatings').attr('title','Users score').css('font-weight', 'bold').text("-"));
+          td.append('<br>');
+    $('#scout_rating_table').find('tr').append(td);
+  }
+
+  // Rotten Tomatoes ratings
+  if (GM_config.get("ratings_cfg_rotten")) {
+    const img = "data:image/png;base64,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";
+    const url = "https://www.rottentomatoes.com/search/?search=" + title;
+    const td1 = $('<td>').append(
+                  $('<center>').append(
+                    $('<a>').addClass('RottCritRatingUrl').attr({'href': url, 'title':'Rotten Tomatoes', 'target': '_blank'}).css('display','flex').append(
+                      $('<img>').addClass('RottCritRatingImg').attr('src', img).css({'height':img_px, 'width':img_px})
+    )));
+    $('#scout_rating_table').find('tr').append(td1);
+
+    const td = $('<td>').attr('style', 'width:30px; vertical-align:middle;');
+          td.append($('<span>').addClass('RottCritRating scoutRatings').attr('title','Tomatometer').css('font-weight', 'bold').text("-"));
+          td.append('<br>');
+    $('#scout_rating_table').find('tr').append(td);
+
+    const img1 = "data:image/png;base64,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";
+    const td3 = $('<td>').append(
+                  $('<center>').append(
+                    $('<a>').addClass('RottCritRatingUrl').attr({'href': url, 'title':'Rotten Tomatoes', 'target': '_blank'}).css('display','flex').append(
+                      $('<img>').addClass('RottUserRatingImg').attr('src', img1).css({'height':img_px, 'width':img_px})
+    )));
+    $('#scout_rating_table').find('tr').append(td3);
+
+    const td2 = $('<td>').attr('style', 'width:30px; vertical-align:middle;');
+          td2.append($('<span>').addClass('RottUserRating scoutRatings').attr('title','Audience score').css('font-weight', 'bold').text("-"));
+          td2.append('<br>');
+    $('#scout_rating_table').find('tr').append(td2);
+  }
+
+  // Letterboxd ratings
+  if (GM_config.get("ratings_cfg_letterboxd")) {
+    const img = "data:image/png;base64,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";
+    const url = "https://letterboxd.com/imdb/" + imdbid;
+    const td1 = $('<td>').append(
+                  $('<center>').append(
+                    $('<a>').addClass('LetterboxdUserRatingUrl').attr({'href': url, 'title':'Letterboxd', 'target': '_blank'}).css('display','flex').append(
+                      $('<img>').addClass('LetterboxdUserRatingImg').attr('src', img).css({'height':img_px, 'width':img_px})
+    )));
+    $('#scout_rating_table').find('tr').append(td1);
+
+    const td = $('<td>').attr('style', 'width:30px; vertical-align:middle;');
+          td.append($('<span>').addClass('LetterboxdUserRating scoutRatings').attr('title','Users rating').css('font-weight', 'bold').text("-"));
+          td.append('<br>');
+    $('#scout_rating_table').find('tr').append(td);
+  }
+
+  // Douban ratings
+  if (GM_config.get("ratings_cfg_douban")) {
+    const img = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACAAgMAAAC+UIlYAAAADFBMVEUAAABlZWX+/v6np6epfp6hAAAAAXRSTlMAQObYZgAAARhJREFUWMPt2D0OgjAUB/A6eATv4xEcKE0YcOcI3qNHcABjnDhKL8HuYqK1EuA988orUQeI/S8Q8iNtXstHK4SQTITLmgM7BzYcSEgLtI0VD7akC6QTGx4kYSADiQCBvPLmHMHPgbLeXGc1HxYCPLW8A/CPRhnBp8CiND5gJKSIIAIEmrnO6j8Ae/tw19Cje4H3ZJfUATRUNXkVKwTcqfYCA8AAoLcpAqBh6M50gKfhcSjKyQMOr29xm2wCKCmAy0AxwC0XfpAOoOm6S0HFAqifO6kpgBFQDNA90BRArVMHDAVQ63wKkBRAATMKbJubq1R7HKav6UE1Eh3BO7AjMfP6l1s6+HrFGlwUh5fVggfBpX14cyC4vfAEQ6sYUOFLXfsAAAAASUVORK5CYII=";
+    const url = "https://search.douban.com/movie/subject_search?search_text=tt" +imdbid;
+    const td1 = $('<td>').append(
+                  $('<center>').append(
+                    $('<a>').addClass('DoubanUserRatingUrl').attr({'href': url, 'title':'Douban', 'target': '_blank'}).css('display','flex').append(
+                      $('<img>').addClass('DoubanUserRatingImg').attr('src', img).css({'height':img_px, 'width':img_px})
+    )));
+    $('#scout_rating_table').find('tr').append(td1);
+
+    const td = $('<td>').attr('style', 'width:30px; vertical-align:middle;');
+          td.append($('<span>').addClass('DoubanUserRating scoutRatings').attr('title','Users rating').css('font-weight', 'bold').text("-"));
+          td.append('<br>');
+    $('#scout_rating_table').find('tr').append(td);
+  }
+
+  // Allocine ratings
+  if (GM_config.get("ratings_cfg_allocine")) {
+    const img = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHYAAAB2BAMAAADviXoiAAAAGFBMVEUAAAAzMzPr6+vExMSdnZ1WVlaCgoJubm4HXAuhAAAAAXRSTlMAQObYZgAAA45JREFUWMPdmU1T2zAQhjv8A+OPXNNMoeeMnPgcPJCzG5q7G1LObtLp329JLL/Su5JVrBt7acrwoN13P5CWTx/KbhZXm7+bXJg2mWQ67C3bfCrKcBhleCrKcBhlOIhOhhfj9r/otkneLD8THPb4mMD25PX4sfeJbT9wcAh9TNieAY97vEmkZeNeE+qDx469S9z2beRgyGRbfmhtwfzHMjqr1bL/6D3YE+xeKVVRyB6WPT6rf1ZSmj0udxSqulij/Xc77dR4p67WktbOYxubTXt2OTiCg5nl1GY9WyHJDhbRChZiIWI6FiITC7Eg9ZxZ5Ja1UnAoE6xdUrnW9aTZ/qeiuJj9rEupXvWflLYV2FuwhsstSun6qRjYNdgCThtsX0rw8aAGS2DEIrmzGuI8K1jHfWyzG8vL1+/ny79PP2s4YigtXc4U2bEXYOVwGuyXS7SEPl6HpCVW8qBZylAfLtViDbGQJStcVAOXxM4SKxNsY3Qdt0BqiZWDhVQkFgQ6ecW60T1EYsHPoYXRS2BRzC6XC/wHYjnYg8PlHVqYWd0I+D64jMS13A6WzCzWMGcw7yC0yeIbtVVGhkgsyUIsHLTvtASlk9XVTGK111CP2pOGKnqQ+aucb43RkyTWr4vQmr2TM5lLdEntP0d6WazKCIDFumVWm1kZ1BlBttYu8ihoAizE0uML1oXZFLJmNAmCbIFTdha7CrAIshHsOsBCrEZMLxVkNZFItguzqY/d+FgWC+mCWGE2H9j8hcViVtxwagiT1yZMvYAeJLEQPImFHkTvk1gNWlKI9cAzB5b52JVnXrFYHVghlpyxMO0fsyXPWMx2a94tmUUgBVgk2GzhysW2Y7+PAJQudilZvofOIFZqsZX4HSrfJzohzJbioiOFPuiDwUKs3HVXoXlXdtaExhRjlsW62NPr+a0i/ryAxR2J72YQC7Y1hu2R7mYesSAPgmhIKnfANfVO3juAcMFy+2PaDD19pDuw1+mUW6fo6GYGltuhoJb13/lllnJUMBkyBJacrmnM0Btn9G11IpbfVsze+5+g/KYbfUsWrBW/JeUblsUq8ePoDSvfziTWGl+gt7PnzQ6xtp79SGhXkKryNyDaFQR2FBn85VVUeDfiXwcFdzJscicT3gXJ5VnMDipi9xWzc4vY9cXsGON3m/E71fhdbvwOGXD84jt+4R6/6AcahhmN+5vINDrib0Afyf4CrepxXp43oBkAAAAASUVORK5CYII=";
+    const url = "https://www.allocine.fr/rechercher/?q=" +title_orig;
+    const td1 = $('<td>').append(
+                  $('<center>').append(
+                    $('<a>').addClass('AllocineUserRatingUrl').attr({'href': url, 'title':'Allocine', 'target': '_blank'}).css('display','flex').append(
+                      $('<img>').addClass('AllocineUserRatingImg').attr('src', img).css({'height':img_px, 'width':img_px})
+    )));
+    $('#scout_rating_table').find('tr').append(td1);
+
+    const td = $('<td>').attr('style', 'width:30px; vertical-align:middle;');
+          td.append($('<span>').addClass('AllocineCritRating scoutRatings').attr('title','Critics').css('font-weight', 'bold').text("-"));
+          td.append('<br>');
+          td.append($('<span>').addClass('AllocineUserRating scoutRatings').attr('title','Users').css('font-weight', 'bold').text("-"));
+          td.append('<br>');
+    $('#scout_rating_table').find('tr').append(td);
+  }
+}
+
+function getIMDbRatings(imdbid, imdb_icon) {
+  const url = "https://www.imdb.com/title/tt" +imdbid+ "/ratings";
+  GM.xmlHttpRequest({
+    method: "GET",
+    timeout: 10000,
+    url:    url,
+    onload: function(response) {
+      const parser = new DOMParser();
+      const result = parser.parseFromString(response.responseText, "text/html");
+
+      let crit_rating, user_rating, fem_rating;
+      if ($(result).find('.ratingTable.Selected .bigcell').length) {
+        user_rating = $(result).find('.ratingTable.Selected .bigcell').text().trim().replace(',','.');
+        if ($.isNumeric(user_rating)) {
+          user_rating = user_rating *10;
+        } else {
+          user_rating = "-";
+        }
+        crit_rating = $(result).find('.ratingTable.noLeftBorder .bigcell').text().trim().replace(',','.');
+        if ($.isNumeric(crit_rating)) {
+          crit_rating = crit_rating *10;
+        } else {
+          crit_rating = "-";
+        }
+        if (GM_config.get("ratings_imdb_fem")) {
+          fem_rating = $(result).find('.ratingTable:eq(10)').find('.bigcell').text().trim().replace(',','.');
+          if ($.isNumeric(fem_rating)) {
+            fem_rating = fem_rating *10;
+          } else {
+            fem_rating = "-";
+          }
+        } else {
+          fem_rating = "-";
+        }
+      } else {
+        return;
+      }
+      if (crit_rating > 0 || user_rating > 0) {
+        $('.IMDbUserRatingImg').attr('src', imdb_icon)
+      }
+      $('.IMDbCritRating').text(crit_rating);
+      $('.IMDbUserRating').text(user_rating);
+      $('.IMDbFemRating').text(fem_rating);
+      ratingsColor();
+    },
+    onerror: function() {
+      console.log("IMDb Scout Mod (IMDb Ratings): Request Error.");
+    },
+    onabort: function() {
+      console.log("IMDb Scout Mod (IMDb Ratings): Request is aborted.");
+    },
+    ontimeout: function() {
+      console.log("IMDb Scout Mod (IMDb Ratings): Request timed out.");
+    }
+  });
+}
+
+function getMetacriticRatings_IMDb(imdbid, meta_icon, meta_badge) {
+  const url = "https://www.imdb.com/title/tt" +imdbid+ "/criticreviews";
+  GM.xmlHttpRequest({
+    method: "GET",
+    timeout: 10000,
+    url:    url,
+    onload: function(response) {
+      const parser = new DOMParser();
+      const result = parser.parseFromString(response.responseText, "text/html");
+      let meta_crit, meta_count, meta_url;
+      if ($(result).find('.metascore').length) {
+        const x = $(result).find('.metascore span').text().trim();
+        if ($.isNumeric(x)) {
+          meta_crit = x;
+        } else {
+          meta_crit = "-";
+        }
+        if ($(result).find('span[itemprop="ratingCount"]').length) {
+          const y = $(result).find('span[itemprop="ratingCount"]').text().trim();
+          if ($.isNumeric(y)) {
+            meta_count = y;
+          } else {
+            meta_count = "-";
+          }
+        } else {
+          meta_count = "-";
+        }
+        if ($(result).find('.see-more .offsite-link').length) {
+          meta_url = $(result).find('.see-more .offsite-link').attr("href");
+          getMetacritic_User(meta_url);
+        }
+      } else {
+        return;
+      }
+      $('.MetaCritRatingImg').attr('src', meta_icon);
+      if (meta_url.match("metacritic")) {
+        $('.MetaCritRatingUrl').attr('href', meta_url);
+      }
+      $('.MetaCritRating').text(meta_crit);
+      if (meta_crit > 80 && meta_count > 14) {
+        $('.MetaCritRatingImg').attr('src', meta_badge);
+      }
+      ratingsColor();
+    },
+    onerror: function() {
+      console.log("IMDb Scout Mod (Metascore from IMDb): Request Error.");
+    },
+    onabort: function() {
+      console.log("IMDb Scout Mod (Metascore from IMDb): Request is aborted.");
+    },
+    ontimeout: function() {
+      console.log("IMDb Scout Mod (Metascore from IMDb): Request timed out.");
+    }
+  });
+}
+
+function getMetacritic_User(url) {
+  GM.xmlHttpRequest({
+    method: "GET",
+    timeout: 10000,
+    url:    url,
+    onload: function(response) {
+      const parser = new DOMParser();
+      const result = parser.parseFromString(response.responseText, "text/html");
+      let meta_user;
+      if ($(result).find('a.metascore_anchor span.user').length) {
+        const x = $(result).find('a.metascore_anchor span.user').text().trim();
+        if ($.isNumeric(x)) {
+          meta_user = x *10;
+        } else {
+          return;
+        }
+      } else {
+        return;
+      }
+      $('.MetaUserRating').text(meta_user);
+      ratingsColor();
+    },
+    onerror: function() {
+      console.log("IMDb Scout Mod (Metacritic user): Request Error.");
+    },
+    onabort: function() {
+      console.log("IMDb Scout Mod (Metacritic user): Request is aborted.");
+    },
+    ontimeout: function() {
+      console.log("IMDb Scout Mod (Metacritic user): Request timed out.");
+    }
+  });
+}
+
+function getLetterboxdRatings(imdbid, lboxd_icon, lboxd_cust) {
+  const url = "https://letterboxd.com/imdb/" + imdbid;
+  GM.xmlHttpRequest({
+    method: "GET",
+    timeout: 10000,
+    url:    url,
+    onload: function(response) {
+      const parser = new DOMParser();
+      const result = parser.parseFromString(response.responseText, "text/html");
+
+      let user_rating;
+      if ($(result).find('meta[content="Average rating"]').length) {
+        const x = $(result).find('meta[content="Average rating"]').next().attr('content');
+        const y = x.split("out")[0].replace( /^\D+/g, '').trim() * 20;
+        const z = Math.round(y);
+        user_rating = z;
+        $('.LetterboxdUserRatingImg').attr('src', lboxd_icon);
+        $('.LetterboxdUserRating').text(user_rating);
+        ratingsColor();
+      // If there is no score then try to get raw average rating with another func.
+      } else if ($(result).find('meta[property="og\:url"]').length && !String(response.responseText).match('No-one has added')) {
+        const url = $(result).find('meta[property="og\:url"]').attr('content');
+        getLetterboxdRatingsCustom(url, lboxd_cust);
+      }
+    },
+    onerror: function() {
+      console.log("IMDb Scout Mod (Letterboxd Ratings 1): Request Error.");
+    },
+    onabort: function() {
+      console.log("IMDb Scout Mod (Letterboxd Ratings 1): Request is aborted.");
+    },
+    ontimeout: function() {
+      console.log("IMDb Scout Mod (Letterboxd Ratings 1): Request timed out.");
+    }
+  });
+}
+
+function getLetterboxdRatingsCustom(url, lboxd_cust) {
+  const newurl = url + "ratings";
+  GM.xmlHttpRequest({
+    method: "GET",
+    timeout: 10000,
+    url:    newurl,
+    onload: function(response) {
+      const parser = new DOMParser();
+      const result = parser.parseFromString(response.responseText, "text/html");
+
+      let user_rating;
+      if ($(result).find('[class*=rated-large-]').length) {
+        let ratings_array = [];
+        ratings_array.push($(result).find('.rated-large-1').parentsUntil('.section').find('li').length);
+        ratings_array.push($(result).find('.rated-large-2').parentsUntil('.section').find('li').length *2);
+        ratings_array.push($(result).find('.rated-large-3').parentsUntil('.section').find('li').length *3);
+        ratings_array.push($(result).find('.rated-large-4').parentsUntil('.section').find('li').length *4);
+        ratings_array.push($(result).find('.rated-large-5').parentsUntil('.section').find('li').length *5);
+        ratings_array.push($(result).find('.rated-large-6').parentsUntil('.section').find('li').length *6);
+        ratings_array.push($(result).find('.rated-large-7').parentsUntil('.section').find('li').length *7);
+        ratings_array.push($(result).find('.rated-large-8').parentsUntil('.section').find('li').length *8);
+        ratings_array.push($(result).find('.rated-large-9').parentsUntil('.section').find('li').length *9);
+        ratings_array.push($(result).find('.rated-large-10').parentsUntil('.section').find('li').length *10);
+
+        const voters = $(result).find('.film-rating-group').find('li').length;
+        const average = (eval(ratings_array.join("+")) / voters) *10;
+        user_rating = Math.round(average);
+      } else {
+        return;
+      }
+      $('.LetterboxdUserRatingImg').attr('src', lboxd_cust);
+      $('.LetterboxdUserRating').attr('title', 'Custom raw average');
+      $('.LetterboxdUserRating').text(user_rating);
+      ratingsColor();
+    },
+    onerror: function() {
+      console.log("IMDb Scout Mod (Letterboxd Ratings 2): Request Error.");
+    },
+    onabort: function() {
+      console.log("IMDb Scout Mod (Letterboxd Ratings 2): Request is aborted.");
+    },
+    ontimeout: function() {
+      console.log("IMDb Scout Mod (Letterboxd Ratings 2): Request timed out.");
+    }
+  });
+}
+
+function getRTandMetaRatings_OMDb(key, imdbid, meta_icon, rott_rotten, rott_certified, rott_fresh, rott_user_up, rott_user_down) {
+  const url = "http://www.omdbapi.com/?i=tt" +imdbid+ "&apikey=" +key+ "&plot=full&tomatoes=true";
+  GM.xmlHttpRequest({
+    method: "GET",
+    timeout: 10000,
+    url:    url,
+    onload: function(response) {
+      if (String(response.responseText).match("limit reached!")) {
+        GM.notification("Limit reached! \nSet OMDb API key in settings. \nGet it at www.omdbapi.com .", "IMDb Scout Mod (RT/MC Ratings)");
+        return;
+      }
+      let responseJSON, rott_crit, meta_crit;
+      if (response.status == 200) {
+        responseJSON = JSON.parse(response.responseText);
+        GM.setValue("OMDb_last", JSON.stringify(responseJSON));
+        if (responseJSON['Response'] == "False" || responseJSON['Ratings'].length < 1) {
+          return;
+        }
+        const rott_url = responseJSON['tomatoURL'];
+        if (rott_url.match("rottentomatoes")) {
+          getRotten(rott_url, rott_rotten, rott_certified, rott_fresh, rott_user_up, rott_user_down);
+          $('.RottCritRatingUrl').attr('href', rott_url);
+        }
+        let x;
+        if (responseJSON['Ratings'][0]['Source'] == 'Rotten Tomatoes') {
+          x = parseInt(responseJSON['Ratings'][0]['Value'], 10);
+        } else if (responseJSON['Ratings'].length > 1) {
+            if (responseJSON['Ratings'][1]['Source'] == 'Rotten Tomatoes') {
+              x = parseInt(responseJSON['Ratings'][1]['Value'], 10);
+            } else if (responseJSON['Ratings'].length > 2) {
+               if (responseJSON['Ratings'][2]['Source'] == 'Rotten Tomatoes') {
+                 x = parseInt(responseJSON['Ratings'][2]['Value'], 10);
+               }
+            }
+        }
+        const y = parseInt(responseJSON['Metascore'], 10);
+        if ($.isNumeric(x)) {
+          rott_crit = x;
+        } else {
+          rott_crit = "-";
+        }
+        if ($.isNumeric(y)) {
+          meta_crit = y;
+        } else {
+          meta_crit = "-";
+        }
+      } else {
+        return;
+      }
+      if (rott_crit <= 59) {
+        $('.RottCritRatingImg').attr('src', rott_rotten);
+      } else if (rott_crit > 59) {
+        $('.RottCritRatingImg').attr('src', rott_fresh);
+      }
+      if (rott_crit >= 0) {
+        $('.RottCritRating').text(rott_crit);
+      }
+      if (meta_crit >= 0) {
+        $('.MetaCritRatingImg').attr('src', meta_icon);
+        $('.MetaCritRating').text(meta_crit);
+      }
+      ratingsColor();
+    },
+    onerror: function() {
+      console.log("IMDb Scout Mod (OMDb Ratings): Request Error.");
+    },
+    onabort: function() {
+      console.log("IMDb Scout Mod (OMDb Ratings): Request is aborted.");
+    },
+    ontimeout: function() {
+      console.log("IMDb Scout Mod (OMDb Ratings): Request timed out.");
+    }
+  });
+}
+
+function getRotten(url, rott_rotten, rott_certified, rott_fresh, rott_user_up, rott_user_down) {
+  GM.xmlHttpRequest({
+    method: "GET",
+    timeout: 14000,
+    url:    url,
+    onload: function(response) {
+      const parser = new DOMParser();
+      const result = parser.parseFromString(response.responseText, "text/html");
+
+      let rott_state, rott_user, rott_crit;
+      if ($(result).find('#score-details-json').length) {
+        const scoreTxt = $(result).find('#score-details-json').text();
+        const scoreJsn = JSON.parse(scoreTxt);
+        const x = scoreJsn.scoreboard.audienceScore;
+        const y = scoreJsn.scoreboard.tomatometerScore;
+        rott_state = scoreJsn.scoreboard.tomatometerState;
+        if ($.isNumeric(x)) {
+          rott_user = x;
+        } else {
+          rott_user = "-";
+        }
+        if ($.isNumeric(y)) {
+          rott_crit = y;
+        } else {
+          rott_crit = "-";
+        }
+      } else {
+        return;
+      }
+
+      if (rott_crit >= 0) {
+        $('.RottCritRating').text(rott_crit);
+      }
+      if (rott_user >= 0) {
+        $('.RottUserRating').text(rott_user);
+      }
+      if (rott_state.match("certified")) {
+        $('.RottCritRatingImg').attr('src', rott_certified);
+      } else if (rott_state.match("rotten")) {
+        $('.RottCritRatingImg').attr('src', rott_rotten);
+      } else if (rott_state.match("fresh")) {
+        $('.RottCritRatingImg').attr('src', rott_fresh);
+      }
+      if (rott_user > 59) {
+        $('.RottUserRatingImg').attr('src', rott_user_up);
+      } else if (rott_user <= 59 && rott_user >= 0) {
+        $('.RottUserRatingImg').attr('src', rott_user_down);
+      }
+      ratingsColor();
+    },
+    onerror: function() {
+      console.log("IMDb Scout Mod (Rotten Tomatoes): Request Error.");
+    },
+    onabort: function() {
+      console.log("IMDb Scout Mod (Rotten Tomatoes): Request is aborted.");
+    },
+    ontimeout: function() {
+      console.log("IMDb Scout Mod (Rotten Tomatoes): Request timed out.");
+    }
+  });
+}
+
+async function getDoubanRatings(imdbid, douban_icon) {
+  let id = await getDoubanID0(imdbid);
+  if (id == "00000000") {
+    id = await getDoubanID1(imdbid);
+  }
+  if (id == "00000000") {
+    id = await getDoubanID2(imdbid);
+  }
+  if (id == "00000000") {
+    id = await getDoubanID3(imdbid);
+  }
+  if (id == "00000000") {
+    return;
+  }
+  const url = "https://movie.douban.com/subject/" +id;
+  $('.DoubanUserRatingUrl').attr('href', url);
+  GM.xmlHttpRequest({
+    method: "GET",
+    timeout: 10000,
+    url:    url,
+    onload: function(response) {
+      const parser = new DOMParser();
+      const result = parser.parseFromString(response.responseText, "text/html");
+
+      let user_rating;
+      if ($(result).find('.rating_num').length) {
+        const x = $(result).find('.rating_num').text();
+        if ($.isNumeric(x)) {
+          user_rating = x *10;
+          $('.DoubanUserRating').text(user_rating);
+          $('.DoubanUserRatingImg').attr('src', douban_icon);
+          ratingsColor();
+        }
+      }
+    },
+    onerror: function() {
+      console.log("IMDb Scout Mod (Douban): Request Error.");
+    },
+    onabort: function() {
+      console.log("IMDb Scout Mod (Douban): Request is aborted.");
+    },
+    ontimeout: function() {
+      console.log("IMDb Scout Mod (Douban): Request timed out.");
+    }
+  });
+}
+
+//www.allocine.fr/film/fichefilm_gen_cfilm=118831.html
+async function getAllocineRatings(imdbid, allocine_icon) {
+  const id = await getAllocineID(imdbid);
+  const is_film = await GM.getValue("AllocineID_last_is_film");
+  let url;
+  if (id == "00000000") {
+    return;
+  } else if (is_film) {
+    url = "https://www.allocine.fr/film/fichefilm_gen_cfilm=" +id+ ".html";
+  } else {
+    url = "https://www.allocine.fr/series/ficheserie_gen_cserie=" +id+ ".html";
+  }
+  $('.AllocineUserRatingUrl').attr('href', url);
+  GM.xmlHttpRequest({
+    method: "GET",
+    timeout: 10000,
+    url:    url,
+    onload: function(response) {
+      const parser = new DOMParser();
+      const result = parser.parseFromString(response.responseText, "text/html");
+      const resultStr = String(response.responseText);
+
+      let rating1, rating2;
+      if ($(result).find('.stareval-note').length) {
+        const x = $(result).find('.stareval-note:eq(0)').text().replace(',','.') *20;
+        const y = $(result).find('.stareval-note:eq(1)').text().replace(',','.') *20;
+        if ($.isNumeric(x)) {
+          rating1 = x;
+        } else {
+          rating1 = "-";
+        }
+        if ($.isNumeric(y)) {
+          rating2 = y;
+        } else {
+          rating2 = "-";
+        }
+        if (rating1 > 0 || rating2 > 0) {
+          $('.AllocineUserRatingImg').attr('src', allocine_icon);
+        }
+        if (resultStr.match('> Presse <')) {
+          $('.AllocineCritRating').text(rating1);
+          $('.AllocineUserRating').text(rating2);
+        } else {
+          $('.AllocineUserRating').text(rating1);
+        }
+        ratingsColor();
+      }
+    },
+    onerror: function() {
+      console.log("IMDb Scout Mod (Allocine): Request Error.");
+    },
+    onabort: function() {
+      console.log("IMDb Scout Mod (Allocine): Request is aborted.");
+    },
+    ontimeout: function() {
+      console.log("IMDb Scout Mod (Allocine): Request timed out.");
+    }
+  });
+}
+
+function ratingsColor() {
+  if (GM_config.get("ratings_cfg_color")) {
+    const ref_high = parseInt(GM_config.get('ratings_cfg_color_scheme').split(',')[0], 10);
+    const ref_low  = parseInt(GM_config.get('ratings_cfg_color_scheme').split(',')[1], 10);
+    $( ".scoutRatings").each(function(index) {
+      if ($(this).text() > ref_high) {
+        $(this).css('color', '#00e600');
+      } else if ($(this).text() <= ref_high && $(this).text() > ref_low) {
+        $(this).css('color', '#f5c20a');
+      } else if ($(this).text() <= ref_low && $(this).text() >= 0) {
+        $(this).css('color', '#e60000');
+      }
+    });
+  }
+}
+
+//==============================================================================
+//    Dark styles for Reference View
+//==============================================================================
+
+function darkReferenceStyles() {
+  if (!GM_config.get('dark_reference_view') || !onReferencePage) {
+    return;
+  }
+  // www.w3schools.com/colors/colors_picker.asp
+  // background color
+  addGlobalStyles('#nav-search-form {background: #d9d9d9}');
+  addGlobalStyles('#wrapper, #pagecontent, .recently-viewed {background-color: #000000}');
+  addGlobalStyles('.aux-content-widget-2 {background: #191919}');
+  addGlobalStyles('#imdbscout_header, #imdbscoutsecondbar_header, #imdbscoutthirdbar_header, .article, .cast_list tr, .titlereference-list tr {background-color: #191919 !important}');
+  addGlobalStyles('.add-image-container {background-color: #262626}');
+  // border color
+  addGlobalStyles('.article, .aux-content-widget-2, .cast_list tr, .titlereference-list tr, .recently-viewed .item {border-color: #323232 !important}');
+  addGlobalStyles('hr, .answers-widget__question, .answers-widget__see-more {border-color: #666666}');
+  addGlobalStyles('.recently-viewed {border-color: #000000}');
+  // font color
+  addGlobalStyles('h3[itemprop="name"], .titlereference-title-year a {color: #f5c20a}');
+  addGlobalStyles('.titlereference-original-title-label {color: #cc0000}');
+  addGlobalStyles('.ipl-rating-star__rating {font-weight: bold; color: #00b300;}');
+  addGlobalStyles('.article, .aux-content-widget-2, .cast_list tr td {color: #cccccc !important}');
+  addGlobalStyles('.ipl-list-title, #sidebar h4, .ipl-list-title::after {color: #c49b08}');
+  addGlobalStyles('.ipl-list-title::after {border-color: #7a6105}');
+}
+
+function addGlobalStyles(css) {
+  var head, style;
+  head = document.getElementsByTagName('head')[0];
+  if (!head) { return; }
+  style = document.createElement('style');
+  style.className = 'IMDbScoutStyles';
+  style.innerHTML = css;
+  head.appendChild(style);
+}
+
+//==============================================================================
+//    Compact mode for Reference View
+//==============================================================================
+
+function compactReferenceStyles() {
+  if (!GM_config.get('compact_reference_view') || !onReferencePage) {
+    return;
+  }
+  addGlobalStyles('#main {margin-left:25px !important}');
+  addGlobalStyles('#sidebar {margin-right:25px !important}');
+  addGlobalStyles('#content-2-wide {margin-top:5px !important}');
+  addGlobalStyles('.aux-content-widget-2 {margin-top:0px; padding-top:0px !important}');
+
+  addGlobalStyles('#imdbHeader {width:960px; display:flex; justify-content:center; align-items:center; margin:auto !important}');
+  document.getElementById('styleguide-v2').id = 'styleguide-v2x';
+  addGlobalStyles('body#styleguide-v2x {background-color: #000000 !important; margin-top:0px}');
+}
+
+function compactReferenceElemRemoval() {
+  if (!GM_config.get('compact_reference_view') || !onReferencePage) {
+    return;
+  }
+  $('.titlereference-section-credits').nextUntil('.titlereference-section-storyline').remove();
+  $('.titlereference-section-credits').remove();
+  if (Boolean($('.titlereference-section-storyline .ipl-zebra-list__item').first().text().match("Plot Summary"))) {
+    $('.titlereference-section-storyline .ipl-zebra-list__item').first().nextUntil('section').remove();
+  } else {
+    $('.titlereference-section-storyline').remove();
+  }
+  $('.titlereference-section-did-you-know').remove();
+  $('#contribute-main-section').remove();
+  $('.recently-viewed').remove();
+
+  // Inject Top Review
+  if ($('.titlereference-overview-review-list').length) {
+    if ($('.titlereference-overview-review-list').text().match('User')) {
+      getIMDbTopReview();
+    }
+  }
+}
+
+function getIMDbTopReview() {
+  const imdbid = document.URL.match(/\/tt([0-9]+)\//)[1].trim('tt');
+  const url = "https://www.imdb.com/title/tt" +imdbid+ "/reviews?spoiler=hide&sort=helpfulnessScore";
+  GM.xmlHttpRequest({
+    method: "GET",
+    timeout: 10000,
+    url:    url,
+    onload: function(response) {
+      const parser = new DOMParser();
+      const result = parser.parseFromString(response.responseText, "text/html");
+
+      const xTitle = $(result).find('.imdb-user-review:eq(0)').find('.title').text().trim();
+      const xRevLink = $(result).find('.imdb-user-review:eq(0)').find('.title').attr('href');
+      const xReview = $(result).find('.imdb-user-review:eq(0)').find('.text').html();
+      const xUser = $(result).find('.imdb-user-review:eq(0)').find('.display-name-link').text().trim();
+      const xUsrLink = $(result).find('.imdb-user-review:eq(0)').find('.display-name-link a').attr('href');
+      const xDate = $(result).find('.imdb-user-review:eq(0)').find('.review-date').text().trim();
+      const xRating = $(result).find('.imdb-user-review:eq(0)').find('.ipl-star-icon').next().text().trim();
+
+      let x = '' +
+              '<section class="scout_review">' +
+              '  <div><h4 class="ipl-list-title">Top Review</h4></div>' +
+              '  <table class="titlereference-list ipl-zebra-list">' +
+              '    <tbody>' +
+              '      <tr class="ipl-zebra-list__item">' +
+              '        <td>' +
+              '          <a class="scout_review_rating">' +
+              '            <span class="ipl-rating-star__star">' +
+              '              <svg class="ipl-icon ipl-star-icon" xmlns="http://www.w3.org/2000/svg" fill="#000000" height="24" viewBox="0 0 24 24" width="24">' +
+              '                <path d="M0 0h24v24H0z" fill="none"></path>' +
+              '                <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>' +
+              '                <path d="M0 0h24v24H0z" fill="none"></path>' +
+              '              </svg></span>' +
+              '            <span class="point-scale"> xRating</span><span> |</span></a>' +
+              '          <a class="scout_review_title" href="xRevLink"> xTitle</a>' +
+              '          <div class="display-name-date" style="font-size:11px">' +
+              '            <span class="display-name-link">' +
+              '              <a href="xUsrLink">xUser</a></span>' +
+              '            <span class="review-date"> xDate</span></div>' +
+              '          <p>xReview</p></td></tr></tbody></table></section>' +
+              '';
+      x = x.replace('xTitle', xTitle);
+      x = x.replace('xRevLink', xRevLink);
+      x = x.replace('xReview', xReview);
+      x = x.replace('xUser', xUser);
+      x = x.replace('xUsrLink', xUsrLink);
+      x = x.replace('xDate', xDate);
+      x = x.replace('xRating', xRating);
+
+      let y = jQuery.parseHTML(x);
+      $('.titlereference-section-media').after(y);
+    },
+    onerror: function() {
+      console.log("IMDb Scout Mod (Review): Request Error.");
+    },
+    onabort: function() {
+      console.log("IMDb Scout Mod (Review): Request is aborted.");
+    },
+    ontimeout: function() {
+      console.log("IMDb Scout Mod (Review): Request timed out.");
+    }
+  });
+}
+
+//==============================================================================
+//    Remove ads from IMDb
+//==============================================================================
+
+function adsRemovalReference() {
+  if (!GM_config.get('remove_ads')) {
+    return;
+  }
+  if (Boolean($('.aux-content-widget-2').first().text().match("IMDb Answers"))) {
+    $('.aux-content-widget-2').first().remove();
+  }
+  $('.cornerstone_slot').remove();
+  $('.imdb-footer').remove();
+  $('#social-share-widget').remove();
+  $('.navbar__imdbpro').remove();
+  $('[class^=Root__Separator]').remove();
+  // To remove ad's background image
+  $('#wrapper').attr('style', 'background: 000000 !important');
+}
+
+function adsRemoval() {
+  if (!GM_config.get('remove_ads')) {
+    return;
+  }
+  // removing 5th ".nas-slot" breaks dynamic reflow when window is resized.
+  if ($('.nas-slot').length == 7) {
+    $('.nas-slot')[0].remove();
+    $('.nas-slot')[0].remove();
+    $('.nas-slot')[0].remove();
+    $('.nas-slot')[0].remove();
+    $('.nas-slot')[1].remove();
+    $('.nas-slot')[1].remove();
+    $('#inline40_wrapper').remove();
+  } else {
+    $('.nas-slot').remove();
+  }
+
+  $('[class^=Banner]').remove();
+  $('[id^=taboola]').remove();
+  $('[class*=ProLink]').remove();
+  $('[class^=IMDbPro]').remove();
+  $('.imdb-editorial-single').remove();
+  $('.imdb-footer').remove();
+  $('.navbar__imdbpro').remove();
+  $('[class^=Root__Separator]').remove();
+}
+
+//==============================================================================
+//    Create the config name (GM_config)
+//==============================================================================
+
+function configName(site) {
+  if ('configName' in site) {
+    return 'show_' + site['configName'] + (site['TV'] ? '_TV' : '');
+  } else {
+    return 'show_' + site['name'] + (site['TV'] ? '_TV' : '');
+  }
+}
+
+//==============================================================================
+//    Count sites (GM_config)
+//==============================================================================
+
+function countSites(task) {
+  if (task == 1) {
+    const count_total = sites.concat(icon_sites).length;
+    return count_total;
+  }
+  if (task == 2) {
+    // Init GM_config to get amount of selected sites.
+    // GM_config's fields needs to be mirrored to keep Settings intact.
+    var config_fields = {
+      'aftertitle': {'type': 'hidden'},
+      'imdbtotalstats': {'type': 'hidden'},
+      'imdbselectedstats': {'type': 'hidden'},
+      'imdbscoutmod_header_text': {'type': 'text'},
+      'imdbscoutsecondbar_header_text': {'type': 'text'},
+      'imdbscoutthirdbar_header_text': {'type': 'text'},
+      'mod_icons_size': {'type': 'text'},
+      'iconsborder_size': {'type': 'select', 'options': ['2px', '3px', '4px', '5px', '6px']},
+      'cfg_iconsize': {'type': 'text'},
+      'timeout_ms': {'type': 'select', 'options': ['10000 ms', '20000 ms', '30000 ms', '45000 ms', '60000 ms']},
+      'load_icons_in_settings': {'type': 'checkbox'},
+      'remove_ads': {'type': 'checkbox'},
+      'debug_sites': {'type': 'checkbox'},
+      'loadmod_on_start_movie': {'type': 'checkbox'},
+      'load_second_bar': {'type': 'checkbox'},
+      'load_third_bar_movie': {'type': 'checkbox'},
+      'switch_bars': {'type': 'checkbox'},
+      'sortReqOnNewLine': {'type': 'checkbox'},
+      'call_http_mod_movie': {'type': 'checkbox'},
+      'hide_missing_movie': {'type': 'checkbox'},
+      'use_mod_icons_movie': {'type': 'checkbox'},
+      'one_line': {'type': 'checkbox'},
+      'ignore_type_movie': {'type': 'checkbox'},
+      'remove_openall': {'type': 'checkbox'},
+      'force_reference_view': {'type': 'checkbox'},
+      'dark_reference_view': {'type': 'checkbox'},
+      'compact_reference_view': {'type': 'checkbox'},
+      'greybackground_reference_view': {'type': 'checkbox'},
+      'highlight_sites_movie': {'type': 'text'},
+      'highlight_missing_movie': {'type': 'text'},
+      'loadmod_on_start_search': {'type': 'checkbox'},
+      'load_third_bar_search': {'type': 'checkbox'},
+      'call_http_mod_search': {'type': 'checkbox'},
+      'hide_missing_search': {'type': 'checkbox'},
+      'use_mod_icons_search': {'type': 'checkbox'},
+      'ignore_type_search': {'type': 'checkbox'},
+      'highlight_sites_search': {'type': 'text'},
+      'highlight_missing_search': {'type': 'text'},
+      'ratings_img_px': {'type': 'select', 'options': ['32px', '48px', '64px']},
+      'ratings_cfg_imdb': {'type': 'checkbox'},
+      'ratings_cfg_metacritic': {'type': 'checkbox'},
+      'ratings_cfg_rotten': {'type': 'checkbox'},
+      'ratings_cfg_letterboxd': {'type': 'checkbox'},
+      'ratings_cfg_douban': {'type': 'checkbox'},
+      'ratings_cfg_allocine': {'type': 'checkbox'},
+      'ratings_imdb_fem': {'type': 'checkbox'},
+      'ratings_cfg_color': {'type': 'checkbox'},
+      'ratings_cfg_color_scheme': {'type': 'text'},
+      'ratings_cfg_omdb_apikey': {'type': 'text'},
+      'radarr_searchformovie': {'type': 'checkbox'},
+      'radarr_monitored': {'type': 'checkbox'},
+      'radarr_url': {'type': 'text'},
+      'radarr_apikey': {'type': 'text'},
+      'radarr_rootfolderpath': {'type': 'text'},
+      'radarr_profileid': {'type': 'select', 'options': ['Any', 'HD - 720p/1080p', 'HD-1080p', 'HD-720p', 'SD', 'Ultra-HD', 'Custom']},
+      'radarr_customprofileid': {'type': 'text'},
+      'radarr_minimumavailability': {'type': 'select', 'options': ['announced', 'inCinemas', 'released']},
+      'sonarr_searchformissing': {'type': 'checkbox'},
+      'sonarr_searchforcutoff': {'type': 'checkbox'},
+      'sonarr_ignoreEpisodesWithFiles': {'type': 'checkbox'},
+      'sonarr_ignoreEpisodesWithoutFiles': {'type': 'checkbox'},
+      'sonarr_seasonfolder': {'type': 'checkbox'},
+      'sonarr_usescenenumbering': {'type': 'select', 'options': ['Auto', 'No', 'Yes']},
+      'sonarr_monitored': {'type': 'select', 'options': ['All Episodes', 'Future Episodes', 'Missing Episodes', 'Existing Episodes', 'Pilot Episode', 'Only First Season', 'Only Latest Season', 'None']},
+      'sonarr_url': {'type': 'text'},
+      'sonarr_apikey': {'type': 'text'},
+      'sonarr_rootfolderpath': {'type': 'text'},
+      'sonarr_profileid': {'type': 'select', 'options': ['Any', 'HD - 720p/1080p', 'HD-1080p', 'HD-720p', 'SD', 'Ultra-HD', 'Custom']},
+      'sonarr_customprofileid': {'type': 'text'},
+      'sonarr_languageprofileid': {'type': 'text'},
+      'sonarr_seriestype': {'type': 'select', 'options': ['standard', 'daily', 'anime']},
+      'trakt_synclimiter': {'type': 'select', 'options': ['15', '30', '60', '300']},
+      'plex_server_url': {'type': 'text'},
+      'plex_token': {'type': 'text'},
+      'jellyfin_server_url': {'type': 'text'},
+      'jellyfin_username': {'type': 'text'},
+      'jellyfin_password': {'type': 'text'},
+      'jellyfin_debug': {'type': 'checkbox'},
+      'emby_server_url': {'type': 'text'},
+      'emby_username': {'type': 'text'},
+      'emby_password': {'type': 'text'},
+      'emby_debug': {'type': 'checkbox'},
+      'milkie_authToken': {'type': 'text'},
+      'tnt_authToken': {'type': 'text'}
+    };
+    $.each(custom_sites, function(index, site) {config_fields[configName(site)] = {'type': 'checkbox'};});
+    $.each(public_sites, function(index, site) {config_fields[configName(site)] = {'type': 'checkbox'};});
+    $.each(private_sites, function(index, site) {config_fields[configName(site)] = {'type': 'checkbox'};});
+    $.each(chinese_sites, function(index, site) {config_fields[configName(site)] = {'type': 'checkbox'};});
+    $.each(french_sites, function(index, site) {config_fields[configName(site)] = {'type': 'checkbox'};});
+    $.each(german_sites, function(index, site) {config_fields[configName(site)] = {'type': 'checkbox'};});
+    $.each(usenet_sites, function(index, site) {config_fields[configName(site)] = {'type': 'checkbox'};});
+    $.each(subs_sites, function(index, site) {config_fields[configName(site)] = {'type': 'checkbox'};});
+    $.each(pre_databases, function(index, site) {config_fields[configName(site)] = {'type': 'checkbox'};});
+    $.each(other_sites, function(index, site) {config_fields[configName(site)] = {'type': 'checkbox'};});
+    $.each(streaming_sites, function(index, site) {config_fields[configName(site)] = {'type': 'checkbox'};});
+    $.each(icon_sites_main, function(index, icon_site) {config_fields['show_icon_' + icon_site['name']] = {'type': 'checkbox'};});
+    $.each(special_buttons, function(index, icon_site) {config_fields['show_icon_' + icon_site['name']] = {'type': 'checkbox'};});
+
+    GM_config.init({'id': 'imdb_scout', 'fields': config_fields});
+
+    $.each(sites, function(index, site) {
+      site['show'] = GM_config.get(configName(site));
+    });
+    $.each(icon_sites, function(index, icon_site) {
+      icon_site['show'] = GM_config.get('show_icon_' + icon_site['name']);
+    });
+
+    const count_selected = sites.concat(icon_sites).reduce(function (n, site) {
+      return n + (site['show'] == true); }, 0);
+
+    return count_selected;
+  }
+}
+
+
+//============================================================================//
+//================================  MAIN  ====================================//
+//============================================================================//
+
+
+//==============================================================================
+//    Polyfill for GM3 notifications
+//==============================================================================
+
+if (typeof GM.notification === "undefined") {
+  this.GM_notification = function(options) {
+    const opts = {};
+    if (typeof options === "string") {
+      opts.text = options;
+      opts.title = arguments[1];
+      opts.image = arguments[2];
+      opts.onclick = arguments[3];
+    } else {
+      Object.keys(options).forEach(function(key) {
+        opts[key] = options[key];
+      });
+    }
+
+    checkPermission();
+
+    function checkPermission() {
+      if (Notification.permission === "granted") {
+        fireNotice(opts);
+      } else if (Notification.permission === "denied") {
+        alert("User has denied notifications for this page/site!");
+        // eslint-disable-next-line no-useless-return
+        return;
+      } else {
+        Notification.requestPermission(function(permission) {
+          console.log("New permission: ", permission);
+          checkPermission();
+        });
+      }
+    }
+
+    function fireNotice(ntcOptions) {
+      if (ntcOptions.text && !ntcOptions.body) {
+        ntcOptions.body = ntcOptions.text;
+      }
+      var ntfctn = new Notification(ntcOptions.title, ntcOptions);
+
+      if (ntcOptions.onclick) {
+        ntfctn.onclick = ntcOptions.onclick;
+      }
+      if (ntcOptions.timeout) {
+        setTimeout(function() {
+          ntfctn.close();
+        }, ntcOptions.timeout);
+      }
+    }
+  };
+  GM.notification = GM_notification;
+}
+
+//==============================================================================
+//    Settings Menu (GM_config)
+//==============================================================================
+
+// To have consistent spacing in different browsers.
+var set_cfg_iconsize_spacing = "&nbsp &nbsp";
+var radarr_url_spacing = "&nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp";
+var radarr_apikey_spacing = "&nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp";
+var radarr_rootfolderpath_spacing = "&nbsp";
+var sonarr_usescenenumbering_spacing = "&nbsp &nbsp";
+var sonarr_monitored_spacing = " &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp";
+var sonarr_languageprofileid_spacing = " &nbsp &nbsp &nbsp &nbsp &nbsp";
+var sonarr_seriestype_spacing = "&nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp";
+if (navigator.userAgent.toLowerCase().indexOf('firefox') > -1) {
+  set_cfg_iconsize_spacing = " &nbsp";
+  radarr_url_spacing = " &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp";
+  radarr_apikey_spacing = "&nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp";
+  radarr_rootfolderpath_spacing = "";
+  sonarr_usescenenumbering_spacing = "&nbsp";
+  sonarr_monitored_spacing = " &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp";
+  sonarr_languageprofileid_spacing = "&nbsp &nbsp &nbsp &nbsp &nbsp";
+  sonarr_seriestype_spacing = "&nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp";
+}
+
+var config_fields = {
+  'aftertitle': {
+    'section': ' ',
+    'label': ' &nbsp',
+    'type': 'hidden'
+  },
+  'imdbtotalstats': {
+    'label': 'Total sites:&nbsp'.bold().fontsize(3) + countSites(1).toString().bold().fontsize(3).fontcolor("Blue"),
+    'type': 'hidden'
+  },
+  'imdbselectedstats': {
+    'label': 'Selected sites:&nbsp'.bold().fontsize(3) + countSites(2).toString().bold().fontsize(3).fontcolor("Blue"),
+    'type': 'hidden'
+  },
+  'imdbscoutmod_header_text': {
+    'label': 'Header text for the 1st bar:&nbsp',
+    'type': 'text',
+    'default': ''
+  },
+  'imdbscoutsecondbar_header_text': {
+    'label': 'Header text for the 2nd bar:',
+    'type': 'text',
+    'default': ''
+  },
+  'imdbscoutthirdbar_header_text': {
+    'label': 'Header text for the 3rd bar:&nbsp',
+    'type': 'text',
+    'default': ''
+  },
+  'mod_icons_size': {
+    'label': 'Size of the icons (pixels): &nbsp &nbsp',
+    'type': 'text',
+    'default': '32'
+  },
+  'iconsborder_size': {
+    'label': 'Size of the icons border:&nbsp &nbsp &nbsp',
+    'type': 'select',
+    'options': ['2px', '3px', '4px', '5px', '6px'],
+    'default': '3px'
+  },
+  'cfg_iconsize': {
+    'label': 'Size of the settings icons:' + set_cfg_iconsize_spacing,
+    'type': 'text',
+    'default': '22'
+  },
+  'timeout_ms': {
+    'label': 'Timeout requests after: &nbsp &nbsp &nbsp' + radarr_rootfolderpath_spacing,
+    'type': 'select',
+    'options': ['10000 ms', '20000 ms', '30000 ms', '45000 ms', '60000 ms'],
+    'default': '30000 ms'
+  },
+  'load_icons_in_settings': {
+    'type': 'checkbox',
+    'label': 'Load icons in settings (most of them are external)?',
+    'default': true
+  },
+  'remove_ads': {
+    'type': 'checkbox',
+    'label': 'Remove IMDb ads?',
+    'default': true
+  },
+  'debug_sites': {
+    'type': 'checkbox',
+    'label': 'Debug (the searchable sites)?',
+    'default': false
+  },
+  'loadmod_on_start_movie': {
+    'section': 'Title Page:',
+    'type': 'checkbox',
+    'label': 'Load links to sites on start?',
+    'default': true
+  },
+  'load_second_bar': {
+    'type': 'checkbox',
+    'label': 'Enable the 2nd search bar?',
+    'default': false
+  },
+  'load_third_bar_movie': {
+    'type': 'checkbox',
+    'label': 'Enable the 3rd search bar?',
+    'default': false
+  },
+  'switch_bars': {
+    'type': 'checkbox',
+    'label': 'Swap 2nd and 3rd bars?',
+    'default': false
+  },
+  'sortReqOnNewLine': {
+    'type': 'checkbox',
+    'label': 'Split Req sites to a new line if the request is found?',
+    'default': true
+  },
+  'call_http_mod_movie': {
+    'type': 'checkbox',
+    'label': 'Auto-search sites for results?',
+    'default': true
+  },
+  'hide_missing_movie': {
+    'type': 'checkbox',
+    'label': "Hide link if search didn't found results?",
+    'default': false
+  },
+  'use_mod_icons_movie': {
+    'type': 'checkbox',
+    'label': 'Use icons instead of text?',
+    'default': true
+  },
+  'one_line': {
+    'type': 'checkbox',
+    'label': 'Show search results on one line?',
+    'default': true
+  },
+  'ignore_type_movie': {
+    'type': 'checkbox',
+    'label': 'Search all sites, ignoring movie/tv distinction?',
+    'default': false
+  },
+  'remove_openall': {
+    'type': 'checkbox',
+    'label': 'Remove "Open All" button?',
+    'default': false
+  },
+  'force_reference_view': {
+    'type': 'checkbox',
+    'label': 'Reference View: Force it (without login)?',
+    'default': false
+  },
+  'dark_reference_view': {
+    'type': 'checkbox',
+    'label': 'Reference View: Enable the dark style?',
+    'default': true
+  },
+  'compact_reference_view': {
+    'type': 'checkbox',
+    'label': 'Reference View: Enable the compact mode?',
+    'default': true
+  },
+  'greybackground_reference_view': {
+    'type': 'checkbox',
+    'label': 'Reference View: Enable grey background for searchable sites?',
+    'default': true
+  },
+  'highlight_sites_movie': {
+    'label': 'Highlight sites: &nbsp &nbsp &nbsp',
+    'type': 'text',
+    'default': 'PTP,KG,BTN,BTN-Title,SC,CG,TVV,Tik'
+  },
+  'highlight_missing_movie': {
+    'label': 'Mark when not on:',
+    'type': 'text',
+    'default': ''
+  },
+  'loadmod_on_start_search': {
+    'section': 'Search/List/Watchlist Page:',
+    'type': 'checkbox',
+    'label': 'Load links to sites on start?',
+    'default': false
+  },
+  'load_third_bar_search': {
+    'type': 'checkbox',
+    'label': 'Enable the 3rd search bar?',
+    'default': false
+  },
+  'call_http_mod_search': {
+    'type': 'checkbox',
+    'label': 'Auto-search sites for results?',
+    'default': true
+  },
+  'hide_missing_search': {
+    'type': 'checkbox',
+    'label': "Hide link if search didn't found results?",
+    'default': false
+  },
+  'use_mod_icons_search': {
+    'type': 'checkbox',
+    'label': 'Use icons instead of text?',
+    'default': true
+  },
+  'ignore_type_search': {
+    'type': 'checkbox',
+    'label': 'Search all sites, ignoring movie/tv distinction?',
+    'default': false
+  },
+  'highlight_sites_search': {
+    'label': 'Highlight sites: &nbsp &nbsp &nbsp',
+    'type': 'text',
+    'default': ''
+  },
+  'highlight_missing_search': {
+    'label': 'Mark when not on:',
+    'type': 'text',
+    'default': ''
+  },
+  'ratings_img_px': {
+    'label': 'Size of the ratings icons: &nbsp',
+    'section': 'External ratings:',
+    'type': 'select',
+    'options': ['32px', '48px', '64px'],
+    'default': '48px'
+  },
+  'ratings_cfg_imdb': {
+    'type': 'checkbox',
+    'label': 'Enable IMDb ratings?',
+    'default': true
+  },
+  'ratings_cfg_metacritic': {
+    'type': 'checkbox',
+    'label': 'Enable Metacritic ratings?',
+    'default': true
+  },
+  'ratings_cfg_rotten': {
+    'type': 'checkbox',
+    'label': 'Enable Rotten Tomatoes ratings?',
+    'default': true
+  },
+  'ratings_cfg_letterboxd': {
+    'type': 'checkbox',
+    'label': 'Enable Letterboxd ratings?',
+    'default': true
+  },
+  'ratings_cfg_douban': {
+    'type': 'checkbox',
+    'label': 'Enable Douban ratings?',
+    'default': false
+  },
+  'ratings_cfg_allocine': {
+    'type': 'checkbox',
+    'label': 'Enable Allocine ratings?',
+    'default': false
+  },
+  'ratings_imdb_fem': {
+    'type': 'checkbox',
+    'label': 'Add additional females ratings for IMDb?',
+    'default': false
+  },
+  'ratings_cfg_color': {
+    'type': 'checkbox',
+    'label': 'Enable color scheme for ratings?',
+    'default': true
+  },
+  'ratings_cfg_color_scheme': {
+    'label': 'Reference points for colors:&nbsp',
+    'type': 'text',
+    'default': '69,49'
+  },
+  'ratings_cfg_omdb_apikey': {
+    'label': 'OMDb API key:&nbsp',
+    'type': 'text',
+    'default': ''
+  },
+  'radarr_searchformovie': {
+    'section': 'Radarr settings:',
+    'type': 'checkbox',
+    'label': 'Search for movie on add?',
+    'default': true
+  },
+  'radarr_monitored': {
+    'type': 'checkbox',
+    'label': 'Add monitored?',
+    'default': true
+  },
+  'radarr_url': {
+    'label': 'Radarr URL:' + radarr_url_spacing,
+    'type': 'text',
+    'default': 'http://localhost:7878'
+  },
+  'radarr_apikey': {
+    'label': 'Radarr API Key:' + radarr_apikey_spacing,
+    'type': 'text',
+    'default': ''
+  },
+  'radarr_rootfolderpath': {
+    'label': 'Radarr Root Folder Path:' + radarr_rootfolderpath_spacing,
+    'type': 'text',
+    'default': 'D:\\Movies'
+  },
+  'radarr_profileid': {
+    'label': 'Radarr Quality Profile: &nbsp &nbsp &nbsp',
+    'type': 'select',
+    'options': ['Any', 'HD - 720p/1080p', 'HD-1080p', 'HD-720p', 'SD', 'Ultra-HD', 'Custom'],
+    'default': 'Any'
+  },
+  'radarr_customprofileid': {
+    'label': 'Custom Quality ProfileID:' + radarr_rootfolderpath_spacing,
+    'type': 'text',
+    'default': '1'
+  },
+  'radarr_minimumavailability': {
+    'label': 'Minimum Availability: &nbsp &nbsp &nbsp &nbsp',
+    'type': 'select',
+    'options': ['announced', 'inCinemas', 'released'],
+    'default': 'inCinemas'
+  },
+  'sonarr_searchformissing': {
+    'section': 'Sonarr settings:',
+    'type': 'checkbox',
+    'label': 'Start search for missing episodes?',
+    'default': false
+  },
+  'sonarr_searchforcutoff': {
+    'type': 'checkbox',
+    'label': 'Start search for cutoff unmet episodes?',
+    'default': false
+  },
+  'sonarr_ignoreEpisodesWithFiles': {
+    'type': 'checkbox',
+    'label': 'Set ignoreEpisodesWithFiles=true?',
+    'default': false
+  },
+  'sonarr_ignoreEpisodesWithoutFiles': {
+    'type': 'checkbox',
+    'label': 'Set ignoreEpisodesWithoutFiles=true?',
+    'default': false
+  },
+  'sonarr_seasonfolder': {
+    'type': 'checkbox',
+    'label': 'Season Folder?',
+    'default': true
+  },
+  'sonarr_usescenenumbering': {
+    'label': 'Use Scene Numbering?' + sonarr_usescenenumbering_spacing,
+    'type': 'select',
+    'options': ['Auto', 'No', 'Yes'],
+    'default': 'Auto'
+  },
+  'sonarr_monitored': {
+    'label': 'Monitored:' + sonarr_monitored_spacing,
+    'type': 'select',
+    'options': ['All Episodes', 'Future Episodes', 'Missing Episodes', 'Existing Episodes', 'Pilot Episode', 'Only First Season', 'Only Latest Season', 'None'],
+    'default': 'All Episodes'
+  },
+  'sonarr_url': {
+    'label': 'Sonarr URL:' + radarr_url_spacing,
+    'type': 'text',
+    'default': 'http://localhost:8989'
+  },
+  'sonarr_apikey': {
+    'label': 'Sonarr API Key:' + radarr_apikey_spacing,
+    'type': 'text',
+    'default': ''
+  },
+  'sonarr_rootfolderpath': {
+    'label': 'Sonarr Root Folder Path:' + radarr_rootfolderpath_spacing,
+    'type': 'text',
+    'default': 'D:\\TVSeries'
+  },
+  'sonarr_profileid': {
+    'label': 'Sonarr Quality Profile: &nbsp &nbsp &nbsp',
+    'type': 'select',
+    'options': ['Any', 'HD - 720p/1080p', 'HD-1080p', 'HD-720p', 'SD', 'Ultra-HD', 'Custom'],
+    'default': 'Any'
+  },
+  'sonarr_customprofileid': {
+    'label': 'Custom Quality ProfileID:' + radarr_rootfolderpath_spacing,
+    'type': 'text',
+    'default': '1'
+  },
+  'sonarr_languageprofileid': {
+    'label': 'Language ProfileID:' + sonarr_languageprofileid_spacing,
+    'type': 'text',
+    'default': '1'
+  },
+  'sonarr_seriestype': {
+    'label': 'Series Type:' + sonarr_seriestype_spacing,
+    'type': 'select',
+    'options': ['standard', 'daily', 'anime'],
+    'default': 'standard'
+  },
+  'trakt_synclimiter': {
+    'label': "Sliding watchlist's sync timeout (seconds):",
+    'section': 'Trakt-Watchlist settings:',
+    'type': 'select',
+    'options': ['15', '30', '60', '300'],
+    'default': '15'
+  },
+  'plex_server_url': {
+    'label': "Plex Server URL:",
+    'section': 'Plex settings:',
+    'type': 'text',
+    'default': 'http://127.0.0.1:32400'
+  },
+  'plex_token': {
+    'label': "Plex Token: &nbsp &nbsp &nbsp &nbsp &nbsp",
+    'type': 'text',
+    'default': ''
+  },
+  'jellyfin_server_url': {
+    'label': "Jellyfin Server URL:",
+    'section': 'Jellyfin settings:',
+    'type': 'text',
+    'default': 'http://localhost:8096'
+  },
+  'jellyfin_username': {
+    'label': "Jellyfin Username: &nbsp",
+    'type': 'text',
+    'default': ''
+  },
+  'jellyfin_password': {
+    'label': "Jellyfin Password:&nbsp &nbsp",
+    'type': 'text',
+    'default': ''
+  },
+  'jellyfin_debug': {
+    'type': 'checkbox',
+    'label': "Debug?",
+    'default': false
+  },
+  'emby_server_url': {
+    'label': "Emby Server URL:",
+    'section': 'Emby settings:',
+    'type': 'text',
+    'default': 'http://localhost:8096'
+  },
+  'emby_username': {
+    'label': "Emby Username: &nbsp",
+    'type': 'text',
+    'default': ''
+  },
+  'emby_password': {
+    'label': "Emby Password:&nbsp &nbsp",
+    'type': 'text',
+    'default': ''
+  },
+  'emby_debug': {
+    'type': 'checkbox',
+    'label': "Debug?",
+    'default': false
+  },
+  'milkie_authToken': {
+    'label': 'Milkie:',
+    'section': 'Authorization Tokens:',
+    'type': 'text',
+    'default': ''
+  },
+  'tnt_authToken': {
+    'label': 'TNT:&nbsp &nbsp',
+    'type': 'text',
+    'default': ''
+  }
+};
+
+//==============================================================================
+//    Add sites to Settings (GM_config)
+//==============================================================================
+
+$.each(custom_sites, function(index, site) {
+  config_fields[configName(site)] = {
+    'section': (index == 0) ? ['Custom sites:'] : '',
+    'type': 'checkbox',
+    'label': ' ' + site['name'] + (site['TV'] ? ' (TV)' : '')
+  };
+});
+
+$.each(public_sites, function(index, site) {
+  config_fields[configName(site)] = {
+    'section': (index == 0) ? ['Public download sites:'] : '',
+    'type': 'checkbox',
+    'label': ' ' + site['name'] + (site['TV'] ? ' (TV)' : '')
+  };
+});
+
+$.each(private_sites, function(index, site) {
+  config_fields[configName(site)] = {
+    'section': (index == 0) ? ['Private download sites:'] : '',
+    'type': 'checkbox',
+    'label': ' ' + site['name'] + (site['TV'] ? ' (TV)' : '')
+  };
+});
+
+$.each(chinese_sites, function(index, site) {
+  config_fields[configName(site)] = {
+    'section': (index == 0) ? ['Chinese sites:'] : '',
+    'type': 'checkbox',
+    'label': ' ' + site['name'] + (site['TV'] ? ' (TV)' : '')
+  };
+});
+
+$.each(french_sites, function(index, site) {
+  config_fields[configName(site)] = {
+    'section': (index == 0) ? ['French sites:'] : '',
+    'type': 'checkbox',
+    'label': ' ' + site['name'] + (site['TV'] ? ' (TV)' : '')
+  };
+});
+
+$.each(german_sites, function(index, site) {
+  config_fields[configName(site)] = {
+    'section': (index == 0) ? ['German sites:'] : '',
+    'type': 'checkbox',
+    'label': ' ' + site['name'] + (site['TV'] ? ' (TV)' : '')
+  };
+});
+
+$.each(usenet_sites, function(index, site) {
+  config_fields[configName(site)] = {
+    'section': (index == 0) ? ['Usenet sites:'] : '',
+    'type': 'checkbox',
+    'label': ' ' + site['name'] + (site['TV'] ? ' (TV)' : '')
+  };
+});
+
+$.each(subs_sites, function(index, site) {
+  config_fields[configName(site)] = {
+    'section': (index == 0) ? ['Subtitles sites (in 2nd bar):'] : '',
+    'type': 'checkbox',
+    'label': ' ' + site['name'] + (site['TV'] ? ' (TV)' : '')
+  };
+});
+
+$.each(pre_databases, function(index, site) {
+  config_fields[configName(site)] = {
+    'section': (index == 0) ? ['Pre databases (in 2nd bar):'] : '',
+    'type': 'checkbox',
+    'label': ' ' + site['name'] + (site['TV'] ? ' (TV)' : '')
+  };
+});
+
+$.each(other_sites, function(index, site) {
+  config_fields[configName(site)] = {
+    'section': (index == 0) ? ['Other sites/tools (in 2nd bar):'] : '',
+    'type': 'checkbox',
+    'label': ' ' + site['name'] + (site['TV'] ? ' (TV)' : '')
+  };
+});
+
+$.each(streaming_sites, function(index, site) {
+  config_fields[configName(site)] = {
+    'section': (index == 0) ? ['Streaming sites/tools (in 3rd bar):'] : '',
+    'type': 'checkbox',
+    'label': ' ' + site['name'] + (site['TV'] ? ' (TV)' : '')
+  };
+});
+
+$.each(icon_sites_main, function(index, icon_site) {
+  config_fields['show_icon_' + icon_site['name']] = {
+    'section': (index == 0) ? ['Icon sites (no search):'] : '',
+    'type': 'checkbox',
+    'label': ' ' + icon_site['name'],
+    'default': ('showByDefault' in icon_site) ? icon_site['showByDefault'] : true
+  };
+});
+
+$.each(special_buttons, function(index, icon_site) {
+  config_fields['show_icon_' + icon_site['name']] = {
+    'section': (index == 0) ? ['Special icons/buttons:'] : '',
+    'type': 'checkbox',
+    'label': ' ' + icon_site['name'],
+    'default': ('showByDefault' in icon_site) ? icon_site['showByDefault'] : true
+  };
+});
+
+//==============================================================================
+//    Initialize and register GM_config
+//==============================================================================
+
+GM_config.init({
+  'id': 'imdb_scout',
+  'title': 'IMDb Scout Mod Settings',
+  'fields': config_fields,
+  'css': `#imdb_scout_section_header_1, #imdb_scout_section_header_2, #imdb_scout_section_header_3, \
+          #imdb_scout_section_header_4, #imdb_scout_section_header_5, #imdb_scout_section_header_6, \
+          #imdb_scout_section_header_7, #imdb_scout_section_header_8, #imdb_scout_section_header_9, \
+          #imdb_scout_section_header_10, #imdb_scout_section_header_11, #imdb_scout_section_header_12, \
+          #imdb_scout_section_header_13, #imdb_scout_section_header_14, #imdb_scout_section_header_15, \
+          #imdb_scout_section_header_16, #imdb_scout_section_header_17, #imdb_scout_section_header_18, \
+          #imdb_scout_section_header_19, #imdb_scout_section_header_20, #imdb_scout_section_header_21, \
+          #imdb_scout_section_header_22, #imdb_scout_section_header_23 { \
+             background:   #00ab00 !important; \
+             color:          black !important; \
+             font-weight:     bold !important; \
+             border:           0px !important; \
+             padding-left:     0px !important; \
+             text-align:    middle !important;}\
+          .field_label { \
+             display:         flex !important; \
+             align-items:   center !important; \
+             font-weight:   normal !important;}\
+          .config_var { \
+             margin-top:       2px !important; \
+             margin-bottom:    2px !important; \
+             display:         flex !important; \
+             align-items:   center !important;}\
+          #imdb_scout_aftertitle_var { \
+             margin-top:       0px !important; \
+             margin-bottom:    0px !important;}\
+          input { \
+             margin-top:       0px !important; \
+             margin-bottom:    0px !important;}\
+          .grey_link { \
+             margin-left:      4px !important;}\
+          #imdb_scout_section_header_0 { \
+             font-weight:     bold !important; \
+             border:           0px !important; \
+             margin-top:       0px !important; \
+             background:   #bfbfbf !important;}\
+          #imdb_scout_header { \
+             background:     black !important; \
+             color:          white !important;}\
+          #imdb_scout_section_0 { \
+             margin-top:       0px !important;}`,
+  'events':
+  {
+    'open': function() {
+      // Iframe position.
+      this.frame.style.top    = '50px';
+      this.frame.style.left   = 'auto';
+      this.frame.style.right  = '150px';
+      this.frame.style.height = '90%';
+      this.frame.style.width  = '450px';
+
+      $('#imdb_scout').contents().find('input#imdb_scout_field_highlight_sites_movie').attr('size', '35');
+      $('#imdb_scout').contents().find('input#imdb_scout_field_highlight_missing_movie').attr('size', '35');
+      $('#imdb_scout').contents().find('input#imdb_scout_field_highlight_sites_search').attr('size', '35');
+      $('#imdb_scout').contents().find('input#imdb_scout_field_highlight_missing_search').attr('size', '35');
+      $('#imdb_scout').contents().find('input#imdb_scout_field_mod_icons_size').attr('size', '1');
+      $('#imdb_scout').contents().find('input#imdb_scout_field_cfg_iconsize').attr('size', '1');
+      $('#imdb_scout').contents().find('input#imdb_scout_field_radarr_customprofileid').attr('size', '1');
+      $('#imdb_scout').contents().find('input#imdb_scout_field_sonarr_customprofileid').attr('size', '1');
+      $('#imdb_scout').contents().find('input#imdb_scout_field_sonarr_languageprofileid').attr('size', '1');
+      $('#imdb_scout').contents().find('input#imdb_scout_field_ratings_cfg_color_scheme').attr('size', '2');
+
+      const modVersion = 'IMDb Scout Mod v' + GM.info.script.version;
+      const modUrl = 'https://greasyfork.org/en/scripts/407284-imdb-scout-mod';
+      $('#imdb_scout').contents().find('#imdb_scout_section_header_0').append($('<a href="'+modUrl+'" target ="_blank">'+modVersion+'</a>'));
+      $('#imdb_scout').contents().find('#imdb_scout_section_header_0').find('a').css({
+       'text-decoration': 'none',
+       'color': '#cb0000'
+      });
+
+      const iconsInSettings = GM_config.get('load_icons_in_settings');
+
+      $('#imdb_scout').contents().find('#imdb_scout_section_11').find('.field_label').each(function(index, label) {
+        var url = new URL(custom_sites[index].searchUrl);
+        $(label).append(' ' + '<a class="grey_link" target="_blank" rel="noreferrer" style="color: gray; text-decoration : none" href="' + url.origin + '">'
+                        + (/www./.test(url.hostname) ? url.hostname.match(/www.(.*)/)[1] : url.hostname) + '</a>');
+        $(label).prepend(getFavicon(custom_sites[index], iconsInSettings));
+      });
+      $('#imdb_scout').contents().find('#imdb_scout_section_12').find('.field_label').each(function(index, label) {
+        var url = new URL(public_sites[index].searchUrl);
+        $(label).append(' ' + '<a class="grey_link" target="_blank" rel="noreferrer" style="color: gray; text-decoration : none" href="' + url.origin + '">'
+                        + (/www./.test(url.hostname) ? url.hostname.match(/www.(.*)/)[1] : url.hostname) + '</a>');
+        $(label).prepend(getFavicon(public_sites[index], iconsInSettings));
+      });
+      $('#imdb_scout').contents().find('#imdb_scout_section_13').find('.field_label').each(function(index, label) {
+        var url = new URL(private_sites[index].searchUrl);
+        $(label).append(' ' + '<a class="grey_link" target="_blank" rel="noreferrer" style="color: gray; text-decoration : none" href="' + url.origin + '">'
+                        + (/www./.test(url.hostname) ? url.hostname.match(/www.(.*)/)[1] : url.hostname) + '</a>');
+        $(label).prepend(getFavicon(private_sites[index], iconsInSettings));
+      });
+      $('#imdb_scout').contents().find('#imdb_scout_section_14').find('.field_label').each(function(index, label) {
+        var url = new URL(chinese_sites[index].searchUrl);
+        $(label).append(' ' + '<a class="grey_link" target="_blank" rel="noreferrer" style="color: gray; text-decoration : none" href="' + url.origin + '">'
+                        + (/www./.test(url.hostname) ? url.hostname.match(/www.(.*)/)[1] : url.hostname) + '</a>');
+        $(label).prepend(getFavicon(chinese_sites[index], iconsInSettings));
+      });
+      $('#imdb_scout').contents().find('#imdb_scout_section_15').find('.field_label').each(function(index, label) {
+        var url = new URL(french_sites[index].searchUrl);
+        $(label).append(' ' + '<a class="grey_link" target="_blank" rel="noreferrer" style="color: gray; text-decoration : none" href="' + url.origin + '">'
+                        + (/www./.test(url.hostname) ? url.hostname.match(/www.(.*)/)[1] : url.hostname) + '</a>');
+        $(label).prepend(getFavicon(french_sites[index], iconsInSettings));
+      });
+      $('#imdb_scout').contents().find('#imdb_scout_section_16').find('.field_label').each(function(index, label) {
+        var url = new URL(german_sites[index].searchUrl);
+        $(label).append(' ' + '<a class="grey_link" target="_blank" rel="noreferrer" style="color: gray; text-decoration : none" href="' + url.origin + '">'
+                        + (/www./.test(url.hostname) ? url.hostname.match(/www.(.*)/)[1] : url.hostname) + '</a>');
+        $(label).prepend(getFavicon(german_sites[index], iconsInSettings));
+      });
+      $('#imdb_scout').contents().find('#imdb_scout_section_17').find('.field_label').each(function(index, label) {
+        var url = new URL(usenet_sites[index].searchUrl);
+        $(label).append(' ' + '<a class="grey_link" target="_blank" rel="noreferrer" style="color: gray; text-decoration : none" href="' + url.origin + '">'
+                        + (/www./.test(url.hostname) ? url.hostname.match(/www.(.*)/)[1] : url.hostname) + '</a>');
+        $(label).prepend(getFavicon(usenet_sites[index], iconsInSettings));
+      });
+      $('#imdb_scout').contents().find('#imdb_scout_section_18').find('.field_label').each(function(index, label) {
+        var url = new URL(subs_sites[index].searchUrl);
+        $(label).append(' ' + '<a class="grey_link" target="_blank" rel="noreferrer" style="color: gray; text-decoration : none" href="' + url.origin + '">'
+                        + (/www./.test(url.hostname) ? url.hostname.match(/www.(.*)/)[1] : url.hostname) + '</a>');
+        $(label).prepend(getFavicon(subs_sites[index], iconsInSettings));
+      });
+      $('#imdb_scout').contents().find('#imdb_scout_section_19').find('.field_label').each(function(index, label) {
+        var url = new URL(pre_databases[index].searchUrl);
+        $(label).append(' ' + '<a class="grey_link" target="_blank" rel="noreferrer" style="color: gray; text-decoration : none" href="' + url.origin + '">'
+                        + (/www./.test(url.hostname) ? url.hostname.match(/www.(.*)/)[1] : url.hostname) + '</a>');
+        $(label).prepend(getFavicon(pre_databases[index], iconsInSettings));
+      });
+      $('#imdb_scout').contents().find('#imdb_scout_section_20').find('.field_label').each(function(index, label) {
+        var url = new URL(other_sites[index].searchUrl);
+        $(label).append(' ' + '<a class="grey_link" target="_blank" rel="noreferrer" style="color: gray; text-decoration : none" href="' + url.origin + '">'
+                        + (/www./.test(url.hostname) ? url.hostname.match(/www.(.*)/)[1] : url.hostname) + '</a>');
+        $(label).prepend(getFavicon(other_sites[index], iconsInSettings));
+      });
+      $('#imdb_scout').contents().find('#imdb_scout_section_21').find('.field_label').each(function(index, label) {
+        var url = new URL(streaming_sites[index].searchUrl);
+        $(label).append(' ' + '<a class="grey_link" target="_blank" rel="noreferrer" style="color: gray; text-decoration : none" href="' + url.origin + '">'
+                        + (/www./.test(url.hostname) ? url.hostname.match(/www.(.*)/)[1] : url.hostname) + '</a>');
+        $(label).prepend(getFavicon(streaming_sites[index], iconsInSettings));
+      });
+      $('#imdb_scout').contents().find('#imdb_scout_section_22').find('.field_label').each(function(index, label) {
+        var url = new URL(icon_sites_main[index].searchUrl);
+        $(label).append(' ' + '<a class="grey_link" target="_blank" rel="noreferrer" style="color: gray; text-decoration : none" href="' + url.origin + '">'
+                        + (/www./.test(url.hostname) ? url.hostname.match(/www.(.*)/)[1] : url.hostname) + '</a>');
+        $(label).prepend(getFavicon(icon_sites_main[index], iconsInSettings));
+      });
+      $('#imdb_scout').contents().find('#imdb_scout_section_23').find('.field_label').each(function(index, label) {
+        var url = new URL(special_buttons[index].searchUrl);
+        $(label).append(' ' + '<a class="grey_link" target="_blank" rel="noreferrer" style="color: gray; text-decoration : none" href="' + url.origin + '">'
+                        + (/www./.test(url.hostname) ? url.hostname.match(/www.(.*)/)[1] : url.hostname) + '</a>');
+        $(label).prepend(getFavicon(special_buttons[index], iconsInSettings));
+      });
+
+      $('#imdb_scout').contents().find("img").css({"margin-right": "4px", "width": GM_config.get('cfg_iconsize'), "height": GM_config.get('cfg_iconsize')});
+    },
+
+    'close': function() {
+      location.reload();
+    }
+  }
+});
+
+GM.registerMenuCommand('IMDb Scout Mod Settings', function() {GM_config.open();});
+
+//==============================================================================
+//    Remove tracking from IMDb's URL before start
+//    Force the title pages to open in Reference View
+//==============================================================================
+
+if (Boolean(location.href.match('\\?ref_=')) || Boolean(location.href.match('\\?pf_'))) {
+  let stripped_href = location.href.split('?ref_=')[0];
+      stripped_href = stripped_href.split('?pf_')[0];
+  if (GM_config.get('force_reference_view') && Boolean(location.href.match('/title/tt')) && !Boolean(location.href.match('reference'))) {
+    stripped_href = stripped_href + "reference";
+  }
+  window.location.replace(stripped_href);
+  return;
+} else if (GM_config.get('force_reference_view') && Boolean(location.href.match('/title/tt')) && !Boolean(location.href.match('reference'))) {
+  const reference_href = location.href + "reference";
+  window.location.replace(reference_href);
+  return;
+}
+
+//==============================================================================
+//    Fetch per-site values from GM_config
+//==============================================================================
+
+$.each(sites, function(index, site) {
+  site['show'] = GM_config.get(configName(site));
+});
+
+$.each(icon_sites, function(index, icon_site) {
+  icon_site['show'] = GM_config.get('show_icon_' + icon_site['name']);
+});
+
+//==============================================================================
+//    Global variables
+//==============================================================================
+
+// For internal use (order matters).
+const valid_states = [
+  'found',
+  'missing',
+  'logged_out',
+  'error'
+];
+
+// Are we on a search/list page?
+const onSearchPage = Boolean(location.href.match('/search/'))
+                  || Boolean(location.href.match('/list/'))
+                  || Boolean(location.href.match('watchlist'));
+
+// Are we on a reference page?
+const onReferencePage = Boolean(location.href.match('/reference'));
+
+// Globals for the sorting launcher.
+var showSitezFirstBar = 0;
+var sortReqOnNewLineTemp = false;
+
+// Trakt auth code?
+const traktCodePage = Boolean(location.href.match(/tt0052077\/reference\?code=/));
+
+//==============================================================================
+//    Stuff for the new IMDb design (to start after reflow)
+//==============================================================================
+
+function startObserver() {
+  // Double check if still on a redesigned page. Possible fix for a rare bug when the script runs before page transfers to a reference page if set on imdb's settings.
+  if ($('html[xmlns\\:og="http://ogp.me/ns#"]').length) {
+    return;
+  }
+
+  if ($('.ipc-page-section').length) {
+    addDummyElem();
+    const obscfg = { childList: true};
+    const obs = new MutationObserver(checkDummyElem);
+    obs.observe($('.ipc-page-section')[0], obscfg);
+  } else {
+    console.log("IMDb Scout Mod (Start Error): Element not found! Please report it.");
+    GM.notification("Element not found! Please report it.", "IMDb Scout Mod (Start Error)");
+  }
+}
+
+function addDummyElem() {
+  const temp = $('<temp />').attr('id','temp_scout').css({'display':'none'});
+  $('.ipc-page-section:eq(0)').append(temp);
+  setTimeout(function(){
+    temp.remove();
+  }, 2000);
+}
+
+function checkDummyElem(mutation, observer) {
+  if (!$('#temp_scout').length) {
+    observer.disconnect();
+    adsRemoval();
+    startIMDbScout();
+  }
+}
+
+//==============================================================================
+//    Stuff for the new IMDb design (alternative to startObserver)
+//==============================================================================
+
+function startRedesign() {
+  // Double check if still on a redesigned page. Possible fix for a rare bug when the script runs before page transfers to a reference page if set on imdb's settings.
+  if ($('html[xmlns\\:og="http://ogp.me/ns#"]').length) {
+    return;
+  }
+
+  if ($('.ipc-page-section').length) {
+    adsRemoval();
+    startIMDbScout();
+  } else {
+    console.log("IMDb Scout Mod (Start Error): Element not found! Please report it.");
+    GM.notification("Element not found! Please report it.", "IMDb Scout Mod (Start Error)");
+  }
+}
+
+//==============================================================================
+//    Start: Display 'Load' button or add links to sites
+//==============================================================================
+
+function startIMDbScout() {
+  if (traktCodePage) {
+    traktCatchToken();
+    return;
+  }
+  if (!onSearchPage && GM_config.get('loadmod_on_start_movie')) {
+    performPage();
+  } else if (onSearchPage && GM_config.get('loadmod_on_start_search')) {
+    performSearch();
+  } else {
+    displayButton();
+  }
+}
+
+if ($('html[xmlns\\:og="http://ogp.me/ns#"]').length) {
+  document.events.on('bodyloaded', () => {
+    darkReferenceStyles();
+    compactReferenceStyles();
+  });
+  document.addEventListener('DOMContentLoaded', compactReferenceElemRemoval);
+  document.addEventListener('DOMContentLoaded', adsRemovalReference);
+  document.addEventListener('DOMContentLoaded', startIMDbScout);
+} else {
+  // Redesigned pages stopped using jQuery(?). It's needed for POST links.
+  document.events.on('headloaded', () => {
+    const addJquery = document.createElement("script");
+    addJquery.setAttribute("type","text/javascript");
+    addJquery.setAttribute("src","https://code.jquery.com/jquery-3.5.1.min.js");
+    document.getElementsByTagName("head")[0].appendChild(addJquery);
+  });
+  // Start for redesigned page
+  // document.addEventListener('DOMContentLoaded', startObserver);  // replaced with startRedesign in v17.0, probably not needed anymore as elements were moved out of a reflow area
+  document.addEventListener('DOMContentLoaded', startRedesign);
+}
+
