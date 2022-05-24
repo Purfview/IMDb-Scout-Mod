@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      17.0.3
+// @version      17.0.4
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from hundreds various sites. Adds movies/series to Radarr/Sonarr. Adds external ratings from Metacritic, Rotten Tomatoes, Letterboxd, Douban, Allocine. Media Server indicators for Plex, Jellyfin, Emby. Dark theme/style for Reference View. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAMFBMVEUAAAD/AAAcAAA1AABEAABVAAC3AADnAAD2AACFAAClAABlAAB3AADHAACVAADYAABCnXhrAAAD10lEQVRIx73TV4xMURgH8H/OnRmZWe3T7h2sOWaNXu7oJRg9UccuHgTRBatMtAgSg+gJu9q+kFmihcQoD8qLTkK0CIkoy0YJITsRD0rCKTHFrnkSv5e5c88/53znO+fiPwvsvrN038cPNqrG9pJmHkRVnPcpaTlHJY60cfPSpsrzl1LKihrmLvxhCM2i3OHvDx0d+H7e3F6JBv5iZMiJfhFTfPYDMHrMImpwimWWUdSgDQkbno7fFpUPVgh+pHFbZR4SovSctDCM9Hac9IKd9rO8EevtBCkXgY5IMmgquwypP7qqfcp/Tp4KLONDVsWh3RSBB2rnZfit69ocUdqLn2prrRZYM0Jg4JibamKsqe7gfEh5GOAfeYJjVHIPZvil97rcXkMog30byWRwXYRWoxHbzNFHJJpAarO8NdEBBsdCaP3WMJltTmQd4zlnekTq9Z5dgACwAlrpK4BxdV5mvLuspRgMSHbCIFF0iS8MZ5S8oYBYKY7rByC4dDM9uSIUmPOIwxgQBoYeF93auP4qFyPbIVXziWeGTH1EFM57kJo2hqQju6BwIyRf6RmCjdT4JOdiwNgiH/PPD3qoqlsNaXRd+fKtFfECxlZVNVF9SOsgTZEr2TUjJJbyeNX1IZrKIbyGlBABfpQPv2UDrly13LkJXDVhpQ5MhtGwcyF4HKjlU4E8xwB0AvDjd6AGmevZ87EcQRHgcO52e9uNsYELOrAa/Yh81YlmYLQJ5HWyq0+kzQ/DQKEusg6CRI27ryy8nReRS0wsoetkmRwogHSprliCckfEjXG9yAQc74J0WB99vu6DF3i3pMucsXM6tpBbxd2mVJAwXwGogNRBvGRA4jtHKTXkAIwLGCR/mT4Lh75oneQXXP9sAYfGRDCsnw7pX/jRZkU3M44kjw2l5zRIzb4CbZ8dULdL6wbNPZOpK0B6gN1UR1mdoxAaL/GrWiLPL3SEwW9YMTU/d64BtLahAVyucWhj9Mm8ign9IfQaBtd2/GbvCAEBpG5eMcrj2I0ktpKLeaqXQ3Pst42KGIshpdTmQLAeTgFGJ2wvh+tayMOR0n1RZ8B9z13vnOPBnsBq4E1ffgZpPFZHWVpO2cvhjYpOcbBd5TlhpDu5zq9mHGZcVi0y+VFkcFkDdyKJfTt99wEyHSEzDM90KH0nexpwZHJHKYYhjzlwGe0pP/IKfxociaEb7YDbi6KGJY1R2cR76E6NAtXqY4pPH3plLcl8LD7V+cOLUbUWRFZRPTAbVZO3mxK18Xc1ZaAiS8ARJXpZliXAomR94siiiMx8ZBOkXGTlnH0F/9ov1xPtWwEqP9wAAAAASUVORK5CYII=
@@ -1058,6 +1058,8 @@
 17.0.2  -   Added: Flick Metrix.
 
 17.0.3  -   Version bump: GitHub glitched with 17.0.2 update.
+
+17.0.4  -   Added: Free Streaming API, HBO Max Movie/Series Catalog [https://github.com/Purfview/IMDb-Scout-Mod/pull/110].
 
 */
 //==============================================================================
@@ -4645,12 +4647,12 @@ var streaming_sites = [
       'inThirdSearchBar': true,
       'both': true},
   {   'name': 'Free Streaming API',
-      'icon': 'https://fsapi.xyz/website-assets/img/favicon.png',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAMAAADVRocKAAAAXVBMVEUAAAD+1yT+kk78tBj8qx3+oUb9liX9fS/9bTT+rED9iin8oyD+tjr7nCH+wTP+yRv+zC33vxj/7yf/4yX/uSP+dj7iaS7/w0LYWDX/1zbPhhvjqRfRoRPkiiPplSFePmsiAAAAAXRSTlMAQObYZgAABKFJREFUaN601tt2qyAUheElW/CAxgNGozm8/2PuFUQproSEDvrf9KaZHzLaDCGoW9c03Q3+qEb1KkkShT86iF+C61toNBC3q5m3Rh/1ppo+IfVdxOvB/fgC3adC7PuhQuTzU6GJvU+F2PdDbyn2PhVi71Mh9j4VIu8rpfpnaqtv4u3r7cT5xl7u16aLs4/jypm6YCOWi+wX+yppD/PJFUz5mR06/2b/J7Cf/aK3aXnofqvbr349fM7el4fuW0H1ev7CvPFz8L4h+gSwkXEWSxjcfX38jHHOIgh0X8HW+MngPPtqf6b7pgt/Q3Ad40X21f7JAmoBp5H7owLdP50sMA9wjBd+ofxi3xIKaKVfqLxCivtr9gFIY+EjCiKQfUvMC7yMVwUdNhGB7ltihjeVU+FpEvAyOVVV5QAtvGusqmAB93VewFZMgYLAfdMOnMDm+QAFKioIPNBRaAfwtVQC4889Egpk3/nFFUjBnxDlM4EVfkFU5tEcopXwSZDlFjEmCXui4Lw4EgjU8LFUlEJnjNMPYf/4tWCcU8ICvqQUe2hIPNj2+fkOa32NgCXIEfzdB+GkCSNsL+j/Mvf/fQMe8FWpJITzZ9irJmPcIcIAkKmobUikRpjNG5B6nI9fWkEAPFBwiBofYvs7VAh0I+OMENMdvhdqN5HuXzZ9gi05Z+xAhACQyqNQD62+o5vCfXUD3LdCOACDnpW2GoW2XaBbXw3hwgkhxgCgTuWxOm1bCc36bqsfwRXKMgSAQb4SBgR0CoCZ1n3+vxYz2nEchAGgOXMBBUUWLYmqZLf//5nnA5Y0a7IUKTtS+zhT24qq1pj+gCxo8PcU2MAeCqY3oLWrJdKRmVsaISf+GNsbeKI7ohlcAW55Rwrgb/Fb2z3BGrSE0oP2dedHLrA/Ft4PGH6dBfgIZUlz8TMdATPXA6iBuZXfSfkMs028HViM5XdfHYBRZQQCiH4RaPpt9QYYAPII5QxcsF/M7wUM+znwlAEFiW0vAMDcGRiNjQEtArRBxpczHAvLG/rR5I8S8LsfARqFpakfjImBBwAhviRQk6//MUEvhaWlH80xUCh+MQPSS2Fp6pn5fwBiQPjlDB5TwaYEnPLpst/YFNBB+mWBEHNhiYWf9OMxQDW/2JLHXMhrOtFr1jPJn0dVuJP8ErpjwiuIa5rrelf8+wAfJP0ST4cCVAprcMNQCQh/o4BqA2aRX1tD8pcN5YAS/laBCAQhTKwXA9gHbCT8zUJQm9BPU/TLDSnpbxfQ055YQ3DJLzdkAUj62wUmkNcrwFMnfQ6IAQ7+roLWGIIPQTsmB+onLv6ugs5k//kAvvj7CsXfCCjhbxfkADJQBij+noKuB+RDwIHi7yy0N5QXlP3dhfoAkeJ/gKfk7wZLoTFA8fcXmhsywt9ZaGzIxAUJf2fhfIDZAijh7wK9qwWyfxb+fnRwpxu6wM9s4WxDfADyFX//DPVAPHDV31+Yav7lIj/jggzMds3+qwrHE1v79HH/FzGFIbL7HV3oZ57hNWCN9ojKw4WsYSobsiN6pPsHXMukY8GY0XlPiuB6Pgc3mHFiu0L4JVbnCft28w/heodtf3lorAAAAABJRU5ErkJggg==',
       'searchUrl': 'https://fsapi.xyz/movie/%tt%',
       'matchRegex': /<title> ()/,
       'inThirdSearchBar': true},
   {   'name': 'Free Streaming API',
-      'icon': 'https://fsapi.xyz/website-assets/img/favicon.png',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAMAAADVRocKAAAAXVBMVEUAAAD+1yT+kk78tBj8qx3+oUb9liX9fS/9bTT+rED9iin8oyD+tjr7nCH+wTP+yRv+zC33vxj/7yf/4yX/uSP+dj7iaS7/w0LYWDX/1zbPhhvjqRfRoRPkiiPplSFePmsiAAAAAXRSTlMAQObYZgAABKFJREFUaN601tt2qyAUheElW/CAxgNGozm8/2PuFUQproSEDvrf9KaZHzLaDCGoW9c03Q3+qEb1KkkShT86iF+C61toNBC3q5m3Rh/1ppo+IfVdxOvB/fgC3adC7PuhQuTzU6GJvU+F2PdDbyn2PhVi71Mh9j4VIu8rpfpnaqtv4u3r7cT5xl7u16aLs4/jypm6YCOWi+wX+yppD/PJFUz5mR06/2b/J7Cf/aK3aXnofqvbr349fM7el4fuW0H1ev7CvPFz8L4h+gSwkXEWSxjcfX38jHHOIgh0X8HW+MngPPtqf6b7pgt/Q3Ad40X21f7JAmoBp5H7owLdP50sMA9wjBd+ofxi3xIKaKVfqLxCivtr9gFIY+EjCiKQfUvMC7yMVwUdNhGB7ltihjeVU+FpEvAyOVVV5QAtvGusqmAB93VewFZMgYLAfdMOnMDm+QAFKioIPNBRaAfwtVQC4889Egpk3/nFFUjBnxDlM4EVfkFU5tEcopXwSZDlFjEmCXui4Lw4EgjU8LFUlEJnjNMPYf/4tWCcU8ICvqQUe2hIPNj2+fkOa32NgCXIEfzdB+GkCSNsL+j/Mvf/fQMe8FWpJITzZ9irJmPcIcIAkKmobUikRpjNG5B6nI9fWkEAPFBwiBofYvs7VAh0I+OMENMdvhdqN5HuXzZ9gi05Z+xAhACQyqNQD62+o5vCfXUD3LdCOACDnpW2GoW2XaBbXw3hwgkhxgCgTuWxOm1bCc36bqsfwRXKMgSAQb4SBgR0CoCZ1n3+vxYz2nEchAGgOXMBBUUWLYmqZLf//5nnA5Y0a7IUKTtS+zhT24qq1pj+gCxo8PcU2MAeCqY3oLWrJdKRmVsaISf+GNsbeKI7ohlcAW55Rwrgb/Fb2z3BGrSE0oP2dedHLrA/Ft4PGH6dBfgIZUlz8TMdATPXA6iBuZXfSfkMs028HViM5XdfHYBRZQQCiH4RaPpt9QYYAPII5QxcsF/M7wUM+znwlAEFiW0vAMDcGRiNjQEtArRBxpczHAvLG/rR5I8S8LsfARqFpakfjImBBwAhviRQk6//MUEvhaWlH80xUCh+MQPSS2Fp6pn5fwBiQPjlDB5TwaYEnPLpst/YFNBB+mWBEHNhiYWf9OMxQDW/2JLHXMhrOtFr1jPJn0dVuJP8ErpjwiuIa5rrelf8+wAfJP0ST4cCVAprcMNQCQh/o4BqA2aRX1tD8pcN5YAS/laBCAQhTKwXA9gHbCT8zUJQm9BPU/TLDSnpbxfQ055YQ3DJLzdkAUj62wUmkNcrwFMnfQ6IAQ7+roLWGIIPQTsmB+onLv6ugs5k//kAvvj7CsXfCCjhbxfkADJQBij+noKuB+RDwIHi7yy0N5QXlP3dhfoAkeJ/gKfk7wZLoTFA8fcXmhsywt9ZaGzIxAUJf2fhfIDZAijh7wK9qwWyfxb+fnRwpxu6wM9s4WxDfADyFX//DPVAPHDV31+Yav7lIj/jggzMds3+qwrHE1v79HH/FzGFIbL7HV3oZ57hNWCN9ojKw4WsYSobsiN6pPsHXMukY8GY0XlPiuB6Pgc3mHFiu0L4JVbnCft28w/heodtf3lorAAAAABJRU5ErkJggg==',
       'searchUrl': 'https://fsapi.xyz/tv-imdb/%seriesid%-%seasonid%-%episodeid%',
       'matchRegex': /<title>: Season/,
       'inThirdSearchBar': true,
@@ -4887,7 +4889,7 @@ var icon_sites_main = [
       'searchUrl': 'https://www.findanyfilm.com/search?all=%search_string%&sort=product_release_date&type=ALL',
       'showByDefault': false},
   {   'name': 'Flick Metrix',
-      'icon': 'https://flickmetrix.com/img/favicon.png',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAclBMVEUAAAAgOE52Mk4pRFiDME40N05HNU6XL065LE7KKk5oM076+Pm3vMTWtsGTdYd1QVtZNE6pLU55d4evc4dsT2arSmbVKk7dbofXSWhSUmbFSGa9w8nEcYfScIdeb3+UWXHRx87Pq7jmd4+QZnuTQl3ZNlg+MZB+AAAAAXRSTlMAQObYZgAAAI5JREFUOMu1zNkKwjAQheHEmLVVE61xiUvd3v8VhYCMLdMONPS/O/Bx2K8bF39xwfol3gkAXFCgpUC+EHWqcwkBWynlCeYsQClFgmYMrEngvS8EzrmmYlVuCLhNzr1QsIDuGNiRYAkNgvcq92hRoLXew5wALiQIIZSBqzHmPC84WGtJcCwDMcZR8IwfBHwBAKwK0SIaMawAAAAASUVORK5CYII=',
       'searchUrl': 'https://flickmetrix.com/?id=%nott%',
       'showByDefault': false},
   {   'name': 'Google',
