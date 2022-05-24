@@ -1059,7 +1059,7 @@
 
 17.0.3  -   Version bump: GitHub glitched with 17.0.2 update.
 
-17.0.4  -   Added: Free Streaming API, HBO Max Movie/Series Catalog [https://github.com/Purfview/IMDb-Scout-Mod/pull/110].
+17.0.4  -   Added: HBO Max Movie/Series Catalog [https://github.com/Purfview/IMDb-Scout-Mod/pull/110].
 
 */
 //==============================================================================
@@ -4585,21 +4585,21 @@ var streaming_sites = [
       'icon': 'https://cdn-1.webcatalog.io/catalog/hbo-max/hbo-max-icon-filled-128.webp',
       'searchUrl': 'https://www.themoviedb.org/movie/%tmdbid%/watch?translate=false&locale=US',
       'loggedOutRegex': /Oops! We can't find the page you're looking for|Não existe oferta para|There are no offers for/,
-      'matchRegex': /HBO Max/|&search_string_orig&/,
+      'matchRegex': /HBO Max/,
       'positiveMatch': true,
       'inThirdSearchBar': true},
   {   'name': 'HBO Max Movie Catalog (BR)',
       'icon': 'https://cdn-1.webcatalog.io/catalog/hbo-max/hbo-max-icon-filled-128.webp',
       'searchUrl': 'https://www.themoviedb.org/movie/%tmdbid%/watch?translate=false&locale=BR',
       'loggedOutRegex': /Oops! We can't find the page you're looking for|Não existe oferta para|There are no offers for/,
-      'matchRegex': /HBO Max|&search_string_orig&/,
+      'matchRegex': /HBO Max/,
       'positiveMatch': true,
       'inThirdSearchBar': true},
   {   'name': 'HBO Max Series Catalog (US)',
       'icon': 'https://cdn-1.webcatalog.io/catalog/hbo-max/hbo-max-icon-filled-128.webp',
       'searchUrl': 'https://www.themoviedb.org/tv/%tmdbid%/watch?translate=false&locale=US',
       'loggedOutRegex': /Oops! We can't find the page you're looking for|Não existe oferta para|There are no offers for/,
-      'matchRegex': /HBO Max|&search_string_orig&/,
+      'matchRegex': /HBO Max/,
       'positiveMatch': true,
       'inThirdSearchBar': true,
       'TV': true},
@@ -4607,7 +4607,7 @@ var streaming_sites = [
       'icon': 'https://cdn-1.webcatalog.io/catalog/hbo-max/hbo-max-icon-filled-128.webp',
       'searchUrl': 'https://www.themoviedb.org/tv/%tmdbid%/watch?translate=false&locale=BR',
       'loggedOutRegex': /Oops! We can't find the page you're looking for|Não existe oferta para|There are no offers for/,
-      'matchRegex': /HBO Max|&search_string_orig&/,
+      'matchRegex': /HBO Max/,
       'positiveMatch': true,
       'inThirdSearchBar': true,
       'TV': true},
@@ -4646,17 +4646,6 @@ var streaming_sites = [
       'matchRegex': /nedavė jokių rezultatų/,
       'inThirdSearchBar': true,
       'both': true},
-  {   'name': 'Free Streaming API',
-      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAMAAADVRocKAAAAXVBMVEUAAAD+1yT+kk78tBj8qx3+oUb9liX9fS/9bTT+rED9iin8oyD+tjr7nCH+wTP+yRv+zC33vxj/7yf/4yX/uSP+dj7iaS7/w0LYWDX/1zbPhhvjqRfRoRPkiiPplSFePmsiAAAAAXRSTlMAQObYZgAABKFJREFUaN601tt2qyAUheElW/CAxgNGozm8/2PuFUQproSEDvrf9KaZHzLaDCGoW9c03Q3+qEb1KkkShT86iF+C61toNBC3q5m3Rh/1ppo+IfVdxOvB/fgC3adC7PuhQuTzU6GJvU+F2PdDbyn2PhVi71Mh9j4VIu8rpfpnaqtv4u3r7cT5xl7u16aLs4/jypm6YCOWi+wX+yppD/PJFUz5mR06/2b/J7Cf/aK3aXnofqvbr349fM7el4fuW0H1ev7CvPFz8L4h+gSwkXEWSxjcfX38jHHOIgh0X8HW+MngPPtqf6b7pgt/Q3Ad40X21f7JAmoBp5H7owLdP50sMA9wjBd+ofxi3xIKaKVfqLxCivtr9gFIY+EjCiKQfUvMC7yMVwUdNhGB7ltihjeVU+FpEvAyOVVV5QAtvGusqmAB93VewFZMgYLAfdMOnMDm+QAFKioIPNBRaAfwtVQC4889Egpk3/nFFUjBnxDlM4EVfkFU5tEcopXwSZDlFjEmCXui4Lw4EgjU8LFUlEJnjNMPYf/4tWCcU8ICvqQUe2hIPNj2+fkOa32NgCXIEfzdB+GkCSNsL+j/Mvf/fQMe8FWpJITzZ9irJmPcIcIAkKmobUikRpjNG5B6nI9fWkEAPFBwiBofYvs7VAh0I+OMENMdvhdqN5HuXzZ9gi05Z+xAhACQyqNQD62+o5vCfXUD3LdCOACDnpW2GoW2XaBbXw3hwgkhxgCgTuWxOm1bCc36bqsfwRXKMgSAQb4SBgR0CoCZ1n3+vxYz2nEchAGgOXMBBUUWLYmqZLf//5nnA5Y0a7IUKTtS+zhT24qq1pj+gCxo8PcU2MAeCqY3oLWrJdKRmVsaISf+GNsbeKI7ohlcAW55Rwrgb/Fb2z3BGrSE0oP2dedHLrA/Ft4PGH6dBfgIZUlz8TMdATPXA6iBuZXfSfkMs028HViM5XdfHYBRZQQCiH4RaPpt9QYYAPII5QxcsF/M7wUM+znwlAEFiW0vAMDcGRiNjQEtArRBxpczHAvLG/rR5I8S8LsfARqFpakfjImBBwAhviRQk6//MUEvhaWlH80xUCh+MQPSS2Fp6pn5fwBiQPjlDB5TwaYEnPLpst/YFNBB+mWBEHNhiYWf9OMxQDW/2JLHXMhrOtFr1jPJn0dVuJP8ErpjwiuIa5rrelf8+wAfJP0ST4cCVAprcMNQCQh/o4BqA2aRX1tD8pcN5YAS/laBCAQhTKwXA9gHbCT8zUJQm9BPU/TLDSnpbxfQ055YQ3DJLzdkAUj62wUmkNcrwFMnfQ6IAQ7+roLWGIIPQTsmB+onLv6ugs5k//kAvvj7CsXfCCjhbxfkADJQBij+noKuB+RDwIHi7yy0N5QXlP3dhfoAkeJ/gKfk7wZLoTFA8fcXmhsywt9ZaGzIxAUJf2fhfIDZAijh7wK9qwWyfxb+fnRwpxu6wM9s4WxDfADyFX//DPVAPHDV31+Yav7lIj/jggzMds3+qwrHE1v79HH/FzGFIbL7HV3oZ57hNWCN9ojKw4WsYSobsiN6pPsHXMukY8GY0XlPiuB6Pgc3mHFiu0L4JVbnCft28w/heodtf3lorAAAAABJRU5ErkJggg==',
-      'searchUrl': 'https://fsapi.xyz/movie/%tt%',
-      'matchRegex': /<title> ()/,
-      'inThirdSearchBar': true},
-  {   'name': 'Free Streaming API',
-      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAMAAADVRocKAAAAXVBMVEUAAAD+1yT+kk78tBj8qx3+oUb9liX9fS/9bTT+rED9iin8oyD+tjr7nCH+wTP+yRv+zC33vxj/7yf/4yX/uSP+dj7iaS7/w0LYWDX/1zbPhhvjqRfRoRPkiiPplSFePmsiAAAAAXRSTlMAQObYZgAABKFJREFUaN601tt2qyAUheElW/CAxgNGozm8/2PuFUQproSEDvrf9KaZHzLaDCGoW9c03Q3+qEb1KkkShT86iF+C61toNBC3q5m3Rh/1ppo+IfVdxOvB/fgC3adC7PuhQuTzU6GJvU+F2PdDbyn2PhVi71Mh9j4VIu8rpfpnaqtv4u3r7cT5xl7u16aLs4/jypm6YCOWi+wX+yppD/PJFUz5mR06/2b/J7Cf/aK3aXnofqvbr349fM7el4fuW0H1ev7CvPFz8L4h+gSwkXEWSxjcfX38jHHOIgh0X8HW+MngPPtqf6b7pgt/Q3Ad40X21f7JAmoBp5H7owLdP50sMA9wjBd+ofxi3xIKaKVfqLxCivtr9gFIY+EjCiKQfUvMC7yMVwUdNhGB7ltihjeVU+FpEvAyOVVV5QAtvGusqmAB93VewFZMgYLAfdMOnMDm+QAFKioIPNBRaAfwtVQC4889Egpk3/nFFUjBnxDlM4EVfkFU5tEcopXwSZDlFjEmCXui4Lw4EgjU8LFUlEJnjNMPYf/4tWCcU8ICvqQUe2hIPNj2+fkOa32NgCXIEfzdB+GkCSNsL+j/Mvf/fQMe8FWpJITzZ9irJmPcIcIAkKmobUikRpjNG5B6nI9fWkEAPFBwiBofYvs7VAh0I+OMENMdvhdqN5HuXzZ9gi05Z+xAhACQyqNQD62+o5vCfXUD3LdCOACDnpW2GoW2XaBbXw3hwgkhxgCgTuWxOm1bCc36bqsfwRXKMgSAQb4SBgR0CoCZ1n3+vxYz2nEchAGgOXMBBUUWLYmqZLf//5nnA5Y0a7IUKTtS+zhT24qq1pj+gCxo8PcU2MAeCqY3oLWrJdKRmVsaISf+GNsbeKI7ohlcAW55Rwrgb/Fb2z3BGrSE0oP2dedHLrA/Ft4PGH6dBfgIZUlz8TMdATPXA6iBuZXfSfkMs028HViM5XdfHYBRZQQCiH4RaPpt9QYYAPII5QxcsF/M7wUM+znwlAEFiW0vAMDcGRiNjQEtArRBxpczHAvLG/rR5I8S8LsfARqFpakfjImBBwAhviRQk6//MUEvhaWlH80xUCh+MQPSS2Fp6pn5fwBiQPjlDB5TwaYEnPLpst/YFNBB+mWBEHNhiYWf9OMxQDW/2JLHXMhrOtFr1jPJn0dVuJP8ErpjwiuIa5rrelf8+wAfJP0ST4cCVAprcMNQCQh/o4BqA2aRX1tD8pcN5YAS/laBCAQhTKwXA9gHbCT8zUJQm9BPU/TLDSnpbxfQ055YQ3DJLzdkAUj62wUmkNcrwFMnfQ6IAQ7+roLWGIIPQTsmB+onLv6ugs5k//kAvvj7CsXfCCjhbxfkADJQBij+noKuB+RDwIHi7yy0N5QXlP3dhfoAkeJ/gKfk7wZLoTFA8fcXmhsywt9ZaGzIxAUJf2fhfIDZAijh7wK9qwWyfxb+fnRwpxu6wM9s4WxDfADyFX//DPVAPHDV31+Yav7lIj/jggzMds3+qwrHE1v79HH/FzGFIbL7HV3oZ57hNWCN9ojKw4WsYSobsiN6pPsHXMukY8GY0XlPiuB6Pgc3mHFiu0L4JVbnCft28w/heodtf3lorAAAAABJRU5ErkJggg==',
-      'searchUrl': 'https://fsapi.xyz/tv-imdb/%seriesid%-%seasonid%-%episodeid%',
-      'matchRegex': /<title>: Season/,
-      'inThirdSearchBar': true,
-      'TV': true},
   {   'name': 'GDrivePlayer',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAA3XAAAN1wFCKJt4AAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAAROSURBVFjDzZdbTBRnGIZJ0/te9aKJFhWwi6Fgu6wHPLR40bTaRm1CUamFptWmrYZUW4IcTCTW0gZDLyBBjFi4wGoitnsAi2Bokap00yJW2YXCnoGZ7bK7YGFhd3n7/bOMYfYgyyHqxZOZ7E7+95nv/+bLTAyAmCdJzFMjwG1dK/IMsY/4hTATjki4Nq51nCpL4rZfS3S8q4mInegl6ojNRAwjksBzhIpANJAASAAkAFo0GvxEcSSBZwm1JGRLCvgNMvCp8eDlcXSU4k6Ow4lTsd70q8uwXSnlLeG4HDvV8eFEcsMJZErCNyUJ4YM5e2EuOw3jmXMwVUmxVp6DsuWsv/JuNc50SanuqkLp7SLkNL+OHcoXsVsjmy3AhxNofhielgRumwKGC1egt09DN4aIDIwAZjtgCkL87e6gE991luBt1QoKfijhDCdgDgiwsifCcEkN3QSgJ1f98MLp5wIiJ2/lC5WYEXCEE+CZAL/+JdgOZENHl+g56WK93MIkBugmbposyGhMxi716jkEqLlMldVCeYMX6hmaholK/o99fgK9RB/J57Zl4h1hKx4loEiAsfZH6Eali7DgKo0VBTU6dFu8sLrmVxEDVeFY+0HqhdgoBH64ECJgocDTl414flcD0o+0oabZhn57QCzabchvP7A4ge+vmLBirwrxWRqs2qfGeyW3odE6hf8G/n2MAmtympBIrKTzxOwmHK7oxs3ecdjc1B/8YxIQkWU3IjZTCcWnLSi92I/7Np9wbXB/zCnwIC2eJzD+yguw1dShJ0oBkdX7NYLIG3ntqGsdxv1Bn0SCCXzx28dIp1nwploWKlCWXTFEeEv3lHuvNnT7B1zzExBZlvEzlmcoUaE0wzirQftIoLHzkK++ZY334nU5FyKQVOLjCawq8qG8dRrWkfkJJLxPFdijwo6CDtS3cdAN+yUV0NH5+J0vgQ4FTaWtoRVYf9zFE0jOd6Li2iQsUQrIPmgUgjd83kqPqYGu9cPiDO0BJuDsOorJG6nw/L5l8QKs+1fOnB+tugdtvwdWd6DU4Z6CJRWIy1ILcyDrmz/Q3OWOag4siYAwCXc2BDr9+pAQaoxyEs5LoLIlVICN3OomG47X9uJehGd9SQReJoGTP03A6gyzCGF2Rp52j2Yao9oPMdmxLqIAxwReLXBhd/kodEOhQQt9H+ihdQwmPQVvniG8QB8TYKQcc+JblQeDrLnsi3sj6hFuYgquv3Kp/AoWHlHgvCigKKZKFDpxomECWqMfRtZsjlBMRB8J9lBldLwUFsz2fcCsp/AjmLohF8MZo+EE5IRflFhXHGjIbV+78dHZBzhc+x8OBXHw/BR+bav3jf2dh5E7xUEUwv3nJxT2mth4s+kOJ8DIEwVEUosCW5JCMsJxFglfeaC6ROP1lky4w2AmO1jJNwWHjxEbIwkwPiNMhGMukgs9Ds3lQg6dcgfb1yjQEmnEU/hx+qT4Hxx8JuUJoU43AAAAAElFTkSuQmCC',
       'searchUrl': 'https://databasegdriveplayer.xyz/player.php?imdb=%tt%',
