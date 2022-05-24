@@ -4617,7 +4617,7 @@ var streaming_sites = [
   {   'name': 'Free Streaming API',
       'icon': 'https://fsapi.xyz/website-assets/img/favicon.png',
       'searchUrl': 'https://fsapi.xyz/movie/%tt%',
-      'matchRegex': /<title> () | IMDB ID/,
+      'matchRegex': /<title> ()/,
       'inThirdSearchBar': true},
   {   'name': 'Free Streaming API',
       'icon': 'https://fsapi.xyz/website-assets/img/favicon.png',
