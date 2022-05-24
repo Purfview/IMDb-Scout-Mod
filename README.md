@@ -21,10 +21,10 @@ Supports browsers: Firefox, Chrome, Opera, Safari, Waterfox, Brave, Pale Moon, E
 Supports: [Violentmonkey](https://violentmonkey.github.io/), [Tampermonkey](https://www.tampermonkey.net/), [Greasemonkey](https://www.greasespot.net/), [Greasemonkey v3](https://github.com/greasemonkey/greasemonkey/releases?after=4.0) & [Greasemonkey for Pale Moon](https://github.com/janekptacijarabaci/greasemonkey/releases).  
 
 Meanings of the color borders around the icons:  
-![#008000](https://via.placeholder.com/15/008000/000000?text=+) - `Search completed. Results found.`  
-![#daa520](https://via.placeholder.com/15/daa520/000000?text=+) - `Search completed. Results not found.`  
-![#ff0000](https://via.placeholder.com/15/ff0000/000000?text=+) - `No access to search or search can't be done.`  
-![#0000ff](https://via.placeholder.com/15/0000ff/000000?text=+) - `Search completed. Request found.` 
+![alt text](https://i.imgur.com/hgjQd00.png) - `Search completed. Results found.`  
+![alt text](https://i.imgur.com/VWMw0YC.png) - `Search completed. Results not found.`  
+![alt text](https://i.imgur.com/4aJukqO.png) - `No access to search or search can't be done.`  
+![alt text](https://i.imgur.com/UTLrRZu.png) - `Search completed. Request found.` 
 
 ## Installing:
 
