@@ -1,4 +1,4 @@
-﻿// ==UserScript==
+// ==UserScript==
 //
 // @name         IMDb Scout Mod
 // @version      17.0.5
@@ -1293,7 +1293,7 @@ var public_sites = [
       'rateLimit': 5000,
       'both': true},
   {   'name': 'DonTor',
-      'icon': 'https://dontorrent.wtf/assets/images/touch-icon-ipad.png',
+      'icon': 'https://dontorrent.wtf/assets/DonFav.ico',
       'searchUrl': 'https://dontorrent.wtf/buscar/%search_string_orig%',
       'loggedOutRegex': /Cloudflare|Ray ID/,
       'matchRegex': /encontrado <b>0</,
