@@ -3533,7 +3533,6 @@ var french_sites = [
       'matchRegex': /Aucun torrent trouvé/,
       'spaceEncode': ' '},
   {   'name': 'TCTG',
-      'icon': 'https://tctg.pm/favicon.ico',
       'searchUrl': 'https://tctg.pm/torrents-search.php?search="%search_string_orig% %year%"&cat=0&incldead=0&freeleech=0&lang=0',
       'loggedOutRegex': /Cloudflare|Ray ID|Entrer le total/,
       'matchRegex': /Aucun torrent trouvé/,
