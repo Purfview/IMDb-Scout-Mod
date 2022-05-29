@@ -1,5 +1,5 @@
 // ==UserScript==
-//
+
 // @name         IMDb Scout Mod
 // @version      17.0.5
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
@@ -1061,10 +1061,6 @@
 
 17.0.4  -   Added: HBO Max Movie/Series Catalog [https://github.com/Purfview/IMDb-Scout-Mod/pull/110].
 
-17.0.5  -   Fixed Favicons: DonTor, ilCorSaRoNeRo, NNM, G-Free, TCTG.
-            Updated URLs: DonTor, NNM, TCTG.
-            Removed Sites: baconBits, Milkie.
-
 */
 //==============================================================================
 //    JSHint directives.
@@ -1358,7 +1354,6 @@ var public_sites = [
       'matchRegex': /We could not find/,
       'both': true},
   {   'name': 'ilCorSaRoNeRo',
-      'icon': 'https://www.ilcorsaronero.fun/favicon.ico',
       'searchUrl': 'https://ilcorsaronero.fun/argh.php?search=%search_string_orig%+%year%',
       'loggedOutRegex': /Cloudflare|Ray ID/,
       'matchRegex': /Nessun torrent trovato/,
@@ -1924,18 +1919,6 @@ var private_sites = [
       'searchUrl': 'https://baconbits.org/torrents.php?action=basic&filter_cat[9]=1&searchstr=%search_string%+%year%',
       'loggedOutRegex': /Lost your password/,
       'matchRegex': /Your search was way too l33t/},
-/* https://torrentfreak.com/reddit-born-torrent-tracker-baconbits-shuts-down-220516/
-  {   'name': 'bB',
-      'searchUrl': 'https://baconbits.org/torrents.php?action=basic&filter_cat[8]=1&filter_cat[10]=1&searchstr=%search_string%',
-      'loggedOutRegex': /Lost your password/,
-      'matchRegex': /Your search was way too l33t/,
-      'TV': true},
-  {   'name': 'bB-Req',
-      'searchUrl': 'https://baconbits.org/requests.php?search=%search_string%&cat[8]=on&cat[9]=on',
-      'loggedOutRegex': /Lost your password/,
-      'matchRegex': /Nothing found/,
-      'both': true},
-*/
   {   'name': 'BB-HD',
       'icon': 'https://bluebird-hd.org/pic/apple-touch-icon-57.png',
       'searchUrl': 'https://bluebird-hd.org/browse.php?search=&incldead=0&cat=0&dsearch=%tt%&stype=or',
@@ -2564,7 +2547,6 @@ var private_sites = [
       'matchRegex': /\/dl.png/,
       'positiveMatch': true,
       'TV': true},
-/*
  {   'name': 'Milkie',
       'icon': 'https://milkie.cc/favicon.png',
       'searchUrl': 'https://milkie.cc/api/v1/torrents?query=%search_string%+%year%&oby=created_at&odir=desc&categories=1&pi=0&ps=50',
@@ -2578,7 +2560,6 @@ var private_sites = [
       'loggedOutRegex': /Cloudflare|Ray ID/,
       'matchRegex': /hits":0/,
       'TV': true},
-*/
   {   'name': 'MKO',
       'icon': 'https://makingoff.org/forum/favicon.ico',
       'searchUrl': 'https://indice.makingoff.org/response.php?search_term=%tt%',
@@ -5784,23 +5765,21 @@ async function maybeAddLink(elem, site_name, search_url, site, scout_tick, movie
   }
   // Request header tweaks
   let reqHeader = {};
-/*
+
   if (site['name'] == "Milkie") {
     reqHeader = {
       "Host": "milkie.cc",
       "Authorization": GM_config.get("milkie_authToken")
     };
-  } else
-*/
-    if (site['name'] == "TNT") {
+  } else if (site['name'] == "TNT") {
     reqHeader = {
       "Host": "tntracker.org",
       "Authorization": GM_config.get("tnt_authToken")
     };
   } else if (site['name'] == "DonTor") {
     reqHeader = {
-      "Host": "dontorrents.one",
-      "Referer": "https://dontorrents.one"
+      "Host": "dontorrents.wtf",
+      "Referer": "https://dontorrents.wrf"
     };
   }
   // Check for results with GET method.
@@ -9054,7 +9033,7 @@ function countSites(task) {
       'emby_username': {'type': 'text'},
       'emby_password': {'type': 'text'},
       'emby_debug': {'type': 'checkbox'},
-//      'milkie_authToken': {'type': 'text'},
+      'milkie_authToken': {'type': 'text'},
       'tnt_authToken': {'type': 'text'}
     };
     $.each(custom_sites, function(index, site) {config_fields[configName(site)] = {'type': 'checkbox'};});
@@ -9598,15 +9577,13 @@ var config_fields = {
     'type': 'checkbox',
     'label': "Debug?",
     'default': false
-  },
-/*  
+  }, 
   'milkie_authToken': {
     'label': 'Milkie:',
     'section': 'Authorization Tokens:',
     'type': 'text',
     'default': ''
   },
-*/
   'tnt_authToken': {
     'label': 'TNT:&nbsp &nbsp',
     'type': 'text',
