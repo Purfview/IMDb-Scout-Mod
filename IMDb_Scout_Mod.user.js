@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      17.0.5
+// @version      17.1
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from hundreds various sites. Adds movies/series to Radarr/Sonarr. Adds external ratings from Metacritic, Rotten Tomatoes, Letterboxd, Douban, Allocine. Media Server indicators for Plex, Jellyfin, Emby. Dark theme/style for Reference View. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAMFBMVEUAAAD/AAAcAAA1AABEAABVAAC3AADnAAD2AACFAAClAABlAAB3AADHAACVAADYAABCnXhrAAAD10lEQVRIx73TV4xMURgH8H/OnRmZWe3T7h2sOWaNXu7oJRg9UccuHgTRBatMtAgSg+gJu9q+kFmihcQoD8qLTkK0CIkoy0YJITsRD0rCKTHFrnkSv5e5c88/53znO+fiPwvsvrN038cPNqrG9pJmHkRVnPcpaTlHJY60cfPSpsrzl1LKihrmLvxhCM2i3OHvDx0d+H7e3F6JBv5iZMiJfhFTfPYDMHrMImpwimWWUdSgDQkbno7fFpUPVgh+pHFbZR4SovSctDCM9Hac9IKd9rO8EevtBCkXgY5IMmgquwypP7qqfcp/Tp4KLONDVsWh3RSBB2rnZfit69ocUdqLn2prrRZYM0Jg4JibamKsqe7gfEh5GOAfeYJjVHIPZvil97rcXkMog30byWRwXYRWoxHbzNFHJJpAarO8NdEBBsdCaP3WMJltTmQd4zlnekTq9Z5dgACwAlrpK4BxdV5mvLuspRgMSHbCIFF0iS8MZ5S8oYBYKY7rByC4dDM9uSIUmPOIwxgQBoYeF93auP4qFyPbIVXziWeGTH1EFM57kJo2hqQju6BwIyRf6RmCjdT4JOdiwNgiH/PPD3qoqlsNaXRd+fKtFfECxlZVNVF9SOsgTZEr2TUjJJbyeNX1IZrKIbyGlBABfpQPv2UDrly13LkJXDVhpQ5MhtGwcyF4HKjlU4E8xwB0AvDjd6AGmevZ87EcQRHgcO52e9uNsYELOrAa/Yh81YlmYLQJ5HWyq0+kzQ/DQKEusg6CRI27ryy8nReRS0wsoetkmRwogHSprliCckfEjXG9yAQc74J0WB99vu6DF3i3pMucsXM6tpBbxd2mVJAwXwGogNRBvGRA4jtHKTXkAIwLGCR/mT4Lh75oneQXXP9sAYfGRDCsnw7pX/jRZkU3M44kjw2l5zRIzb4CbZ8dULdL6wbNPZOpK0B6gN1UR1mdoxAaL/GrWiLPL3SEwW9YMTU/d64BtLahAVyucWhj9Mm8ign9IfQaBtd2/GbvCAEBpG5eMcrj2I0ktpKLeaqXQ3Pst42KGIshpdTmQLAeTgFGJ2wvh+tayMOR0n1RZ8B9z13vnOPBnsBq4E1ffgZpPFZHWVpO2cvhjYpOcbBd5TlhpDu5zq9mHGZcVi0y+VFkcFkDdyKJfTt99wEyHSEzDM90KH0nexpwZHJHKYYhjzlwGe0pP/IKfxociaEb7YDbi6KGJY1R2cR76E6NAtXqY4pPH3plLcl8LD7V+cOLUbUWRFZRPTAbVZO3mxK18Xc1ZaAiS8ARJXpZliXAomR94siiiMx8ZBOkXGTlnH0F/9ov1xPtWwEqP9wAAAAASUVORK5CYII=
@@ -1065,6 +1065,8 @@
             Updated: DonTor, ilCorSaRoNeRo, TCTG, Blu.
             Removed: bB, Arsenevich, G-Free, Proxy sites.
 
+17.1    -   Updated script to work with new IMDb layout changes [TV Episode pages].
+
 */
 //==============================================================================
 //    JSHint directives.
@@ -1302,7 +1304,7 @@ var public_sites = [
       'rateLimit': 5000,
       'both': true},
   {   'name': 'DonTor',
-      'icon': 'https://dontorrent.wtf/assets/images/touch-icon-ipad.png',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEwAAABMAgMAAAC6+bm4AAAADFBMVEUAAAABPKf5+v2GoM92jUKqAAAAAXRSTlMAQObYZgAAAVZJREFUOMu91LFtwzAQBVClyAjZJyOkiERABdNrBDWZwiOo8CeIVEQm4RJsUqUJYDt3lqHzN1m4SQgX0sPdkabI67qu5yHSPd7YyxZGgQ+VPVuqJTftqbLXpvX1+DvLDfs6fd+aK4Ag2QwgsDnoSGTz2eLFLOx0DNfm12olX1lBAKRCMpPUT40bFzOPMKj5aDYjekSxvVlBHrGIhc0cgoQmMs2bsNOHzUYkTSeb5R3oyaagJdnKvh+wPxcxizpNZbo8LWy26PLUAttOJyObkPXBbFr6cq4E2wMf1wiHaHtwkAi27c1jIVsue2E26JsuiL5lWrebTCPA31wjXMM8n5dRbUZi07+IXWVApnpiejrYNDaSDZJWkMgckoM4n+fkEao7UxDJ3uQHJDKf+x8gs30csabSGbdUuwuXWfnOfJPpeD/8R9+wcW9fu7dPNntsPXGzZ7d6+y+u2i95hsgMCwAAAABJRU5ErkJggg==',
       'searchUrl': 'https://dontorrent.wtf/buscar/%search_string_orig%',
       'loggedOutRegex': /Cloudflare|Ray ID/,
       'matchRegex': /encontrado <b>0</,
@@ -1463,7 +1465,7 @@ var public_sites = [
       'icon': 'https://pahe.li/wp-content/uploads/2017/12/favicon.ico',
       'searchUrl': 'https://pahe.li/?s=%tt%',
       'loggedOutRegex': /Cloudflare|Ray ID|the security check/,
-      'matchRegex': /Nothing Found/,
+      'matchRegex': /Please try again|nothing matched|Nothing Found/,
       'both': true},
   {   'name': 'Partis',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEYAAABGAgMAAAAMQAoXAAAACVBMVEUAAAB1dnbkmQdwRkMRAAAAAXRSTlMAQObYZgAAANZJREFUOMvN0sENhCAQBdAPWS/cbYIqLIFNoB9K4Wimyl1AYXDUeNv9xxfnO07Er/KSNJ3QIkg5SV5SkF3hWDaH4I7PfDNSlnFSFfJD0xUtosrLKnekd57TkW3l6zcmRku9xMoIqrzPdvLbVW1s5DYyidGr0sqoRlM/3zWB4iWpTjbdkGu0b3FLhvZDn5AXNHXqi7X6G0JYBM2FNECNJle6OalCFroTyhYEy2iuJyWi4bc3RJzgAJtl7ZTnchInI4lKoiSIwQRRjzG2CzuyyDMyj0jjj/IBZ05ftNQK2woAAAAASUVORK5CYII=',
@@ -6183,8 +6185,9 @@ function performPage() {
       episode_id = $('.titlereference-overview-season-episode-numbers li').last().text().trim().match(/(\d+)/)[0];
     } else {
       series_id  = $('[data-testid=hero-title-block__series-link]').prop('href').match(/\/tt([0-9]+)\//)[0].replace(/\//g, "");
-      season_id  = $('[data-testid=hero-subnav-bar-season-episode-numbers-section]').children().first().text().trim().match(/(\d+)/)[0];
-      episode_id = $('[data-testid=hero-subnav-bar-season-episode-numbers-section]').children().last().text().trim().match(/(\d+)/)[0];
+      SE_numbers = $('[data-testid=hero-subnav-bar-season-episode-numbers-section-xs]').text().trim().split('.')
+      season_id  = SE_numbers[0].match(/(\d+)/)[0];
+      episode_id = SE_numbers[1].match(/(\d+)/)[0];
     }
   }
 
