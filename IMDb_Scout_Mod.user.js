@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      17.1.1
+// @version      17.2
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from hundreds various sites. Adds movies/series to Radarr/Sonarr. Adds external ratings from Metacritic, Rotten Tomatoes, Letterboxd, Douban, Allocine. Media Server indicators for Plex, Jellyfin, Emby. Dark theme/style for Reference View. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAMFBMVEUAAAD/AAAcAAA1AABEAABVAAC3AADnAAD2AACFAAClAABlAAB3AADHAACVAADYAABCnXhrAAAD10lEQVRIx73TV4xMURgH8H/OnRmZWe3T7h2sOWaNXu7oJRg9UccuHgTRBatMtAgSg+gJu9q+kFmihcQoD8qLTkK0CIkoy0YJITsRD0rCKTHFrnkSv5e5c88/53znO+fiPwvsvrN038cPNqrG9pJmHkRVnPcpaTlHJY60cfPSpsrzl1LKihrmLvxhCM2i3OHvDx0d+H7e3F6JBv5iZMiJfhFTfPYDMHrMImpwimWWUdSgDQkbno7fFpUPVgh+pHFbZR4SovSctDCM9Hac9IKd9rO8EevtBCkXgY5IMmgquwypP7qqfcp/Tp4KLONDVsWh3RSBB2rnZfit69ocUdqLn2prrRZYM0Jg4JibamKsqe7gfEh5GOAfeYJjVHIPZvil97rcXkMog30byWRwXYRWoxHbzNFHJJpAarO8NdEBBsdCaP3WMJltTmQd4zlnekTq9Z5dgACwAlrpK4BxdV5mvLuspRgMSHbCIFF0iS8MZ5S8oYBYKY7rByC4dDM9uSIUmPOIwxgQBoYeF93auP4qFyPbIVXziWeGTH1EFM57kJo2hqQju6BwIyRf6RmCjdT4JOdiwNgiH/PPD3qoqlsNaXRd+fKtFfECxlZVNVF9SOsgTZEr2TUjJJbyeNX1IZrKIbyGlBABfpQPv2UDrly13LkJXDVhpQ5MhtGwcyF4HKjlU4E8xwB0AvDjd6AGmevZ87EcQRHgcO52e9uNsYELOrAa/Yh81YlmYLQJ5HWyq0+kzQ/DQKEusg6CRI27ryy8nReRS0wsoetkmRwogHSprliCckfEjXG9yAQc74J0WB99vu6DF3i3pMucsXM6tpBbxd2mVJAwXwGogNRBvGRA4jtHKTXkAIwLGCR/mT4Lh75oneQXXP9sAYfGRDCsnw7pX/jRZkU3M44kjw2l5zRIzb4CbZ8dULdL6wbNPZOpK0B6gN1UR1mdoxAaL/GrWiLPL3SEwW9YMTU/d64BtLahAVyucWhj9Mm8ign9IfQaBtd2/GbvCAEBpG5eMcrj2I0ktpKLeaqXQ3Pst42KGIshpdTmQLAeTgFGJ2wvh+tayMOR0n1RZ8B9z13vnOPBnsBq4E1ffgZpPFZHWVpO2cvhjYpOcbBd5TlhpDu5zq9mHGZcVi0y+VFkcFkDdyKJfTt99wEyHSEzDM90KH0nexpwZHJHKYYhjzlwGe0pP/IKfxociaEb7YDbi6KGJY1R2cR76E6NAtXqY4pPH3plLcl8LD7V+cOLUbUWRFZRPTAbVZO3mxK18Xc1ZaAiS8ARJXpZliXAomR94siiiMx8ZBOkXGTlnH0F/9ov1xPtWwEqP9wAAAAASUVORK5CYII=
@@ -1071,6 +1071,9 @@
             Updated: NZBgeek (to ID search), MTV.
             Updated UNIT3D: Aither, HD-U, JME, NTELogo, LAT-Team, SI, STC, RedBits.
             Removed: PornoLab-ID, Telly, BP, PREcBurns.
+
+17.2    -   Fixed: Searchable sites with mPOST didn't work if auto-search was disabled.
+            Added: TPB-Proxy (as icon site), Wikipedia Links Search, Francomac, MyAnimeList, AniDB.
 
 
 //==============================================================================
@@ -3477,6 +3480,12 @@ var french_sites = [
       'matchRegex': />0 torrents/,
       'spaceEncode': ' ',
       'TV': true},
+  {   'name': 'Francomac',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADwAAAA8BAMAAADI0sRBAAAAMFBMVEUAAACap4p6pJqisJiwrIS0to9pmpaYu5uNqqOOfT9mi3yGmoDExZOdvLCwmlRIf3Udke/SAAAAAXRSTlMAQObYZgAAAulJREFUOMvtjzGL1EAYhucvfJvIiVs5YgxnNY5hA2IRdlIpwnEJCp6FIwwSq/M4ZwstdgM6KBaWUbjiioA58NhTD7kBbdwujQruFqYQLFyU/ICziJO9fyE+MJDwfO8376D//GOoU3QzZmBdXbGGVm/D7k0fTKu7nAv86JGUaHTSOt8HgN66DZY81hu4Usq7QnDnDmzE6C6WG1IOl5bWgSjZk/f45np3jDnXr37YIZrKliUIlgaWlA/ksnhfz190zmxGV+bZwZGmNoBZUlUPBrl4mWXZd3n/4zzLNGrthkd7BKxWSyfJDM+ulh/nv7KfqDTa6km5DnJaTQczt9vqrcvlpK5/vUZlWcYsJGZo8+pAOtjsbvXvlehKPaZGG792Xa+VkxUHVzwx2vC28+ZKTVs9mZTlNWKGHPe2/1UcaY5Pskv0IooZC8uJfxbIPn/6GStnoZ/nHO+dcFMU2PFafH1vljs5V0Lw2UK/yJNtvCxuIS+K7CieKcwf7m5j7NzJWnRR5ImZR0/AgkvUVQ5/XGzHPheL3TxpDpN3TxUqCrG/K0xMFMVt75x77mVWZJlFm2bnYjVDy8Xhi0Lrg6JpjH54u2O+s621smn+VJVCB8+LBY1BfXt8ajTuagCV7h6evWh0V2stTCIvmlytftgpdosiSVJKUhaau8s4YtCFfkckfKQS0ZY4FOl5xur6p0LjS1pwnJgjzBkphdVy7qR1Xc+36jE6W+S54A7HBp5SSoBYhFJ74beQHdgAgBeI05RSCGMDi72IaI1s1kI7Joudm9RjXmtXFyMsRMCOACxM/hhlcRnHUTvhBUZ3CQvPmwvCoOMI96Rncob+l9CjbTogNgsIgBXHZGj5qRdGYUxtn8arNgkRUYwFT3Y0WKaSV1HKzL+vfEVcdQHQp1aPdRfAXg29trnN+v4IK9yC/D3THQKtCAQAQNTQSoEed4+3T+FoxU9Nhb5SykjreFp9ufFp3IUhaL0vXPSff4u/Gsl2CI3KRskAAAAASUVORK5CYII=',
+      'searchUrl': 'https://kebekmac.forum-canada.com/search?search_keywords=%tt%&search_by=text',
+      'loggedOutRegex': /Cloudflare|Ray ID|Vous pouvez vous enregistrer/,
+      'matchRegex': /Aucun message/,
+      'both': true},
   {   'name': 'HD-F',
       'searchUrl': 'https://hdf.world/torrents.php?searchstr=%search_string_orig%+%year%&order_by=time&order_way=desc&group_results=1&action=basic&searchsubmit=1',
       'loggedOutRegex': /Cloudflare|Ray ID|Mot de passe perdu/,
@@ -4678,6 +4687,10 @@ var icon_sites_main = [
       'icon': 'https://www.amazon.com/favicon.ico',
       'searchUrl': 'https://www.amazon.de/s?k=%search_string_orig%&i=instant-video',
       'showByDefault': false},
+  {   'name': 'AniDB',
+      'icon': 'https://cdn-eu.anidb.net/css/assets/images/touch/favicon-32x32.png',
+      'searchUrl': 'https://anidb.net/anime/?adb.search=%search_string_orig%&do.search=1',
+      'showByDefault': false},
   {   'name': 'Arrow Films',
       'icon': 'https://www.arrowfilms.com/apple-touch-icon.png',
       'searchUrl': 'https://www.arrowfilms.com/elysium.search?search=%search_string%',
@@ -4918,6 +4931,10 @@ var icon_sites_main = [
       'icon': 'https://mubi.com/apple-touch-icon.png',
       'searchUrl': 'https://mubi.com/search/films?query=%search_string_orig%',
       'showByDefault': false},
+  {   'name': 'MyAnimeList',
+      'icon': 'https://cdn.myanimelist.net/images/favicon.ico',
+      'searchUrl': 'https://myanimelist.net/anime.php?q=%search_string_orig%&cat=anime',
+      'showByDefault': false},
   {   'name': 'MyDramaList (Asia)',
       'icon': 'https://mydramalist.com/assets/img/apple-touch-icon-iphone.png',
       'searchUrl': 'https://mydramalist.com/search?q=%search_string%',
@@ -4985,6 +5002,10 @@ var icon_sites_main = [
   {   'name': 'TMDB',
       'icon': 'https://www.themoviedb.org/assets/2/apple-touch-icon-57ed4b3b0450fd5e9a0c20f34e814b82adaa1085c79bdde2f00ca8787b63d2c4.png',
       'searchUrl': 'https://www.themoviedb.org/search?query=%search_string%+y:%year%'},
+  {   'name': 'TPB-Proxy',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAAA8BAMAAAAkp6FXAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAAAkUExURQAAABkZGTMZAEwzM0xMM0xMTGZMM2ZMTGZmTH9mZn9/Zv///0CpG+oAAAGySURBVDjLxdXNitNgFMbxx2NlHHMThz8DfmRTBnfdSDeDuhFczc5LKINQ0M2Ay16CFyDSTYxgnT435yLph0lqVXA8q5D8kpf3Oe8h8pHS7YF5tzpgrH6V+yDoV/FHYOA55X8CkhSHQBBczOfzKUEMgPzoa2y7zoWrAXBir8K26/v2OvqgtN2AYnejC/gVKLaJHwB37VUD2qtuN3PiV00AOfGs06ybaHNo48oATvdAPRT16Bg4+SdAABkHQAYGKOsG9sDjunAFace6C74GUPjUFeTS99zdpgU8qvMpwNkzPveOfZ2QQgFIKUDL3x7evHMERE6OgLbzA/Xals1BUKmw7DdwAIx50HyBeDEIZhSWK0gUiwEApeUZ+WQq9cgKkbYMYa+nktiRT0jNAMvXKleLlsQ72+u3SCARnDRRq8n9AyhICSm4tMekZbuOpnPft6dt2bYwtmDk1XkGqBmJJmRZ0SwRIAUSF0tfKYjndkW+3LT7C6TEZbuFK4XiIeRkA74FZz+lMBUJ2h6YmuxkeHO+GW/ZdjXQrs1LLRj1GxH5freEigGwt8Rg5TFQ6bb/en8PfgCTTMM5Mqng0wAAAABJRU5ErkJggg==',
+      'searchUrl': 'https://tpb.one/search.php?q=%search_string%&cat=201,202,207,209,205,208',
+      'showByDefault': false},
   {   'name': 'TrailerAddict',
       'icon': 'https://cdn.traileraddict.com/icons/favicon-32x32.png',
       'searchUrl': 'https://www.traileraddict.com/search/%search_string%',
@@ -5023,6 +5044,10 @@ var icon_sites_main = [
   {   'name': 'Wikipedia',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwBAMAAAClLOS0AAAAGFBMVEUAAAD+/v4FBQVFRUXQ0NBvb2+Ojo6vr6/DA8rxAAAAAXRSTlMAQObYZgAAAUpJREFUOMu9lE1ugzAQhdMbdMJP1pkEvMahBzBRugf1AqCoe+j9pc7Mk1OBQJWqKrMwY39+8zQYvJN4oUW87ixoJVb3Rw2tBgRrkj8A2ojngIvGW6Jj/fVIBdw8M98PHXMxvns+WXrXUhnzkejA3BNddci5gofXhDpuiZKCdE8AmAxcVdfUJIqSADJ2Nsp8GElkNYBITzKmninVhKYWQE2CmfSZs+kYwWAmDR8beUIGkPDZTArbm7sHyGAiLepsXwFgCVZnK9wDYKmFiU5EDYAls7K+ywhsqYRVkPwYAVo0nVZs2gg07NX6iWsZQwSxxbSQimjvB+zZSfFUTLLzDORiMvXkuUd7ADAJF7WvhjAHHX86OxPBM9AwV3bwbgES5hHHvwAp3uzE/QKQdxCGBcBBU17QEtyw9ePXj/o/f84Nk80rY/uS2byWvgGb7GoMA0DhoQAAAABJRU5ErkJggg==',
       'searchUrl': 'https://en.wikipedia.org/w/index.php?search=%search_string%&go=Go'},
+  {   'name': 'Wikipedia Links Search',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwBAMAAAClLOS0AAAAGFBMVEUAAAD+/v4FBQVFRUXQ0NBvb2+Ojo6vr6/DA8rxAAAAAXRSTlMAQObYZgAAAUpJREFUOMu9lE1ugzAQhdMbdMJP1pkEvMahBzBRugf1AqCoe+j9pc7Mk1OBQJWqKrMwY39+8zQYvJN4oUW87ixoJVb3Rw2tBgRrkj8A2ojngIvGW6Jj/fVIBdw8M98PHXMxvns+WXrXUhnzkejA3BNddci5gofXhDpuiZKCdE8AmAxcVdfUJIqSADJ2Nsp8GElkNYBITzKmninVhKYWQE2CmfSZs+kYwWAmDR8beUIGkPDZTArbm7sHyGAiLepsXwFgCVZnK9wDYKmFiU5EDYAls7K+ywhsqYRVkPwYAVo0nVZs2gg07NX6iWsZQwSxxbSQimjvB+zZSfFUTLLzDORiMvXkuUd7ADAJF7WvhjAHHX86OxPBM9AwV3bwbgES5hHHvwAp3uzE/QKQdxCGBcBBU17QEtyw9ePXj/o/f84Nk80rY/uS2byWvgGb7GoMA0DhoQAAAABJRU5ErkJggg==',
+      'searchUrl': 'https://en.wikipedia.org/w/index.php?target=https%3A%2F%2Fwww.imdb.com%2Ftitle%2F%tt%&title=Special%3ALinkSearch',
+      'showByDefault': false},
   {   'name': 'WhatsOnMubi',
       'searchUrl': 'https://whatsonmubi.com/?q=%search_string%',
       'showByDefault': false},
@@ -5791,7 +5816,8 @@ function perform(elem, movie_id, movie_title, movie_title_orig, is_tv, is_movie,
           maybeAddLink(elem, site['name'], searchUrl, site, scout_tick, movie_id, movie_title, movie_title_orig, movie_year, series_id, season_id, episode_id);
         }
         if (!('goToUrl' in site) && !getPageSetting('call_http_mod')){
-          addLink(elem, site['name'], searchUrl, site, 'found', scout_tick);
+          const post_data = await replaceSearchUrlParams(site, movie_id, movie_title, movie_title_orig, movie_year, series_id, season_id, episode_id, false); // runs on non-post sites too to keep order of icons
+          addLink(elem, site['name'], searchUrl, site, 'found', scout_tick, post_data);
         }
       }
     }
