@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      17.2.1
+// @version      17.3
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from hundreds various sites. Adds movies/series to Radarr/Sonarr. Adds external ratings from Metacritic, Rotten Tomatoes, Letterboxd, Douban, Allocine. Media Server indicators for Plex, Jellyfin, Emby. Dark theme/style for Reference View. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAMFBMVEUAAAD/AAAcAAA1AABEAABVAAC3AADnAAD2AACFAAClAABlAAB3AADHAACVAADYAABCnXhrAAAD10lEQVRIx73TV4xMURgH8H/OnRmZWe3T7h2sOWaNXu7oJRg9UccuHgTRBatMtAgSg+gJu9q+kFmihcQoD8qLTkK0CIkoy0YJITsRD0rCKTHFrnkSv5e5c88/53znO+fiPwvsvrN038cPNqrG9pJmHkRVnPcpaTlHJY60cfPSpsrzl1LKihrmLvxhCM2i3OHvDx0d+H7e3F6JBv5iZMiJfhFTfPYDMHrMImpwimWWUdSgDQkbno7fFpUPVgh+pHFbZR4SovSctDCM9Hac9IKd9rO8EevtBCkXgY5IMmgquwypP7qqfcp/Tp4KLONDVsWh3RSBB2rnZfit69ocUdqLn2prrRZYM0Jg4JibamKsqe7gfEh5GOAfeYJjVHIPZvil97rcXkMog30byWRwXYRWoxHbzNFHJJpAarO8NdEBBsdCaP3WMJltTmQd4zlnekTq9Z5dgACwAlrpK4BxdV5mvLuspRgMSHbCIFF0iS8MZ5S8oYBYKY7rByC4dDM9uSIUmPOIwxgQBoYeF93auP4qFyPbIVXziWeGTH1EFM57kJo2hqQju6BwIyRf6RmCjdT4JOdiwNgiH/PPD3qoqlsNaXRd+fKtFfECxlZVNVF9SOsgTZEr2TUjJJbyeNX1IZrKIbyGlBABfpQPv2UDrly13LkJXDVhpQ5MhtGwcyF4HKjlU4E8xwB0AvDjd6AGmevZ87EcQRHgcO52e9uNsYELOrAa/Yh81YlmYLQJ5HWyq0+kzQ/DQKEusg6CRI27ryy8nReRS0wsoetkmRwogHSprliCckfEjXG9yAQc74J0WB99vu6DF3i3pMucsXM6tpBbxd2mVJAwXwGogNRBvGRA4jtHKTXkAIwLGCR/mT4Lh75oneQXXP9sAYfGRDCsnw7pX/jRZkU3M44kjw2l5zRIzb4CbZ8dULdL6wbNPZOpK0B6gN1UR1mdoxAaL/GrWiLPL3SEwW9YMTU/d64BtLahAVyucWhj9Mm8ign9IfQaBtd2/GbvCAEBpG5eMcrj2I0ktpKLeaqXQ3Pst42KGIshpdTmQLAeTgFGJ2wvh+tayMOR0n1RZ8B9z13vnOPBnsBq4E1ffgZpPFZHWVpO2cvhjYpOcbBd5TlhpDu5zq9mHGZcVi0y+VFkcFkDdyKJfTt99wEyHSEzDM90KH0nexpwZHJHKYYhjzlwGe0pP/IKfxociaEb7YDbi6KGJY1R2cR76E6NAtXqY4pPH3plLcl8LD7V+cOLUbUWRFZRPTAbVZO3mxK18Xc1ZaAiS8ARJXpZliXAomR94siiiMx8ZBOkXGTlnH0F/9ov1xPtWwEqP9wAAAAASUVORK5CYII=
@@ -1076,6 +1076,10 @@
             Added: TPB-Proxy (as icon site), Wikipedia Links Search, Francomac, MyAnimeList, AniDB.
 
 17.2.1  -   Added: CorruptNet-Pre, CorruptNet-Trace, LimitOfEden.
+
+17.3    -   New feature: Added option to disable Radarr/Sonarr notification when they don't respond.
+            Added: HD-Source.
+            Updated: NZBgeek (reverted 17.1.1).
 
 
 //==============================================================================
@@ -3623,7 +3627,7 @@ var german_sites = [
       'loggedOutRegex': /Cannot GET/,
       'matchRegex': /"result":\[\]/},
   {   'name': 'HD-Source',
-      'icon': 'https://hd-source.to/wp-content/themes/hdsrc/favicon.ico',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAMAAACdt4HsAAAAXVBMVEUAAAAAY5eRFxbMODgJEhy0LCsBLUeoJybUODjGMjIBRWm9MC+aIiJLEhLaNDAyS25qFRSiHRvdPDy9KCZ+HR13OEYZWIQnV4CZPEdYSmWGRli0JCFCMEJzJzCyNzvubZtLAAAAAXRSTlMAQObYZgAAAedJREFUWMPtlu3SmyAQhVtB8As1CULMq7n/y+xhCWutvNN28qMf4/mR4ZxlH8mOyfDlbX19UycgAA7T/K3kBPwvgD//Jv77AOg7O0A55waSd+7QvQMsBbTsnCJSwbLr4j4HrAUkm5ez7CjfGEsOwC1jAriCXMz3Wj4BeG5J574YmVDWmHEcmZAFDJfQol5ujo5zqSA5XgLXqixgunQdA6KTilBb3qwwyLMAqvEMOzjMMKFS3oRcmyYH6LTWRRqB05CVnDN4/dD6w6gMwKNSbjNk5zVWhCJNVMgB5lDp1inqDneLMwyr8RcA062EbknBEGDGsjWKt5HNAe6o7NRq2aScVrytzgKeLVQnhXUnU643QNlCsAeAr9GizUgyFk5Y+coFoUgDbcsB5r6uq1GqqCU4ozjnETyCJTIDuCIEWvbukHshyGYA9x4l/qrPSlQ13D6P7qphjwCBFh62E7QvoTA0PhgKOMAR4CtUeFZDD2flD7nD8ylvMoA5tNCs2MUZRpTD/+JD9PFgyI+AB7XkZyjqGh99XyHk/g3w8xmir0JzaK9G9GcB2HPlWfkKrpSUX6uoK1RbiS1ZgHvi7eWfnG/hDLmpfEl31kh6fP4EjYSYrtg1SiYpRcmm86583pVPwHlX/rsA7+obvAcqGK4t9SEAAAAASUVORK5CYII=',
       'searchUrl': 'https://hd-source.to/?s=%tt%',
       'loggedOutRegex': /Cloudflare|Ray ID|Private Computer/,
       'matchRegex': /No search results/,
@@ -3898,11 +3902,11 @@ var usenet_sites = [
       'matchRegex': /No suitable matches were found/,
       'both': true},
   {   'name': 'NZBgeek',
-      'searchUrl': 'https://nzbgeek.info/geekseek.php?movieid=%nott%',
+      'searchUrl': 'https://nzbgeek.info/geekseek.php?moviesgeekseek=1&browsecategory=2000&browseincludewords=%search_string% %year%',
       'loggedOutRegex': /Cloudflare|Ray ID|forgot password/,
       'matchRegex': /returned 0 releases/},
   {   'name': 'NZBgeek',
-      'searchUrl': 'https://nzbgeek.info/geekseek.php?tvid=%tvdbid%',
+      'searchUrl': 'https://nzbgeek.info/geekseek.php?moviesgeekseek=1&browsecategory=5000&browseincludewords=%search_string%',
       'loggedOutRegex': /Cloudflare|Ray ID|forgot password/,
       'matchRegex': /returned 0 releases/,
       'TV': true},
@@ -7361,7 +7365,9 @@ function get_radarr_movies(movie_id) {
     onerror: function() {
       $('a[href="https://radarr.video"]').find('img').prop("src", error_icon);
       console.log("IMDb Scout Mod (Radarr): Request Error. Check that Radarr is running or your Radarr URL.");
-      GM.notification("Error: No response. \nPlease check your Radarr URL.", "IMDb Scout Mod (Radarr)");
+      if (GM_config.get("app_notification")) {
+        GM.notification("Error: No response. \nPlease check your Radarr URL.", "IMDb Scout Mod (Radarr)");
+      }
     },
     onabort: function() {
       $('a[href="https://radarr.video"]').find('img').prop("src", error_icon);
@@ -7552,6 +7558,9 @@ async function get_sonarr_tvseries(movie_id) {
     onerror: function() {
       $('a[href="https://sonarr.tv"]').find('img').prop("src", error_icon);
       console.log("IMDb Scout Mod (Sonarr): Request Error. Check that Sonarr is running or your Sonarr URL.");
+      if (GM_config.get("app_notification")) {
+        GM.notification("Error: No response. \nPlease check your Sonarr URL.", "IMDb Scout Mod (Sonarr)");
+      }
     },
     onabort: function() {
       $('a[href="https://sonarr.tv"]').find('img').prop("src", error_icon);
@@ -8983,6 +8992,7 @@ function countSites(task) {
       'dark_reference_view': {'type': 'checkbox'},
       'compact_reference_view': {'type': 'checkbox'},
       'greybackground_reference_view': {'type': 'checkbox'},
+      'app_notification': {'type': 'checkbox'},
       'highlight_sites_movie': {'type': 'text'},
       'highlight_missing_movie': {'type': 'text'},
       'loadmod_on_start_search': {'type': 'checkbox'},
@@ -9294,6 +9304,11 @@ var config_fields = {
   'greybackground_reference_view': {
     'type': 'checkbox',
     'label': 'Reference View: Enable grey background for searchable sites?',
+    'default': true
+  },
+  'app_notification': {
+    'type': 'checkbox',
+    'label': "Notify when Radarr/Sonarr doesn't respond?",
     'default': true
   },
   'highlight_sites_movie': {
