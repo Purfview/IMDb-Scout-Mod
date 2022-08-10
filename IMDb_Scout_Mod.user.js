@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      17.3.2
+// @version      17.3.3
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from hundreds various sites. Adds movies/series to Radarr/Sonarr. Adds external ratings from Metacritic, Rotten Tomatoes, Letterboxd, Douban, Allocine. Media Server indicators for Plex, Jellyfin, Emby. Dark theme/style for Reference View. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAMFBMVEUAAAD/AAAcAAA1AABEAABVAAC3AADnAAD2AACFAAClAABlAAB3AADHAACVAADYAABCnXhrAAAD10lEQVRIx73TV4xMURgH8H/OnRmZWe3T7h2sOWaNXu7oJRg9UccuHgTRBatMtAgSg+gJu9q+kFmihcQoD8qLTkK0CIkoy0YJITsRD0rCKTHFrnkSv5e5c88/53znO+fiPwvsvrN038cPNqrG9pJmHkRVnPcpaTlHJY60cfPSpsrzl1LKihrmLvxhCM2i3OHvDx0d+H7e3F6JBv5iZMiJfhFTfPYDMHrMImpwimWWUdSgDQkbno7fFpUPVgh+pHFbZR4SovSctDCM9Hac9IKd9rO8EevtBCkXgY5IMmgquwypP7qqfcp/Tp4KLONDVsWh3RSBB2rnZfit69ocUdqLn2prrRZYM0Jg4JibamKsqe7gfEh5GOAfeYJjVHIPZvil97rcXkMog30byWRwXYRWoxHbzNFHJJpAarO8NdEBBsdCaP3WMJltTmQd4zlnekTq9Z5dgACwAlrpK4BxdV5mvLuspRgMSHbCIFF0iS8MZ5S8oYBYKY7rByC4dDM9uSIUmPOIwxgQBoYeF93auP4qFyPbIVXziWeGTH1EFM57kJo2hqQju6BwIyRf6RmCjdT4JOdiwNgiH/PPD3qoqlsNaXRd+fKtFfECxlZVNVF9SOsgTZEr2TUjJJbyeNX1IZrKIbyGlBABfpQPv2UDrly13LkJXDVhpQ5MhtGwcyF4HKjlU4E8xwB0AvDjd6AGmevZ87EcQRHgcO52e9uNsYELOrAa/Yh81YlmYLQJ5HWyq0+kzQ/DQKEusg6CRI27ryy8nReRS0wsoetkmRwogHSprliCckfEjXG9yAQc74J0WB99vu6DF3i3pMucsXM6tpBbxd2mVJAwXwGogNRBvGRA4jtHKTXkAIwLGCR/mT4Lh75oneQXXP9sAYfGRDCsnw7pX/jRZkU3M44kjw2l5zRIzb4CbZ8dULdL6wbNPZOpK0B6gN1UR1mdoxAaL/GrWiLPL3SEwW9YMTU/d64BtLahAVyucWhj9Mm8ign9IfQaBtd2/GbvCAEBpG5eMcrj2I0ktpKLeaqXQ3Pst42KGIshpdTmQLAeTgFGJ2wvh+tayMOR0n1RZ8B9z13vnOPBnsBq4E1ffgZpPFZHWVpO2cvhjYpOcbBd5TlhpDu5zq9mHGZcVi0y+VFkcFkDdyKJfTt99wEyHSEzDM90KH0nexpwZHJHKYYhjzlwGe0pP/IKfxociaEb7YDbi6KGJY1R2cR76E6NAtXqY4pPH3plLcl8LD7V+cOLUbUWRFZRPTAbVZO3mxK18Xc1ZaAiS8ARJXpZliXAomR94siiiMx8ZBOkXGTlnH0F/9ov1xPtWwEqP9wAAAAASUVORK5CYII=
@@ -1086,6 +1086,8 @@
 
 17.3.2  -   Added: TMDB-ID, NewHeaven, MaDsRevolution.
             Removed: BitBR.
+
+17.3.3  -   Added: 2Embed, Filmweb (PL), Ancensored.
 
 
 //==============================================================================
@@ -4529,6 +4531,12 @@ var pre_databases = [
 ];
 
 var other_sites = [
+  {   'name': 'Ancensored',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAABUFBMVEX///9PDwsXBAMSAwMQAwJdEQ1CDAkAAAAAAAB2FRBvFA9tFA9sFA8eBgUAAAAAAAAAAAAAAACGGBOHGRN8FhF/FxFeEg5EDQooCAYiBgUiBgUcBQQLAgIKAgIAAADtIx7lGh72/xfo8BbqHh68IRnv9xfs8xbf8hSDQA/1JiDwIh/QJBvHIhr0/xe1ExfR5xOJJRGRnA2AgQz3Kh/vJR/dJR3iIB3dGR3TJBzQHRuyHxi3ERjl9hWnExWjERXU6RTH3BKxxhB9FhCCLw+AJg93HQ+Zqw5+TA6Gig1tIA1POgjyJR/kIx3ZJRzVHBvRFRvBGhm/Fhm4GBj6/xfy+xesEhfs/Rbp+xbh/BXa7RTW8RPJ3ROQFhPC1RKNEhLB1xGHKhGAHhGisg+CLQ93KQ92KQ+BTQ5/Sw6LlA1tNg18eQxwXQxoLwxoQQtcOgpdWQlJqLHAAAAAH3RSTlMBzo+FgOG9JAXz7ufmkzIsCgP7+fn148GtoZ+Ud3c3N6M00gAAAPJJREFUGNMtjcVuA0EUBN+i2Y7DvLPMaGbGMDMz//8tHsl16i6p1YAJ0SzDsFQKpmxETU4UuWKETuOaTpR1x9M0z9Gl1fBErJeNdtBU1athd1uiJvuo3u7zsqAcuePDzHwKaNMJeEE4Vt9fSrulIgks5zVlxW791MWT326WAEbUVP4i6BX2esPLVxSHRVE7f/yooNuvG/tsgGKwlL3/u0aV7/6prDQ6HAGUaR0UHj5dWxB4v55bg1Aksz++w798a2TMJgFoKf/su9Vqwx/lLRIAwivSVu3pbdCpGdbyDGBDLexwCHG5ORJ3TJIk4jEisYnzP7H/J8p3VrQ0AAAAAElFTkSuQmCC',
+      'searchUrl': 'http://ancensored.com/advanced-search/media?AdvancedSearchForm[mediaText]=%search_string%&AdvancedSearchForm[mediaYearFrom]=%year%&AdvancedSearchForm[mediaYearTo]=%year%',
+      'matchRegex': /No results found/,
+      'inSecondSearchBar': true,
+      'both': true},
   {   'name': 'Blu-ray',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAADeUExURVO29Vq59Vu59Vy59V269WC79W6/9W+/9XDA9XDB9nDC93HC93PC9nXE93bG9njF93vF9n3I94DH9oHG9oLH9oTI9oXJ9orK9orN+IvK94zM94zO+I3L943O+JDN95HP+JHQ+JPP95XQ+JbQ95jU+ZnR+JzR+JzS95zT+J3S+J3T+J3U+J7S+J/T+J/U+KDT+KPV+KTX+anX+K7Z+q/a+bHc+bbf+rrf+cTk+sXk+8jk+svl+svm+8zn+9vt/Nvu/Nzu/Nzv/N3v/ODv/OHw/Ojz/Onz/er0/er1/f///532i+4AAAC+SURBVDjLtdNFDsNADEDRFFxmZmZmZs79L9TUo1ZZOGOpamdlK0/K6EdRgDnK74CqO9cRA7RT54DapMFpf3wLEvTsNkdmKkCBAi5chzhXKODH0ceBEs55CrhfU/yBc4gCk1qnvxB3LJulHbYRMElBCsAqL3lgU58DFPACWJJzIZYGHbRXd/UfgwKw5sAYl7RhatjgkjVKDQ1xhwQBquForD0Tzy8eqsPt/glRZEIN5CV3OVnqVSvo/Mev9zV4Aq22bvwYC8iHAAAAAElFTkSuQmCC',
       'searchUrl': 'https://www.blu-ray.com/search/?quicksearch=1&quicksearch_country=all&quicksearch_keyword=%tt%&section=theatrical',
@@ -4615,6 +4623,11 @@ var other_sites = [
 ];
 
 var streaming_sites = [
+  {   'name': '2Embed',
+      'searchUrl': 'https://2embed.org/embed/%tt%',
+      'matchRegex': /Not Found/,
+      'inThirdSearchBar': true,
+      'both': true},
   {   'name': 'HBO Max Movie Catalog (US)',
       'icon': 'https://cdn-1.webcatalog.io/catalog/hbo-max/hbo-max-icon-filled-128.webp',
       'searchUrl': 'https://www.themoviedb.org/movie/%tmdbid%/watch?translate=false&locale=US',
@@ -4903,6 +4916,10 @@ var icon_sites_main = [
       'showByDefault': false},
   {   'name': 'Filmow (BR)',
       'searchUrl': 'https://filmow.com/buscar/?year_start=%year%&q=%search_string_orig%',
+      'showByDefault': false},
+  {   'name': 'Filmweb (PL)',
+      'icon': 'https://fwcdn.pl/front/ogfx/icons2/32x32.png',
+      'searchUrl': 'https://www.filmweb.pl/search?q=%search_string_orig%+%year%',
       'showByDefault': false},
   {   'name': 'FindAnyFilm',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAMAAABlApw1AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA3BpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMTQ1IDc5LjE2MzQ5OSwgMjAxOC8wOC8xMy0xNjo0MDoyMiAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDplNGEzZDk4ZC1lOWQ0LTRjNDMtYjFlYi1iZWY1YTVkY2Q2ZmEiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6NEZDMDVDN0VFMzdCMTFFOTkzNjE5ODcxQkEzMDVCNjQiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6NEZDMDVDN0RFMzdCMTFFOTkzNjE5ODcxQkEzMDVCNjQiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTggKE1hY2ludG9zaCkiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDozMUI2QzE5RTg5MzUxMUU5OUU0NDkwODZGNzcxNzRFQyIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDozMUI2QzE5Rjg5MzUxMUU5OUU0NDkwODZGNzcxNzRFQyIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/Ps4JVg4AAADGUExURQYcPAYcPAYcPAYcPAYcPAYcPAYcPAYcPAYcPAYcPAYcPAYcPAYcPAYcPAYcPAYcPAYcPAYcPAYcPAYcPAYcPAYcPAYcPAYcPAYcPAYcPAYcPAYcPAYcPAYcPAYcPAYcPAYcPAcdPQcePQsmPwwnPxg9RSM3UyNSSypfTzRyVDZIYTh5Vjp9WERVbUVWbkmYX0pacllofV9tgl/Ca2bPb2l2iWrVcHOAknXqdnjweIWQn5egraKqtrzCytHV293g5PLz9f///9Pyn44AAAAgdFJOUwAeHyAhIk5XWFlab3Fzd3ilpqe4udfj5PLz+Pn6/P3+T6ZSXQAAAwNJREFUeNrt3dlSE1EUheF9QAFFE+lEmw7YfZznCYcYJ/D9X8oLULkJ6e6zx6q1n+B864eqVFEpiM4vTef3FjnINXdn02t0+dLB/Rzs2oP0//07hzngNTf+vn+/zSGvu3X+/t0uB71ul4goNTnsNYmI7uTAVxFttZEB7RZNcuib0Cw2YEZ1bEBNi9iAI8rBDwAAAAAgCuDkl+KdCACWvxVvCQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMAQwPdl8b00Bbzx+Uc+AAAAAAAAAAAAAAAAsAO8PQsOyE9/BgfkB5/PYgP6RnAM6BfBM6BXBN+AHhGcAzZHcA/YFME/YEOECIArI4QAXBUhCGB9hCiAtRFOR31l4JsBoPenoz73wwIw4COqVwBfBCsAWwQ7AFMEQwBPBFMARwRbAEMEa0BxBHNAaQQHgLIIHgBFEcQBL14/FI0gDni1+vhEMoICYPVVMoIGYCUZQQcgGEEJIBdBDSAVQQ8gFEETIBJBFSARQRnAH0EbwB5BH8AcwQDAG8EEwBnBBsAYwQrAFsEMwBXBEMATwRLAEsEWwBDBGFAewRzQN8KHNV8ZeG8O6BuB91gBPSM4BhhE4AaoR2AHaEcQAOhGkACoRpABKEYQAuhFEANoRZADKEWQBKhEEAVoRBAGyEeQBohHkAesPj2ODXj3KHSBL89i/xILzy8NEJ9fGCA/vyhAY35JgMr8cgCl+cUAWvMLAfTmlwEozi8BUJ1fAKA7PztAe35ugPr8vACD+VkBFvMzAmzm5wMYzc8FMJufCWA3PwvAcn4OgOn85QDj+YsB1vMXAuznLwM4mL8E4GL+AoCP+UcDvMw/FuBm/nEAR/OPAniafwTA1/zDAc7mHwpwN/9AgL/5BwGeO5w/43+zAgAAAACUAhax339EdWxATfPYgBlNYgMmtN1Gfn+7TVRFBlRElJq4728SEdFeF/X93R4REdF+0F+D7jZd3M5hyJ+fm/TvUhUuQlslunxpOq+Pozz+uJ5Pr188/A9SdDQDmX60YQAAAABJRU5ErkJggg==',
