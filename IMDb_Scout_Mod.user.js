@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      17.3.5
+// @version      17.4
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from hundreds various sites. Adds movies/series to Radarr/Sonarr. Adds external ratings from Metacritic, Rotten Tomatoes, Letterboxd, Douban, Allocine. Media Server indicators for Plex, Jellyfin, Emby. Dark theme/style for Reference View. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAMFBMVEUAAAD/AAAcAAA1AABEAABVAAC3AADnAAD2AACFAAClAABlAAB3AADHAACVAADYAABCnXhrAAAD10lEQVRIx73TV4xMURgH8H/OnRmZWe3T7h2sOWaNXu7oJRg9UccuHgTRBatMtAgSg+gJu9q+kFmihcQoD8qLTkK0CIkoy0YJITsRD0rCKTHFrnkSv5e5c88/53znO+fiPwvsvrN038cPNqrG9pJmHkRVnPcpaTlHJY60cfPSpsrzl1LKihrmLvxhCM2i3OHvDx0d+H7e3F6JBv5iZMiJfhFTfPYDMHrMImpwimWWUdSgDQkbno7fFpUPVgh+pHFbZR4SovSctDCM9Hac9IKd9rO8EevtBCkXgY5IMmgquwypP7qqfcp/Tp4KLONDVsWh3RSBB2rnZfit69ocUdqLn2prrRZYM0Jg4JibamKsqe7gfEh5GOAfeYJjVHIPZvil97rcXkMog30byWRwXYRWoxHbzNFHJJpAarO8NdEBBsdCaP3WMJltTmQd4zlnekTq9Z5dgACwAlrpK4BxdV5mvLuspRgMSHbCIFF0iS8MZ5S8oYBYKY7rByC4dDM9uSIUmPOIwxgQBoYeF93auP4qFyPbIVXziWeGTH1EFM57kJo2hqQju6BwIyRf6RmCjdT4JOdiwNgiH/PPD3qoqlsNaXRd+fKtFfECxlZVNVF9SOsgTZEr2TUjJJbyeNX1IZrKIbyGlBABfpQPv2UDrly13LkJXDVhpQ5MhtGwcyF4HKjlU4E8xwB0AvDjd6AGmevZ87EcQRHgcO52e9uNsYELOrAa/Yh81YlmYLQJ5HWyq0+kzQ/DQKEusg6CRI27ryy8nReRS0wsoetkmRwogHSprliCckfEjXG9yAQc74J0WB99vu6DF3i3pMucsXM6tpBbxd2mVJAwXwGogNRBvGRA4jtHKTXkAIwLGCR/mT4Lh75oneQXXP9sAYfGRDCsnw7pX/jRZkU3M44kjw2l5zRIzb4CbZ8dULdL6wbNPZOpK0B6gN1UR1mdoxAaL/GrWiLPL3SEwW9YMTU/d64BtLahAVyucWhj9Mm8ign9IfQaBtd2/GbvCAEBpG5eMcrj2I0ktpKLeaqXQ3Pst42KGIshpdTmQLAeTgFGJ2wvh+tayMOR0n1RZ8B9z13vnOPBnsBq4E1ffgZpPFZHWVpO2cvhjYpOcbBd5TlhpDu5zq9mHGZcVi0y+VFkcFkDdyKJfTt99wEyHSEzDM90KH0nexpwZHJHKYYhjzlwGe0pP/IKfxociaEb7YDbi6KGJY1R2cR76E6NAtXqY4pPH3plLcl8LD7V+cOLUbUWRFZRPTAbVZO3mxK18Xc1ZaAiS8ARJXpZliXAomR94siiiMx8ZBOkXGTlnH0F/9ov1xPtWwEqP9wAAAAASUVORK5CYII=
@@ -1092,6 +1092,11 @@
 17.3.4  -   Added: MrSkin.
 
 17.3.5  -   Added: LastFiles.
+
+17.4    -   Updated script to work with new IMDb layout changes [TV Episode pages].
+            Fixed: Most likely "17.1" fix wasn't working on the list pages. [untested]
+            Updated: TSH.
+            Removed: THC, HDME, Taranis, DWR, LookMovie.ws.
 
 
 //==============================================================================
@@ -2407,15 +2412,6 @@ var private_sites = [
       'loggedOutRegex': /Make sure your passcode generating|nginx/,
       'matchRegex': /Nothing here!/,
       'both': true},
-  {   'name': 'HDME',
-      'searchUrl': 'https://hdme.eu/browse.php?blah=2&cat=0&incldead=1&search=%tt%',
-      'loggedOutRegex': /You need cookies enabled/,
-      'matchRegex': /Try again with a refined search string./},
-  {   'name': 'HDME',
-      'searchUrl': 'https://hdme.eu/browse.php?search=%search_string%&blah=0&cat=0&incldead=1',
-      'loggedOutRegex': /You need cookies enabled/,
-      'matchRegex': /Try again with a refined search string./,
-      'TV': true},
   {   'name': 'HDSpace',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAACJVBMVEUAAAAICAgMDAwUFBQYGBgcHBweHh4gICAgICIkJCQmJiYoKCgqKiosLCwuLi4wMDAyMjIyMjQ0NDQ0NDY0ODg4NjY4ODg4ODw4Ojw6PD48PDw8PD48PEA8PkA+PkJAQEBAQERAQkJAQkRCQkZEREREREZEREhERkhGREZGRkhGSEpISEhISExISkpISkxITExITE5KSkxKTE5MTExMTFBMTlBMUFBOTExOUFJQUFBQUFJQUFRQUlRSUlZSVFZUVFRUVFZUVFhUVlhWVlpYWFpYWFxYWlxaWlxcXGBcXmBcYGBeXmBeYGJgYGBgYGJgYGRgYmRgZGRiZGZkZGRkZGhkZmhmaGpoaGxoamxobGxqampqam5sbGxsbHBsbnBscHBucHBucHJwcHBwcHRwcnBwdHBwdHRydHR0dHR0dHh0eHh2dnZ2eHh4eHh4eHp4eHx4enx4fHx8fIB8gIB+foKAgISAhISChIaEhIiEiIiIiIyIjIqIjIyMjI6MjJCMkI6QkJCQkJSQkpKQkpSQlJSUlJiUmJiYmJiYnJyanJyanJ6cnKCcoKCgoKCgpKSkpKimpqqmqqioqKyoqqqsrLCwsLCwsLSwtLS0tLi4uLi4uLy8vLy8vMC+wL7AwMDAwMTAxMDAxMTExMjIyMjIyMzMzMzM0NDO0tDQ0NDU2NjY2NjY2NzY3Njc4Nzc4ODg4ODk5OTk6Ojo7Ozs8PDw9PD0+PT4+PweuDG8AAADNElEQVQYGV3By25bVRQG4H/vtfY+F5/YTuLESVyqgNQSqQgGVAhRxICCuAnEpJ0xYNIBPATPwQMwYwoCBJ2WQAdQAapUNWrqxCEXJ/E5ts9l36gAMeD7xEs1FLOFMhyaTE+cS1xZKX3ACJIF0aZr+dC4kIagJZVBqQVbIgQlnL3sp4IpcQjoqLkSAk3HWHFiktJ4awKPagFJmohhglBdz9H6kmq8ayiEYJzLbSC66IT0WgpvLLGYt5MqFsEiSNG1ThuS3grFqW6gPFEC1coGKWlNIJLCwrNUsRM+CL5jk2u1n3bqY2Q21zqfeFhB0msJJZtSeLng6twn9d4UilQWgzlW4Mhbkqb16k+EFPrer/ym+cXhb1IvwrCuAyEsrHmFXit16kr3QEr8w51nCUsNRNL+cRyj37UaV0Qe4z/cYxZkKAonLsnai4cJLhWvnMyNMSTyCUA169KlXqqGsvV+8jhr92KKjoY5LqlIVfAVg4MgJPMYHdU6ia+mkGSHsb6G722MhthCERIyjKfSUPFyRGxSz8nYGzB8zaqRJJP49hTXW8NtfCg1WrNt9Jss3imQboobIro9Cvi/Txa8+bzEi4nU8ov9gCdab+BfsgOR5ad7JZKu4ulXHunbB3fw3us3b+HTdz3s5BZot4i/Bl6QQf5osfrB4n3Qa+kRcNH64MoGmccPFVZ7MuJz4IY/Pcf7ld8Gnqa6qh4B6f7PBulVE8AWcnP8ZZDPH9O3iKdw5/V3wGgErF2nwwAWCOHuMT6eTiYN1kddXZwNAVD/ZdKloERc2MMTz71T6Ggpn6tlOT6f2YDIt58Z3483OvTZ7wX05a2z5U5qDqpa1mdVYznl6NkNsb7VYZYf2c7+nxdXUJTFWFvfnlml1hVtrFS8Gj/e47t1MjyKBr2dh6IVO9ipEytZItpr5nBcmwcFl8iHSbt5cM9m7blQDKWVnIamqk9OHyW9Ne4fRDqqv/EpTaeFlqWqcTpD0lCv26Kl/li8NSHXEUUsfeMz8qwhBQYFBoPFyuh8h0u2yQwizJ2NrffOcmswxJa7sATMdn+r2M+1KrwuQFQL3+md2tkodNfLFC7ffdiovwAwkJZAwmXSqAAAAABJRU5ErkJggg==',
       'searchUrl': 'https://hd-space.org/index.php?page=torrents&active=0&options=2&search=%nott%',
@@ -2982,13 +2978,13 @@ var private_sites = [
       'searchUrl': 'https://skipthecommericals.xyz/torrents?imdbId=%tt%',
       'loggedOutRegex': /Cloudflare|Forgot Your Password|Service Unavailable/,
       'matchRegex': /torrent-listings-no-result/,
-      'both': true},
+      'TV': true},
   {   'name': 'STC-Req',
       'searchUrl': 'https://skipthecommericals.xyz/requests?unfilled=1&imdbId=%tt%',
       'loggedOutRegex': /Cloudflare|Forgot Your Password|Service Unavailable/,
       'matchRegex': /label-danger/,
       'positiveMatch': true,
-      'both': true},
+      'TV': true},
   {   'name': 'Swarmazon',
       'icon': 'https://swarmazon.club/forum/assets/favicon-xurteib6.png',
       'searchUrl': 'https://swarmazon.club/en/search/search.php?category=1&query=%search_string_orig%',
@@ -3013,11 +3009,6 @@ var private_sites = [
       'loggedOutRegex': /Cloudflare|Ray ID|Remember me/,
       'matchRegex': /did not match/,
       'TV': true},
-  {   'name': 'Taranis',
-      'searchUrl': 'https://taranis.me/browse.php?search=%tt%&cat=0&incldead=1',
-      'loggedOutRegex': /Cloudflare|Ray ID|Wachtwoord vergeten/,
-      'matchRegex': /Niets gevonden/,
-      'both': true},
   {   'name': 'Tasmanites',
       'searchUrl': 'https://tasmanit.es/browse.php?do=search&search_type=t_name&keywords=%search_string%',
       'loggedOutRegex': /Recover Password/,
@@ -3036,7 +3027,7 @@ var private_sites = [
       'matchRegex': /No Torrents Found!/,
       'both': true},
   {   'name': 'TDB',
-      'searchUrl': 'https://torrentdb.net/filter/torrents?&search=%nott%',
+      'searchUrl': 'https://torrentdb.net/filter/torrents?search=%nott%',
       'loggedOutRegex': /Cloudflare|Ray ID|Forgot Your Password|Service Unavailable/,
       'matchRegex': /<tbody>\s*<\/tbody>/,
       'rateLimit': 5100,
@@ -3078,14 +3069,6 @@ var private_sites = [
       'loggedOutRegex': /404 - Not Found|You need cookies enabled/,
       'matchRegex': /Try again with a refined search string/,
       'both': true},
-  {   'name': 'THC',
-      'searchUrl': 'https://horrorcharnel.org/browse.php?search=%nott%&cat=0&incldead=1',
-      'loggedOutRegex': /Not logged in!/,
-      'matchRegex': /Nothing found!/},
-  {   'name': 'THC-Req',
-      'searchUrl': 'https://horrorcharnel.org/viewrequests.php?search=%search_string_orig%&category=0&filter=true',
-      'loggedOutRegex': /Not logged in!/,
-      'matchRegex': /Nothing here/},
   {   'name': 'THR',
       'searchUrl': 'https://www.torrenthr.org/browse.php?search=%search_string%&blah=0&incldead=1',
       'loggedOutRegex': /registraciju morate imati omogućene cookiese/,
@@ -3689,11 +3672,6 @@ var german_sites = [
       'loggedOutRegex': /Seite nicht gefunden/,
       'matchRegex': /<a href="\/serie\//,
       'positiveMatch': true},
-  {   'name': 'DWR',
-      'icon': 'data:image/png;base64,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',
-      'searchUrl': 'https://dragonworld-reloaded.net/selection.php?search=%search_string_orig%+%year%',
-      'loggedOutRegex': /Cloudflare|Ray ID|PW vergessen|equiv='refresh/,
-      'matchRegex': /Nichts gefunden/},
   {   'name': 'FilmFans',
       'icon': 'https://filmfans.org/favicon.ico',
       'searchUrl': 'https://filmfans.org/api/v2/search?q=%tt%',
@@ -3857,8 +3835,7 @@ var german_sites = [
   {   'name': 'TSH',
       'searchUrl': 'https://theshinning.me/filterTorrents?imdb=%nott%',
       'loggedOutRegex': /Cloudflare|Ray ID|Haben Sie Ihr Passwort vergessen/,
-      'matchRegex': /label-danger/,
-      'positiveMatch': true,
+      'matchRegex': /<tbody>\s*<\/tbody>/,
       'both': true},
   {   'name': 'TSH-Req',
       'searchUrl': 'https://theshinning.me/filterRequests?search=%search_string_orig%&categories[]=1&categories[]=2&categories[]=10&unfilled=1',
@@ -3979,6 +3956,7 @@ var usenet_sites = [
       'matchRegex': /No result!/,
       'TV': true},
   {   'name': 'nzbforyou',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQBAMAAADt3eJSAAAAKlBMVEUAAAD+AAH////8AAD7AAH9/P3///v5AAL/+PT4///kf3/ke3bnCwziDgs/bjd5AAAAAXRSTlMAQObYZgAAAD1JREFUCNdjIAYIuygpBSkJOzMICippNCkZCoMYKZJJYIZKubgTmBErLHwIzFBbLg1VE6QKYSSpKoEYRAAAF9IK6F3BkiEAAAAASUVORK5CYII=',
       'searchUrl': 'https://www.nzbforyou.com/search.php?keywords=%tt%',
       'loggedOutRegex': /Cloudflare|Ray ID|Remember me/,
       'matchRegex': /No suitable matches were found/,
@@ -4728,11 +4706,6 @@ var streaming_sites = [
       'matchRegex': /we have nothing to/,
       'inThirdSearchBar': true,
       'both': true},
-  {   'name': 'LookMovie.ws',
-      'icon': 'https://www.lookmovie.ws/templates/movibazar-light/images/favicon.svg',
-      'searchUrl': 'https://www.lookmovie.ws/?do=search&subaction=search&story=%tt%',
-      'matchRegex': /yielded no results/,
-      'inThirdSearchBar': true},
   {   'name': 'M4uFree',
       'searchUrl': 'https://ww2.m4ufree.com/search/%search_string% %year%.html',
       'loggedOutRegex': /Too Many Requests/,
@@ -6270,8 +6243,9 @@ function performSearchSecondPart(elem, link, movie_id, showsites, scout_tick) {
           episode_id = $(result).find('.titlereference-overview-season-episode-numbers li').last().text().trim().match(/(\d+)/)[0];
         } else {
           series_id  = $(result).find('[data-testid=hero-title-block__series-link]').prop('href').match(/\/tt([0-9]+)\//)[0].replace(/\//g, "");
-          season_id  = $(result).find('[data-testid=hero-subnav-bar-season-episode-numbers-section]').children().first().text().trim().match(/(\d+)/)[0];
-          episode_id = $(result).find('[data-testid=hero-subnav-bar-season-episode-numbers-section]').children().last().text().trim().match(/(\d+)/)[0];
+          SE_numbers = $('[data-testid=hero-subnav-bar-season-episode-numbers-section]').text().trim().split('.')
+          season_id  = SE_numbers[0].match(/(\d+)/)[0];
+          episode_id = SE_numbers[1].match(/(\d+)/)[0];
         }
       }
 
@@ -6330,7 +6304,7 @@ function performPage() {
       episode_id = $('.titlereference-overview-season-episode-numbers li').last().text().trim().match(/(\d+)/)[0];
     } else {
       series_id  = $('[data-testid=hero-title-block__series-link]').prop('href').match(/\/tt([0-9]+)\//)[0].replace(/\//g, "");
-      SE_numbers = $('[data-testid=hero-subnav-bar-season-episode-numbers-section-xs]').text().trim().split('.')
+      SE_numbers = $('[data-testid=hero-subnav-bar-season-episode-numbers-section]').text().trim().split('.')
       season_id  = SE_numbers[0].match(/(\d+)/)[0];
       episode_id = SE_numbers[1].match(/(\d+)/)[0];
     }
