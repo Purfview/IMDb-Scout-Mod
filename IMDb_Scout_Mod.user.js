@@ -1420,7 +1420,7 @@ var public_sites = [
       'both': true},
   {   'name': 'UHDMV',
       'icon': 'https://uhdmv.org/templates/Default/images/favicon.ico',
-      'searchUrl': 'https://uhdmv.org/index.php?story=%tt%&do=search&subaction=search&titleonly=0&full_search=1',
+      'searchUrl': 'https://uhdmv.org/index.php?story=%tt%&do=search&subaction=search&titleonly=0&full_search=0',
       'loggedOutRegex': /Cloudflare|Ray ID/,
       'matchRegex': /Unfortunately, site search yielded no results/,
       'both': true},
