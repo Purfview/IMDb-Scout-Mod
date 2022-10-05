@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      17.4
+// @version      17.5
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from hundreds various sites. Adds movies/series to Radarr/Sonarr. Adds external ratings from Metacritic, Rotten Tomatoes, Letterboxd, Douban, Allocine. Media Server indicators for Plex, Jellyfin, Emby. Dark theme/style for Reference View. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAMFBMVEUAAAD/AAAcAAA1AABEAABVAAC3AADnAAD2AACFAAClAABlAAB3AADHAACVAADYAABCnXhrAAAD10lEQVRIx73TV4xMURgH8H/OnRmZWe3T7h2sOWaNXu7oJRg9UccuHgTRBatMtAgSg+gJu9q+kFmihcQoD8qLTkK0CIkoy0YJITsRD0rCKTHFrnkSv5e5c88/53znO+fiPwvsvrN038cPNqrG9pJmHkRVnPcpaTlHJY60cfPSpsrzl1LKihrmLvxhCM2i3OHvDx0d+H7e3F6JBv5iZMiJfhFTfPYDMHrMImpwimWWUdSgDQkbno7fFpUPVgh+pHFbZR4SovSctDCM9Hac9IKd9rO8EevtBCkXgY5IMmgquwypP7qqfcp/Tp4KLONDVsWh3RSBB2rnZfit69ocUdqLn2prrRZYM0Jg4JibamKsqe7gfEh5GOAfeYJjVHIPZvil97rcXkMog30byWRwXYRWoxHbzNFHJJpAarO8NdEBBsdCaP3WMJltTmQd4zlnekTq9Z5dgACwAlrpK4BxdV5mvLuspRgMSHbCIFF0iS8MZ5S8oYBYKY7rByC4dDM9uSIUmPOIwxgQBoYeF93auP4qFyPbIVXziWeGTH1EFM57kJo2hqQju6BwIyRf6RmCjdT4JOdiwNgiH/PPD3qoqlsNaXRd+fKtFfECxlZVNVF9SOsgTZEr2TUjJJbyeNX1IZrKIbyGlBABfpQPv2UDrly13LkJXDVhpQ5MhtGwcyF4HKjlU4E8xwB0AvDjd6AGmevZ87EcQRHgcO52e9uNsYELOrAa/Yh81YlmYLQJ5HWyq0+kzQ/DQKEusg6CRI27ryy8nReRS0wsoetkmRwogHSprliCckfEjXG9yAQc74J0WB99vu6DF3i3pMucsXM6tpBbxd2mVJAwXwGogNRBvGRA4jtHKTXkAIwLGCR/mT4Lh75oneQXXP9sAYfGRDCsnw7pX/jRZkU3M44kjw2l5zRIzb4CbZ8dULdL6wbNPZOpK0B6gN1UR1mdoxAaL/GrWiLPL3SEwW9YMTU/d64BtLahAVyucWhj9Mm8ign9IfQaBtd2/GbvCAEBpG5eMcrj2I0ktpKLeaqXQ3Pst42KGIshpdTmQLAeTgFGJ2wvh+tayMOR0n1RZ8B9z13vnOPBnsBq4E1ffgZpPFZHWVpO2cvhjYpOcbBd5TlhpDu5zq9mHGZcVi0y+VFkcFkDdyKJfTt99wEyHSEzDM90KH0nexpwZHJHKYYhjzlwGe0pP/IKfxociaEb7YDbi6KGJY1R2cR76E6NAtXqY4pPH3plLcl8LD7V+cOLUbUWRFZRPTAbVZO3mxK18Xc1ZaAiS8ARJXpZliXAomR94siiiMx8ZBOkXGTlnH0F/9ov1xPtWwEqP9wAAAAASUVORK5CYII=
@@ -1098,6 +1098,9 @@
             Updated: TSH.
             Removed: THC, HDME, Taranis, DWR, LookMovie.ws.
 
+17.4    -   Fixed: Error if page is "TV Episode" and there is no episode numbers. [probably since 15.0]
+            Added: OpenSubtitles (NL), UHDMV.
+
 
 //==============================================================================
 //    Notes.
@@ -1224,7 +1227,7 @@ The movie year (e.g. 1961).
 #  %seriesid%
 #  %seasonid%
 #  %episodeid%
-For the streaming APIs. The IMDb id of series and season/episode numbers.
+For the streaming APIs. The IMDb ID of series and season/episode numbers.
 
 */
 
@@ -1417,12 +1420,6 @@ var public_sites = [
       'searchUrl': 'https://hdencode.com/?s=%tt%',
       'loggedOutRegex': /Cloudflare|Ray ID/,
       'matchRegex': /No content available/,
-      'both': true},
-  {   'name': 'UHDMV',
-      'icon': 'https://uhdmv.org/templates/Default/images/favicon.ico',
-      'searchUrl': 'https://uhdmv.org/index.php?story=%tt%&do=search&subaction=search&titleonly=0&full_search=0',
-      'loggedOutRegex': /Cloudflare|Ray ID/,
-      'matchRegex': /Unfortunately, site search yielded no results/,
       'both': true},
   {   'name': 'Hurtom',
       'icon': 'https://toloka.to/favicon.png',
@@ -1774,6 +1771,12 @@ var public_sites = [
       'loggedOutRegex': /Cloudflare|Ray ID|Recover Password|Şifre Sıfırlama/,
       'matchRegex': /\/details\.php/,
       'positiveMatch': true,
+      'both': true},
+  {   'name': 'UHDMV',
+      'icon': 'https://uhdmv.org/templates/Default/images/favicon.ico',
+      'searchUrl': 'https://uhdmv.org/index.php?story=%tt%&do=search&subaction=search&titleonly=0&full_search=0',
+      'loggedOutRegex': /Cloudflare|Ray ID/,
+      'matchRegex': /site search yielded no results/,
       'both': true},
   {   'name': 'Videoteka',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAXVBMVEUAAAAAEIb///9ycnOEhIQAJJWmuN0qO16Rj4sEM6AqLDBiYWBVVlhHR0YoU68ZQJju8vpOcro8Y7OYmJgVKVf9/fnk6/d2jMgcSKegoKAsT5bO1fL///DZ1MbDwbyQ4FuhAAAAAXRSTlMAQObYZgAAAJ5JREFUGNNFzgcOwyAMQFEPzIbsnfT+xywhrfKFkPyQJeApMgd4Y6XssG32Pwe+pdCQ6pwiF6mo6nqIIXBkq9hWyaR8SAPNbTkawGN7+RRpdpr6vjMw4kLJMy2oz72CrGT9hxrU0557A17wuDwdeMOaDYDgcirqClDjVgAw2EzUOrlBDJTuN42u3CLPT9F1jTjJGeHXiOLKzghvpgS1L/8fB1zhxK/kAAAAAElFTkSuQmCC',
@@ -4212,6 +4215,14 @@ var subs_sites = [
       'positiveMatch': true,
       'inSecondSearchBar': true,
       'both': true},
+  {   'name': 'OpenSubtitles (NL)',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwAgMAAAAqbBEUAAAACVBMVEUAAAD///8TExOI954UAAAAk0lEQVQoz62SQQ7DMAgEcSXfe/F/+gQf4D99egeCjJtTpITIG4agtYMsX1nxkr/os56r8EB0+6ANJcxmqEWJV6oMFTq6ynAgm64N8J6j7EksW0CaEL7Z1h0GBjvoBt20oHGoBXyyAmgDTliAe26avk3PoAnxCwVh8nYD1oTJmklsbZTQY1QapVlDZDz34/492K/YD8ElL5+2GoYbAAAAAElFTkSuQmCC',
+      'searchUrl': 'https://www.opensubtitles.org/en/search/sublanguageid-dut/imdbid-%nott%',
+      'loggedOutRegex': /Guru Meditation/,
+      'matchRegex': /div itemscope/,
+      'positiveMatch': true,
+      'inSecondSearchBar': true,
+      'both': true},
   {   'name': 'OpenSubtitles (PL)',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwAgMAAAAqbBEUAAAACVBMVEUAAAD///8TExOI954UAAAAk0lEQVQoz62SQQ7DMAgEcSXfe/F/+gQf4D99egeCjJtTpITIG4agtYMsX1nxkr/os56r8EB0+6ANJcxmqEWJV6oMFTq6ynAgm64N8J6j7EksW0CaEL7Z1h0GBjvoBt20oHGoBXyyAmgDTliAe26avk3PoAnxCwVh8nYD1oTJmklsbZTQY1QapVlDZDz34/492K/YD8ElL5+2GoYbAAAAAElFTkSuQmCC',
       'searchUrl': 'https://www.opensubtitles.org/en/search/sublanguageid-pol/imdbid-%nott%',
@@ -6243,11 +6254,12 @@ function performSearchSecondPart(elem, link, movie_id, showsites, scout_tick) {
       var season_id  = "1";
       var episode_id = "1";
       if (Boolean($(result).find('title').text().match('TV Episode'))) {
-        if ($(result).find('h3[itemprop="name"]').length) {
+        if ($(result).find('h3[itemprop="name"]').length && $(result).find('.titlereference-overview-season-episode-numbers li').length) {
           series_id  = $(result).find('h4[itemprop="name"] a').prop('href').match(/\/tt([0-9]+)\//)[0].replace(/\//g, "");
           season_id  = $(result).find('.titlereference-overview-season-episode-numbers li').first().text().trim().match(/(\d+)/)[0];
           episode_id = $(result).find('.titlereference-overview-season-episode-numbers li').last().text().trim().match(/(\d+)/)[0];
-        } else {
+
+        } else if ($('[data-testid=hero-subnav-bar-season-episode-numbers-section]').length) {
           series_id  = $(result).find('[data-testid=hero-title-block__series-link]').prop('href').match(/\/tt([0-9]+)\//)[0].replace(/\//g, "");
           SE_numbers = $('[data-testid=hero-subnav-bar-season-episode-numbers-section]').text().trim().split('.')
           season_id  = SE_numbers[0].match(/(\d+)/)[0];
@@ -6304,11 +6316,12 @@ function performPage() {
   var season_id  = "1";
   var episode_id = "1";
   if (Boolean($('title').text().match('TV Episode'))) {
-    if (onReferencePage) {
+    if (onReferencePage && $('.titlereference-overview-season-episode-numbers li').length) {
       series_id  = $('h4[itemprop="name"] a').prop('href').match(/\/tt([0-9]+)\//)[0].replace(/\//g, "");
       season_id  = $('.titlereference-overview-season-episode-numbers li').first().text().trim().match(/(\d+)/)[0];
       episode_id = $('.titlereference-overview-season-episode-numbers li').last().text().trim().match(/(\d+)/)[0];
-    } else {
+
+    } else if ($('[data-testid=hero-subnav-bar-season-episode-numbers-section]').length) {
       series_id  = $('[data-testid=hero-title-block__series-link]').prop('href').match(/\/tt([0-9]+)\//)[0].replace(/\//g, "");
       SE_numbers = $('[data-testid=hero-subnav-bar-season-episode-numbers-section]').text().trim().split('.')
       season_id  = SE_numbers[0].match(/(\d+)/)[0];
