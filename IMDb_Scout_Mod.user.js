@@ -1098,7 +1098,7 @@
             Updated: TSH.
             Removed: THC, HDME, Taranis, DWR, LookMovie.ws.
 
-17.4    -   Fixed: Error if page is "TV Episode" and there is no episode numbers. [probably since 15.0]
+17.5    -   Fixed: Error if page is "TV Episode" and there is no episode numbers. [probably since 15.0]
             Added: OpenSubtitles (NL), UHDMV.
 
 
