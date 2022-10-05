@@ -66,6 +66,9 @@ Inside the script, there is a list of dictionaries that contains of all the site
   - `%search_string%`: The movie title (e.g. Yojimbo). Depends on your preferences at www.imdb.com/preferences/general .
   - `%search_string_orig%`: The original movie title (e.g. Yôjinbô). Reverts to %search_string% if an original title is not set at IMDb.
   - `%year%`: The movie year (e.g. 1961).
+  - `%seriesid%`: For the streaming APIs. The IMDb ID of series.
+  - `%seasonid%`: For the streaming APIs. Season number.
+  - `%episodeid%`: For the streaming APIs. Episode number.
 
 See the script for examples.
 
