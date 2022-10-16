@@ -3965,7 +3965,7 @@ var usenet_sites = [
       'spaceEncode': ' ',
       'TV': true},
   {   'name': 'NinjaCentral',
-      'searchUrl': 'https://ninjacentral.co.za/search/%search_string% %year%?t=2000',
+      'searchUrl': 'https://ninjacentral.co.za/movies/?imdb=%nott%',
       'loggedOutRegex': /Cloudflare|Ray ID|Forgotten your password/,
       'matchRegex': /did not match any/},
   {   'name': 'NinjaCentral',
