@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      17.6.2
+// @version      17.6.3
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from hundreds various sites. Adds movies/series to Radarr/Sonarr. Adds external ratings from Metacritic, Rotten Tomatoes, Letterboxd, Douban, Allocine. Media Server indicators for Plex, Jellyfin, Emby. Dark theme/style for Reference View. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAMFBMVEUAAAD/AAAcAAA1AABEAABVAAC3AADnAAD2AACFAAClAABlAAB3AADHAACVAADYAABCnXhrAAAD10lEQVRIx73TV4xMURgH8H/OnRmZWe3T7h2sOWaNXu7oJRg9UccuHgTRBatMtAgSg+gJu9q+kFmihcQoD8qLTkK0CIkoy0YJITsRD0rCKTHFrnkSv5e5c88/53znO+fiPwvsvrN038cPNqrG9pJmHkRVnPcpaTlHJY60cfPSpsrzl1LKihrmLvxhCM2i3OHvDx0d+H7e3F6JBv5iZMiJfhFTfPYDMHrMImpwimWWUdSgDQkbno7fFpUPVgh+pHFbZR4SovSctDCM9Hac9IKd9rO8EevtBCkXgY5IMmgquwypP7qqfcp/Tp4KLONDVsWh3RSBB2rnZfit69ocUdqLn2prrRZYM0Jg4JibamKsqe7gfEh5GOAfeYJjVHIPZvil97rcXkMog30byWRwXYRWoxHbzNFHJJpAarO8NdEBBsdCaP3WMJltTmQd4zlnekTq9Z5dgACwAlrpK4BxdV5mvLuspRgMSHbCIFF0iS8MZ5S8oYBYKY7rByC4dDM9uSIUmPOIwxgQBoYeF93auP4qFyPbIVXziWeGTH1EFM57kJo2hqQju6BwIyRf6RmCjdT4JOdiwNgiH/PPD3qoqlsNaXRd+fKtFfECxlZVNVF9SOsgTZEr2TUjJJbyeNX1IZrKIbyGlBABfpQPv2UDrly13LkJXDVhpQ5MhtGwcyF4HKjlU4E8xwB0AvDjd6AGmevZ87EcQRHgcO52e9uNsYELOrAa/Yh81YlmYLQJ5HWyq0+kzQ/DQKEusg6CRI27ryy8nReRS0wsoetkmRwogHSprliCckfEjXG9yAQc74J0WB99vu6DF3i3pMucsXM6tpBbxd2mVJAwXwGogNRBvGRA4jtHKTXkAIwLGCR/mT4Lh75oneQXXP9sAYfGRDCsnw7pX/jRZkU3M44kjw2l5zRIzb4CbZ8dULdL6wbNPZOpK0B6gN1UR1mdoxAaL/GrWiLPL3SEwW9YMTU/d64BtLahAVyucWhj9Mm8ign9IfQaBtd2/GbvCAEBpG5eMcrj2I0ktpKLeaqXQ3Pst42KGIshpdTmQLAeTgFGJ2wvh+tayMOR0n1RZ8B9z13vnOPBnsBq4E1ffgZpPFZHWVpO2cvhjYpOcbBd5TlhpDu5zq9mHGZcVi0y+VFkcFkDdyKJfTt99wEyHSEzDM90KH0nexpwZHJHKYYhjzlwGe0pP/IKfxociaEb7YDbi6KGJY1R2cR76E6NAtXqY4pPH3plLcl8LD7V+cOLUbUWRFZRPTAbVZO3mxK18Xc1ZaAiS8ARJXpZliXAomR94siiiMx8ZBOkXGTlnH0F/9ov1xPtWwEqP9wAAAAASUVORK5CYII=
@@ -1112,6 +1112,8 @@
 
 17.6.2  -   Added: CarPT.
 
+17.6.3  -   Added: CinéLounge (FR).
+
 
 //==============================================================================
 //    Notes.
@@ -1149,6 +1151,7 @@ UNIT3D old:
 
 #  'name':
 The site name, abbreviated, unique (the 'TV' atribute internaly adds 'TV' to the name).
+Note: only these special chars are allowed in a site name if mPOST: .- ().
 
 #  'icon' (optional):
 Icon for the site. If not defined then script looks at site/favicon.ico.
@@ -4879,6 +4882,10 @@ var icon_sites_main = [
       'icon': 'https://caps-a-holic.com/image/favicon.png',
       'searchUrl': 'https://caps-a-holic.com/index.php?s=%search_string%',
       'showByDefault': false},
+  {   'name': 'CinéLounge (FR)',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABAAQMAAACQp+OdAAAABlBMVEUAAAD/AAAb/40iAAAAAXRSTlMAQObYZgAAAMFJREFUKM+d0VEOwiAMBuAuJvJmL2DCFTyAkSv56IMZOxpH4Qg88kCsP2VsM8ZEbbLxJSVAW/o6bvPqJOk6iIjCALHCAppzHVKMYpBAip0gCxxNIWLgbDJOAG6cGrKN2JdoSDYQ/rCbEd1ERInMBqTg4CuuW4wdD9KwC6Z3lL/w+cCwYGzgFf4VvZwVtdLQkGzFqXYjajmUOQH4CmdtC91Naa271PZa4FAb7oE9SeE2C9+HYvu8GAh6i8j8XI/MT/EE7yaA0i0/lBwAAAAASUVORK5CYII=',
+      'searchUrl': 'https://www.cinelounge.org/imdb2cl/%nott%',
+      'showByDefault': false},
   {   'name': 'CineMaterial',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAMAAAAp4XiDAAABOFBMVEUAAADzWELzWELzWELzWELzWELzWELzWELzWELzWELzWELzWELzWELzWELzWEIWhsrzWELzWELzWEJusd1usd3zWEJNm8dNsd0LbrHzWEJ5vN3zWEIWY6bzWEJjsdJusd15vN0LXKDzWELzWEILY6YUj70TWJtusd1usd1jsdJNm8cQXZshhbyFvN15vN1usd3zWEJusdILY6bzWEIskLzzWEJCm8d5vN0hbrFCm8cLY5shebELXJs6m8vzWEJCm8d5vN0LY5shbrFNm8c3kMcLY5sLWJshebxNptILY5sWWJs3kMdusd0hebELY6YhebFjptJYptJjsdIskLwWbqYLWJsLWJvzWEJ5vN0WY6Zusd1usdJjsdJYptIWWJtCm8dNm8chebEskMcWbrEshbwhhbwhbrFNptKbqUhfAAAAV3RSTlMACmgx7OKPdWFXwvc3gyUUsZxOF+GkVw0K28zMwLp3aUM0GBIPBvLsxq6loZqYi4FEIx0d3tfBv7OKd2pSRz0zMifq5+fa1MG1sJdlXV078fDgwreNiGDeTbgzAAAC+ElEQVRIx9WVaVvaQBDHJwQI4b4UUEABQYFWFO+73lqrvQtBErz9/t+gMxvWhBzVPk/f9P9q2PDbOXZ2B/6hZuAvtLOxunx397B8ulWCtyi2cXgzGBxt7MTgbUo11Oebm9VxNCsLnohfCoivEJ++qOrzIQKCJ9gZKhQPCK5Atd7vq2ojAyB5O2Z5JRcoM3eNSBEgOumN+z0ofyE0hHJhFwIRDEqUjPgFOTgML+CAzPUQQcKqhZwO2Zn5HiJFNMhNfCUUWilIUd1TQvdjje1DF5E6WfKkkXdchzzsh89SgwlEZlMASwW9RolAWBTDslQGUoAtRkYPpIvIFBbLx/ZjcZs3lVholREniKTRByMSAlQiOfIVlzk3Rh+kkUwQwdxZRT24kMRDYT988rDatNmkuVyEpCAwGnGFNYEfmJL0bclA0oisAdBOcTCpHDQYMmWjf7uoFtvIWwGzBPrjLneDNNc0IdMsRQ+MqoyxBXUTrTHgmiIkBTl0YmtZyi/Ki2bk/54QAKov2OTjrj2EZE1IGqKOvQcRnsICBfbLhEwwJOzQydy3SGzTjLDARDsimhAZTvaNk0yzqMOOSIQb5RmtZKoYlsQxl3Cnk2SGjNXeRsQ4lwwkKVibJF75CG7Y1NrDa8+Okg5rxY4E+T6FHMzUNFPvd+fZrYjaUuG3UQjJsKmd8PUWIrNV6vCIFSnwOy/HIVvTPvL1RUToUiZtHSP7eBETZfipadvAtYYIXX2/pS+Fl3dyaRdKmlbLmnu516sDMhi5owTIHmsUl+GGHqUWGrui24udVzRt3/qOXU+Bq6rniqI1wawWIf2i6xjMK4pSizm8yf16xpEoHSuobesASyOiql93HFz8UEhNsGpxFr3gFDvbs0zPzQNG5KtgZ9KE0Ky8eAm6fbl+f68TWcdp/E1HBoPB8vd3qNOD26cnHTlHwlFFjuDcf3h8vL0lhJhNcNXimQOi5PfhT9prWJH1K3hNsfHGEUc+r2+14W2K7Y1fbF1eteF/0m8ceNWfw2T0aAAAAABJRU5ErkJggg==',
       'searchUrl': 'https://www.cinematerial.com/search?q=%tt%',
@@ -5151,7 +5158,7 @@ var icon_sites_main = [
       'searchUrl': 'https://screenanarchy.com/search.html?term=%search_string%',
       'showByDefault': false},
   {   'name': 'SensCritique (FR)',
-      'searchUrl': 'https://www.senscritique.com/search?q=%search_string%',
+      'searchUrl': 'https://www.senscritique.com/search?query=%search_string%',
       'showByDefault': false},
   {   'name': 'Simkl',
       'icon': 'https://eu.simkl.in/img_favicon/v2/favicon-32x32.png',
