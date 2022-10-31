@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      17.6.4
+// @version      17.7
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from hundreds various sites. Adds movies/series to Radarr/Sonarr. Adds external ratings from Metacritic, Rotten Tomatoes, Letterboxd, Douban, Allocine. Media Server indicators for Plex, Jellyfin, Emby. Dark theme/style for Reference View. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAMFBMVEUAAAD/AAAcAAA1AABEAABVAAC3AADnAAD2AACFAAClAABlAAB3AADHAACVAADYAABCnXhrAAAD10lEQVRIx73TV4xMURgH8H/OnRmZWe3T7h2sOWaNXu7oJRg9UccuHgTRBatMtAgSg+gJu9q+kFmihcQoD8qLTkK0CIkoy0YJITsRD0rCKTHFrnkSv5e5c88/53znO+fiPwvsvrN038cPNqrG9pJmHkRVnPcpaTlHJY60cfPSpsrzl1LKihrmLvxhCM2i3OHvDx0d+H7e3F6JBv5iZMiJfhFTfPYDMHrMImpwimWWUdSgDQkbno7fFpUPVgh+pHFbZR4SovSctDCM9Hac9IKd9rO8EevtBCkXgY5IMmgquwypP7qqfcp/Tp4KLONDVsWh3RSBB2rnZfit69ocUdqLn2prrRZYM0Jg4JibamKsqe7gfEh5GOAfeYJjVHIPZvil97rcXkMog30byWRwXYRWoxHbzNFHJJpAarO8NdEBBsdCaP3WMJltTmQd4zlnekTq9Z5dgACwAlrpK4BxdV5mvLuspRgMSHbCIFF0iS8MZ5S8oYBYKY7rByC4dDM9uSIUmPOIwxgQBoYeF93auP4qFyPbIVXziWeGTH1EFM57kJo2hqQju6BwIyRf6RmCjdT4JOdiwNgiH/PPD3qoqlsNaXRd+fKtFfECxlZVNVF9SOsgTZEr2TUjJJbyeNX1IZrKIbyGlBABfpQPv2UDrly13LkJXDVhpQ5MhtGwcyF4HKjlU4E8xwB0AvDjd6AGmevZ87EcQRHgcO52e9uNsYELOrAa/Yh81YlmYLQJ5HWyq0+kzQ/DQKEusg6CRI27ryy8nReRS0wsoetkmRwogHSprliCckfEjXG9yAQc74J0WB99vu6DF3i3pMucsXM6tpBbxd2mVJAwXwGogNRBvGRA4jtHKTXkAIwLGCR/mT4Lh75oneQXXP9sAYfGRDCsnw7pX/jRZkU3M44kjw2l5zRIzb4CbZ8dULdL6wbNPZOpK0B6gN1UR1mdoxAaL/GrWiLPL3SEwW9YMTU/d64BtLahAVyucWhj9Mm8ign9IfQaBtd2/GbvCAEBpG5eMcrj2I0ktpKLeaqXQ3Pst42KGIshpdTmQLAeTgFGJ2wvh+tayMOR0n1RZ8B9z13vnOPBnsBq4E1ffgZpPFZHWVpO2cvhjYpOcbBd5TlhpDu5zq9mHGZcVi0y+VFkcFkDdyKJfTt99wEyHSEzDM90KH0nexpwZHJHKYYhjzlwGe0pP/IKfxociaEb7YDbi6KGJY1R2cR76E6NAtXqY4pPH3plLcl8LD7V+cOLUbUWRFZRPTAbVZO3mxK18Xc1ZaAiS8ARJXpZliXAomR94siiiMx8ZBOkXGTlnH0F/9ov1xPtWwEqP9wAAAAASUVORK5CYII=
@@ -1115,6 +1115,10 @@
 17.6.3  -   Added: CinéLounge (FR).
 
 17.6.4  -   Added: UniOtaku.
+
+17.7    -   "Open All" button disabled by default.
+            Option to disable the icon sites code.
+            Option to disable the searchable sites code.
 
 
 //==============================================================================
@@ -6395,18 +6399,22 @@ function performPage() {
   iconSorterCount(is_tv, is_movie);
 
   // Create areas to put links in
-  addIconBar(movie_id, movie_title, movie_title_orig);
-  perform(getLinkArea(), movie_id, movie_title, movie_title_orig, is_tv, is_movie, series_id, season_id, episode_id);
-  if (GM_config.get('load_second_bar') && !GM_config.get('load_third_bar_movie')) {
-    getLinkAreaSecond();
-  } else if (!GM_config.get('load_second_bar') && GM_config.get('load_third_bar_movie')) {
-    getLinkAreaThird();
-  } else if (GM_config.get('load_second_bar') && GM_config.get('load_third_bar_movie') && !GM_config.get('switch_bars')) {
-    getLinkAreaSecond();
-    getLinkAreaThird();
-  } else if (GM_config.get('load_second_bar') && GM_config.get('load_third_bar_movie') && GM_config.get('switch_bars')) {
-    getLinkAreaThird();
-    getLinkAreaSecond();
+  if (!GM_config.get("disable_iconsites")) {
+    addIconBar(movie_id, movie_title, movie_title_orig);
+  }
+  if (!GM_config.get("disable_iconsites")) {
+    perform(getLinkArea(), movie_id, movie_title, movie_title_orig, is_tv, is_movie, series_id, season_id, episode_id);
+    if (GM_config.get('load_second_bar') && !GM_config.get('load_third_bar_movie')) {
+      getLinkAreaSecond();
+    } else if (!GM_config.get('load_second_bar') && GM_config.get('load_third_bar_movie')) {
+      getLinkAreaThird();
+    } else if (GM_config.get('load_second_bar') && GM_config.get('load_third_bar_movie') && !GM_config.get('switch_bars')) {
+      getLinkAreaSecond();
+      getLinkAreaThird();
+    } else if (GM_config.get('load_second_bar') && GM_config.get('load_third_bar_movie') && GM_config.get('switch_bars')) {
+      getLinkAreaThird();
+      getLinkAreaSecond();
+    }
   }
 }
 
@@ -9139,6 +9147,8 @@ function countSites(task) {
       'compact_reference_view': {'type': 'checkbox'},
       'greybackground_reference_view': {'type': 'checkbox'},
       'app_notification': {'type': 'checkbox'},
+      'disable_iconsites': {'type': 'checkbox'},
+      'disable_sites': {'type': 'checkbox'},
       'highlight_sites_movie': {'type': 'text'},
       'highlight_missing_movie': {'type': 'text'},
       'loadmod_on_start_search': {'type': 'checkbox'},
@@ -9430,7 +9440,7 @@ var config_fields = {
   'remove_openall': {
     'type': 'checkbox',
     'label': 'Remove "Open All" button?',
-    'default': false
+    'default': true
   },
   'force_reference_view': {
     'type': 'checkbox',
@@ -9456,6 +9466,16 @@ var config_fields = {
     'type': 'checkbox',
     'label': "Notify when Radarr/Sonarr doesn't respond?",
     'default': true
+  },
+  'disable_iconsites': {
+    'type': 'checkbox',
+    'label': "Disable the icon sites code?",
+    'default': false
+  },
+  'disable_sites': {
+    'type': 'checkbox',
+    'label': "Disable the searchable sites code?",
+    'default': false
   },
   'highlight_sites_movie': {
     'label': 'Highlight sites: &nbsp &nbsp &nbsp',
