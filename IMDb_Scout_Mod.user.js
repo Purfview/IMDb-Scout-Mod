@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      17.7.2
+// @version      17.7.3
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from hundreds various sites. Adds movies/series to Radarr/Sonarr. Adds external ratings from Metacritic, Rotten Tomatoes, Letterboxd, Douban, Allocine. Media Server indicators for Plex, Jellyfin, Emby. Dark theme/style for Reference View. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAMFBMVEUAAAD/AAAcAAA1AABEAABVAAC3AADnAAD2AACFAAClAABlAAB3AADHAACVAADYAABCnXhrAAAD10lEQVRIx73TV4xMURgH8H/OnRmZWe3T7h2sOWaNXu7oJRg9UccuHgTRBatMtAgSg+gJu9q+kFmihcQoD8qLTkK0CIkoy0YJITsRD0rCKTHFrnkSv5e5c88/53znO+fiPwvsvrN038cPNqrG9pJmHkRVnPcpaTlHJY60cfPSpsrzl1LKihrmLvxhCM2i3OHvDx0d+H7e3F6JBv5iZMiJfhFTfPYDMHrMImpwimWWUdSgDQkbno7fFpUPVgh+pHFbZR4SovSctDCM9Hac9IKd9rO8EevtBCkXgY5IMmgquwypP7qqfcp/Tp4KLONDVsWh3RSBB2rnZfit69ocUdqLn2prrRZYM0Jg4JibamKsqe7gfEh5GOAfeYJjVHIPZvil97rcXkMog30byWRwXYRWoxHbzNFHJJpAarO8NdEBBsdCaP3WMJltTmQd4zlnekTq9Z5dgACwAlrpK4BxdV5mvLuspRgMSHbCIFF0iS8MZ5S8oYBYKY7rByC4dDM9uSIUmPOIwxgQBoYeF93auP4qFyPbIVXziWeGTH1EFM57kJo2hqQju6BwIyRf6RmCjdT4JOdiwNgiH/PPD3qoqlsNaXRd+fKtFfECxlZVNVF9SOsgTZEr2TUjJJbyeNX1IZrKIbyGlBABfpQPv2UDrly13LkJXDVhpQ5MhtGwcyF4HKjlU4E8xwB0AvDjd6AGmevZ87EcQRHgcO52e9uNsYELOrAa/Yh81YlmYLQJ5HWyq0+kzQ/DQKEusg6CRI27ryy8nReRS0wsoetkmRwogHSprliCckfEjXG9yAQc74J0WB99vu6DF3i3pMucsXM6tpBbxd2mVJAwXwGogNRBvGRA4jtHKTXkAIwLGCR/mT4Lh75oneQXXP9sAYfGRDCsnw7pX/jRZkU3M44kjw2l5zRIzb4CbZ8dULdL6wbNPZOpK0B6gN1UR1mdoxAaL/GrWiLPL3SEwW9YMTU/d64BtLahAVyucWhj9Mm8ign9IfQaBtd2/GbvCAEBpG5eMcrj2I0ktpKLeaqXQ3Pst42KGIshpdTmQLAeTgFGJ2wvh+tayMOR0n1RZ8B9z13vnOPBnsBq4E1ffgZpPFZHWVpO2cvhjYpOcbBd5TlhpDu5zq9mHGZcVi0y+VFkcFkDdyKJfTt99wEyHSEzDM90KH0nexpwZHJHKYYhjzlwGe0pP/IKfxociaEb7YDbi6KGJY1R2cR76E6NAtXqY4pPH3plLcl8LD7V+cOLUbUWRFZRPTAbVZO3mxK18Xc1ZaAiS8ARJXpZliXAomR94siiiMx8ZBOkXGTlnH0F/9ov1xPtWwEqP9wAAAAASUVORK5CYII=
@@ -1126,6 +1126,8 @@
 17.7.2  -   Added: GimmePeers
             Removed: HQS
 
+17.7.3  -   Added: Mkvking, TFPDL, YTS, 9anime.
+
 
 //==============================================================================
 //    Notes.
@@ -1508,6 +1510,17 @@ var public_sites = [
       'matchRegex': /csprite_dl14/,
       'positiveMatch': true,
       'TV': true},
+  {   'name': 'Mkvking',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgAgMAAAAOFJJnAAAADFBMVEUnZOn4+v6ivPZslO2tyxFwAAAAeUlEQVQY02MIhQIsDDgojAkX7U2OuAZmeAaFTGU4/OGPPQgzrIIChlWzQNSyVQwMF0BaWID4AjOMwVgAY4TDGKEFMEY4jBFagM4Ig0klQBlhMO0JKFYgLF0VBXXGfyhg2LRmtVbf4hWvEI7fvOaF1bnNa17D1eAJBABb3lrP+lHrAQAAAABJRU5ErkJggg==',
+      'searchUrl': 'https://mkvking.icu/?s=%search_string%+%year%',
+      'loggedOutRegex': /Cloudflare|Ray ID/,
+      'matchRegex': /Nothing Found/},
+  {   'name': 'Mkvking',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgAgMAAAAOFJJnAAAADFBMVEUnZOn4+v6ivPZslO2tyxFwAAAAeUlEQVQY02MIhQIsDDgojAkX7U2OuAZmeAaFTGU4/OGPPQgzrIIChlWzQNSyVQwMF0BaWID4AjOMwVgAY4TDGKEFMEY4jBFagM4Ig0klQBlhMO0JKFYgLF0VBXXGfyhg2LRmtVbf4hWvEI7fvOaF1bnNa17D1eAJBABb3lrP+lHrAQAAAABJRU5ErkJggg==',
+      'searchUrl': 'https://mkvking.icu/?s=%search_string%',
+      'loggedOutRegex': /Cloudflare|Ray ID/,
+      'matchRegex': /Nothing Found/,
+      'TV': true},
   {   'name': 'MovieParadise',
       'icon': 'https://movieparadise.org/wp-content/uploads/2018/01/favicon.png',
       'searchUrl': 'https://movieparadise.org/?s=%tt%',
@@ -1727,6 +1740,12 @@ var public_sites = [
       'spaceEncode': ' ',
       'matchRegex': /Found 0 results/,
       'TV': true},
+  {   'name': 'TFPDL',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADQAAAA0BAMAAAA3VgbYAAAAD1BMVEX7/fs+iD0UFBTN2M2JnonIfb6nAAABMUlEQVQ4y93T4ZWDIBAEYDwoIBgbYGMBJlhAkO2/ptu4A/vUlwLu5k8SviAjivs7ycwlxolrPo+P1BPrYrLSMal2GuXXxFnCHHecMdHTVM8XT2ohubwyf0owZxlbBZVec4g94tJxa/R4xkN4eYG2W4nHLG0WveMpbZan/I0C+QttoBS02vM7+XKmYQa5ZpMD/cwDBpw/0Qt0/zwD0Ah6PEFqSu5Cfv/mKV3IF9AMGkCQeA8gqwGJ70APUFASAQ2dfMFG2e7enO5Gv5Ld8VuJZBU2sTt2gcTcaiTdCe/auFsujWqg5DRBbFqcX0svOLtu+jL7zEULavdmxPvSOdde0CwxDhBJQYvf9ABxzQtaWNaRkBFLWXKhlpsNIv1w1na8Gqgyx0k+bZJl2f+LaWd1/yC/Hh5VaR+WTLEAAAAASUVORK5CYII=',
+      'searchUrl': 'https://tfpdl.mobi/?s=%tt%',
+      'loggedOutRegex': /Cloudflare|Ray ID/,
+      'matchRegex': /nothing matched/,
+      'both': true},
   {   'name': 'TGx',
       'icon': 'data:image/png;base64,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',
       'searchUrl': 'https://tgx.rs/torrents.php?search=%tt%',
@@ -1845,6 +1864,13 @@ var public_sites = [
       'searchUrl': 'https://xtorrenty.org/?do=search&subaction=search&story=%search_string_orig%+%year%&catlist[]=0',
       'loggedOutRegex': /Cloudflare|Ray ID|odzyskaj hasło/,
       'matchRegex': /przyniosło żadnych rezultatów/},
+  {   'name': 'YTS',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADkAAAA5BAMAAAB+Np62AAAAGFBMVEUAAAAVKQktfCBsrTZenjEnTxM8aR5NiSmj225UAAABbUlEQVQ4y+WTQU/CQBCFp8bKdUsEr7JJ+QODcCau9roUi9dCtVxBCv37vsXE7kIyP0DnMFnyzXu8ZVj6r6UkmEgwshIdKkk6kqR3pUTfReOTaDyX6P1Oom9Woo0YyiiKBoqSn6JBsfBonBH1tY10qlGjGE15kWeY0DbWxZnmaJ62Bxrpsj+Oio0uEp3CvatbR6HBj52P3Sm8LihtUm1dB02vaa7H6I5s9DqgE7Q+DM+uOGkbUIXgrQVt3Uje7v1UDHrTosXtI7mZo38jxvIfMmdgSkJ9vPoL5B3sMzcHOkyS5sWjMWO/y6lLwJYqYzDdVcQg1RNhBAkOzLNgZweEXrlLDmuiwfYUrrviUvrn8Fygd903dWG60zOXwrNb8lR4dj0OxeGzg3UojsIlMu/9zzmkgXhiPd9gFCtini1+4Ze6yFgxT9bqfFw1a7qo+ACc1UVRN+ZIVzUAZoPqYKDeIpoxmWcbyld1/ZnQX65vDoc/lpvrtC8AAAAASUVORK5CYII=',
+      'searchUrl': 'https://yts.do/movie/%search_string%-%year%/',
+      'loggedOutRegex': /Cloudflare|Ray ID/,
+      'positiveMatch': true,
+      'spaceEncode': '-',
+      'matchRegex': /movie-poster/},
   {   'name': 'xTorrenty',
       'icon': 'https://xtorrenty.org/templates/xTorrenty/images/favicon.ico',
       'searchUrl': 'https://xtorrenty.org/?do=search&subaction=search&story=%search_string_orig%&catlist[]=89',
@@ -4700,6 +4726,12 @@ var other_sites = [
 ];
 
 var streaming_sites = [
+  {   'name': '9anime',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEQAAABEAgMAAABFfXshAAAADFBMVEUAAACHIL3s2/S5ftmdkvnwAAAAAXRSTlMAQObYZgAAAJNJREFUOMu11LENwkAUBNFtCFHNYAkh13EiQDRB7qbIXQYhIdJOYAf4h6Ony/bytzt/urymZ5U3owo0gkYIIYQQQgghhBBCCCGEEEIIIYQQQgghhBBCCFGoy0VlUmFHmXa8fFNZu8xJIhKRiEQkIhGJSEQiEpH8SJVHuqxd5nRZuly1lKXLfXtxY3u5Y/MHOI0ccl8JdMZ/7cEcZAAAAABJRU5ErkJggg==',
+      'searchUrl': 'https://9anime.to/filter?keyword=+%search_string%',
+      'matchRegex': /There is no anime/,
+      'inThirdSearchBar': true,
+      'both': true},
   {   'name': '2Embed',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAHlBMVEUAAAAAm/8AqP8AlP8Asv8Aof8Ajf8Auf8Ag/8Aev+DTgm9AAAAAXRSTlMAQObYZgAAAgRJREFUSMfNlUFqwzAQRXWECOOuW2F3XWPoOhiXbGODeoGA6TKUgg8QCMkNkttW80fKWJIPkFk/3nyN5LF6jjq1mqq0o0H1qN3s6gjg1jJhY4IANlxPbVNoPZTW1jUBFRNBoC6kaFgxmsp0jybKA6RwRKY4BsApopyVV6gHEFJYKDqv2Abg53JFivSoKtR0udxPIIYBOZ2jcgIBWNFwCms8oQRIFDWabBdApOAmlVFSnw4IilJ7xesCaNGDFIWkUEuAFFcoClbEAlWIwt9qHQmUBnANKUo3rdcY4B6cghUqBnwPTkGKfQKIwt+qimsQBZqUmwSwGjFFoZKqtS5cj6DQmwyQHlCotIwNMaH4yIFYoXIAiskrnCA3LGLe1QogPdaBzowS87zSol8obod2DRDFee2YfUfn4JiHtUH1vTvHgJNONMlNBpCCexzw7HKAFUULgc4Ufw/FRIJcMTsAis+Df7b7BHAKNwqrIZBHKwAUo32hiE4gz14AUrzRGVhgTAIg5svU+kU0jrFihuKLBLLJIgCKbxoCBNYkX+9Mig5TZAEZTALM7yLApqy2MfA7hSFQROxBAVjgp8gR4zXoBXwG7NqKAFEEQdPIqo1W8UIwLAT9LgAk4CmKAMDRAyTgKZalEyAi/3E8IAK6J1cdCx6/JBY0JKAhiCAoSCAXjQ7yW3yK+gdCPiwH6opzegAAAABJRU5ErkJggg==',
       'searchUrl': 'https://2embed.org/embed/%tt%',
@@ -5333,7 +5365,8 @@ async function replaceSearchUrlParams(site, movie_id, movie_title, movie_title_o
                     .replace(/%episodeid%/g, episode_id)
                     .replace(/%search_string%/g, search_string)
                     .replace(/%search_string_orig%/g, search_string_orig)
-                    .replace(/%year%/g, movie_year);
+                    .replace(/%year%/g, movie_year)
+                    .replace(/---/g, '-');
   return s;
 }
 
