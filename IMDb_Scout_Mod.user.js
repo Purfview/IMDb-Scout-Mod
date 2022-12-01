@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      17.8.1
+// @version      17.9
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from hundreds various sites. Adds movies/series to Radarr/Sonarr. Adds external ratings from Metacritic, Rotten Tomatoes, Letterboxd, Douban, Allocine. Media Server indicators for Plex, Jellyfin, Emby. Dark theme/style for Reference View. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAMFBMVEUAAAD/AAAcAAA1AABEAABVAAC3AADnAAD2AACFAAClAABlAAB3AADHAACVAADYAABCnXhrAAAD10lEQVRIx73TV4xMURgH8H/OnRmZWe3T7h2sOWaNXu7oJRg9UccuHgTRBatMtAgSg+gJu9q+kFmihcQoD8qLTkK0CIkoy0YJITsRD0rCKTHFrnkSv5e5c88/53znO+fiPwvsvrN038cPNqrG9pJmHkRVnPcpaTlHJY60cfPSpsrzl1LKihrmLvxhCM2i3OHvDx0d+H7e3F6JBv5iZMiJfhFTfPYDMHrMImpwimWWUdSgDQkbno7fFpUPVgh+pHFbZR4SovSctDCM9Hac9IKd9rO8EevtBCkXgY5IMmgquwypP7qqfcp/Tp4KLONDVsWh3RSBB2rnZfit69ocUdqLn2prrRZYM0Jg4JibamKsqe7gfEh5GOAfeYJjVHIPZvil97rcXkMog30byWRwXYRWoxHbzNFHJJpAarO8NdEBBsdCaP3WMJltTmQd4zlnekTq9Z5dgACwAlrpK4BxdV5mvLuspRgMSHbCIFF0iS8MZ5S8oYBYKY7rByC4dDM9uSIUmPOIwxgQBoYeF93auP4qFyPbIVXziWeGTH1EFM57kJo2hqQju6BwIyRf6RmCjdT4JOdiwNgiH/PPD3qoqlsNaXRd+fKtFfECxlZVNVF9SOsgTZEr2TUjJJbyeNX1IZrKIbyGlBABfpQPv2UDrly13LkJXDVhpQ5MhtGwcyF4HKjlU4E8xwB0AvDjd6AGmevZ87EcQRHgcO52e9uNsYELOrAa/Yh81YlmYLQJ5HWyq0+kzQ/DQKEusg6CRI27ryy8nReRS0wsoetkmRwogHSprliCckfEjXG9yAQc74J0WB99vu6DF3i3pMucsXM6tpBbxd2mVJAwXwGogNRBvGRA4jtHKTXkAIwLGCR/mT4Lh75oneQXXP9sAYfGRDCsnw7pX/jRZkU3M44kjw2l5zRIzb4CbZ8dULdL6wbNPZOpK0B6gN1UR1mdoxAaL/GrWiLPL3SEwW9YMTU/d64BtLahAVyucWhj9Mm8ign9IfQaBtd2/GbvCAEBpG5eMcrj2I0ktpKLeaqXQ3Pst42KGIshpdTmQLAeTgFGJ2wvh+tayMOR0n1RZ8B9z13vnOPBnsBq4E1ffgZpPFZHWVpO2cvhjYpOcbBd5TlhpDu5zq9mHGZcVi0y+VFkcFkDdyKJfTt99wEyHSEzDM90KH0nexpwZHJHKYYhjzlwGe0pP/IKfxociaEb7YDbi6KGJY1R2cR76E6NAtXqY4pPH3plLcl8LD7V+cOLUbUWRFZRPTAbVZO3mxK18Xc1ZaAiS8ARJXpZliXAomR94siiiMx8ZBOkXGTlnH0F/9ov1xPtWwEqP9wAAAAASUVORK5CYII=
@@ -1134,6 +1134,9 @@
 17.8.1  -   Added: BitSearch, OldToonsWorld.
             Removed: TorSurf, Movietown.
 
+17.9    -   Fixed: Options from 17.7 didn't work properly.
+        -   Added: ReelFliX.
+
 
 //==============================================================================
 //    Notes.
@@ -1828,7 +1831,7 @@ var public_sites = [
   {   'name': 'TurkSeed',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAGFBMVEXl5eXtHiYCAgLsOUDqZms/Pz/cp6mHh4dS1HxgAAABw0lEQVRIx7XUwYqDMBAG4MC2em1I2QcQQq8NkZ4tBh9ASL0G2nWvUrB9/XXjJBM3WmGX/Q9tDx//TDVK3ugQRpYjLCiWAbVZBcfVhr8CdvzPBrHWIG0A/Co3VambGlOkutF900UjIOyYZjXP+BTQILtt9p0XIAWw0nBZa2jWADcxyG0KC3AGAtbamGQEvPsJ9gRSj6JZBH0WCTo59lsAvFloSGsUs4DcMyeesyPIR+bFI26AGZBDFwOogDTRCKjw6YIGzBMBN3Mg6RFccEQotBcaG8KkKLopiBc9eJCUUuZVJLgBkJSCKlVhx93NgCVLyqrWbmiI/f6EjgsAQXMzPmhVewqvaDOAkRj4j4wW4RragRMBIABABXegAHAVVJqxAkE4QZVMmXAGgD0A0l7zBH7PA7Kp8ISHAG9Vi8czasBEgM2AevI3YXJ0S7UDOWxgEMCVFDBj3O1WeNDDvZA0WDMJdrkDOFOIrColTzjBnYeSeiFFbnBF9yp5o5h98XTR/kxuQkA0r2vNhw98+jYCwTvJMDCBJGcEOwTB43t9AYYCNyMG+Corl8Chg+sv54F+EMhNzgAevm4TJdkQD2rOtXvJfQGxDp98uYX4AAAAAABJRU5ErkJggg==',
       'searchUrl': 'https://trendfilm.net/browse.php?do=search&keywords=%tt%&search_type=t_genre&category=0&include_dead_torrents=yes',
-      'loggedOutRegex': /Cloudflare|Ray ID|Recover Password|Şifre Sıfırlamaz|signup.php/,
+      'loggedOutRegex': /Cloudflare|Ray ID|Recover Password|Şifre Sıfırlama|signup.php/,
       'matchRegex': /\/details\.php/,
       'positiveMatch': true,
       'both': true},
@@ -2604,12 +2607,12 @@ var private_sites = [
       'both': true},
   {   'name': 'LastFiles',
       'searchUrl': 'https://www.lastfiles.ro/browse.php?search=%2B%search_string%+%2B%year%&searchin=title&incldead=0&cat=+',
-      'loggedOutRegex': /Cloudflare|Ray ID|Not logged in/,
+      'loggedOutRegex': /Cloudflare|Ray ID|Not logged in|pm_system.php/,
       'spaceEncode': '+%2B',
       'matchRegex': /Nothing found/},
   {   'name': 'LastFiles',
       'searchUrl': 'https://www.lastfiles.ro/browse.php?search=%2B%search_string%&searchin=title&incldead=0&cat=+',
-      'loggedOutRegex': /Cloudflare|Ray ID|Not logged in/,
+      'loggedOutRegex': /Cloudflare|Ray ID|Not logged in|pm_system.php/,
       'spaceEncode': '+%2B',
       'matchRegex': /Nothing found/,
       'TV': true},
@@ -2917,6 +2920,17 @@ var private_sites = [
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADwAAAA8BAMAAADI0sRBAAAAGFBMVEUAAAD6AQGsAQHQAgKMBARZAwP5Ly/FPz/1JFdTAAAAAXRSTlMAQObYZgAAASlJREFUOMvt0LFqwzAQBuBL0tirjcFzUQxZU2vIaopKn8C7Q6GzGvr+9H7fCSvIWpp2yw+RLvp0Z2x65G9SXGpOm1Fg1gvFz7qectp6VFVGpW1l+kV0U6FOeKPKvzWelQFLOrwQJV4xqVqZLUM8lemL6dcCY9Atlqzisk/Jg/U8ZdUWT9CcYrU4We75r8bG+gINL9/w4MYu7RaZ6Cxs0fix8A7Kl4569TyfPcfNJz5QBiiH5gNvPXgXuA98sNbwtjVgVgb8E+bCoARjsb25YcMhYVw9CpiIUYGuXPuZS9P5wB0pI7x3jq44FO6GmIetce7VdO/Kzsn+xF0GnfTtOEPgQRlHDpdLMGlQKOuiqyZhJMdvGd67ETzmeASP9/D+P5nuYeS3TI9ofgArj0YZoy/t6AAAAABJRU5ErkJggg==',
       'searchUrl': 'https://red-bits.com/requests?unfilled=1&imdbId=%nott%',
       'loggedOutRegex': /Cloudflare|Ray ID|Remember Me|Olvidaste tu contraseña/,
+      'matchRegex': /label-danger/,
+      'positiveMatch': true,
+      'both': true},
+  {   'name': 'ReelFliX',
+      'searchUrl': 'https://reelflix.xyz/torrents?imdbId=%tt%',
+      'loggedOutRegex': /Cloudflare|Forgot Your Password|Service Unavailable/,
+      'matchRegex': /torrent-listings-no-result/,
+      'both': true},
+  {   'name': 'ReelFliX-Req',
+      'searchUrl': 'https://reelflix.xyz/requests?unfilled=1&tmdbId=%tmdbid%',
+      'loggedOutRegex': /Cloudflare|Forgot Your Password|Service Unavailable/,
       'matchRegex': /label-danger/,
       'positiveMatch': true,
       'both': true},
@@ -3670,7 +3684,7 @@ var french_sites = [
       'both': true},
   {   'name': 'SpiderTK',
       'searchUrl': 'https://spidertk.top/torrents.php?incldead=1&search=%tt%&search_area=4',
-      'loggedOutRegex': /Cloudflare|Ray ID|Le site est en maintenance|Pas connecté/,
+      'loggedOutRegex': /Cloudflare|Ray ID|Le site est en maintenance|Pas connecté|Site is down/,
       'matchRegex': /Pas de résultats/,
       'both': true},
   {   'name': 'TCTG',
@@ -3692,13 +3706,13 @@ var french_sites = [
   {   'name': 'TOS',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABAAgMAAADXB5lNAAAADFBMVEUAAADyFXnyWZ7vMofMliBtAAAAAXRSTlMAQObYZgAAAdFJREFUOMudk71KxEAUhcOk2oRg5SOIoGS3WgQrH8K7YyGrj5DSzmF9BvuUElGrgIg/eQiHbacUKxthETSeO7mTKHZe2GHnY3Luz5yJ/h2qqswvcNm2rz/3lY9hn3zxelMOBy543bruFVdYIDoJupMy+Yrb1iUrAY/Rts6ITvBHvlDv+wBHTr5J3TYd5IQjqeskzAMVU4A51L2EsnRsCWE6kVVK1HjgJl7T5aTPWg6XNqxpatKq4ihjVl0zlmah5jcs44Wlg9DFLX53SFLwZnTaumuGnJUBkhVjzhpZarwAap14UOuuB2gBqJcylyTnNE9NpMr7bN6BKekEwDyPJCsqVgaFLuOiAyMAB2Ab14E4gCIUbvXCg5NQOMAxg3kAtYBZABsCdAC5ALQieUUUzUrepeqA5M0UAwUQSt9bKm6uptBcscPNuSvS0v5hkhoMKKcwIB35iWUURqjNJg85JRkyAA95N1l+eoCTjsHY4A59VoBbf5VRP9IFXyUy9UNXztshbTkiC081wTAIZWGY3lJEOkbWRzFdDTDL2HTBlgCHGduyNy4ufhqMCxGuqViHtQfzw4FPZW9+1qq8eiTR9ZIASiQfwxP7+wiHZ/r3If83vgHfvOgPcdehwgAAAABJRU5ErkJggg==',
       'searchUrl': 'https://theoldschool.cc/torrents?imdbId=%tt%',
-      'loggedOutRegex': /Cloudflare|Ray ID|title>Login/,
+      'loggedOutRegex': /Cloudflare|Ray ID|title>Login|Mot de passe oubli/,
       'matchRegex': /torrent-listings-no-result/,
       'both': true},
   {   'name': 'TOS-Req',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABAAgMAAADXB5lNAAAADFBMVEUAAADyFXnyWZ7vMofMliBtAAAAAXRSTlMAQObYZgAAAdFJREFUOMudk71KxEAUhcOk2oRg5SOIoGS3WgQrH8K7YyGrj5DSzmF9BvuUElGrgIg/eQiHbacUKxthETSeO7mTKHZe2GHnY3Luz5yJ/h2qqswvcNm2rz/3lY9hn3zxelMOBy543bruFVdYIDoJupMy+Yrb1iUrAY/Rts6ITvBHvlDv+wBHTr5J3TYd5IQjqeskzAMVU4A51L2EsnRsCWE6kVVK1HjgJl7T5aTPWg6XNqxpatKq4ihjVl0zlmah5jcs44Wlg9DFLX53SFLwZnTaumuGnJUBkhVjzhpZarwAap14UOuuB2gBqJcylyTnNE9NpMr7bN6BKekEwDyPJCsqVgaFLuOiAyMAB2Ab14E4gCIUbvXCg5NQOMAxg3kAtYBZABsCdAC5ALQieUUUzUrepeqA5M0UAwUQSt9bKm6uptBcscPNuSvS0v5hkhoMKKcwIB35iWUURqjNJg85JRkyAA95N1l+eoCTjsHY4A59VoBbf5VRP9IFXyUy9UNXztshbTkiC081wTAIZWGY3lJEOkbWRzFdDTDL2HTBlgCHGduyNy4ufhqMCxGuqViHtQfzw4FPZW9+1qq8eiTR9ZIASiQfwxP7+wiHZ/r3If83vgHfvOgPcdehwgAAAABJRU5ErkJggg==',
       'searchUrl': 'https://theoldschool.cc/requests?unfilled=1&tmdbId=%tmdbid%',
-      'loggedOutRegex': /Cloudflare|Ray ID|title>Login/,
+      'loggedOutRegex': /Cloudflare|Ray ID|title>Login|Mot de passe oubli/,
       'matchRegex': /label-danger/,
       'positiveMatch': true,
       'both': true},
@@ -6429,7 +6443,7 @@ function performPage() {
   if (!GM_config.get("disable_iconsites")) {
     addIconBar(movie_id, movie_title, movie_title_orig);
   }
-  if (!GM_config.get("disable_iconsites")) {
+  if (!GM_config.get("disable_sites")) {
     perform(getLinkArea(), movie_id, movie_title, movie_title_orig, is_tv, is_movie, series_id, season_id, episode_id);
     if (GM_config.get('load_second_bar') && !GM_config.get('load_third_bar_movie')) {
       getLinkAreaSecond();
