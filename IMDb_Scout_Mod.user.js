@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      17.9
+// @version      17.9.1
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from hundreds various sites. Adds movies/series to Radarr/Sonarr. Adds external ratings from Metacritic, Rotten Tomatoes, Letterboxd, Douban, Allocine. Media Server indicators for Plex, Jellyfin, Emby. Dark theme/style for Reference View. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAMFBMVEUAAAD/AAAcAAA1AABEAABVAAC3AADnAAD2AACFAAClAABlAAB3AADHAACVAADYAABCnXhrAAAD10lEQVRIx73TV4xMURgH8H/OnRmZWe3T7h2sOWaNXu7oJRg9UccuHgTRBatMtAgSg+gJu9q+kFmihcQoD8qLTkK0CIkoy0YJITsRD0rCKTHFrnkSv5e5c88/53znO+fiPwvsvrN038cPNqrG9pJmHkRVnPcpaTlHJY60cfPSpsrzl1LKihrmLvxhCM2i3OHvDx0d+H7e3F6JBv5iZMiJfhFTfPYDMHrMImpwimWWUdSgDQkbno7fFpUPVgh+pHFbZR4SovSctDCM9Hac9IKd9rO8EevtBCkXgY5IMmgquwypP7qqfcp/Tp4KLONDVsWh3RSBB2rnZfit69ocUdqLn2prrRZYM0Jg4JibamKsqe7gfEh5GOAfeYJjVHIPZvil97rcXkMog30byWRwXYRWoxHbzNFHJJpAarO8NdEBBsdCaP3WMJltTmQd4zlnekTq9Z5dgACwAlrpK4BxdV5mvLuspRgMSHbCIFF0iS8MZ5S8oYBYKY7rByC4dDM9uSIUmPOIwxgQBoYeF93auP4qFyPbIVXziWeGTH1EFM57kJo2hqQju6BwIyRf6RmCjdT4JOdiwNgiH/PPD3qoqlsNaXRd+fKtFfECxlZVNVF9SOsgTZEr2TUjJJbyeNX1IZrKIbyGlBABfpQPv2UDrly13LkJXDVhpQ5MhtGwcyF4HKjlU4E8xwB0AvDjd6AGmevZ87EcQRHgcO52e9uNsYELOrAa/Yh81YlmYLQJ5HWyq0+kzQ/DQKEusg6CRI27ryy8nReRS0wsoetkmRwogHSprliCckfEjXG9yAQc74J0WB99vu6DF3i3pMucsXM6tpBbxd2mVJAwXwGogNRBvGRA4jtHKTXkAIwLGCR/mT4Lh75oneQXXP9sAYfGRDCsnw7pX/jRZkU3M44kjw2l5zRIzb4CbZ8dULdL6wbNPZOpK0B6gN1UR1mdoxAaL/GrWiLPL3SEwW9YMTU/d64BtLahAVyucWhj9Mm8ign9IfQaBtd2/GbvCAEBpG5eMcrj2I0ktpKLeaqXQ3Pst42KGIshpdTmQLAeTgFGJ2wvh+tayMOR0n1RZ8B9z13vnOPBnsBq4E1ffgZpPFZHWVpO2cvhjYpOcbBd5TlhpDu5zq9mHGZcVi0y+VFkcFkDdyKJfTt99wEyHSEzDM90KH0nexpwZHJHKYYhjzlwGe0pP/IKfxociaEb7YDbi6KGJY1R2cR76E6NAtXqY4pPH3plLcl8LD7V+cOLUbUWRFZRPTAbVZO3mxK18Xc1ZaAiS8ARJXpZliXAomR94siiiMx8ZBOkXGTlnH0F/9ov1xPtWwEqP9wAAAAASUVORK5CYII=
@@ -1137,6 +1137,10 @@
 17.9    -   Fixed: Options from 17.7 didn't work properly.
         -   Added: ReelFliX.
 
+17.9.1  -   Added: HDUse, HUNO.
+            Note: There are some quirks with Violentmonkey v2.13.3, it will be fixed in v2.13.3.9:
+                  [ https://github.com/violentmonkey/violentmonkey/issues/1671 ]
+
 
 //==============================================================================
 //    Notes.
@@ -1144,6 +1148,9 @@
 
 UNIT3D new:
       'matchRegex': /torrent-listings-no-result/,
+
+      'matchRegex': /torrent-listings-name/,
+      'positiveMatch': true,
 
 UNIT3D old:
       'matchRegex': /"Download">/,
@@ -2286,8 +2293,7 @@ var private_sites = [
   {   'name': 'DataScene',
       'searchUrl': 'https://datascene.xyz/torrents?imdbId=%nott%',
       'loggedOutRegex': /Cloudflare|Ray ID|Remember Me/,
-      'matchRegex': /"Download">/,
-      'positiveMatch': true,
+      'matchRegex': /torrent-listings-no-result/,
       'both': true},
   {   'name': 'DataScene-Req',
       'searchUrl': 'https://datascene.xyz/requests?unfilled=1&imdbId=%nott%',
@@ -2519,6 +2525,18 @@ var private_sites = [
       'searchUrl': 'https://huntorrent.net/browse.php?search=%tt%',
       'loggedOutRegex': /Cloudflare|Ray ID|Elfelejtett jelszó|böngésződben cookie-kat/,
       'matchRegex': /Az általad megadott/,
+      'both': true},
+  {   'name': 'HUNO',
+      'searchUrl': 'https://www.hawke.uno/torrents?imdbId=%tt%',
+      'loggedOutRegex': /Cloudflare|Forgot Your Password|Service Unavailable/,
+      'matchRegex': /torrent-listings-name/,
+      'positiveMatch': true,
+      'both': true},
+  {   'name': 'HUNO-Req',
+      'searchUrl': 'https://www.hawke.uno/requests?unfilled=1&tmdbId=%tmdbid%',
+      'loggedOutRegex': /Cloudflare|Forgot Your Password|Service Unavailable/,
+      'matchRegex': /label-danger/,
+      'positiveMatch': true,
       'both': true},
   {   'name': 'IPT',
       'searchUrl': 'https://ip.findnemo.net/t?q=%tt%',
@@ -3080,13 +3098,15 @@ var private_sites = [
       'searchUrl': 'https://swarmazon.club/en/search/search.php?category=1&query=%search_string_orig%',
       'loggedOutRegex': /Cloudflare|Ray ID|>Sign in</,
       'spaceEncode': '%2B',
-      'matchRegex': /\(0\)/},
+      'positiveMatch': true,
+      'matchRegex': /Download</},
   {   'name': 'Swarmazon',
       'icon': 'https://swarmazon.club/forum/assets/favicon-xurteib6.png',
       'searchUrl': 'https://swarmazon.club/en/search/search.php?category=2&query=%search_string_orig%',
       'spaceEncode': '%2B',
       'loggedOutRegex': /Cloudflare|Ray ID|>Sign in</,
-      'matchRegex': /\(0\)/,
+      'positiveMatch': true,
+      'matchRegex': /Download</,
       'TV': true},
   {   'name': 'T',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAAQiSURBVHjaxFfda1xFFP/NvXfux3Y39JPupkZN27Rp0obEGLcSUKFYsPgHFAwU8qJSBMW+SF98UB8FEVQUKRaVJvhQPwuitY1gidgP6lNa2diY7OImu7H7eT9nfGnu3uud3aypqQcu3DmcM+c353fmzAzhnCMoqZ4hntw5AKoaACG+nnMO5jlYTTjzwBgT6suFHDJXz5OgngQB7H74ME/tHsR6il2vYPrzd3wQUmj16xwcAFQjjr0Hn/ZXraz89DzyFN/+YD/uhXRs7UQEgEI1eG5zjjWFo+++BABgvmBiseyuGUCwRnwAskLhOlZTp8G9O/H2ay8DAN78YAKTX0+tGUAwTgMA1eDaZlOngT1dcF33zgR2S9tVAQR8GxSoGqx6VVw4xMWRQ6NwHOfOBBacuwEgyoBCdVT+KkT5cmp49ZXj6EgkfACOY8Ox1g4g6BugQI2kdXhfF54bfwb9fftg23aIDnZ4xB/XTQtnv/v5X1BgtVeEJ0+8gM2bN4WCA0B6ZBjpkWF/XCwu47NzP7YNwHNtEQAVzA0HclzXT3vLlLpuxLflNhQBkGQZjHkhw3PfT2GDYeDQY4/CMHRff2s+i98yc/64WqtFfFv3AS8KQCTvnToDAHhooA+apvr6n6av4P3Tk/9JVwwBIEQSn3CchboXB29q256QKADmuZAVuqoDAEhEbmHbBgWBY11pVKYDmWpCB0mWIEmNFUuK0tS2vV0gBGCDqrqYJ0UBpY0VU6o2tW1vFwgAuI4NqhlCB0rVEACF0qa2jHmISRb6eh7AQm4R80UzAlbYBzzHajqpqqpQ1cYu2HV/EkQiUKjup5S5JqiewIHuLXj95Is+4FMfT2Li219CRevadREAG1TfIM6ZpEDTGpw/PnoQzy9kcfHSZagqRXpoP7jagdNnf8CJ4+OIx+O+7bPjY7h4dRaFUiNosH5CRWio4sK6PjOHnu6ukO7Y2FEcGzvqjye+ugBF1bBjR2coWwCQTKVw21xAsO1H7oTMcyArVPh98uUUZmazPhWib8X20rUbIf3ichm/Zwuh+SRZFvQB5jVtLjXTxktvfIgnRwfxRPoAuruSUKmCSrWOm7eymL42gwvTv4IQCW999AXqpo2h/l2Yzy3h3U+/gcfCjSv0v3It35M+wrd3778nl9Lb+TlcP3+GhCgo5f/APx8p6yWl3E1BDVglZG9cBudsXYObxTmU/pwNU9Db28u3btuGXH4ZZZMhsSW1aquVZKWtgCt2zHMRV2xoXhm5XA6ZTIb4RajrOjZt3IjOVAq248Cy7MDB4UFMTPACwuExDvDmZ1nM0GHoHSiVgGKxGN4FpVIJS0tLiMViIITc5QErOs+Beq2GaqWCSqWCarUa3QXJZJJTSkEIWTOIlhg4B+cclmUhn88T4ev4/5C/BwDN68QK5KaRZAAAAABJRU5ErkJggg==',
@@ -3353,7 +3373,8 @@ var private_sites = [
       'goToUrl': 'https://tracker.uniotaku.com/torrents.php?search=%search_string%',
       'searchUrl': 'https://tracker.uniotaku.com/torrents_.php?start=0&length=25&search[value]=%search_string%',
       'loggedOutRegex': /Cloudflare|Ray ID/,
-      'matchRegex': /recordsTotal":0/,
+      'matchRegex': /torrents-details.php/,
+      'positiveMatch': true,
       'both': true},
   {   'name': 'Unlimitz',
       'searchUrl': 'https://www.unlimitz.biz/browse.php?search=%search_string%&cat=0&blah=0',
