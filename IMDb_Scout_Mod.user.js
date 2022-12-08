@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      17.9.1
+// @version      17.9.2
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from hundreds various sites. Adds movies/series to Radarr/Sonarr. Adds external ratings from Metacritic, Rotten Tomatoes, Letterboxd, Douban, Allocine. Media Server indicators for Plex, Jellyfin, Emby. Dark theme/style for Reference View. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAMFBMVEUAAAD/AAAcAAA1AABEAABVAAC3AADnAAD2AACFAAClAABlAAB3AADHAACVAADYAABCnXhrAAAD10lEQVRIx73TV4xMURgH8H/OnRmZWe3T7h2sOWaNXu7oJRg9UccuHgTRBatMtAgSg+gJu9q+kFmihcQoD8qLTkK0CIkoy0YJITsRD0rCKTHFrnkSv5e5c88/53znO+fiPwvsvrN038cPNqrG9pJmHkRVnPcpaTlHJY60cfPSpsrzl1LKihrmLvxhCM2i3OHvDx0d+H7e3F6JBv5iZMiJfhFTfPYDMHrMImpwimWWUdSgDQkbno7fFpUPVgh+pHFbZR4SovSctDCM9Hac9IKd9rO8EevtBCkXgY5IMmgquwypP7qqfcp/Tp4KLONDVsWh3RSBB2rnZfit69ocUdqLn2prrRZYM0Jg4JibamKsqe7gfEh5GOAfeYJjVHIPZvil97rcXkMog30byWRwXYRWoxHbzNFHJJpAarO8NdEBBsdCaP3WMJltTmQd4zlnekTq9Z5dgACwAlrpK4BxdV5mvLuspRgMSHbCIFF0iS8MZ5S8oYBYKY7rByC4dDM9uSIUmPOIwxgQBoYeF93auP4qFyPbIVXziWeGTH1EFM57kJo2hqQju6BwIyRf6RmCjdT4JOdiwNgiH/PPD3qoqlsNaXRd+fKtFfECxlZVNVF9SOsgTZEr2TUjJJbyeNX1IZrKIbyGlBABfpQPv2UDrly13LkJXDVhpQ5MhtGwcyF4HKjlU4E8xwB0AvDjd6AGmevZ87EcQRHgcO52e9uNsYELOrAa/Yh81YlmYLQJ5HWyq0+kzQ/DQKEusg6CRI27ryy8nReRS0wsoetkmRwogHSprliCckfEjXG9yAQc74J0WB99vu6DF3i3pMucsXM6tpBbxd2mVJAwXwGogNRBvGRA4jtHKTXkAIwLGCR/mT4Lh75oneQXXP9sAYfGRDCsnw7pX/jRZkU3M44kjw2l5zRIzb4CbZ8dULdL6wbNPZOpK0B6gN1UR1mdoxAaL/GrWiLPL3SEwW9YMTU/d64BtLahAVyucWhj9Mm8ign9IfQaBtd2/GbvCAEBpG5eMcrj2I0ktpKLeaqXQ3Pst42KGIshpdTmQLAeTgFGJ2wvh+tayMOR0n1RZ8B9z13vnOPBnsBq4E1ffgZpPFZHWVpO2cvhjYpOcbBd5TlhpDu5zq9mHGZcVi0y+VFkcFkDdyKJfTt99wEyHSEzDM90KH0nexpwZHJHKYYhjzlwGe0pP/IKfxociaEb7YDbi6KGJY1R2cR76E6NAtXqY4pPH3plLcl8LD7V+cOLUbUWRFZRPTAbVZO3mxK18Xc1ZaAiS8ARJXpZliXAomR94siiiMx8ZBOkXGTlnH0F/9ov1xPtWwEqP9wAAAAASUVORK5CYII=
@@ -1141,18 +1141,20 @@
             Note: There are some quirks with Violentmonkey v2.13.3, it will be fixed in v2.13.3.9:
                   [ https://github.com/violentmonkey/violentmonkey/issues/1671 ]
 
+17.9.2  -   Update: Blu, RedBits.
+
 
 //==============================================================================
 //    Notes.
 //==============================================================================
 
 UNIT3D new:
-      'matchRegex': /torrent-listings-no-result/,
-
       'matchRegex': /torrent-listings-name/,
       'positiveMatch': true,
 
 UNIT3D old:
+      'matchRegex': /torrent-listings-no-result/,
+
       'matchRegex': /"Download">/,
       'positiveMatch': true,
 
@@ -2101,12 +2103,14 @@ var private_sites = [
   {   'name': 'Blu',
       'searchUrl': 'https://blutopia.xyz/torrents?imdbId=%nott%',
       'loggedOutRegex': /Cloudflare|Forgot Your Password|Service Unavailable/,
-      'matchRegex': /torrent-listings-no-result/,
+      'matchRegex': /torrent-listings-name/,
+      'positiveMatch': true,
       'both': true},
   {   'name': 'Blu-TMDb',
       'searchUrl': 'https://blutopia.xyz/torrents?tmdbId=%tmdbid%',
       'loggedOutRegex': /Cloudflare|Forgot Your Password|Service Unavailable/,
-      'matchRegex': /torrent-listings-no-result/,
+      'matchRegex': /torrent-listings-name/,
+      'positiveMatch': true,
       'both': true},
   {   'name': 'Blu-Req',
       'searchUrl': 'https://blutopia.xyz/requests?unfilled=1&tmdbId=%tmdbid%',
@@ -2930,13 +2934,13 @@ var private_sites = [
       'matchRegex': /Your search did not match anything/},
   {   'name': 'RedBits',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADwAAAA8BAMAAADI0sRBAAAAGFBMVEUAAAD6AQGsAQHQAgKMBARZAwP5Ly/FPz/1JFdTAAAAAXRSTlMAQObYZgAAASlJREFUOMvt0LFqwzAQBuBL0tirjcFzUQxZU2vIaopKn8C7Q6GzGvr+9H7fCSvIWpp2yw+RLvp0Z2x65G9SXGpOm1Fg1gvFz7qectp6VFVGpW1l+kV0U6FOeKPKvzWelQFLOrwQJV4xqVqZLUM8lemL6dcCY9Atlqzisk/Jg/U8ZdUWT9CcYrU4We75r8bG+gINL9/w4MYu7RaZ6Cxs0fix8A7Kl4569TyfPcfNJz5QBiiH5gNvPXgXuA98sNbwtjVgVgb8E+bCoARjsb25YcMhYVw9CpiIUYGuXPuZS9P5wB0pI7x3jq44FO6GmIetce7VdO/Kzsn+xF0GnfTtOEPgQRlHDpdLMGlQKOuiqyZhJMdvGd67ETzmeASP9/D+P5nuYeS3TI9ofgArj0YZoy/t6AAAAABJRU5ErkJggg==',
-      'searchUrl': 'https://red-bits.com/torrents?imdbId=%tt%',
+      'searchUrl': 'https://redbits.xyz/torrents?imdbId=%tt%',
       'loggedOutRegex': /Cloudflare|Ray ID|Remember Me|Olvidaste tu contraseña/,
       'matchRegex': /torrent-listings-no-result/,
       'both': true},
   {   'name': 'RedBits-Req',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADwAAAA8BAMAAADI0sRBAAAAGFBMVEUAAAD6AQGsAQHQAgKMBARZAwP5Ly/FPz/1JFdTAAAAAXRSTlMAQObYZgAAASlJREFUOMvt0LFqwzAQBuBL0tirjcFzUQxZU2vIaopKn8C7Q6GzGvr+9H7fCSvIWpp2yw+RLvp0Z2x65G9SXGpOm1Fg1gvFz7qectp6VFVGpW1l+kV0U6FOeKPKvzWelQFLOrwQJV4xqVqZLUM8lemL6dcCY9Atlqzisk/Jg/U8ZdUWT9CcYrU4We75r8bG+gINL9/w4MYu7RaZ6Cxs0fix8A7Kl4569TyfPcfNJz5QBiiH5gNvPXgXuA98sNbwtjVgVgb8E+bCoARjsb25YcMhYVw9CpiIUYGuXPuZS9P5wB0pI7x3jq44FO6GmIetce7VdO/Kzsn+xF0GnfTtOEPgQRlHDpdLMGlQKOuiqyZhJMdvGd67ETzmeASP9/D+P5nuYeS3TI9ofgArj0YZoy/t6AAAAABJRU5ErkJggg==',
-      'searchUrl': 'https://red-bits.com/requests?unfilled=1&imdbId=%nott%',
+      'searchUrl': 'https://redbits.xyz/requests?unfilled=1&imdbId=%nott%',
       'loggedOutRegex': /Cloudflare|Ray ID|Remember Me|Olvidaste tu contraseña/,
       'matchRegex': /label-danger/,
       'positiveMatch': true,
