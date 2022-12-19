@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      17.10
+// @version      18.0
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from hundreds various sites. Adds movies/series to Radarr/Sonarr. Adds external ratings from Metacritic, Rotten Tomatoes, Letterboxd, Douban, Allocine. Media Server indicators for Plex, Jellyfin, Emby. Dark theme/style for Reference View. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAMFBMVEUAAAD/AAAcAAA1AABEAABVAAC3AADnAAD2AACFAAClAABlAAB3AADHAACVAADYAABCnXhrAAAD10lEQVRIx73TV4xMURgH8H/OnRmZWe3T7h2sOWaNXu7oJRg9UccuHgTRBatMtAgSg+gJu9q+kFmihcQoD8qLTkK0CIkoy0YJITsRD0rCKTHFrnkSv5e5c88/53znO+fiPwvsvrN038cPNqrG9pJmHkRVnPcpaTlHJY60cfPSpsrzl1LKihrmLvxhCM2i3OHvDx0d+H7e3F6JBv5iZMiJfhFTfPYDMHrMImpwimWWUdSgDQkbno7fFpUPVgh+pHFbZR4SovSctDCM9Hac9IKd9rO8EevtBCkXgY5IMmgquwypP7qqfcp/Tp4KLONDVsWh3RSBB2rnZfit69ocUdqLn2prrRZYM0Jg4JibamKsqe7gfEh5GOAfeYJjVHIPZvil97rcXkMog30byWRwXYRWoxHbzNFHJJpAarO8NdEBBsdCaP3WMJltTmQd4zlnekTq9Z5dgACwAlrpK4BxdV5mvLuspRgMSHbCIFF0iS8MZ5S8oYBYKY7rByC4dDM9uSIUmPOIwxgQBoYeF93auP4qFyPbIVXziWeGTH1EFM57kJo2hqQju6BwIyRf6RmCjdT4JOdiwNgiH/PPD3qoqlsNaXRd+fKtFfECxlZVNVF9SOsgTZEr2TUjJJbyeNX1IZrKIbyGlBABfpQPv2UDrly13LkJXDVhpQ5MhtGwcyF4HKjlU4E8xwB0AvDjd6AGmevZ87EcQRHgcO52e9uNsYELOrAa/Yh81YlmYLQJ5HWyq0+kzQ/DQKEusg6CRI27ryy8nReRS0wsoetkmRwogHSprliCckfEjXG9yAQc74J0WB99vu6DF3i3pMucsXM6tpBbxd2mVJAwXwGogNRBvGRA4jtHKTXkAIwLGCR/mT4Lh75oneQXXP9sAYfGRDCsnw7pX/jRZkU3M44kjw2l5zRIzb4CbZ8dULdL6wbNPZOpK0B6gN1UR1mdoxAaL/GrWiLPL3SEwW9YMTU/d64BtLahAVyucWhj9Mm8ign9IfQaBtd2/GbvCAEBpG5eMcrj2I0ktpKLeaqXQ3Pst42KGIshpdTmQLAeTgFGJ2wvh+tayMOR0n1RZ8B9z13vnOPBnsBq4E1ffgZpPFZHWVpO2cvhjYpOcbBd5TlhpDu5zq9mHGZcVi0y+VFkcFkDdyKJfTt99wEyHSEzDM90KH0nexpwZHJHKYYhjzlwGe0pP/IKfxociaEb7YDbi6KGJY1R2cR76E6NAtXqY4pPH3plLcl8LD7V+cOLUbUWRFZRPTAbVZO3mxK18Xc1ZaAiS8ARJXpZliXAomR94siiiMx8ZBOkXGTlnH0F/9ov1xPtWwEqP9wAAAAASUVORK5CYII=
@@ -1145,6 +1145,9 @@
 
 17.10   -   Fixed: Broken Douban and Metacritic ratings on the mobile browsers.
             Removed: SP.
+
+18.0    -   New feature: Show Rotten Tomatoes & Metacritic ratings for TV series.
+            Added: NZBKing.
 
 
 //==============================================================================
@@ -4119,6 +4122,12 @@ var usenet_sites = [
       'loggedOutRegex': /Cloudflare|Ray ID|You are not logged in/,
       'matchRegex': /There are no posts/,
       'both': true},
+  {   'name': 'NZBKing',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQBAMAAADt3eJSAAAALVBMVEX///8AAAAWFhaTk5MlJSXz8/PDw8Ozs7OHh4dLS0tiYmLl5eXc3NzPz8+pqamHx8n4AAAAT0lEQVQI12PADgKgNN8CKINTAcp4KAUir+1xKJLgakhjSCxYzqm9M1SYgXmuoqCgYMUEBgZHQRAAmpDkAgQaQNVHlIBAHMgINgaCHgY8AABKXA/GCcvtCwAAAABJRU5ErkJggg==',
+      'searchUrl': 'https://www.nzbking.com/?q=%tt%&ft=vi&gr=&po=&so=',
+      'loggedOutRegex': /Cloudflare|Ray ID/,
+      'matchRegex': /did not match any/,
+      'both': true},
   {   'name': 'NzbNdx',
       'icon': 'https://www.nzbndx.com/templates/bookstrap/images/icons/favicon.ico',
       'searchUrl': 'https://www.nzbndx.com/search/%search_string% %year%?t=2000',
@@ -5685,6 +5694,84 @@ function getAllocineID(movie_id) {
         resolve("00000000");
       },
       ontimeout: function() {
+        resolve("00000000");
+      }
+    });
+  });
+}
+
+function getMetacriticID1(movie_id) {
+  return new Promise(resolve => {
+    GM.xmlHttpRequest({
+      method: "GET",
+      timeout: 10000,
+      url:    'https://query.wikidata.org/sparql?format=json&query=SELECT * WHERE {?s wdt:P345 "tt' +movie_id+ '". OPTIONAL { ?s wdt:P1712 ?Metacritic_ID. }}',
+      headers: { "User-Agent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:108.0) Gecko/20100101 Firefox/108.0" },
+      onload: function(response) {
+        const result = JSON.parse(response.responseText);
+        if (result.results.bindings[0] != undefined) {
+          if (result.results.bindings[0].Metacritic_ID != undefined) {
+            const metacritic_id = result.results.bindings[0].Metacritic_ID.value;
+            resolve(metacritic_id);
+          } else {
+            const metacritic_id = "00000000";
+            resolve("00000000");
+          }
+        } else {
+          const metacritic_id = "00000000";
+          resolve(metacritic_id);
+        }
+      },
+      onerror: function() {
+        GM.notification("Request Error.", "IMDb Scout Mod (getMetacriticID1)");
+        console.log("IMDb Scout Mod (getMetacriticID1): Request Error.");
+        resolve("00000000");
+      },
+      onabort: function() {
+        console.log("IMDb Scout Mod (getMetacriticID1): Request Aborted.");
+        resolve("00000000");
+      },
+      ontimeout: function() {
+        console.log("IMDb Scout Mod (getMetacriticID1): Request Timeout.");
+        resolve("00000000");
+      }
+    });
+  });
+}
+
+function getRottenID1(movie_id) {
+  return new Promise(resolve => {
+    GM.xmlHttpRequest({
+      method: "GET",
+      timeout: 10000,
+      url:    'https://query.wikidata.org/sparql?format=json&query=SELECT * WHERE {?s wdt:P345 "tt' +movie_id+ '". OPTIONAL { ?s wdt:P1258 ?Rotten_Tomatoes_ID. }}',
+      headers: { "User-Agent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:108.0) Gecko/20100101 Firefox/108.0" },
+      onload: function(response) {
+        const result = JSON.parse(response.responseText);
+        if (result.results.bindings[0] != undefined) {
+          if (result.results.bindings[0].Rotten_Tomatoes_ID != undefined) {
+            const rotten_id = result.results.bindings[0].Rotten_Tomatoes_ID.value;
+            resolve(rotten_id);
+          } else {
+            const rotten_id = "00000000";
+            resolve("00000000");
+          }
+        } else {
+          const rotten_id = "00000000";
+          resolve(rotten_id);
+        }
+      },
+      onerror: function() {
+        GM.notification("Request Error.", "IMDb Scout Mod (getRottenID1)");
+        console.log("IMDb Scout Mod (getRottenID1): Request Error.");
+        resolve("00000000");
+      },
+      onabort: function() {
+        console.log("IMDb Scout Mod (getRottenID1): Request Aborted.");
+        resolve("00000000");
+      },
+      ontimeout: function() {
+        console.log("IMDb Scout Mod (getRottenID1): Request Timeout.");
         resolve("00000000");
       }
     });
@@ -8598,6 +8685,8 @@ function getMetacriticRatings_IMDb(imdbid, meta_icon, meta_badge) {
           getMetacritic_User(meta_url);
         }
       } else {
+        console.log("IMDb Scout Mod (Metascore from IMDb): Score not found. Starting getMetacriticRatings.");
+        getMetacriticRatings(imdbid, meta_icon, meta_badge);
         return;
       }
       $('.MetaCritRatingImg').attr('src', meta_icon);
@@ -8653,6 +8742,61 @@ function getMetacritic_User(url) {
     },
     ontimeout: function() {
       console.log("IMDb Scout Mod (Metacritic user): Request timed out.");
+    }
+  });
+}
+
+async function getMetacriticRatings(imdbid, meta_icon, meta_badge) {
+  let metacritic_id = await getMetacriticID1(imdbid);
+  if (metacritic_id == "00000000") {
+    console.log("IMDb Scout Mod (Metacritic): ID not found on Wikidata.");
+    return;
+  }
+  const meta_url = "https://www.metacritic.com/" +metacritic_id;
+
+  GM.xmlHttpRequest({
+    method:  "GET",
+    timeout: 10000,
+    url:     meta_url,
+    headers: { "User-Agent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:108.0) Gecko/20100101 Firefox/108.0" },
+    onload: function(response) {
+      const parser = new DOMParser();
+      const result = parser.parseFromString(response.responseText, "text/html");
+      let meta_crit, meta_user;
+      if ($(result).find('a.metascore_anchor span.larger').length) {
+        const x = $(result).find('a.metascore_anchor span.larger:eq(0)').text().trim();
+        if ($.isNumeric(x)) {
+          meta_crit = x;
+        } else {
+          meta_crit = "-";
+        }
+      }
+      if ($(result).find('a.metascore_anchor span.user').length) {
+        const x = $(result).find('a.metascore_anchor span.user').text().trim();
+        if ($.isNumeric(x)) {
+          meta_user = x *10;
+        } else {
+          meta_user = "-";
+        }
+      }
+      if ($(result).find('.must-see').length) {
+        $('.MetaCritRatingImg').attr('src', meta_badge);
+      } else {
+        $('.MetaCritRatingImg').attr('src', meta_icon);
+      }
+      $('.MetaCritRatingUrl').attr('href', meta_url);
+      $('.MetaCritRating').text(meta_crit);
+      $('.MetaUserRating').text(meta_user)
+      ratingsColor();
+    },
+    onerror: function() {
+      console.log("IMDb Scout Mod (Metacritic): Request Error.");
+    },
+    onabort: function() {
+      console.log("IMDb Scout Mod (Metacritic): Request is aborted.");
+    },
+    ontimeout: function() {
+      console.log("IMDb Scout Mod (Metacritic): Request timed out.");
     }
   });
 }
@@ -8758,12 +8902,15 @@ function getRTandMetaRatings_OMDb(key, imdbid, meta_icon, rott_rotten, rott_cert
       if (response.status == 200) {
         responseJSON = JSON.parse(response.responseText);
         GM.setValue("OMDb_last", JSON.stringify(responseJSON));
-        if (responseJSON['Response'] == "False" || responseJSON['Ratings'].length < 1) {
+        if (responseJSON['Response'] == "False" || responseJSON['Ratings'].length < 1 || responseJSON['Type'] == "series") {
+          console.log("IMDb Scout Mod (OMDb Ratings): Ratings not found. Starting getRotten.");
+          const rott_url = '00000000';
+          getRotten(rott_url, rott_rotten, rott_certified, rott_fresh, rott_user_up, rott_user_down, imdbid);
           return;
         }
         const rott_url = responseJSON['tomatoURL'];
         if (rott_url.match("rottentomatoes")) {
-          getRotten(rott_url, rott_rotten, rott_certified, rott_fresh, rott_user_up, rott_user_down);
+          getRotten(rott_url, rott_rotten, rott_certified, rott_fresh, rott_user_up, rott_user_down, imdbid);
           $('.RottCritRatingUrl').attr('href', rott_url);
         }
         let x;
@@ -8818,11 +8965,24 @@ function getRTandMetaRatings_OMDb(key, imdbid, meta_icon, rott_rotten, rott_cert
   });
 }
 
-function getRotten(url, rott_rotten, rott_certified, rott_fresh, rott_user_up, rott_user_down) {
+async function getRotten(rott_url, rott_rotten, rott_certified, rott_fresh, rott_user_up, rott_user_down, imdbid) {
+  if (rott_url == "00000000") {
+    let rotten_id = await getRottenID1(imdbid);
+    if (rotten_id == "00000000") {
+      console.log("IMDb Scout Mod (Rotten Tomatoes): ID not found on Wikidata.");
+      return;
+    }
+    if (rotten_id.match("tv")) {
+      rott_url = "https://www.rottentomatoes.com/" +rotten_id+ "/s01";
+    } else {
+      rott_url = "https://www.rottentomatoes.com/" +rotten_id;
+    }
+    $('.RottCritRatingUrl').attr('href', rott_url);
+  }
   GM.xmlHttpRequest({
     method: "GET",
     timeout: 14000,
-    url:    url,
+    url:     rott_url,
     headers: { "User-Agent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:108.0) Gecko/20100101 Firefox/108.0" },
     onload: function(response) {
       const parser = new DOMParser();
@@ -8845,7 +9005,28 @@ function getRotten(url, rott_rotten, rott_certified, rott_fresh, rott_user_up, r
         } else {
           rott_crit = "-";
         }
+      } else if ($(result).find('.mop-ratings-wrap__percentage').length) {
+        const y = $(result).find('.mop-ratings-wrap__percentage:eq(0)').text().trim().replace(/\%/g, '');
+        const x = $(result).find('.mop-ratings-wrap__percentage:eq(1)').text().trim().replace(/\%/g, '');
+        if ($(result).find('#tomato_meter_link .certified-fresh').length) {
+          rott_state = "certified";
+        } else if($(result).find('#tomato_meter_link .rotten').length) {
+          rott_state = "rotten";
+        } else if($(result).find('#tomato_meter_link .fresh').length) {
+          rott_state = "fresh";
+        }
+        if ($.isNumeric(x)) {
+          rott_user = x;
+        } else {
+          rott_user = "-";
+        }
+        if ($.isNumeric(y)) {
+          rott_crit = y;
+        } else {
+          rott_crit = "-";
+        }
       } else {
+        console.log("IMDb Scout Mod (Rotten Tomatoes): Elements not found.");
         return;
       }
 
