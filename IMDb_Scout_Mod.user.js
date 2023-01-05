@@ -1149,9 +1149,6 @@
 18.0    -   New feature: Show Rotten Tomatoes & Metacritic ratings for TV series.
             Added: NZBKing.
             
-18.0.1  -   Added: AnimeVibe Lite, KissAnime, Actvid, KinoZ, HDOnline, MovieStars, Solarmovies, StreamKiste, 123Movies
-
-
 //==============================================================================
 //    Notes.
 //==============================================================================
