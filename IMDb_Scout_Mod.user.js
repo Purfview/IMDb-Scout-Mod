@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      18.2.1
+// @version      18.2.2
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from hundreds various sites. Adds movies/series to Radarr/Sonarr. Adds external ratings from Metacritic, Rotten Tomatoes, Letterboxd, Douban, Allocine. Media Server indicators for Plex, Jellyfin, Emby. Dark theme/style for Reference View. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAMFBMVEUAAAD/AAAcAAA1AABEAABVAAC3AADnAAD2AACFAAClAABlAAB3AADHAACVAADYAABCnXhrAAAD10lEQVRIx73TV4xMURgH8H/OnRmZWe3T7h2sOWaNXu7oJRg9UccuHgTRBatMtAgSg+gJu9q+kFmihcQoD8qLTkK0CIkoy0YJITsRD0rCKTHFrnkSv5e5c88/53znO+fiPwvsvrN038cPNqrG9pJmHkRVnPcpaTlHJY60cfPSpsrzl1LKihrmLvxhCM2i3OHvDx0d+H7e3F6JBv5iZMiJfhFTfPYDMHrMImpwimWWUdSgDQkbno7fFpUPVgh+pHFbZR4SovSctDCM9Hac9IKd9rO8EevtBCkXgY5IMmgquwypP7qqfcp/Tp4KLONDVsWh3RSBB2rnZfit69ocUdqLn2prrRZYM0Jg4JibamKsqe7gfEh5GOAfeYJjVHIPZvil97rcXkMog30byWRwXYRWoxHbzNFHJJpAarO8NdEBBsdCaP3WMJltTmQd4zlnekTq9Z5dgACwAlrpK4BxdV5mvLuspRgMSHbCIFF0iS8MZ5S8oYBYKY7rByC4dDM9uSIUmPOIwxgQBoYeF93auP4qFyPbIVXziWeGTH1EFM57kJo2hqQju6BwIyRf6RmCjdT4JOdiwNgiH/PPD3qoqlsNaXRd+fKtFfECxlZVNVF9SOsgTZEr2TUjJJbyeNX1IZrKIbyGlBABfpQPv2UDrly13LkJXDVhpQ5MhtGwcyF4HKjlU4E8xwB0AvDjd6AGmevZ87EcQRHgcO52e9uNsYELOrAa/Yh81YlmYLQJ5HWyq0+kzQ/DQKEusg6CRI27ryy8nReRS0wsoetkmRwogHSprliCckfEjXG9yAQc74J0WB99vu6DF3i3pMucsXM6tpBbxd2mVJAwXwGogNRBvGRA4jtHKTXkAIwLGCR/mT4Lh75oneQXXP9sAYfGRDCsnw7pX/jRZkU3M44kjw2l5zRIzb4CbZ8dULdL6wbNPZOpK0B6gN1UR1mdoxAaL/GrWiLPL3SEwW9YMTU/d64BtLahAVyucWhj9Mm8ign9IfQaBtd2/GbvCAEBpG5eMcrj2I0ktpKLeaqXQ3Pst42KGIshpdTmQLAeTgFGJ2wvh+tayMOR0n1RZ8B9z13vnOPBnsBq4E1ffgZpPFZHWVpO2cvhjYpOcbBd5TlhpDu5zq9mHGZcVi0y+VFkcFkDdyKJfTt99wEyHSEzDM90KH0nexpwZHJHKYYhjzlwGe0pP/IKfxociaEb7YDbi6KGJY1R2cR76E6NAtXqY4pPH3plLcl8LD7V+cOLUbUWRFZRPTAbVZO3mxK18Xc1ZaAiS8ARJXpZliXAomR94siiiMx8ZBOkXGTlnH0F/9ov1xPtWwEqP9wAAAAASUVORK5CYII=
@@ -1163,6 +1163,8 @@
 
 18.2.1  -   Removed: Zooqle, ATorrents, TorParadise, Nitro, CineCalidad, ProStyleX, HDSpain.
             Updated: PTN.
+
+18.2.2  -   Added: ZmPT, GayTor.
 
 
 //==============================================================================
@@ -2432,6 +2434,11 @@ var private_sites = [
       'loggedOutRegex': /Cloudflare|Ray ID|.Login</,
       'matchRegex': /sit nimic!</,
       'both': true},
+  {   'name': 'GayTor',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwBAMAAAClLOS0AAAAHlBMVEUlUIEoapLs8vVSepyhrrnZ3+Wzu8J4lrDI0tm5xs6a2DC/AAABkUlEQVQ4y5WQQUvDQBCFd1ih1x2iqNfBRXuLDdJ7KXoPVO29BHsrbbVXKVTaoyLa/lv3ZZOs1eTQN4SZ3TffDBt1iJImY1J7q5WuN1TcajC6R7Gu61f6Ja5BdHe+WC3+jLjrj0ajbD2Qh1gFtbbb3Xg8zrLsSfr9halG7Eb9Qm+PExVXzHN2W2icDbtKUQncY3yur2yow44bN/9p7bUaElfGerNZ38exgaKin4hUy64GKV6F2ZqUC7/kzA4GlxVufILXEUlf0YZP+4wG07MiE6P2A/aHiDDtKzdTsW2gpXAHQqcibZfmCx8F4SRWLpTR4nVloJK4IGoVhiViT5A75IRFBIIxox2IKwICglOp2cFMMNoOTLpJMhWxjDsFF+9wCXWn2gF7iZdDxB03CpkVGzY9wb9CZWCgygm0yTtDKC1DCm0nYuUSFfsdqHLiSJxmTFTuYL+DGYb9vJsl19NgQO4YZH8Zx1aqCATUC8C+cfrfiBjB58uwAzclwSaa7wp9F6Ma1GxEXB/NBDcgB+yIfP4B/Lp0ee1WCjMAAAAASUVORK5CYII=',
+      'searchUrl': 'https://gay-torrents.org/torrents_beta.php?search=%search_string_orig%',
+      'loggedOutRegex': /Cloudflare|Ray ID|not authorized/,
+      'matchRegex': /No torrents here/},
   {   'name': 'GD',
       'searchUrl': 'https://greekdiamond.info/index.php?page=torrents&search=%search_string_orig%',
       'loggedOutRegex': /Cloudflare|Ray ID|Δεν είστε εξουσιοδοτημένος/,
@@ -3612,6 +3619,12 @@ var chinese_sites = [
       'searchUrl': 'https://u2.dmhy.org/torrents.php?incldead=0&spstate=0&inclbookmarked=0&search=%tt%&search_area=1&search_mode=0',
       'loggedOutRegex': /Cloudflare|Ray ID|<title>Access Point :: U2<|under heavy load/,
       'matchRegex': /Nothing found/,
+      'both': true},
+  {   'name': 'ZmPT',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgBAMAAACBVGfHAAAAGFBMVEUykv83iv8umf8qov/x9/+v1f+CvP9apf//gdGhAAABK0lEQVQozzWQMW/CMBCFjwjEylUC1ugitWuEVVhLdXbWVrVghSrQNWmhv7/vLukbbOnzu+enI6IJ85VNhQi5mDWeAUTKAUzWqdWjARrBcs+/Gns3uKbvzOusRwfMRG3P0F1TZwDKbFo85ngaQGK7HsrioidrsYoYASCaK2Y878tGiG4NDSkXPTjQzmuALCMOmrrBwW1vIHc4HKyVoVljtJAShsbrnA0IwEJ7y0mWCyAIcwNqjiCbYZXoH8wa+6h9Qz6GpAruXVkTPFAVnhO+kvZ1KE3BDAKgR/Glhm3cFALdNX7bD6H92IipnOdPAzs9OAglZYEwohEvVagpkoOws7wQ6nlDhQEIeT+hnr2gZulg84Ql1lNULUYg1UVT6/sbQQjbrDQCqLLjSqY/tHlFuuT6rCwAAAAASUVORK5CYII=',
+      'searchUrl': 'https://zmpt.cc/torrents.php?incldead=1&search=%tt%&search_area=1',
+      'loggedOutRegex': /Cloudflare|Ray ID|SSL \(HTTPS\)/,
+      'matchRegex': /Nothing found|没有种子|沒有種子/,
       'both': true}
 ];
 
