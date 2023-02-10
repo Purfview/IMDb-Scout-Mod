@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      18.2.2
+// @version      18.3
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from hundreds various sites. Adds movies/series to Radarr/Sonarr. Adds external ratings from Metacritic, Rotten Tomatoes, Letterboxd, Douban, Allocine. Media Server indicators for Plex, Jellyfin, Emby. Dark theme/style for Reference View. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAMFBMVEUAAAD/AAAcAAA1AABEAABVAAC3AADnAAD2AACFAAClAABlAAB3AADHAACVAADYAABCnXhrAAAD10lEQVRIx73TV4xMURgH8H/OnRmZWe3T7h2sOWaNXu7oJRg9UccuHgTRBatMtAgSg+gJu9q+kFmihcQoD8qLTkK0CIkoy0YJITsRD0rCKTHFrnkSv5e5c88/53znO+fiPwvsvrN038cPNqrG9pJmHkRVnPcpaTlHJY60cfPSpsrzl1LKihrmLvxhCM2i3OHvDx0d+H7e3F6JBv5iZMiJfhFTfPYDMHrMImpwimWWUdSgDQkbno7fFpUPVgh+pHFbZR4SovSctDCM9Hac9IKd9rO8EevtBCkXgY5IMmgquwypP7qqfcp/Tp4KLONDVsWh3RSBB2rnZfit69ocUdqLn2prrRZYM0Jg4JibamKsqe7gfEh5GOAfeYJjVHIPZvil97rcXkMog30byWRwXYRWoxHbzNFHJJpAarO8NdEBBsdCaP3WMJltTmQd4zlnekTq9Z5dgACwAlrpK4BxdV5mvLuspRgMSHbCIFF0iS8MZ5S8oYBYKY7rByC4dDM9uSIUmPOIwxgQBoYeF93auP4qFyPbIVXziWeGTH1EFM57kJo2hqQju6BwIyRf6RmCjdT4JOdiwNgiH/PPD3qoqlsNaXRd+fKtFfECxlZVNVF9SOsgTZEr2TUjJJbyeNX1IZrKIbyGlBABfpQPv2UDrly13LkJXDVhpQ5MhtGwcyF4HKjlU4E8xwB0AvDjd6AGmevZ87EcQRHgcO52e9uNsYELOrAa/Yh81YlmYLQJ5HWyq0+kzQ/DQKEusg6CRI27ryy8nReRS0wsoetkmRwogHSprliCckfEjXG9yAQc74J0WB99vu6DF3i3pMucsXM6tpBbxd2mVJAwXwGogNRBvGRA4jtHKTXkAIwLGCR/mT4Lh75oneQXXP9sAYfGRDCsnw7pX/jRZkU3M44kjw2l5zRIzb4CbZ8dULdL6wbNPZOpK0B6gN1UR1mdoxAaL/GrWiLPL3SEwW9YMTU/d64BtLahAVyucWhj9Mm8ign9IfQaBtd2/GbvCAEBpG5eMcrj2I0ktpKLeaqXQ3Pst42KGIshpdTmQLAeTgFGJ2wvh+tayMOR0n1RZ8B9z13vnOPBnsBq4E1ffgZpPFZHWVpO2cvhjYpOcbBd5TlhpDu5zq9mHGZcVi0y+VFkcFkDdyKJfTt99wEyHSEzDM90KH0nexpwZHJHKYYhjzlwGe0pP/IKfxociaEb7YDbi6KGJY1R2cR76E6NAtXqY4pPH3plLcl8LD7V+cOLUbUWRFZRPTAbVZO3mxK18Xc1ZaAiS8ARJXpZliXAomR94siiiMx8ZBOkXGTlnH0F/9ov1xPtWwEqP9wAAAAASUVORK5CYII=
@@ -1166,6 +1166,10 @@
 
 18.2.2  -   Added: ZmPT, GayTor.
 
+18.3    -   Fixed: Broken names URLs with "?ref" tracking.
+            Added: Acervos, RoTor.
+            Removed: PREovh.
+
 
 //==============================================================================
 //    Notes.
@@ -1904,6 +1908,20 @@ var private_sites = [
       'loggedOutRegex': /Forgot your username|Ray ID/,
       'matchRegex': /Translation: No search results/,
       'both': true},
+  {   'name': 'Acervos',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEEAAABBBAMAAAB82dR2AAAAGFBMVEUAAAAKYxH+/v46fD9nnWuewaDj7eTE2cbjcLFAAAAAAXRSTlMAQObYZgAAAYlJREFUSMfNlU9zgjAQxWHoByANtPedqlcjdDzbMPZci3Iu/eO5OMrXL02aTJIN0Vt9N4bfvN2XnWyi61TCCJkH/nMilY4BjGj5AWKIBhwQggClzAViB8DtEiSKLcImxCdkgU2QRaCThAwqqu2x3/f9seYquVUk34GhfsvtMow8gquJVYbkCJhys0xMWwSsrDTxHbJ4FVk0wTYucBAOz7oMdYEPASxBEUnmAJ9MjB+miohvUc5BeftLpJJY/PVf86JgRSEdWjCIJ0lwcyQdmISM8kAMrUERRth3k9jYRCeIb0yoyRBJvPiITBKtJsIeq4BHd6HH27gHk5+uBzrTAwkRznkNs+lsYqHn2TdNczqJ9BZxDxM1T0tTvdOymQIQoS7DSg18lBDABjBBzZu/Bg+RGhd7CX5Cl8nBSxg3O9uBqT0XXVFrBZXNF0jNjnyIXm/rOtXEjUxDy7KqqoJoBbYUJpLApguZXLRxwybu83XOAtdJzz0wWeQRbgK74I0+1ss8Cqgsy+g/9AMHV5Owqz8qKAAAAABJRU5ErkJggg==',
+      'searchUrl': 'https://acervos.cc/torrents?imdbId=%nott%',
+      'loggedOutRegex': /Cloudflare|Ray ID|Esqueceu sua senha|Service Unavailable/,
+      'matchRegex': /torrent-listings-name/,
+      'positiveMatch': true,
+      'both': true},
+  {   'name': 'Acervos-Req',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEEAAABBBAMAAAB82dR2AAAAGFBMVEUAAAAKYxH+/v46fD9nnWuewaDj7eTE2cbjcLFAAAAAAXRSTlMAQObYZgAAAYlJREFUSMfNlU9zgjAQxWHoByANtPedqlcjdDzbMPZci3Iu/eO5OMrXL02aTJIN0Vt9N4bfvN2XnWyi61TCCJkH/nMilY4BjGj5AWKIBhwQggClzAViB8DtEiSKLcImxCdkgU2QRaCThAwqqu2x3/f9seYquVUk34GhfsvtMow8gquJVYbkCJhys0xMWwSsrDTxHbJ4FVk0wTYucBAOz7oMdYEPASxBEUnmAJ9MjB+miohvUc5BeftLpJJY/PVf86JgRSEdWjCIJ0lwcyQdmISM8kAMrUERRth3k9jYRCeIb0yoyRBJvPiITBKtJsIeq4BHd6HH27gHk5+uBzrTAwkRznkNs+lsYqHn2TdNczqJ9BZxDxM1T0tTvdOymQIQoS7DSg18lBDABjBBzZu/Bg+RGhd7CX5Cl8nBSxg3O9uBqT0XXVFrBZXNF0jNjnyIXm/rOtXEjUxDy7KqqoJoBbYUJpLApguZXLRxwybu83XOAtdJzz0wWeQRbgK74I0+1ss8Cqgsy+g/9AMHV5Owqz8qKAAAAABJRU5ErkJggg==',
+      'searchUrl': 'https://acervos.cc/requests?unfilled=1&tmdbId=%tmdbid%',
+      'loggedOutRegex': /Cloudflare|Ray ID|Esqueceu sua senha|Service Unavailable/,
+      'matchRegex': /fa-circle text-red/,
+      'positiveMatch': true,
+      'both': true},
   {   'name': 'ACM',
       'searchUrl': 'https://asiancinema.me/torrents/filter?imdb=%tt%',
       'loggedOutRegex': /Forgot your password|Ray ID/,
@@ -2089,19 +2107,19 @@ var private_sites = [
       'both': true},
   {   'name': 'Blu',
       'searchUrl': 'https://blutopia.cc/torrents?imdbId=%nott%',
-      'loggedOutRegex': /Cloudflare|Forgot Your Password|Service Unavailable/,
+      'loggedOutRegex': /Cloudflare|Ray ID|Forgot Your Password|Service Unavailable/,
       'matchRegex': /torrent-listings-name/,
       'positiveMatch': true,
       'both': true},
   {   'name': 'Blu-TMDb',
       'searchUrl': 'https://blutopia.cc/torrents?tmdbId=%tmdbid%',
-      'loggedOutRegex': /Cloudflare|Forgot Your Password|Service Unavailable/,
+      'loggedOutRegex': /Cloudflare|Ray ID|Forgot Your Password|Service Unavailable/,
       'matchRegex': /torrent-listings-name/,
       'positiveMatch': true,
       'both': true},
   {   'name': 'Blu-Req',
       'searchUrl': 'https://blutopia.cc/requests?unfilled=1&tmdbId=%tmdbid%',
-      'loggedOutRegex': /Cloudflare|Forgot Your Password|Service Unavailable/,
+      'loggedOutRegex': /Cloudflare|Ray ID|Forgot Your Password|Service Unavailable/,
       'matchRegex': /fa-circle text-red/,
       'positiveMatch': true,
       'both': true},
@@ -2991,6 +3009,17 @@ var private_sites = [
       'matchRegex': />Request-Unfilled</,
       'positiveMatch': true,
       'both': true},
+  {   'name': 'RoTor',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAQAAAD9CzEMAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAADsSURBVHja3NhbFoMwCEVR5j9p+ltr4B7Io0v1L6nslGSZoLntve0IIK/kefWY+hUcZg8o5qIKNNLNgfaMCiBeWKNrjPzGs2GDDJ4xKVALHiLhHIjgcR8D0vAqdSMiAch0auIKlEYPCA7c2ynxDYDxk1bXAF05JJ1XpTR+Z4v5DvgLAfVyyHoXAF4D1ox/GtD/dwog6ZwA2GwtALwH2JLwzwfsr4BtAhovC3KEgTtaG4i2TJtIUbwn2wogP1UAgvUiwMoAOdnhs2kb2H66PlAfVCocr1c40zWa8yrT91aZR+rkA5U+Qdi3ip33ZwAb5/CcnuFpKAAAAABJRU5ErkJggg==',
+      'searchUrl': 'https://rotorrent.ro/torrents-search.php?search=%search_string_orig%+%year%&cat=0&incldead=0',
+      'loggedOutRegex': /Cloudflare|Ray ID|only for members/,
+      'matchRegex': /No torrents were found/},
+  {   'name': 'RoTor',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAQAAAD9CzEMAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAADsSURBVHja3NhbFoMwCEVR5j9p+ltr4B7Io0v1L6nslGSZoLntve0IIK/kefWY+hUcZg8o5qIKNNLNgfaMCiBeWKNrjPzGs2GDDJ4xKVALHiLhHIjgcR8D0vAqdSMiAch0auIKlEYPCA7c2ynxDYDxk1bXAF05JJ1XpTR+Z4v5DvgLAfVyyHoXAF4D1ox/GtD/dwog6ZwA2GwtALwH2JLwzwfsr4BtAhovC3KEgTtaG4i2TJtIUbwn2wogP1UAgvUiwMoAOdnhs2kb2H66PlAfVCocr1c40zWa8yrT91aZR+rkA5U+Qdi3ip33ZwAb5/CcnuFpKAAAAABJRU5ErkJggg==',
+      'searchUrl': 'https://rotorrent.ro/torrents-search.php?search=%search_string_orig%&cat=0&incldead=0',
+      'loggedOutRegex': /Cloudflare|Ray ID|only for members/,
+      'matchRegex': /No torrents were found/,
+      'TV': true},
   {   'name': 'RPTor',
       'icon': 'https://rptorrents.com/themes/Dark/images/favicon.ico',
       'searchUrl': 'https://rptorrents.com/torrents-search.php?c37=1&c6=1&c7=1&c32=1&c9=1&c10=1&c11=1&c12=1&c18=1&c33=1&c40=1&c41=1&search=%search_string_orig%+%year%&incldesc=1',
@@ -4664,21 +4693,6 @@ var pre_databases = [
       'mPOST': 'input-Search=%search_string%&submit-Search=',
       'inSecondSearchBar': true,
       'both': true},
-  {   'name': 'PREovh',
-      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQBAMAAADt3eJSAAAAMFBMVEUAAADmUQDmUQDmUQDmUQDmUQDmUQDmUQDmUQDmUQDmUQDmUQDmUQDmUQDmUQDmUQCFDl5aAAAAD3RSTlMAnu3OvE8vGBH0851ZWJ/vQJUxAAAAMUlEQVQI12NAAFZh/U+GAUCG/38g+AJk/AcDZJFSkJpwIGPisQaO3F2US7E+BlsKBwASDDQfgbbhXwAAAABJRU5ErkJggg==',
-      'searchUrl': 'https://predb.ovh/api/v1/?q=%search_string%+%year%',
-      'goToUrl': 'https://predb.ovh/?q=%search_string%+%year%',
-      'loggedOutRegex': /Cloudflare|Ray ID/,
-      'matchRegex': /total": 0/,
-      'inSecondSearchBar': true},
-  {   'name': 'PREovh',
-      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQBAMAAADt3eJSAAAAMFBMVEUAAADmUQDmUQDmUQDmUQDmUQDmUQDmUQDmUQDmUQDmUQDmUQDmUQDmUQDmUQDmUQCFDl5aAAAAD3RSTlMAnu3OvE8vGBH0851ZWJ/vQJUxAAAAMUlEQVQI12NAAFZh/U+GAUCG/38g+AJk/AcDZJFSkJpwIGPisQaO3F2US7E+BlsKBwASDDQfgbbhXwAAAABJRU5ErkJggg==',
-      'searchUrl': 'https://predb.ovh/api/v1/?q=%search_string%',
-      'goToUrl': 'https://predb.ovh/?q=%search_string%',
-      'loggedOutRegex': /Cloudflare|Ray ID/,
-      'matchRegex': /total": 0/,
-      'inSecondSearchBar': true,
-      'TV': true},
   {   'name': 'srrDB',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAMAAACdt4HsAAAAUVBMVEUAAAAAAAAAAAAAAAAAAAC7u7v///+ZzP/Mmf+Z/5n/mZn//2b/mWaMjIxymL6Ycr5yvnK+cnK+vky+ckxUcY1xVI1nZ2dUjVSNVFSNjTiNVDi2juC+AAAABHRSTlN9PL4AffGBGQAAAMlJREFUWMPtlzcOwzAQBElLVKZy/v9DjXVBLK5Q4StkyJxygJ3uCNAk1qRfY2xi7CtV8LLGpCqw1/EJ7ENFDDvcOTXEdMIdY02MRwhgzwU47LkAhz0XQqASwDUCuFoQAzHwtIDqmPTnrOBJga0viX6Dm9ucaGe4pSuIbgkB7LkAhz0X4LDnQgiUArhcAFcIYiAGnhZQHJPunH/oRbo/sHpH+BXOu4xw/jKAPRfgsOfCZcAJ4DJBDMTAPwR0x6Q/53u/rkb9+VZ//9+xTWbto7vDzQAAAABJRU5ErkJggg==',
       'searchUrl': 'https://www.srrdb.com/browse/imdb:%nott%/order:date-desc/1',
@@ -9277,7 +9291,7 @@ function compactReferenceStyles() {
 function compactReferenceElemRemoval() {
   // Replace urls to fullcredits
   if (GM_config.get('fullcredits_reference_view')) {
-    $('a[href^="/name/nm"]').attr('href', (n, old) => old + '/fullcredits');
+    $('a[href^="/name/nm"]').attr('href', (n, old) => old.split('/?ref_=')[0] + '/fullcredits');
   }
 
   if (!GM_config.get('compact_reference_view') || !onReferencePage) {
