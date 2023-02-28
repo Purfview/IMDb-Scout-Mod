@@ -3638,7 +3638,7 @@ var chinese_sites = [
   {   'name': 'PTer',
       'searchUrl': 'https://pterclub.com/torrents.php?search=%tt%&search_area=4',
       'loggedOutRegex': /Cloudflare|Ray ID|SSL \(HTTPS\)|Err code/,
-      'matchRegex': /Nothing found!/,
+      'matchRegex': /Nothing found!|没有种子|沒有種子/,
       'both': true},
   {   'name': 'PTMSG',
       'searchUrl': 'https://pt.msg.vg/torrents.php?incldead=1&search=%tt%&search_area=1',
