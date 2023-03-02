@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      19.0
+// @version      19.1
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from hundreds various sites. Adds movies/series to Radarr/Sonarr. Adds external ratings from Metacritic, Rotten Tomatoes, Letterboxd, Douban, Allocine. Media Server indicators for Plex, Jellyfin, Emby. Dark theme/style for Reference View. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAMFBMVEUAAAD/AAAcAAA1AABEAABVAAC3AADnAAD2AACFAAClAABlAAB3AADHAACVAADYAABCnXhrAAAD10lEQVRIx73TV4xMURgH8H/OnRmZWe3T7h2sOWaNXu7oJRg9UccuHgTRBatMtAgSg+gJu9q+kFmihcQoD8qLTkK0CIkoy0YJITsRD0rCKTHFrnkSv5e5c88/53znO+fiPwvsvrN038cPNqrG9pJmHkRVnPcpaTlHJY60cfPSpsrzl1LKihrmLvxhCM2i3OHvDx0d+H7e3F6JBv5iZMiJfhFTfPYDMHrMImpwimWWUdSgDQkbno7fFpUPVgh+pHFbZR4SovSctDCM9Hac9IKd9rO8EevtBCkXgY5IMmgquwypP7qqfcp/Tp4KLONDVsWh3RSBB2rnZfit69ocUdqLn2prrRZYM0Jg4JibamKsqe7gfEh5GOAfeYJjVHIPZvil97rcXkMog30byWRwXYRWoxHbzNFHJJpAarO8NdEBBsdCaP3WMJltTmQd4zlnekTq9Z5dgACwAlrpK4BxdV5mvLuspRgMSHbCIFF0iS8MZ5S8oYBYKY7rByC4dDM9uSIUmPOIwxgQBoYeF93auP4qFyPbIVXziWeGTH1EFM57kJo2hqQju6BwIyRf6RmCjdT4JOdiwNgiH/PPD3qoqlsNaXRd+fKtFfECxlZVNVF9SOsgTZEr2TUjJJbyeNX1IZrKIbyGlBABfpQPv2UDrly13LkJXDVhpQ5MhtGwcyF4HKjlU4E8xwB0AvDjd6AGmevZ87EcQRHgcO52e9uNsYELOrAa/Yh81YlmYLQJ5HWyq0+kzQ/DQKEusg6CRI27ryy8nReRS0wsoetkmRwogHSprliCckfEjXG9yAQc74J0WB99vu6DF3i3pMucsXM6tpBbxd2mVJAwXwGogNRBvGRA4jtHKTXkAIwLGCR/mT4Lh75oneQXXP9sAYfGRDCsnw7pX/jRZkU3M44kjw2l5zRIzb4CbZ8dULdL6wbNPZOpK0B6gN1UR1mdoxAaL/GrWiLPL3SEwW9YMTU/d64BtLahAVyucWhj9Mm8ign9IfQaBtd2/GbvCAEBpG5eMcrj2I0ktpKLeaqXQ3Pst42KGIshpdTmQLAeTgFGJ2wvh+tayMOR0n1RZ8B9z13vnOPBnsBq4E1ffgZpPFZHWVpO2cvhjYpOcbBd5TlhpDu5zq9mHGZcVi0y+VFkcFkDdyKJfTt99wEyHSEzDM90KH0nexpwZHJHKYYhjzlwGe0pP/IKfxociaEb7YDbi6KGJY1R2cR76E6NAtXqY4pPH3plLcl8LD7V+cOLUbUWRFZRPTAbVZO3mxK18Xc1ZaAiS8ARJXpZliXAomR94siiiMx8ZBOkXGTlnH0F/9ov1xPtWwEqP9wAAAAASUVORK5CYII=
@@ -1178,6 +1178,11 @@
 
 19.0    -   Fixed: IMDb's layout change was blurring the script's elements.
 
+19.1    -   Fixed: "19.0" fix had cosmetic issues. ["19.0" Reverted. Moved Scout elements one parent up.]
+            Fixed: IMDb's layout change broke %search_string% & %search_string_orig%.
+            Fixed: On some browsers <hr> separator was white instead of dark.
+            Removed: Tornado, iBit, PTMSG.
+
 
 //==============================================================================
 //    Notes.
@@ -1509,14 +1514,8 @@ var public_sites = [
       'positiveMatch': true,
       'spaceEncode': ' ',
       'both': true},
-  {   'name': 'iBit',
-      'icon': 'https://ibit.to/s/img/favicon-16x16.png',
-      'searchUrl': 'https://ibit.to/torrent-search/%tt%/all/uploaded_at:desc/1/',
-      'loggedOutRegex': /Cloudflare|Ray ID/,
-      'matchRegex': /We could not find/,
-      'both': true},
   {   'name': 'ilCorSaRoNeRo',
-      'searchUrl': 'https://ilcorsaronero.fun/argh.php?search=%search_string_orig%+%year%',
+      'searchUrl': 'https://ilcorsaronero.link/argh.php?search=%search_string_orig%+%year%',
       'loggedOutRegex': /Cloudflare|Ray ID/,
       'matchRegex': /Nessun torrent trovato/,
       'both': true},
@@ -3324,12 +3323,6 @@ var private_sites = [
       'loggedOutRegex': /404 - Not Found|You need cookies enabled/,
       'matchRegex': /Try again with a refined search string/,
       'both': true},
-  {   'name': 'Tornado',
-      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQAgMAAABinRfyAAAACVBMVEUAAAAiLBZowwAeV5muAAAAAXRSTlMAQObYZgAAAC5JREFUCNdjEA0NDWGQWrVqCZQIm7qEQdRtYggDA9sEBkKE2BQgIbUERoiGMAAA1DsOylHmwHAAAAAASUVORK5CYII=',
-      'searchUrl': 'https://www.tornado.si/?p=torrents&pid=10&keywords=%search_string_orig%&search_type=both&cid[]=32&cid[]=33&cid[]=34&cid[]=35&cid[]=36&cid[]=48',
-      'loggedOutRegex': /Cloudflare|Ray ID|not have permission/,
-      'matchRegex': /no results found/,
-      'both': true},
   {   'name': 'TorrentLand',
       'searchUrl': 'https://torrentland.li/torrents?imdbId=%nott%',
       'loggedOutRegex': /Cloudflare|Ray ID|Recordar usuario/,
@@ -3659,11 +3652,6 @@ var chinese_sites = [
       'searchUrl': 'https://pterclub.com/torrents.php?search=%tt%&search_area=4',
       'loggedOutRegex': /Cloudflare|Ray ID|SSL \(HTTPS\)|Err code/,
       'matchRegex': /Nothing found!|没有种子|沒有種子/,
-      'both': true},
-  {   'name': 'PTMSG',
-      'searchUrl': 'https://pt.msg.vg/torrents.php?incldead=1&search=%tt%&search_area=1',
-      'loggedOutRegex': /忘记了密码|Open Neural Network/,
-      'matchRegex': /Nothing found|没有种子|沒有種子/,
       'both': true},
   {   'name': 'PTTime',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAMAAACdt4HsAAAB41BMVEVUdZBUdpFVd5FWd5FWd5JWeJJXeJJXeJNXeZNYeZNZeZNZepNZepRaepRae5Rbe5VcfJVcfJZdfZZefZZefpdffpdff5dgf5hhgJhhgJligZligZplg5tnhZxnhZ1ohZ1php1php5ph55qh55riJ9siZ9siaBtiaBxjaNyjaNzjqR0j6V2kaZ3kqd4kqd4k6d4k6h5k6h6lKl7lal8lap+l6t/mKyAma2Cm66Dm66EnK+FnbCGnbCHn7GIn7GIoLKQpreRpreRp7iSqLiTqLiXq7uZrb2arb2brr6cr76cr7+escChs8KhtMKjtcOmt8WnuMWpuseru8iuvcqvv8uwv8yxwMyzws20ws60w861w8+2xdC3xdC4xtG6x9K9ytS/zNXAzNbBzdbBzdfCztfDztfDztjDz9jEz9nH0drI0tvJ09zK1NzL1d3M1d3N1t7N197Q2eDR2uHT3OPU3OPV3eTW3uTa4efc4+jd4+jd4+ne5Onh5+vi6Ozj6O3k6e3l6u7n6+/n7O/o7PDp7fDr7vLr7/Lt8fPu8fTv8vTw8vXx9Pby9Pby9fby9ffz9fbz9ff09vf09vj19vj29/n2+Pn3+fr4+fr5+vv6+/v7+/z8/P39/f79/v7+/v7+/v/////SEZIxAAACGklEQVRYw2PgpBAwjBowasDgM4CVmYWDAgNY+TXNDSRZyTaAzTClY8bEEgsOMg1gUyhfAAINGqzkGcDqNx9swIJEIfIMECiA6F/QTpoT4AYIlUAN6NEhzwDueKgBNfJsZBnAYtkN1j/Nldxo5PaYANQ/M4if7ITEZxaeFe8kzMTExMrGycPNycrEzAZLoRiABVtSZmHj42QSMnHwDY1NSEuND/O2kGEDG2Ed4I8GAlxEcWQmVo2WeQtgYHploBwwSoSKFmCATj0WHAZodSGrm5ejxsYpVIxpQK8RcQYsWJAvw4bNgH5jvAbMygwJji2dAnZDGD9fdEsjCHSC+FObQMzmQnU2fAZM0GVkYRN3aALp6NBmEVcCAVmvuUButrIiiCONq0SCGgAKIg4m+0kgJ7gxcbCBAKPDHCA3lRPMYSfCAE5OQXAGi4I6lskRZEAaD/4yEcUA1kiQAclc5BsQBjIgiZNsA3gzQAZEkO0FVjVwNHgykWGALhMbK5NoBChV98GSDCkGTLaRkdVwzp0FckCMIBlhMK+ttr5jNjjNViqxkWEAArTawUtIcgyYmm+KKCBJNmBmXZyVCFIJTYoB08P8/NxtVTlZkKVIikYdBmDRiFa8k5ESRw0Y4gbo4zQgnYABbLJZ1RXVeSpY2gisJmVVldU+BBuaolJSUmJYa3JuCaAUP+GWKjs7O462AAc7O8doa33UgGFqAADBac8gNnGEjwAAAABJRU5ErkJggg==',
@@ -4071,11 +4059,13 @@ var german_sites = [
       'positiveMatch': true,
       'both': true},
   {   'name': 'WoT',
-      'searchUrl': 'https://world-of-tomorrow.eu/browse.php?showsearch=1&c87=1&c64=1&c91=1&c66=1&c11=1&c49=1&c90=1&c48=1&c47=1&c60=1&c62=1&c89=1&search=%search_string_orig%+%year%&incldead=0&orderby=added&sort=desc',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAACDUlEQVQ4jdWRT2iScRjHP+9Pc07NXuTNYJC9mYSJLJIWS7M/S/ozKKIigjrsUO0UidgOiw6DTiGxgugQMQ+RwU471oZEsUbRH4JBI3Yws7WBAzMRtXfv22EOjNqlW9/bw/M8n+/zB/57SQCJCEqpRuz8dk55XfgffeDo4DiFXJIe4DYQVVOUckkCwBjQr6bIAohEhAvAe93gmG7QDQQ1nbsnAyRmFxlqxqGmYS/gAzwrEwjgfqnGw/Q7znldXAE4spXR7o08VezLhW++cjUeJqgb7Gj2TbQCgGUHIfEawG1n28ATpmUrNoCOtXjKdfYWq5wAZtQUhVZAv2zlUF+ISy2J3lwSBVAAPDLzA1HSshXb7CK+eJjOFYBp6gtvI5tQNZ3rUZWF4AYmLSb2A36gE8gDXrPgp0nQM/eDkec5Dsd8LL0q8NEE8DLP2MEtyN/r3JheQDcLhjuc7AbagGHgeHNNm9vBgWKViWKV7L7NvJBaf5rcw9lKg0ylQcmvkPWvZ/R0hse5JJ9bLm9XU1T7QpxxtXPtN0AT4tENhsp1YjUNp2LjWcDNnGcdNZeNb7vucRMgHiYmJMb/AAAkImSAgpBoNJYYLNdBSORta9BqGrLDgsUscOgG8+JvAGAnkNQNRu5MIbnauShbmTELSs42NCFR0Q3SQJd5FcAD4DJQbsafAE1IdN2aRF+l59/0C0a0pLzBV8MNAAAAAElFTkSuQmCC',
+      'searchUrl': 'https://https://w-o-t.pro/browse.php?showsearch=1&c87=1&c64=1&c91=1&c66=1&c11=1&c49=1&c90=1&c48=1&c47=1&c60=1&c62=1&c89=1&search=%search_string_orig%+%year%&incldead=0&orderby=added&sort=desc',
       'loggedOutRegex': /Cloudflare|Ray ID|Account-Bewerbung/,
       'matchRegex': /Nichts gefunden/},
   {   'name': 'WoT',
-      'searchUrl': 'https://world-of-tomorrow.eu/browse.php?showsearch=1&c87=1&c64=1&c76=1&c79=1&c95=1&c78=1&c100=1&c16=1&c77=1&search=%search_string_orig%&incldead=0&orderby=added&sort=desc',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAACDUlEQVQ4jdWRT2iScRjHP+9Pc07NXuTNYJC9mYSJLJIWS7M/S/ozKKIigjrsUO0UidgOiw6DTiGxgugQMQ+RwU471oZEsUbRH4JBI3Yws7WBAzMRtXfv22EOjNqlW9/bw/M8n+/zB/57SQCJCEqpRuz8dk55XfgffeDo4DiFXJIe4DYQVVOUckkCwBjQr6bIAohEhAvAe93gmG7QDQQ1nbsnAyRmFxlqxqGmYS/gAzwrEwjgfqnGw/Q7znldXAE4spXR7o08VezLhW++cjUeJqgb7Gj2TbQCgGUHIfEawG1n28ATpmUrNoCOtXjKdfYWq5wAZtQUhVZAv2zlUF+ISy2J3lwSBVAAPDLzA1HSshXb7CK+eJjOFYBp6gtvI5tQNZ3rUZWF4AYmLSb2A36gE8gDXrPgp0nQM/eDkec5Dsd8LL0q8NEE8DLP2MEtyN/r3JheQDcLhjuc7AbagGHgeHNNm9vBgWKViWKV7L7NvJBaf5rcw9lKg0ylQcmvkPWvZ/R0hse5JJ9bLm9XU1T7QpxxtXPtN0AT4tENhsp1YjUNp2LjWcDNnGcdNZeNb7vucRMgHiYmJMb/AAAkImSAgpBoNJYYLNdBSORta9BqGrLDgsUscOgG8+JvAGAnkNQNRu5MIbnauShbmTELSs42NCFR0Q3SQJd5FcAD4DJQbsafAE1IdN2aRF+l59/0C0a0pLzBV8MNAAAAAElFTkSuQmCC',
+      'searchUrl': 'https://https://w-o-t.pro/browse.php?showsearch=1&c87=1&c64=1&c76=1&c79=1&c95=1&c78=1&c100=1&c16=1&c77=1&search=%search_string_orig%&incldead=0&orderby=added&sort=desc',
       'loggedOutRegex': /Cloudflare|Ray ID|Account-Bewerbung/,
       'matchRegex': /Nichts gefunden/,
       'TV': true}
@@ -4517,12 +4507,14 @@ var subs_sites = [
       'inSecondSearchBar': true,
       'both': true},
   {   'name': 'Pipocas (BR)',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAMAAABg3Am1AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoV2luZG93cykiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6QTU4ODYzMjRCOEY2MTFFREFEQjk5Qzg3M0VFRUEyNTYiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6QTU4ODYzMjVCOEY2MTFFREFEQjk5Qzg3M0VFRUEyNTYiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDpBNTg4NjMyMkI4RjYxMUVEQURCOTlDODczRUVFQTI1NiIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDpBNTg4NjMyM0I4RjYxMUVEQURCOTlDODczRUVFQTI1NiIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PpMWE6YAAAAYUExURdDQ0P39/Y2Nja2trW1tbVBQUObm5v///7qCX6kAAAAIdFJOU/////////8A3oO9WQAAAa5JREFUeNrsldF2AyEIRBFc8v9/3BmQjamanvacvoUns5krI7KsPH4Z8gH+BGjvXWutaj8A2i9GILHu3d4BIe+dBOWdy0uPgMbexuBSTRAA5yTyqodcHCFYq3hDiIHYAgY95RA5RCotw212JbP/0sMGlq3CkW4DpInhwszbE0A+W4FMMCTtJZBCV+CZYA0bNzMDOiXYA4nIVNJ3QDfLjpH7xt4BSruoXQHKhNd1BDwKImFKyr7dV7txBAA9UAANehPusq9SJDB6SABd4KMBtilwbzwBeyoAGGIXuPMkO0J0tJWFpeiIhg2iQ803CaqtkMMeclGVD4OQBRCZvCUgllmF9WrHAIByclcrlyiu+lEvvOw49LP7Re2sx3YE+OL3OqwfuwOvrbDLZbwJfj/36fag4i/WMC/CsjX6BHBQDCbW/GUxP+rigqi+w0Z4PamKQ6oN5WiNxwQUgb9zHlGPqqiNYTgm2mhvasL+2C+8xDTrOQB7Tdx8gVjfCouZF1Z0KG0ZlVpzMRJcOVv1ZeJ9mxox4yNiQ508nMb9fTStL8PyaVhmqx42/Xx2/x/4EmAAT+4psvTSRe8AAAAASUVORK5CYII=',
       'searchUrl': 'https://pipocas.tv/legendas?t=imdb&s=%nott%&l=brasileiro',
       'loggedOutRegex': /Cloudflare|Ray ID|Lembrar-me/,
       'matchRegex': /Não existem legendas/,
       'inSecondSearchBar': true,
       'both': true},
   {   'name': 'Pipocas (PT)',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAMAAABg3Am1AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoV2luZG93cykiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6QTU4ODYzMjRCOEY2MTFFREFEQjk5Qzg3M0VFRUEyNTYiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6QTU4ODYzMjVCOEY2MTFFREFEQjk5Qzg3M0VFRUEyNTYiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDpBNTg4NjMyMkI4RjYxMUVEQURCOTlDODczRUVFQTI1NiIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDpBNTg4NjMyM0I4RjYxMUVEQURCOTlDODczRUVFQTI1NiIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PpMWE6YAAAAYUExURdDQ0P39/Y2Nja2trW1tbVBQUObm5v///7qCX6kAAAAIdFJOU/////////8A3oO9WQAAAa5JREFUeNrsldF2AyEIRBFc8v9/3BmQjamanvacvoUns5krI7KsPH4Z8gH+BGjvXWutaj8A2i9GILHu3d4BIe+dBOWdy0uPgMbexuBSTRAA5yTyqodcHCFYq3hDiIHYAgY95RA5RCotw212JbP/0sMGlq3CkW4DpInhwszbE0A+W4FMMCTtJZBCV+CZYA0bNzMDOiXYA4nIVNJ3QDfLjpH7xt4BSruoXQHKhNd1BDwKImFKyr7dV7txBAA9UAANehPusq9SJDB6SABd4KMBtilwbzwBeyoAGGIXuPMkO0J0tJWFpeiIhg2iQ803CaqtkMMeclGVD4OQBRCZvCUgllmF9WrHAIByclcrlyiu+lEvvOw49LP7Re2sx3YE+OL3OqwfuwOvrbDLZbwJfj/36fag4i/WMC/CsjX6BHBQDCbW/GUxP+rigqi+w0Z4PamKQ6oN5WiNxwQUgb9zHlGPqqiNYTgm2mhvasL+2C+8xDTrOQB7Tdx8gVjfCouZF1Z0KG0ZlVpzMRJcOVv1ZeJ9mxox4yNiQ508nMb9fTStL8PyaVhmqx42/Xx2/x/4EmAAT+4psvTSRe8AAAAASUVORK5CYII=',
       'searchUrl': 'https://pipocas.tv/legendas?t=imdb&s=%nott%&l=portugues',
       'loggedOutRegex': /Cloudflare|Ray ID|Lembrar-me/,
       'matchRegex': /Não existem legendas/,
@@ -6345,7 +6337,7 @@ function displayButton() {
   if (onSearchPage) {
     $('#sidebar').prepend(p);
   } else if ($('.ipc-page-section').length) {
-    $('.ipc-page-section:eq(0)').before(p);
+    $('.ipc-page-section:eq(0)').parent().before(p);
   // reference
   } else if ($('.titlereference-header').length) {
     $('.titlereference-header').append(p);
@@ -6489,11 +6481,10 @@ function getIconsLinkArea() {
     'margin-bottom': '0px',
     'overflow': 'hidden',
   });
-  const hr = $('<hr />').css({'margin-top':'7px', 'margin-bottom':'7px', 'color':'#0d0d0d' });
+  const hr = $('<hr />').css({'margin-top':'7px', 'margin-bottom':'7px', 'color':'#0d0d0d' }).prop('color','#0d0d0d');
   if ($('.ipc-page-section').length) {
     $('#scout_rating_table').after(hr);
-    $('.ipc-page-section:eq(0)').before(p);
-    $('.ipc-page-section:eq(0)').before($('.sc-14995206-1')); // make sure that blurring '.sc-14995206-1' element is after "#scout..." elements
+    $('.ipc-page-section:eq(0)').parent().before(p);
   // reference
   } else if ($('.titlereference-header div hr').first().length) {
     $('.titlereference-header div hr').first().after(p);
@@ -6601,20 +6592,17 @@ function performSearchSecondPart(elem, link, movie_id, showsites, scout_tick) {
         is_movie = false;
       }
       var movie_year  = result.title.replace(/^(.+) \((\D*|)(\d{4})(.*)$/gi, '$3');
-      var movie_title = $(result).find('[data-testid=hero-title-block__title]').text().trim();
-      // reference
-      if (movie_title === "") {
-        movie_title = $(result).find('h3[itemprop="name"]').text().trim();
-        movie_title = movie_title.substring(movie_title.lastIndexOf("\n") + 1, -1 ).trim();
-      }
-      var movie_title_orig = $(result).find('[data-testid=hero-title-block__original-title]').text().trim().replace(/Original title: |Titre original : |Originaltitel: |मूल शीर्षक: |Titolo originale: |Título original: /, "");
-      // reference
-      if (movie_title_orig === "" && $(result).find('h3[itemprop="name"]').length) {
-        movie_title_orig = $.trim($($(result).find('h3[itemprop="name"]')[0].nextSibling).text());
-      }
-      // not found
-      if (movie_title_orig === "") {
-        movie_title_orig = movie_title;
+      var movie_title = "";
+      var movie_title_orig = "";
+      if ($(result).find('[type=application\\/ld\\+json]:eq(0)').length) {
+        const rawJsn = $(result).find('[type=application\\/ld\\+json]:eq(0)').text();
+        const parseJsn = JSON.parse(rawJsn);
+        movie_title = parseJsn.alternateName;
+        movie_title_orig = parseJsn.name;
+        // movie_title not found
+        if (movie_title === "" || movie_title === undefined) {
+          movie_title = movie_title_orig;
+        }
       }
       // Streaming APIs support
       var series_id  = "tt" + movie_id;
@@ -6653,20 +6641,31 @@ function performSearchSecondPart(elem, link, movie_id, showsites, scout_tick) {
 //==============================================================================
 
 function performPage() {
-  var movie_title = $('[data-testid=hero-title-block__title]').text().trim();
-  // reference
-  if (movie_title === "") {
-    movie_title = $('h3[itemprop="name"]').text().trim();
-    movie_title = movie_title.substring(movie_title.lastIndexOf("\n") + 1, -1 ).trim();
-  }
-  var movie_title_orig = $('[data-testid=hero-title-block__original-title]').text().trim().replace(/Original title: |Titre original : |Originaltitel: |मूल शीर्षक: |Titolo originale: |Título original: /, "");
-  // reference
-  if (movie_title_orig === "" && $('h3[itemprop="name"]').length) {
+  var movie_title = "";
+  var movie_title_orig = "";
+  if (!onReferencePage) {
+    if ($('[type=application\\/ld\\+json]:eq(0)').length) {
+      const rawJsn = $('[type=application\\/ld\\+json]:eq(0)').text();
+      const parseJsn = JSON.parse(rawJsn);
+      movie_title = parseJsn.alternateName;
+      movie_title_orig = parseJsn.name;
+      // movie_title not found
+      if (movie_title === "" || movie_title === undefined) {
+        movie_title = movie_title_orig;
+      }
+    } else {
+      console.log("IMDb Scout Mod (Get a title Error): Element not found! Please report it.");
+      GM.notification("Element not found! Please report it.", "IMDb Scout Mod (Get a title Error)");
+    }
+  } else {
+    // reference
+    const m = $('h3[itemprop="name"]').text().trim();
+    movie_title = m.substring(m.lastIndexOf("\n") + 1, -1 ).trim();
     movie_title_orig = $.trim($($('h3[itemprop="name"]')[0].nextSibling).text());
-  }
-  // not found
-  if (movie_title_orig === "") {
-    movie_title_orig = movie_title;
+    // movie_title_orig not found
+    if (movie_title_orig === "" || movie_title_orig === undefined) {
+      movie_title_orig = movie_title;
+    }
   }
 
   var movie_id = document.URL.match(/\/tt([0-9]+)\//)[1].trim('tt');
@@ -6763,11 +6762,10 @@ function getLinkArea() {
     }
   });
 
-  const hr = $('<hr />').css({'margin-top':'7px', 'margin-bottom':'7px', 'color':'#0d0d0d' });
+  const hr = $('<hr />').css({'margin-top':'7px', 'margin-bottom':'7px', 'color':'#0d0d0d' }).prop('color','#0d0d0d');
   if ($('.ipc-page-section').length) {
     $('#imdbscout_iconsheader').after(hr);
-    $('.ipc-page-section:eq(0)').before(p);
-    $('.ipc-page-section:eq(0)').before($('.sc-14995206-1')); // make sure that blurring '.sc-14995206-1' element is after "#scout..." elements
+    $('.ipc-page-section:eq(0)').parent().before(p);
   // reference
   } else if ($('.titlereference-header').length) {
     $('.titlereference-header').append(p);
@@ -6819,8 +6817,7 @@ function getLinkAreaSecond() {
   });
 
   if ($('.ipc-page-section').length) {
-    $('.ipc-page-section:eq(0)').before(p);
-    $('.ipc-page-section:eq(0)').before($('.sc-14995206-1')); // make sure that blurring '.sc-14995206-1' element is after "#scout..." elements
+    $('.ipc-page-section:eq(0)').parent().before(p);
   // reference
   } else if ($('.titlereference-header').length) {
     $('.titlereference-header').append(p);
@@ -6872,8 +6869,7 @@ function getLinkAreaThird() {
   });
 
   if ($('.ipc-page-section').length) {
-    $('.ipc-page-section:eq(0)').before(p);
-    $('.ipc-page-section:eq(0)').before($('.sc-14995206-1')); // make sure that blurring '.sc-14995206-1' element is after "#scout..." elements
+    $('.ipc-page-section:eq(0)').parent().before(p);
   // reference
   } else if ($('.titlereference-header').length) {
     $('.titlereference-header').append(p);
@@ -8584,14 +8580,14 @@ function addRatingsElements(imdbid, title, title_orig) {
                   $('<tbody>').append(
                     $('<tr>')
   ));
-  const hr = $('<hr />').css({'margin-top':'3px', 'margin-bottom':'3px'});
+  const hr = $('<hr />').css({'margin-top':'3px', 'margin-bottom':'3px'})
   // reference
   if ($('.titlereference-header').length) {
     $('#main').children().first().prepend(table);
     $('#scout_rating_table').after(hr);
   // new layout
   } else if ($('.ipc-page-section').length) {
-    $('.ipc-page-section:eq(0)').parent().prepend(table);
+    $('.ipc-page-section:eq(0)').parent().parent().prepend(table);
   } else {
     return;
   }
@@ -10606,10 +10602,12 @@ function startIMDbScout() {
   }
   console.log("IMDb Scout Mod (Start): Starting main functions.");
   if (!onSearchPage && GM_config.get('loadmod_on_start_movie')) {
+    $('#ipc-wrap-background-id').remove(); // This div steals focus from the scout links. v19.1 fix
     performPage();
   } else if (onSearchPage && GM_config.get('loadmod_on_start_search')) {
     performSearch();
   } else {
+    $('#ipc-wrap-background-id').remove(); // This div steals focus from the scout links. v19.1 fix
     displayButton();
   }
 }
