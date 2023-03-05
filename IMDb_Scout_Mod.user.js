@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      19.1
+// @version      19.1.1
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from hundreds various sites. Adds movies/series to Radarr/Sonarr. Adds external ratings from Metacritic, Rotten Tomatoes, Letterboxd, Douban, Allocine. Media Server indicators for Plex, Jellyfin, Emby. Dark theme/style for Reference View. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAMFBMVEUAAAD/AAAcAAA1AABEAABVAAC3AADnAAD2AACFAAClAABlAAB3AADHAACVAADYAABCnXhrAAAD10lEQVRIx73TV4xMURgH8H/OnRmZWe3T7h2sOWaNXu7oJRg9UccuHgTRBatMtAgSg+gJu9q+kFmihcQoD8qLTkK0CIkoy0YJITsRD0rCKTHFrnkSv5e5c88/53znO+fiPwvsvrN038cPNqrG9pJmHkRVnPcpaTlHJY60cfPSpsrzl1LKihrmLvxhCM2i3OHvDx0d+H7e3F6JBv5iZMiJfhFTfPYDMHrMImpwimWWUdSgDQkbno7fFpUPVgh+pHFbZR4SovSctDCM9Hac9IKd9rO8EevtBCkXgY5IMmgquwypP7qqfcp/Tp4KLONDVsWh3RSBB2rnZfit69ocUdqLn2prrRZYM0Jg4JibamKsqe7gfEh5GOAfeYJjVHIPZvil97rcXkMog30byWRwXYRWoxHbzNFHJJpAarO8NdEBBsdCaP3WMJltTmQd4zlnekTq9Z5dgACwAlrpK4BxdV5mvLuspRgMSHbCIFF0iS8MZ5S8oYBYKY7rByC4dDM9uSIUmPOIwxgQBoYeF93auP4qFyPbIVXziWeGTH1EFM57kJo2hqQju6BwIyRf6RmCjdT4JOdiwNgiH/PPD3qoqlsNaXRd+fKtFfECxlZVNVF9SOsgTZEr2TUjJJbyeNX1IZrKIbyGlBABfpQPv2UDrly13LkJXDVhpQ5MhtGwcyF4HKjlU4E8xwB0AvDjd6AGmevZ87EcQRHgcO52e9uNsYELOrAa/Yh81YlmYLQJ5HWyq0+kzQ/DQKEusg6CRI27ryy8nReRS0wsoetkmRwogHSprliCckfEjXG9yAQc74J0WB99vu6DF3i3pMucsXM6tpBbxd2mVJAwXwGogNRBvGRA4jtHKTXkAIwLGCR/mT4Lh75oneQXXP9sAYfGRDCsnw7pX/jRZkU3M44kjw2l5zRIzb4CbZ8dULdL6wbNPZOpK0B6gN1UR1mdoxAaL/GrWiLPL3SEwW9YMTU/d64BtLahAVyucWhj9Mm8ign9IfQaBtd2/GbvCAEBpG5eMcrj2I0ktpKLeaqXQ3Pst42KGIshpdTmQLAeTgFGJ2wvh+tayMOR0n1RZ8B9z13vnOPBnsBq4E1ffgZpPFZHWVpO2cvhjYpOcbBd5TlhpDu5zq9mHGZcVi0y+VFkcFkDdyKJfTt99wEyHSEzDM90KH0nexpwZHJHKYYhjzlwGe0pP/IKfxociaEb7YDbi6KGJY1R2cR76E6NAtXqY4pPH3plLcl8LD7V+cOLUbUWRFZRPTAbVZO3mxK18Xc1ZaAiS8ARJXpZliXAomR94siiiMx8ZBOkXGTlnH0F/9ov1xPtWwEqP9wAAAAASUVORK5CYII=
@@ -1182,6 +1182,8 @@
             Fixed: IMDb's layout change broke %search_string% & %search_string_orig%.
             Fixed: On some browsers <hr> separator was white instead of dark.
             Removed: Tornado, iBit, PTMSG.
+
+19.1.1  -   Added: NIMA4K, WCX, Fanart, Movieposters, ThePosterDB, Amazon (UK).
 
 
 //==============================================================================
@@ -3934,13 +3936,13 @@ var german_sites = [
       'matchRegex': /Keine Torrents/,
       'TV': true},
 {   'name': 'NIMA4K',
-      'icon': 'https://nima4k.org/assets/img/favicon.png',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyBAMAAADsEZWCAAAALVBMVEUAAADBUiDDWCbIXyzLZjPObjrciEXWeD+biYC+dVGQcmPVZi3Njmi3pp3llFL5M/BLAAAAAXRSTlMAQObYZgAAAXFJREFUOMvtzj9Lw0AYBvB3aEwFW7jazakXHcRFuQr+Waq9UrtVaNFPkIKDS60Bp6AILoK4FwIiSEYXhTipFcdOOgiOBb+FT3N3oYi4uPYZnt69v3B9aZz/5NN194mm0D5uA9f9MjIYlazruq9qjhGSyAt+Ai1vnucdQtA+ZVqet0c6rVHJ4tI1jzWRHaJJtE+9uFXeRyXTaTaPSOdAIlVIQ1Z9W8rKhXlMyo4SCXmWsmYe+5CVa3wIQZ83pEwea8vaaVGL7OEUaJgQYtcWYhkihCjj1NfyJNYDKxGkqCVzK1b7lpMIolezOd8ii/M5CFe5V/LInS6lOJ/tx+Js4iMl25wXy7hyWR/K2hXUN8JYjqNLECdAFUpKmA6EsWmfNhib/yGLSi4Zm4n3bgtkCSDqSlI4x3ufDXOC2Y2vJF1gbIVMUpgRKRn+Uf53OcaufiI5nodwvoCRlTN7I3YU3amGpKMoejCSDsNQNYRChMb5K9+9gH5c6E3PJwAAAABJRU5ErkJggg==',
       'searchUrl': 'https://nima4k.org/search',
       'loggedOutRegex': /Cloudflare|Ray ID/,
       'matchRegex': /Keine Ergebnisse gefunden/,
       'mPOST': 'search=%search_string_orig%+%year%'},
 {   'name': 'NIMA4K',
-      'icon': 'https://nima4k.org/assets/img/favicon.png',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyBAMAAADsEZWCAAAALVBMVEUAAADBUiDDWCbIXyzLZjPObjrciEXWeD+biYC+dVGQcmPVZi3Njmi3pp3llFL5M/BLAAAAAXRSTlMAQObYZgAAAXFJREFUOMvtzj9Lw0AYBvB3aEwFW7jazakXHcRFuQr+Waq9UrtVaNFPkIKDS60Bp6AILoK4FwIiSEYXhTipFcdOOgiOBb+FT3N3oYi4uPYZnt69v3B9aZz/5NN194mm0D5uA9f9MjIYlazruq9qjhGSyAt+Ai1vnucdQtA+ZVqet0c6rVHJ4tI1jzWRHaJJtE+9uFXeRyXTaTaPSOdAIlVIQ1Z9W8rKhXlMyo4SCXmWsmYe+5CVa3wIQZ83pEwea8vaaVGL7OEUaJgQYtcWYhkihCjj1NfyJNYDKxGkqCVzK1b7lpMIolezOd8ii/M5CFe5V/LInS6lOJ/tx+Js4iMl25wXy7hyWR/K2hXUN8JYjqNLECdAFUpKmA6EsWmfNhib/yGLSi4Zm4n3bgtkCSDqSlI4x3ufDXOC2Y2vJF1gbIVMUpgRKRn+Uf53OcaufiI5nodwvoCRlTN7I3YU3amGpKMoejCSDsNQNYRChMb5K9+9gH5c6E3PJwAAAABJRU5ErkJggg==',
       'searchUrl': 'https://nima4k.org/search',
       'loggedOutRegex': /Cloudflare|Ray ID/,
       'matchRegex': /Keine Ergebnisse gefunden/,
@@ -4072,7 +4074,7 @@ var german_sites = [
       'positiveMatch': true,
       'both': true},
 {   'name': 'WCX',
-      'icon': 'https://warez.cx/icons/favicon-32x32.png',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAilBMVEUAAAAAAAAAAAAAAAAFAAD0FBkIAADsBSkAAAAFAAAAAAD1FBkAAAAAAAD/FhwAAAACAAAAAAAAAAAAAAAFAADmExgAAAABAAAAAAB6CQy2DxOdDRAAAAAAAAAAAAAAAAAAAADGDRU/BQb/Fhz/Fh7/FyBTBgr/FyG9DRP/Hij0FBohAgOKCw5iCApaqhxhAAAAKnRSTlMA/g3yLtn6BaMZZ0fEX/zTmpR0NyX77lgI/v353rOsjEwS/KpbVkk2JxlIJll+AAABG0lEQVQ4y9WQ6XaDIBBGZ4QiUnGPW9ySdDd5/9friB6jjf5vrh6B+S6MB/gfdPFewjszRCxItuIkZNE4QRQB34gRx6rqjz0KuVJ4IJDK4wlZ75VIkDLHSJRer8zSSa9eWRzPiI0DDr0S8XwsSu/KHDBkWBy8w01kOudVFYPO2I0KBWow5NC5KJgbAygkqHFcCyHcDu5YiUOfBg2NRX25M4dt2Latpm0VTlAbiOqmrmU+bDY1l45fEIFrRmsQUkSBrsQV0gipEdgyCMLlij0ICkCLfcHnYNvA/T0hhIlwU2Dq83XiO2OPgv9x+Zl5T/y/QvB1ObzcebPlWlBgn2huDw9xooWahXT4+w24P10Uyhw2ySUaQcMu2oKn4BcxihFxFx1o8wAAAABJRU5ErkJggg==',
       'searchUrl': 'https://api.warez.cx/start/search?q=&selectedTypes=&selectedGenres=&types=movie%2Cseries&genres=&page=1&per_page=24&sortBy=latest&sortOrder=desc&search=%search_string_orig%',
       'goToUrl': 'https://warez.cx/search',
       'loggedOutRegex': /Cloudflare|Ray ID/,
@@ -5068,6 +5070,9 @@ var icon_sites_main = [
   {   'name': 'Amazon',
       'searchUrl': 'https://www.amazon.com/s/ref=nb_sb_noss?url=search-alias%3Dmovies-tv&field-keywords=%search_string%',
       'showByDefault': false},
+  {   'name': 'Amazon (UK)',
+      'searchUrl': 'https://www.amazon.co.uk/s?k=%search_string%&i=dvd',
+      'showByDefault': false},
   {   'name': 'Amazon Prime (DE)',
       'icon': 'https://www.amazon.com/favicon.ico',
       'searchUrl': 'https://www.amazon.de/s?k=%search_string_orig%&i=instant-video',
@@ -5188,7 +5193,7 @@ var icon_sites_main = [
       'searchUrl': 'https://www.facebook.com/search/pages/?q=%search_string_orig%',
       'showByDefault': false},
   {   'name': 'Fanart',
-      'icon': 'https://fanart.tv/images/favicon.ico',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAk1BMVEUAAAA1pM0ApqC6urr////n8PPb29ujo6PDw8ONjY3z8/Pt7e3U1NS2tralpaWCgoKr2ul0wNxkudgvocuVz+V4wt7///8ArLIAlL8AjcEAradIrdL4/P0AqbRht9c+qM8Gj8ImnsoAnLoAqqRkudg8q886p88Ar61RUVFNTU0YGBjm8/hludk2p8wXl8e3t7eTk5PuAW5sAAAAFnRSTlMAFf6v6uq4uLe3r6+fn5+fZ2cpKRcX8aevlQAAAIlJREFUGNNly+cSgkAMBOBV7L3eJQGFO5Bmff+nk5NBRb8fSWYnC+cxddO7ozHOZ8CiGOFtmU+8Yo4vw7IcNPe+U0G/B7d3wNqQYy0xE4crmMw/viSpxHH3AuZA1QItEofgqAnUf5BF0g5I0aldsT8fOtUhiNWncq4qRq5+zYjYboIt6UNNV26bJ2MsE+VynbKSAAAAAElFTkSuQmCC',
       'searchUrl': 'https://fanart.tv/?sect=all&s=%search_string_orig%',
       'showByDefault': false},
   {   'name': 'FFF Movie Posters',
@@ -5333,7 +5338,7 @@ var icon_sites_main = [
       'searchUrl': 'https://www.movieposterdb.com/search?category=title&q=%tt%',
       'showByDefault': false},
   {   'name': 'Movieposters',
-      'icon': 'https://cdn.shopify.com/s/files/1/0057/3728/3618/files/favicon_64x64.png',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAGFBMVEUAAAA3NjciICHf3+DGxseFhIVhYGGhoaImnXgYAAAAAXRSTlMAQObYZgAAAjtJREFUSMellU1z2jAQhulA0mtXCeZstaRXZqTANdSmvpbEH9eaBHNtig1/P69kiQTZBmbyXBDaR7trvDa9TzBb3p4K93dE3on4Iifw0HlcIg7+dcRFGMpUCX/b4zIEsoJw09rcMIABopxGzTh2mVcaYzluHF8SYH4WaEPu3ObEjvlK8dehZuLEwaI2OMo48f5EaGY5r8vEgdPcOqgNiTKIb46OD9TP4pU6HogFKmyPjn8lryiKnDLEhQxFFLvNLXIPcSJdxm2+bi0lbXgxEji/jW2NPN08ih9zHYsaPQHDoOfyheLQJFl6qrmmsC9LY7QO0LVXvUw3Wui1ckXRVuRFiXA7A8K1T30018UOgshPPQCBSnHTLVxt1WWuBdiDrQARhgXHJmICYV5CCCS27wk8SYwagVEIVOnXEgt9IFfbAvarj6nbYvM3fxciMVfDCE/OOOfsVk0200IVY7mLI8TZswCPEO5U0v9cC+kGX9IXNfF3qsCUg2fs3XMtzLMMzVeVSvAEQTLsj1WBlRFIC6Q7BHMOVIdq4UP4pbdth2LGgepwpjKN1O2st486tAs/1DOdJIkq5ycg5WBoFz8nWiALBwQYN/wwT0WTc8K5DOxi4fulQrY/IqnJHg9CZworNIMnBBiuMGhWcAXexTcjrJN30uLA6iAUDaxwaQmH00JrBna+RJOPAtuYu1PVn/Zu2avo27pjU2rILeZPjQxN4U8tLOu4b4U1tzzYV6XNQFrxuK1p31Ir3sBWOM8bvdDsvqHitZ0AAAAASUVORK5CYII=',
       'searchUrl': 'https://www.movieposters.com/collections/shop?q=%search_string_orig%',
       'showByDefault': false},
   {   'name': 'MRQE',
@@ -5425,7 +5430,7 @@ var icon_sites_main = [
       'searchUrl': 'https://www.the-numbers.com/custom-search?searchterm=%search_string%',
       'showByDefault': false},
   {   'name': 'ThePosterDB',
-      'icon': 'https://theposterdb.com/images/favicon/prod/favicon-32x32.png',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgBAMAAACBVGfHAAAAGFBMVEUAAAD7bEL8q5T/5+D/+Pb8i2r+1Mj+w7Lo3izNAAAAAXRSTlMAQObYZgAAAM1JREFUKM9VkcEKwjAMhlXwbga9a2G+wGR7AAde7Q56d9o+wLB7ffMvybD/IfT7aFJIN5rgNkVqouGf98S5F1yYHYMLXI4q+FzlFNiu7HI7rmYLbjgvNoflgjszwsgVIrAZCIdz36OGRdDUazoS4d7Ct6CCHiI+pKKaR3A7n1TkxIZ5TiZijJcrFxNVjg0nJmuhZ7PkSyZ8BidvYvAwnfe1Cs+ZOlQb6jUyNKAHQYfTDQ/CuucTjHBlS8VgkobVCFtEKNhX0bH8XDxQGOMftTs7PgAFfmYAAAAASUVORK5CYII=',
       'searchUrl': 'https://theposterdb.com/search?term=%search_string_orig%',
       'showByDefault': false},   
   {   'name': 'TMDB',
