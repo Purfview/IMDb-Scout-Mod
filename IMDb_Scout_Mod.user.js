@@ -4158,7 +4158,7 @@ var usenet_sites = [
       'loggedOutRegex': /Cloudflare|Ray ID|not logged/,
       'matchRegex': /keine Ergebnisse gefunden|no results were returned|No se encontraron resultados|aucun résultat|Nic nie znaleziono|нет результатов|sonuç bulunamadı/,
       'positiveMatch': true},
-  {   'name': 'HOU',
+  {   'name': 'HoU',
       'icon': 'https://house-of-usenet.com/favicon.ico',
       'searchUrl': 'https://house-of-usenet.com/search.php?action=do_search&keywords=%tt%&postthread=1&showresults=threads',
       'loggedOutRegex': /Cloudflare|Ray ID|bist du schon ein Mitglied/,
