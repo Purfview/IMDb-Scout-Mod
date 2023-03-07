@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      19.1.1
+// @version      19.2
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from hundreds various sites. Adds movies/series to Radarr/Sonarr. Adds external ratings from Metacritic, Rotten Tomatoes, Letterboxd, Douban, Allocine. Media Server indicators for Plex, Jellyfin, Emby. Dark theme/style for Reference View. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAMFBMVEUAAAD/AAAcAAA1AABEAABVAAC3AADnAAD2AACFAAClAABlAAB3AADHAACVAADYAABCnXhrAAAD10lEQVRIx73TV4xMURgH8H/OnRmZWe3T7h2sOWaNXu7oJRg9UccuHgTRBatMtAgSg+gJu9q+kFmihcQoD8qLTkK0CIkoy0YJITsRD0rCKTHFrnkSv5e5c88/53znO+fiPwvsvrN038cPNqrG9pJmHkRVnPcpaTlHJY60cfPSpsrzl1LKihrmLvxhCM2i3OHvDx0d+H7e3F6JBv5iZMiJfhFTfPYDMHrMImpwimWWUdSgDQkbno7fFpUPVgh+pHFbZR4SovSctDCM9Hac9IKd9rO8EevtBCkXgY5IMmgquwypP7qqfcp/Tp4KLONDVsWh3RSBB2rnZfit69ocUdqLn2prrRZYM0Jg4JibamKsqe7gfEh5GOAfeYJjVHIPZvil97rcXkMog30byWRwXYRWoxHbzNFHJJpAarO8NdEBBsdCaP3WMJltTmQd4zlnekTq9Z5dgACwAlrpK4BxdV5mvLuspRgMSHbCIFF0iS8MZ5S8oYBYKY7rByC4dDM9uSIUmPOIwxgQBoYeF93auP4qFyPbIVXziWeGTH1EFM57kJo2hqQju6BwIyRf6RmCjdT4JOdiwNgiH/PPD3qoqlsNaXRd+fKtFfECxlZVNVF9SOsgTZEr2TUjJJbyeNX1IZrKIbyGlBABfpQPv2UDrly13LkJXDVhpQ5MhtGwcyF4HKjlU4E8xwB0AvDjd6AGmevZ87EcQRHgcO52e9uNsYELOrAa/Yh81YlmYLQJ5HWyq0+kzQ/DQKEusg6CRI27ryy8nReRS0wsoetkmRwogHSprliCckfEjXG9yAQc74J0WB99vu6DF3i3pMucsXM6tpBbxd2mVJAwXwGogNRBvGRA4jtHKTXkAIwLGCR/mT4Lh75oneQXXP9sAYfGRDCsnw7pX/jRZkU3M44kjw2l5zRIzb4CbZ8dULdL6wbNPZOpK0B6gN1UR1mdoxAaL/GrWiLPL3SEwW9YMTU/d64BtLahAVyucWhj9Mm8ign9IfQaBtd2/GbvCAEBpG5eMcrj2I0ktpKLeaqXQ3Pst42KGIshpdTmQLAeTgFGJ2wvh+tayMOR0n1RZ8B9z13vnOPBnsBq4E1ffgZpPFZHWVpO2cvhjYpOcbBd5TlhpDu5zq9mHGZcVi0y+VFkcFkDdyKJfTt99wEyHSEzDM90KH0nexpwZHJHKYYhjzlwGe0pP/IKfxociaEb7YDbi6KGJY1R2cR76E6NAtXqY4pPH3plLcl8LD7V+cOLUbUWRFZRPTAbVZO3mxK18Xc1ZaAiS8ARJXpZliXAomR94siiiMx8ZBOkXGTlnH0F/9ov1xPtWwEqP9wAAAAASUVORK5CYII=
@@ -1185,6 +1185,10 @@
 
 19.1.1  -   Added: NIMA4K, WCX, Fanart, Movieposters, ThePosterDB, Amazon (UK).
 
+19.2    -   Fixed: Metacritic "getMetacriticRatings_IMDb()" func.
+            Fixed: Rotten Tomatoes ratings.
+            Added: BitHUmen, HoU.
+
 
 //==============================================================================
 //    Notes.
@@ -2122,7 +2126,7 @@ var private_sites = [
       'loggedOutRegex': /Forgot your password/,
       'matchRegex': /No match!/},
   {   'name': 'BitHUmen',
-      'icon': 'https://bithumen.be/favicon.ico',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQAQMAAAAlPW0iAAAABlBMVEUAAACLAABIB02uAAAAAXRSTlMAQObYZgAAAC1JREFUCNdj+P+foYGRYcNZENp3lmHbX4ZtQBLEBonv/wsi981kWBUKZAAVAwAOzhTcDduj4AAAAABJRU5ErkJggg==',
       'searchUrl': 'https://bithumen.be/browse.php?genre=0&search=%tt%',
       'loggedOutRegex': /Cloudflare|Ray ID|Nem vagy bejelentkezve/,
       'matchRegex': /Nincs aktív torrent|Nincs találat/,
@@ -4165,7 +4169,7 @@ var usenet_sites = [
       'matchRegex': /keine Ergebnisse gefunden|no results were returned|No se encontraron resultados|aucun résultat|Nic nie znaleziono|нет результатов|sonuç bulunamadı/,
       'positiveMatch': true},
   {   'name': 'HoU',
-      'icon': 'https://house-of-usenet.com/favicon.ico',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABAAgMAAADXB5lNAAAACVBMVEUAAABDQkIAi//s9KSQAAAAAXRSTlMAQObYZgAAAIdJREFUOMvt06sRgEAMhOEgroRDUA0lIC6GEqiHEkCQKpkhC8vDMAc4Vv7im5jIh4uq6RAqs+EPbwbV1mxUFazobNlUr8Gw2+FqSOthlHWlh34LwUMjPIQEESeIgCACgggIIiCIgCACgggIIk5wMZ1CAJG3oLs1/ghc2oVaohS3A5cXroc93wzg8pjeUhsyUQAAAABJRU5ErkJggg==',
       'searchUrl': 'https://house-of-usenet.com/search.php?action=do_search&keywords=%tt%&postthread=1&showresults=threads',
       'loggedOutRegex': /Cloudflare|Ray ID|bist du schon ein Mitglied/,
       'matchRegex': /keine Ergebnisse gefunden/,
@@ -8605,6 +8609,7 @@ function externalRatings(imdbid, title, title_orig) {
   }
   // Get Metacritic's Metascore & RT's Tomatometer. Link for RT Audience score & "Certified" badge.
   // Running for Metascore without RT enabled is currently disabled, GM_config.get("ratings_cfg_metacritic")
+  // Metacritic disabled in this func as it can overwrite "must see" badge [v19.2]
   if (GM_config.get("ratings_cfg_rotten")) {
     getRTandMetaRatings_OMDb(key, imdbid, meta_icon, rott_rotten, rott_certified, rott_fresh, rott_user_up, rott_user_down);
   }
@@ -8836,25 +8841,22 @@ function getMetacriticRatings_IMDb(imdbid, meta_icon, meta_badge) {
       const parser = new DOMParser();
       const result = parser.parseFromString(response.responseText, "text/html");
       let meta_crit, meta_count, meta_url;
-      if ($(result).find('.metascore').length) {
-        const x = $(result).find('.metascore span').text().trim();
+      if ($(result).find('[data-testid=critic-reviews-title]').length) {
+        const x = $(result).find('[data-testid=critic-reviews-title]').children().first().text().trim();
         if ($.isNumeric(x)) {
           meta_crit = x;
         } else {
           meta_crit = "-";
         }
-        if ($(result).find('span[itemprop="ratingCount"]').length) {
-          const y = $(result).find('span[itemprop="ratingCount"]').text().trim();
-          if ($.isNumeric(y)) {
-            meta_count = y;
-          } else {
-            meta_count = "-";
-          }
+        const y = $(result).find('[data-testid=critic-reviews-title]').children().eq(1).children().eq(1).text().trim().split(" ")[0];
+        if ($.isNumeric(y)) {
+          meta_count = y;
         } else {
           meta_count = "-";
         }
-        if ($(result).find('.see-more .offsite-link').length) {
-          meta_url = $(result).find('.see-more .offsite-link').attr("href");
+        meta_url = $(result).find('[data-testid=critic-reviews-title]').find('[href]').attr("href");
+        if (meta_url != undefined && meta_url.match("www.metacritic.com")) {
+          meta_url = meta_url.split("?ftag")[0];
           getMetacritic_User(meta_url);
         }
       } else {
@@ -8862,6 +8864,9 @@ function getMetacriticRatings_IMDb(imdbid, meta_icon, meta_badge) {
         getMetacriticRatings(imdbid, meta_icon, meta_badge);
         return;
       }
+      //console.log("!!!!!!!!!!!!!: " + meta_crit);
+      //console.log("!!!!!!!!!!!!!: " + meta_count);
+      //console.log("!!!!!!!!!!!!!: " + meta_url);
       $('.MetaCritRatingImg').attr('src', meta_icon);
       if (meta_url.match("metacritic")) {
         $('.MetaCritRatingUrl').attr('href', meta_url);
@@ -9120,10 +9125,11 @@ function getRTandMetaRatings_OMDb(key, imdbid, meta_icon, rott_rotten, rott_cert
       if (rott_crit >= 0) {
         $('.RottCritRating').text(rott_crit);
       }
-      if (meta_crit >= 0) {
-        $('.MetaCritRatingImg').attr('src', meta_icon);
-        $('.MetaCritRating').text(meta_crit);
-      }
+// Metacritic disabled in this func as it can overwrite "must see" badge [v19.2]
+//       if (meta_crit >= 0) {
+//         $('.MetaCritRatingImg').attr('src', meta_icon);
+//         $('.MetaCritRating').text(meta_crit);
+//       }
       ratingsColor();
     },
     onerror: function() {
@@ -9166,9 +9172,9 @@ async function getRotten(rott_url, rott_rotten, rott_certified, rott_fresh, rott
       if ($(result).find('#score-details-json').length) {
         const scoreTxt = $(result).find('#score-details-json').text();
         const scoreJsn = JSON.parse(scoreTxt);
-        const x = scoreJsn.scoreboard.audienceScore;
-        const y = scoreJsn.scoreboard.tomatometerScore;
-        rott_state = scoreJsn.scoreboard.tomatometerState;
+        const x = scoreJsn.scoreboard.audienceScore.value;
+        const y = scoreJsn.scoreboard.tomatometerScore.value;
+        rott_state = scoreJsn.scoreboard.tomatometerScore.state;
         if ($.isNumeric(x)) {
           rott_user = x;
         } else {
@@ -9179,6 +9185,7 @@ async function getRotten(rott_url, rott_rotten, rott_certified, rott_fresh, rott
         } else {
           rott_crit = "-";
         }
+      // Fallback [obsolete]
       } else if ($(result).find('.mop-ratings-wrap__percentage').length) {
         const y = $(result).find('.mop-ratings-wrap__percentage:eq(0)').text().trim().replace(/\%/g, '');
         const x = $(result).find('.mop-ratings-wrap__percentage:eq(1)').text().trim().replace(/\%/g, '');
