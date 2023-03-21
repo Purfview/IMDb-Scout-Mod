@@ -4307,7 +4307,7 @@ var usenet_sites = [
       'both': true},
   {   'name': 'SceneNZBs',
       'icon': 'https://scenenzbs.com/templates/bookstrap/images/icons/favicon.ico',
-      'searchUrl': 'https://scenenzbs.com/search/%search_string%++%year%',
+      'searchUrl': 'https://scenenzbs.com/search/%search_string%+%year%',
       'loggedOutRegex': /Cloudflare|Ray ID|Register/,
       'matchRegex': /did not match any releases/,
       'both': true},
