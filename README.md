@@ -42,7 +42,7 @@ Inside the script, there is a list of dictionaries that contains of all the site
   - `icon` (optional): Icon for the site.
   - `searchUrl`: The URL to perform the search against, see below for how to tailor the string to a site.
   - `matchRegex`: The string which appears if the searchUrl *doesn't* return a result.
-  - `postiveMatch` (optional): Changes the test to return true if the searchUrl *does* return a result that matches matchRegex
+  - `positiveMatch` (optional): Changes the test to return true if the searchUrl *does* return a result that matches matchRegex
   - `TV` (optional): If true, it means that this site will only show up on TV pages. By default, sites only show up on movie pages.
   - `both` (optional): Means that the site will show up on both movie and TV pages.
   - `spaceEncode` (optional): Changes the character used to encode spaces in movie titles. The default is '+'.
