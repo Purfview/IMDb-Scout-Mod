@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      19.4
+// @version      19.5
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from hundreds various sites. Adds movies/series to Radarr/Sonarr. Adds external ratings from Metacritic, Rotten Tomatoes, Letterboxd, Douban, Allocine, MyAnimeList, AniList. Media Server indicators for Plex, Jellyfin, Emby. Dark theme/style for Reference View. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAMFBMVEUAAAD/AAAcAAA1AABEAABVAAC3AADnAAD2AACFAAClAABlAAB3AADHAACVAADYAABCnXhrAAAD10lEQVRIx73TV4xMURgH8H/OnRmZWe3T7h2sOWaNXu7oJRg9UccuHgTRBatMtAgSg+gJu9q+kFmihcQoD8qLTkK0CIkoy0YJITsRD0rCKTHFrnkSv5e5c88/53znO+fiPwvsvrN038cPNqrG9pJmHkRVnPcpaTlHJY60cfPSpsrzl1LKihrmLvxhCM2i3OHvDx0d+H7e3F6JBv5iZMiJfhFTfPYDMHrMImpwimWWUdSgDQkbno7fFpUPVgh+pHFbZR4SovSctDCM9Hac9IKd9rO8EevtBCkXgY5IMmgquwypP7qqfcp/Tp4KLONDVsWh3RSBB2rnZfit69ocUdqLn2prrRZYM0Jg4JibamKsqe7gfEh5GOAfeYJjVHIPZvil97rcXkMog30byWRwXYRWoxHbzNFHJJpAarO8NdEBBsdCaP3WMJltTmQd4zlnekTq9Z5dgACwAlrpK4BxdV5mvLuspRgMSHbCIFF0iS8MZ5S8oYBYKY7rByC4dDM9uSIUmPOIwxgQBoYeF93auP4qFyPbIVXziWeGTH1EFM57kJo2hqQju6BwIyRf6RmCjdT4JOdiwNgiH/PPD3qoqlsNaXRd+fKtFfECxlZVNVF9SOsgTZEr2TUjJJbyeNX1IZrKIbyGlBABfpQPv2UDrly13LkJXDVhpQ5MhtGwcyF4HKjlU4E8xwB0AvDjd6AGmevZ87EcQRHgcO52e9uNsYELOrAa/Yh81YlmYLQJ5HWyq0+kzQ/DQKEusg6CRI27ryy8nReRS0wsoetkmRwogHSprliCckfEjXG9yAQc74J0WB99vu6DF3i3pMucsXM6tpBbxd2mVJAwXwGogNRBvGRA4jtHKTXkAIwLGCR/mT4Lh75oneQXXP9sAYfGRDCsnw7pX/jRZkU3M44kjw2l5zRIzb4CbZ8dULdL6wbNPZOpK0B6gN1UR1mdoxAaL/GrWiLPL3SEwW9YMTU/d64BtLahAVyucWhj9Mm8ign9IfQaBtd2/GbvCAEBpG5eMcrj2I0ktpKLeaqXQ3Pst42KGIshpdTmQLAeTgFGJ2wvh+tayMOR0n1RZ8B9z13vnOPBnsBq4E1ffgZpPFZHWVpO2cvhjYpOcbBd5TlhpDu5zq9mHGZcVi0y+VFkcFkDdyKJfTt99wEyHSEzDM90KH0nexpwZHJHKYYhjzlwGe0pP/IKfxociaEb7YDbi6KGJY1R2cR76E6NAtXqY4pPH3plLcl8LD7V+cOLUbUWRFZRPTAbVZO3mxK18Xc1ZaAiS8ARJXpZliXAomR94siiiMx8ZBOkXGTlnH0F/9ov1xPtWwEqP9wAAAAASUVORK5CYII=
@@ -1197,6 +1197,8 @@
             Removed feature: External IMDb ratings [IMDb monkeys deleted data for this feature].
             Added: SceneNZBs, AniList.
             Removed: RocketHD.
+
+19.5    -   New feature: Support for Sonarr v4.
 
 
 //==============================================================================
@@ -7960,9 +7962,11 @@ function get_radarr_movies(movie_id) {
         buttonBuilder(imdbid, radarr_url, radarr_apikey);
       } else if (response.status == 401) {
           $('a[href="https://radarr.video"]').find('img').prop("src", error_icon);
+          console.log("IMDb Scout Mod (Radarr): Error: Invalid Radarr API Key.");
           GM.notification("Error: Invalid Radarr API Key.", "IMDb Scout Mod (Radarr)");
       } else {
           $('a[href="https://radarr.video"]').find('img').prop("src", error_icon);
+          console.log("IMDb Scout Mod (Radarr): Error: Status " + response.status);
           GM.notification("Error: Status " + response.status, "IMDb Scout Mod (Radarr)");
       }
     },
@@ -8032,7 +8036,8 @@ function new_movie_lookup(imdbid, radarr_url, radarr_apikey, exists_icon) {
       let responseJSON = null;
       if (!response.responseJSON) {
         if (!response.responseText) {
-          GM.notification("No results found.", "IMDb Scout Mod (Radarr)");
+          console.log("IMDb Scout Mod (Radarr): Lookup: No results found.");
+          GM.notification("Lookup: No results found.", "IMDb Scout Mod (Radarr)");
           return;
         }
         responseJSON = JSON.parse(response.responseText);
@@ -8087,6 +8092,7 @@ function add_movie(movie, imdbid, radarr_url, radarr_apikey, exists_icon) {
         });
         GM.notification('"' + responseJSON.title + '"' + " \nSuccessfully sent to Radarr.", "IMDb Scout Mod (Radarr)");
       } else {
+          console.log("IMDb Scout Mod (Radarr): Error: " + responseJSON[0].errorMessage);
           GM.notification("Error: " + responseJSON[0].errorMessage, "IMDb Scout Mod (Radarr)");
       }
     },
@@ -8129,33 +8135,25 @@ async function get_sonarr_tvseries(movie_id) {
   let sonarr_apikey = GM_config.get("sonarr_apikey");
   GM.xmlHttpRequest({
     method: "GET",
-    url: sonarr_url + "/api/series",
+    url: sonarr_url + "/api/v3/series",
     headers: {
       "X-Api-Key": sonarr_apikey,
-      "Accept": "text/json"
+      "Accept": "*/*"
     },
     onload: function(response) {
-      let responseJSON = null;
-      if (!response.responseJSON) {
-        try {
-          responseJSON = JSON.parse(response.responseText);
-          if (responseJSON.error == "Unauthorized") {
-            throw "creds";
-          }
-          GM.setValue("IMDb_Scout_Mod_Sonarr_series", JSON.stringify(responseJSON));
-          console.log("IMDb Scout Mod (Sonarr): Sync series complete!");
-          sonarrButtonBuilder(tvdbid, sonarr_url, sonarr_apikey);
-        }
-        catch (e) {
+      if (response.status == 200) {
+        const responseJSON = JSON.parse(response.responseText);
+        GM.setValue("IMDb_Scout_Mod_Sonarr_series", JSON.stringify(responseJSON));
+        console.log("IMDb Scout Mod (Sonarr): Sync series complete!");
+        sonarrButtonBuilder(tvdbid, sonarr_url, sonarr_apikey);
+      } else if (response.status == 401) {
           $('a[href="https://sonarr.tv"]').find('img').prop("src", error_icon);
-          if (e instanceof SyntaxError) {
-            sonarrErrorNotificationHandler(e, true, "No JSON in response. \nPlease check your Sonarr URL.");
-          } else if (e == "creds") {
-            sonarrErrorNotificationHandler(e, true, "Invalid Sonarr API Key.");
-          } else {
-            sonarrErrorNotificationHandler(e, false);
-          }
-        }
+          console.log("IMDb Scout Mod (Sonarr): Error: Invalid Sonarr API Key.");
+          GM.notification("Error: Invalid Sonarr API Key.", "IMDb Scout Mod (Sonarr)");
+      } else {
+          $('a[href="https://sonarr.tv"]').find('img').prop("src", error_icon);
+          console.log("IMDb Scout Mod (Sonarr): Error: Status " + response.status);
+          GM.notification("Error: Status " + response.status, "IMDb Scout Mod (Sonarr)");
       }
     },
     onerror: function() {
@@ -8215,16 +8213,17 @@ async function sonarrCheck_exists (tvdbid) {
 function new_tvseries_lookup(tvdbid, sonarr_url, sonarr_apikey, exists_icon) {
   GM.xmlHttpRequest({
     method: "GET",
-    url: sonarr_url + "/api/series/lookup?term=tvdb:" + tvdbid,
+    url: sonarr_url + "/api/v3/series/lookup?term=tvdb:" + tvdbid,
     headers: {
       "X-Api-Key": sonarr_apikey,
-      "Accept": "text/json"
+      "Accept": "*/*"
     },
     onload: function(response) {
       let responseJSON = null;
       if (!response.responseJSON) {
         if (!response.responseText) {
-          GM.notification("No results found.", "IMDb Scout Mod (Sonarr)");
+          console.log("IMDb Scout Mod (Sonarr): Lookup: No results found.");
+          GM.notification("Lookup: No results found.", "IMDb Scout Mod (Sonarr)");
           return;
         }
         responseJSON = JSON.parse(response.responseText);
@@ -8245,12 +8244,6 @@ function add_tvseries(tvseries, tvdbid, sonarr_url, sonarr_apikey, exists_icon) 
   if (GM_config.get("sonarr_searchforcutoff")) {
     tvseries.addOptions = {searchForCutoffUnmetEpisodes: true};
   }
-  if (GM_config.get("sonarr_ignoreEpisodesWithFiles")) {
-    tvseries.addOptions = {ignoreEpisodesWithFiles: true};
-  }
-  if (GM_config.get("sonarr_ignoreEpisodesWithoutFiles")) {
-    tvseries.addOptions = {ignoreEpisodesWithoutFiles: true};
-  }
   const uSceneNr = GM_config.get("sonarr_usescenenumbering");
   if (uSceneNr == "Yes") {
     tvseries.useSceneNumbering = true;
@@ -8259,19 +8252,19 @@ function add_tvseries(tvseries, tvdbid, sonarr_url, sonarr_apikey, exists_icon) 
   }
   const qProID = GM_config.get("sonarr_profileid");
   if (qProID == "Any") {
-    tvseries.ProfileId = 1;
+    tvseries.qualityProfileId = 1;
   } else if (qProID == "HD - 720p/1080p") {
-    tvseries.ProfileId = 6;
+    tvseries.qualityProfileId = 6;
   } else if (qProID == "HD-1080p") {
-    tvseries.ProfileId = 4;
+    tvseries.qualityProfileId = 4;
   } else if (qProID == "HD-720p") {
-    tvseries.ProfileId = 3;
+    tvseries.qualityProfileId = 3;
   } else if (qProID == "SD") {
-    tvseries.ProfileId = 2;
+    tvseries.qualityProfileId = 2;
   } else if (qProID == "Ultra-HD") {
-    tvseries.ProfileId = 5;
+    tvseries.qualityProfileId = 5;
   } else if (qProID == "Custom") {
-    tvseries.ProfileId = parseInt(GM_config.get("sonarr_customprofileid"));
+    tvseries.qualityProfileId = parseInt(GM_config.get("sonarr_customprofileid"));
   }
   const sonMon = GM_config.get("sonarr_monitored");
   if (sonMon == "All Episodes") {
@@ -8301,36 +8294,26 @@ function add_tvseries(tvseries, tvdbid, sonarr_url, sonarr_apikey, exists_icon) 
   }
   GM.xmlHttpRequest({
     method: "POST",
-    url: sonarr_url + "/api/series",
+    url: sonarr_url + "/api/v3/series",
     headers: {
       "X-Api-Key": sonarr_apikey,
-      "Accept": "text/json",
+      "Accept": "application/json, text/javascript, */*; q=0.01",
       "Content-Type": "application/json"
     },
     data: JSON.stringify(tvseries),
     onload: function(response) {
-      let responseJSON = null;
-      if (!response.responseJSON) {
-        responseJSON = JSON.parse(response.responseText);
-        try {
-          if (!responseJSON.title && responseJSON[Object.keys(responseJSON)[0]].errorMessage == "This series has already been added") {
-            throw "exists";
-          }
-          let button = $('img[title="Sonarr"]');
-              button.prop("src", exists_icon);
-              button.parent().off("click");
-          button.click(function() {
-            GM.openInTab(sonarr_url + "/series/" + responseJSON.titleSlug);
-          });
-          GM.notification('"' + responseJSON.title + '"' + " \nSuccessfully sent to Sonarr.", "IMDb Scout Mod (Sonarr)");
-        }
-        catch (e) {
-          if (e == "exists") {
-            sonarrErrorNotificationHandler(e, true, "Series already exists in Sonarr.", "IMDb Scout Mod (Sonarr)");
-          } else {
-            sonarrErrorNotificationHandler(e, false);
-          }
-        }
+      const responseJSON = JSON.parse(response.responseText);
+      if (response.status == 201) {
+        let button = $('img[title="Sonarr"]');
+            button.prop("src", exists_icon);
+            button.parent().off("click");
+        button.click(function() {
+          GM.openInTab(sonarr_url + "/series/" + responseJSON.titleSlug);
+        });
+        GM.notification('"' + responseJSON.title + '"' + " \nSuccessfully sent to Sonarr.", "IMDb Scout Mod (Sonarr)");
+      } else {
+          console.log("IMDb Scout Mod (Sonarr): Error: " + responseJSON[0].errorMessage);
+          GM.notification("Error: " + responseJSON[0].errorMessage, "IMDb Scout Mod (Sonarr)");
       }
     }
   });
@@ -9767,8 +9750,6 @@ function countSites(task) {
       'radarr_minimumavailability': {'type': 'select', 'options': ['announced', 'inCinemas', 'released']},
       'sonarr_searchformissing': {'type': 'checkbox'},
       'sonarr_searchforcutoff': {'type': 'checkbox'},
-      'sonarr_ignoreEpisodesWithFiles': {'type': 'checkbox'},
-      'sonarr_ignoreEpisodesWithoutFiles': {'type': 'checkbox'},
       'sonarr_seasonfolder': {'type': 'checkbox'},
       'sonarr_usescenenumbering': {'type': 'select', 'options': ['Auto', 'No', 'Yes']},
       'sonarr_monitored': {'type': 'select', 'options': ['All Episodes', 'Future Episodes', 'Missing Episodes', 'Existing Episodes', 'Pilot Episode', 'Only First Season', 'Only Latest Season', 'None']},
@@ -10224,16 +10205,6 @@ var config_fields = {
   'sonarr_searchforcutoff': {
     'type': 'checkbox',
     'label': 'Start search for cutoff unmet episodes?',
-    'default': false
-  },
-  'sonarr_ignoreEpisodesWithFiles': {
-    'type': 'checkbox',
-    'label': 'Set ignoreEpisodesWithFiles=true?',
-    'default': false
-  },
-  'sonarr_ignoreEpisodesWithoutFiles': {
-    'type': 'checkbox',
-    'label': 'Set ignoreEpisodesWithoutFiles=true?',
     'default': false
   },
   'sonarr_seasonfolder': {
