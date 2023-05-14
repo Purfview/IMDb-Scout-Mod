@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      19.5.2
+// @version      19.5.3
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from hundreds various sites. Adds movies/series to Radarr/Sonarr. Adds external ratings from Metacritic, Rotten Tomatoes, Letterboxd, Douban, Allocine, MyAnimeList, AniList. Media Server indicators for Plex, Jellyfin, Emby. Dark theme/style for Reference View. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAMFBMVEUAAAD/AAAcAAA1AABEAABVAAC3AADnAAD2AACFAAClAABlAAB3AADHAACVAADYAABCnXhrAAAD10lEQVRIx73TV4xMURgH8H/OnRmZWe3T7h2sOWaNXu7oJRg9UccuHgTRBatMtAgSg+gJu9q+kFmihcQoD8qLTkK0CIkoy0YJITsRD0rCKTHFrnkSv5e5c88/53znO+fiPwvsvrN038cPNqrG9pJmHkRVnPcpaTlHJY60cfPSpsrzl1LKihrmLvxhCM2i3OHvDx0d+H7e3F6JBv5iZMiJfhFTfPYDMHrMImpwimWWUdSgDQkbno7fFpUPVgh+pHFbZR4SovSctDCM9Hac9IKd9rO8EevtBCkXgY5IMmgquwypP7qqfcp/Tp4KLONDVsWh3RSBB2rnZfit69ocUdqLn2prrRZYM0Jg4JibamKsqe7gfEh5GOAfeYJjVHIPZvil97rcXkMog30byWRwXYRWoxHbzNFHJJpAarO8NdEBBsdCaP3WMJltTmQd4zlnekTq9Z5dgACwAlrpK4BxdV5mvLuspRgMSHbCIFF0iS8MZ5S8oYBYKY7rByC4dDM9uSIUmPOIwxgQBoYeF93auP4qFyPbIVXziWeGTH1EFM57kJo2hqQju6BwIyRf6RmCjdT4JOdiwNgiH/PPD3qoqlsNaXRd+fKtFfECxlZVNVF9SOsgTZEr2TUjJJbyeNX1IZrKIbyGlBABfpQPv2UDrly13LkJXDVhpQ5MhtGwcyF4HKjlU4E8xwB0AvDjd6AGmevZ87EcQRHgcO52e9uNsYELOrAa/Yh81YlmYLQJ5HWyq0+kzQ/DQKEusg6CRI27ryy8nReRS0wsoetkmRwogHSprliCckfEjXG9yAQc74J0WB99vu6DF3i3pMucsXM6tpBbxd2mVJAwXwGogNRBvGRA4jtHKTXkAIwLGCR/mT4Lh75oneQXXP9sAYfGRDCsnw7pX/jRZkU3M44kjw2l5zRIzb4CbZ8dULdL6wbNPZOpK0B6gN1UR1mdoxAaL/GrWiLPL3SEwW9YMTU/d64BtLahAVyucWhj9Mm8ign9IfQaBtd2/GbvCAEBpG5eMcrj2I0ktpKLeaqXQ3Pst42KGIshpdTmQLAeTgFGJ2wvh+tayMOR0n1RZ8B9z13vnOPBnsBq4E1ffgZpPFZHWVpO2cvhjYpOcbBd5TlhpDu5zq9mHGZcVi0y+VFkcFkDdyKJfTt99wEyHSEzDM90KH0nexpwZHJHKYYhjzlwGe0pP/IKfxociaEb7YDbi6KGJY1R2cR76E6NAtXqY4pPH3plLcl8LD7V+cOLUbUWRFZRPTAbVZO3mxK18Xc1ZaAiS8ARJXpZliXAomR94siiiMx8ZBOkXGTlnH0F/9ov1xPtWwEqP9wAAAAASUVORK5CYII=
@@ -1203,6 +1203,8 @@
 19.5.1  -   Added: 9anime, SkipTheTrailers, YouTube (Invidious).
 
 19.5.2  -   Added: DuckDuckGo.
+
+19.5.2  -   Added: Serializd.
 
 
 //==============================================================================
@@ -3265,12 +3267,13 @@ var private_sites = [
   {   'name': 'Telly',
       'searchUrl': 'https://telly.wtf/torrents?imdbId=%nott%',
       'loggedOutRegex': /Cloudflare|Ray ID|Forgot Your Password/,
-      'matchRegex': /torrent-listings-no-result/,
+      'matchRegex': /torrent-listings-name/,
+      'positiveMatch': true,
       'both': true},
   {   'name': 'Telly-Req',
       'searchUrl': 'https://telly.wtf/requests?unfilled=1&tmdbId=%tmdbid%',
       'loggedOutRegex': /Cloudflare|Ray ID|Forgot Your Password/,
-      'matchRegex': /label-danger/,
+      'matchRegex': /fa-circle text-red/,
       'positiveMatch': true,
       'both': true},
   {   'name': 'TeRaCoD',
@@ -5513,6 +5516,10 @@ var icon_sites_main = [
       'showByDefault': false},
   {   'name': 'SensCritique (FR)',
       'searchUrl': 'https://www.senscritique.com/search?query=%search_string%',
+      'showByDefault': false},
+  {   'name': 'Serializd',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAD4AAAA+BAMAAACB77V3AAAAGFBMVEUAAABEu6Sa/v70//8Yemdjx7cxnIh12s8sFAO9AAAAAXRSTlMAQObYZgAAAVhJREFUOMuVlbFqw0AQRK1CvVfoUJ117PTRFwgO15FxSC0QqR0TyO/nInGMbucu4G0f55l9iPXuoXkXkY8iHWUdl6W1YG6MK9nOG79Ox3KxQ9XM7Mvh3DEB3fiJLfm5Uz2esQM9b1S1ndDA7nYP/HnYrvCVcA1zOmMF2041FnC55Rq8lxy/H/7yV77PqNX+VfU6lHi3cD/JMpn4Q6/64qXEL4Gv9WLAyPHf4Nl67RDbUL3w80s9FOB6T17Aa2OnX+yAV0U74GwH33lF8UcvhpMd4mQnCkq4gx3iZAec7HA+2wFnO5gbONmBf7YDviM7hls723gXOezMgzkSFdlhznZwxmpjh46UsUN8hB2OR4FGYQfxKHBRpfh1cHdSO108b+DzkDvS+P2kHq5vPDwnb9ujoQu83daz53v6uSafJp3/OZ+OFciNSeByGKDCX1wRc0RHDBro8f/zCxqei/YvH0qDAAAAAElFTkSuQmCC',
+      'searchUrl': 'https://www.serializd.com/search?searchQuery=%search_string_orig%',
       'showByDefault': false},
   {   'name': 'ShotOnWhat',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADwAAAA8AgMAAABHkjHhAAAADFBMVEUAAAAAOaskVbdKcsNkxQmEAAAAAXRSTlMAQObYZgAAAMtJREFUKM/N0rERgjAUxvEHHoUFdIzACPaMYMEfLSgYgIIRsoSFK9i4Aks4giPYWYiBeHnhThsKvyb3u+S95C5PpmTnq3i5A7X5cIeN44Yp3ewC1IEb9PIAessYqnEBGusI2qlpZZ1AOS4p4DtyLsBMbRjezsG9wvy0vagWvz6jFdffSxo4gcp3Do1voP9SXujyGDB6++gxAgZ9eSfKtWg3gfeB+8Dln9sop4hKdJB189TMaXzGUKvnLL+HckVv1XQsZ1NOVMrZZT7+AmePTX/3jCjoAAAAAElFTkSuQmCC',
