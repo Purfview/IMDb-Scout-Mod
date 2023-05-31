@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      19.5.3
+// @version      19.6
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from hundreds various sites. Adds movies/series to Radarr/Sonarr. Adds external ratings from Metacritic, Rotten Tomatoes, Letterboxd, Douban, Allocine, MyAnimeList, AniList. Media Server indicators for Plex, Jellyfin, Emby. Dark theme/style for Reference View. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAMFBMVEUAAAD/AAAcAAA1AABEAABVAAC3AADnAAD2AACFAAClAABlAAB3AADHAACVAADYAABCnXhrAAAD10lEQVRIx73TV4xMURgH8H/OnRmZWe3T7h2sOWaNXu7oJRg9UccuHgTRBatMtAgSg+gJu9q+kFmihcQoD8qLTkK0CIkoy0YJITsRD0rCKTHFrnkSv5e5c88/53znO+fiPwvsvrN038cPNqrG9pJmHkRVnPcpaTlHJY60cfPSpsrzl1LKihrmLvxhCM2i3OHvDx0d+H7e3F6JBv5iZMiJfhFTfPYDMHrMImpwimWWUdSgDQkbno7fFpUPVgh+pHFbZR4SovSctDCM9Hac9IKd9rO8EevtBCkXgY5IMmgquwypP7qqfcp/Tp4KLONDVsWh3RSBB2rnZfit69ocUdqLn2prrRZYM0Jg4JibamKsqe7gfEh5GOAfeYJjVHIPZvil97rcXkMog30byWRwXYRWoxHbzNFHJJpAarO8NdEBBsdCaP3WMJltTmQd4zlnekTq9Z5dgACwAlrpK4BxdV5mvLuspRgMSHbCIFF0iS8MZ5S8oYBYKY7rByC4dDM9uSIUmPOIwxgQBoYeF93auP4qFyPbIVXziWeGTH1EFM57kJo2hqQju6BwIyRf6RmCjdT4JOdiwNgiH/PPD3qoqlsNaXRd+fKtFfECxlZVNVF9SOsgTZEr2TUjJJbyeNX1IZrKIbyGlBABfpQPv2UDrly13LkJXDVhpQ5MhtGwcyF4HKjlU4E8xwB0AvDjd6AGmevZ87EcQRHgcO52e9uNsYELOrAa/Yh81YlmYLQJ5HWyq0+kzQ/DQKEusg6CRI27ryy8nReRS0wsoetkmRwogHSprliCckfEjXG9yAQc74J0WB99vu6DF3i3pMucsXM6tpBbxd2mVJAwXwGogNRBvGRA4jtHKTXkAIwLGCR/mT4Lh75oneQXXP9sAYfGRDCsnw7pX/jRZkU3M44kjw2l5zRIzb4CbZ8dULdL6wbNPZOpK0B6gN1UR1mdoxAaL/GrWiLPL3SEwW9YMTU/d64BtLahAVyucWhj9Mm8ign9IfQaBtd2/GbvCAEBpG5eMcrj2I0ktpKLeaqXQ3Pst42KGIshpdTmQLAeTgFGJ2wvh+tayMOR0n1RZ8B9z13vnOPBnsBq4E1ffgZpPFZHWVpO2cvhjYpOcbBd5TlhpDu5zq9mHGZcVi0y+VFkcFkDdyKJfTt99wEyHSEzDM90KH0nexpwZHJHKYYhjzlwGe0pP/IKfxociaEb7YDbi6KGJY1R2cR76E6NAtXqY4pPH3plLcl8LD7V+cOLUbUWRFZRPTAbVZO3mxK18Xc1ZaAiS8ARJXpZliXAomR94siiiMx8ZBOkXGTlnH0F/9ov1xPtWwEqP9wAAAAASUVORK5CYII=
@@ -1206,6 +1206,12 @@
 
 19.5.2  -   Added: Serializd.
 
+19.6    -   Fixed: Rotten Tomatoes ratings. [RT site element's ID change]
+            Fixed: Rotten Tomatoes ratings broken for episodes of TV series. [ www.imdb.com/title/tt14659496 ] [OMDb response change???]
+            Fixed: Bug in getMetacriticRatings().
+            Added: MonikaDesign, Brothers of Usenet.
+            Removed: RARBG, SDBits, InterSinema (TR), OndeBaixa, ComoEuBaixo, RPTor.
+
 
 //==============================================================================
 //    Notes.
@@ -1213,11 +1219,14 @@
 
 UNIT3D (new at top [UNIT3D v6.5.0]):
 
+       v6.5.0:
       'matchRegex': /torrent-listings-name/,
       'positiveMatch': true,
 
+       v6.4.1:
       'matchRegex': /torrent-listings-no-result/,
 
+       v5.3.0:
       'matchRegex': /"Download">/,
       'positiveMatch': true,
 
@@ -1225,9 +1234,11 @@ UNIT3D (new at top [UNIT3D v6.5.0]):
 
 UNIT3D Req (new at top [a circle at Requests - Status]) :
 
+       v6.5.0:
       'matchRegex': /fa-circle text-red/,
       'positiveMatch': true,
 
+       v6.4.1 - v5.3.0:
       'matchRegex': /label-danger/,
       'positiveMatch': true,
 
@@ -1428,17 +1439,10 @@ var public_sites = [
       'matchRegex': />0 results found/,
       'TV': true},
   {   'name': 'Comando4K',
-      'icon': 'https://comando4kfilmeshd2.com/favicon-32x32.png',
-      'searchUrl': 'https://comando4kfilmeshd2.com/?s=%tt%',
+      'icon': 'https://comandofilmes3.com/favicon-32x32.png',
+      'searchUrl': 'https://comandofilmes3.com/?s=%tt%',
       'loggedOutRegex': /Cloudflare|Ray ID/,
       'matchRegex': /Nenhum Arquivo Encontrado/,
-      'both': true},
-  {   'name': 'ComoEuBaixo',
-      'icon': 'https://comoeubaixo.com/icone_site.png',
-      'searchUrl': 'https://comoeubaixo.com/index.php?s=%search_string_orig%',
-      'loggedOutRegex': /Cloudflare|Ray ID/,
-      'matchRegex': /capa_larga align-middle/,
-      'positiveMatch': true,
       'both': true},
   {   'name': 'CPS',
       'searchUrl': 'https://mycarpathians.net/browse.php?search=https%3A%2F%2Fwww.imdb.com%2Ftitle%2F%tt%%2F&incldead=0&onlyname2=false&imdbcat=0',
@@ -1629,13 +1633,6 @@ var public_sites = [
       'loggedOutRegex': /Cloudflare|Ray ID|the security check/,
       'matchRegex': /No results found/,
       'both': true},
-  {   'name': 'OndeBaixa',
-      'icon': 'https://ondebaixa.com/icone_site.png',
-      'searchUrl': 'https://ondebaixa.com/index.php?s=%search_string_orig%',
-      'loggedOutRegex': /Cloudflare|Ray ID/,
-      'matchRegex': /capa_larga align-middle/,
-      'positiveMatch': true,
-      'both': true},
   {   'name': 'Pahe',
       'icon': 'https://pahe.li/wp-content/uploads/2017/12/favicon.ico',
       'searchUrl': 'https://pahe.li/?s=%tt%',
@@ -1686,14 +1683,6 @@ var public_sites = [
       'loggedOutRegex': /Cloudflare|Ray ID|An Error Occurred|Please wait at least/,
       'rateLimit': 30000,
       'matchRegex': /No results found/,
-      'both': true},
-  {   'name': 'RARBG',
-      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAMAAABg3Am1AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAADMUExURQAAADhgu/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////7+/zhgu1d5xlt8x2GByWiGzHCNz3aS0XqV0oCa1Iig1o+l2Zar25yw3qK14Ky947DA5LXE5rnH6MbS7MvW7tDa79ff8tzj8+Pp9uzw+fT2+/7+/////0INwLoAAAAodFJOUwAAAAMIDRQZHSIqMzpAR09dY251foaPl6CmrbO7wMfQ19re5Orx9/zZOpCWAAAB3ElEQVRIx5XVWVvaQBSA4ZlhsewoBapVlqFZKqKtiFAkZfn+/3/yIhAmkJDxXOQiOe8zmeXMEUopJYQolOsNM+q1armYE/FQSqnwUah1B65nhOs4o/5dp1X/lgxqmuRw7m/KCeDqjvTo1c9Bw70AGDULp6AF8D6LxXyxXHuhcFv5E9AG8BNi8s8DcJpSSivg+79XAKOKNfD9BcB9zh74S8CpfAH4W6Arw3wr8Ab0ZJifBObz+Wz2OjYmDuh8Knjc79dH7J+cciZgGYEAaGSDXQQ+gGY24OnwamU3whEE4FYsgDnpUTEbrCMADKTKAt7k8OYV+JkJ1lG+/x+863TgT6fTvy/GRv8BdFGlg9OK2AJtZQ/WgC5Zg/EGcJvSFrx5gNuW1mAD0JP24GkHjKqXQRAE41i10S/nLoDH2KnwVwC3VxmARXwaTjcL8HK8/XYAmWB7HGJmBcw7IDBF+vGexm+ybOAd1/bZGMKq4vx3YHMJuD2AedI0ksEw7JLP8aK4BOS1B2yMsjuIZDCQYWNdGt3LBC3z2pqEB7oyOFlbE5y13Y4QouGcNeAIlB7iH35VhRD57+lA1Aax/BshhBClH855/h6IUvthqLXWWg97neq+8eert319DGPjvhKfLLE8ejIzVGgAAAAASUVORK5CYII=',
-      'searchUrl': 'https://rarbgweb.org/torrents.php?imdb=%tt%',
-      'loggedOutRegex': /something wrong|Please wait|enter the captcha|too many requests/,
-      'matchRegex': /imdb_thumb.gif/,
-      'positiveMatch': true,
-      'rateLimit': 4000,
       'both': true},
   {   'name': 'RareFilm',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAA7VBMVEUAAAD//////////////////+3///L///L/3r3/4L3/3br/3rr/2bP/2rL/wIH/v3z/v37/vnr/vHb/u3X/uXL/uHD/t2v/smT/o0b/oUH/nDj/lyz/lin/lCX/lSf/kiL/jRf/jRf/jBb/ixT/ihH/iQ//iA7/hwz/hgn/hAf/hQf/gQH/ggD/ggD/hAD/igD/jQX/jgD/jwH/lAH/nhn/nxD/owL/pi//pw7/sQz/sVL/uV7/uj7/wTD/xFX/xkL/x3L/0oz/24T/3GL/3Xz/3an/56v/7Yv/7cL/87r/+tn/++f//vr//vv///6LyAiWAAAALXRSTlMAAgQFBg4TFD5CQ0ZKTH2AgIKGh4uNkZm3vMTS09bW2+Tm6Onr7e/y8/X2+/xz1yocAAAAo0lEQVQYGQXBCU7DMAAAMOcoXTpxTuL/70MTYqjHupIEOyCfpnLu8329VzLj8/tpeDmGvl7XQzJePrM2Pg7Dq73F/HyBnOByjrm8QcxPED4ecSqQQwRTyQXE1GNDKPEMYggZTBlIqUcgLiCHEMEaNzBICfoSlxWykGHe4v0HaqsN/XtPrYaJv9N+6/r1tyZ1f6Shtrn25et2CMjjVKY+b9ve+AepX0NhemW8QgAAAABJRU5ErkJggg==',
@@ -3081,17 +3070,6 @@ var private_sites = [
       'loggedOutRegex': /Cloudflare|Ray ID|only for members/,
       'matchRegex': /No torrents were found/,
       'TV': true},
-  {   'name': 'RPTor',
-      'icon': 'https://rptorrents.com/themes/Dark/images/favicon.ico',
-      'searchUrl': 'https://rptorrents.com/torrents-search.php?c37=1&c6=1&c7=1&c32=1&c9=1&c10=1&c11=1&c12=1&c18=1&c33=1&c40=1&c41=1&search=%search_string_orig%+%year%&incldesc=1',
-      'loggedOutRegex': /Cloudflare|Ray ID|Recover Account/,
-      'matchRegex': /Nothing Found|Nu a fost gasit nimic/},
-  {   'name': 'RPTor',
-      'icon': 'https://rptorrents.com/themes/Dark/images/favicon.ico',
-      'searchUrl': 'https://rptorrents.com/torrents-search.php?c14=1&c15=1&c16=1&c17=1&c18=1&search=%search_string_orig%&incldesc=1',
-      'loggedOutRegex': /Cloudflare|Ray ID|Recover Account/,
-      'matchRegex': /Nothing Found|Nu a fost gasit nimic/,
-      'TV': true},
   {   'name': 'SB',
       'searchUrl': 'https://superbits.org/api/v1/torrents?searchText=%tt%',
       'goToUrl': 'https://superbits.org/search?search=%tt%',
@@ -3126,12 +3104,6 @@ var private_sites = [
       'loggedOutRegex': /Cloudflare|Ray ID|Recuperar Password/,
       'matchRegex': /Nada encontrado/,
       'TV': true},
-  {   'name': 'SDBits',
-      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgBAMAAACBVGfHAAAAGFBMVEUgICHIbAiFRQDMcQ1JKQXbgR0gGxgxIA5aYAXjAAAAyElEQVQoz4WPPQvCMBCGg0icz6u4VlvJnMTurZ+zLe4qgmss/n8kSa8hAfFdcvdA8uRlvzKtEzDJE3BfJuC4jXe+aROwaE0s0TLWPLoqjyVdJSKw1zqj+eYkgK0bGNutbRBAuqFk/dVGAqA9O8F4r2GMFvZac6G9yuw77FVIv6MafvtED+SZivQeiNDE36lDEwcwtHl7IEITAIvGNrwAzBoJisAMQJlpAXNDErQ/+KCsSaJLV0HnJFHGVxg0fHUaKpDmQDY7/M8XUc0iLAoTyMgAAAAASUVORK5CYII=',
-      'searchUrl': 'https://sdbits.org/browse.php?incldead=1&imdb=%tt%',
-      'loggedOutRegex': /Not logged in!|Technical Difficulties/,
-      'matchRegex': /Nothing here!|Nothing found!/,
-      'both': true},
   {   'name': 'sHD',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAAABGdBTUEAALGPC/xhBQAAAcJJREFUOE9j3Hty6c3n2z99fc5ACLAxiWjLeTJMXR9dt0ps8lGf2aeiZxwPnXkifPrxwC3XGzdcrZ1+PAgoDkF9h4WAyjqWOjO0LbWHCK24WDD3dEz/Ydf5ZxL//fvz7ffHOaejJh72mnzEG64NpAGIIfwzj1etvVzeud96zeXy////AdGS81kTDrtPPga1BKgGRcO+u5P3350KVP311zug6r///q65XNl32BmnhmUXcj/+ePHt18f/MPD0w6UJh92Ajpx9MhLiChQbpp8I2XGjY8u1po8/XgK1fP/98e23x1de7Fh0NuXA/ZlYNACFeg869h92f/rxMlDDrz/fTzxcdu7JWqCe8083YtcACr5DLttutEEc9fPP1yXnMiYe9QSGNU4NPYect1xrhnvj7tvjoICCxQaKH8Ci3sBgufZyF1zD99+f552Oxalh4hGPuafjgK6Ha/jx+8uyczk4NfQccjr6YN7ff3/23pm463bfow/nnn+6PuWoL04NvYecDt6b+fH7y4lHPNv2mW673gJ0Elw1Ih4giW/miQig/5aczwDGNDCm+g+5LDid+AOsYdrxACAJTXzLN0wB+p1INH/FBAC7js3OZsq8KwAAAABJRU5ErkJggg==',
       'searchUrl': 'https://scenehd.org/browse.php?search=%tt%',
@@ -3679,6 +3651,17 @@ var chinese_sites = [
       'matchRegex': /download.php/,
       'positiveMatch': true,
       'both': true},
+  {   'name': 'MonikaDesign',
+      'searchUrl': 'https://monikadesign.uk/torrents?imdbId=%nott%',
+      'loggedOutRegex': /Cloudflare|Ray ID|忘了用户名/,
+      'matchRegex': /torrent-listings-no-result/,
+      'both': true},
+  {   'name': 'MonikaDesign-Req',
+      'searchUrl': 'https://monikadesign.uk/requests?unfilled=1&tmdbId=%tmdbid%',
+      'loggedOutRegex': /Cloudflare|Ray ID|忘了用户名/,
+      'matchRegex': /label-danger/,
+      'positiveMatch': true,
+      'both': true},
   {   'name': 'OldToonsWorld',
       'searchUrl': 'https://oldtoons.world/torrents.php?incldead=1&spstate=0&search=%tt%&search_area=1&search_mode=0',
       'loggedOutRegex': /Cloudflare|Ray ID|SSL \(HTTPS\)/,
@@ -4153,6 +4136,12 @@ var usenet_sites = [
       'loggedOutRegex': /Cloudflare|Ray ID|not authorized to view/,
       'matchRegex': /download.gif/,
       'positiveMatch': true,
+      'both': true},
+  {   'name': 'Brothers of Usenet',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFAAAABQBAMAAAB8P++eAAAAGFBMVEUAAAAwMDBPT09ubm6MjIykpKS5ubnS0tL7SaK4AAAAAXRSTlMAQObYZgAABPtJREFUSMe9lk2bkzAQxz1YPYfWD0DSeicT8LxNgmdLwl51KeHq40v5+v6H0l26W/Wk8+xC2v6YtwyZefU/5O0I+Ss1jikNpwHo1z8qO7Z9jDGdUkogf88xFmI4TfDwe7CPfXDO1T+da1ObfkvG6LyPzqXexRB8m34TUtv2zhoyVRMtWeN8vE2+ScGnhoiO5IgMOZDDjYBeDwHq6kZWeyoVQdjRG6RPMKipbDqpSqUllLoY2xfGV+FootVafgC4k1oqcvGW8eA7ghKre9PI3aSP/XyhcuVqS1AjK0tlLAlrfLIGKp8pdDWRlFqETIhdna8zPCQnlVe23wTrEYAs3t1JIbL3+yyXs8pr2763ARpU7gSDm6hzAZBdTe3nRQ6DD50GuPkkCtbYedz4SRPjElxh6477XHzshcgB3o8yCLGGk4GuwgmOtpZIDT/gFsy1vS4PIiMWswjnNcDdXpq+jSkGZ13boxz7toFtIg/bT5bpYx+tYY0Sv1Z8r2E1Ok3uyTZ2qk+I870rRCbgY/YJ96zJMuVTcPH+ojIlqx0ID+gRzMUO4Unj02MJrRKcaaDiCyD5BIoaBpSi+/ECuqjlgxDviwsoPk1pWh+qvdIIe7yA5Ax+igKSL0BRjT+kC+YSzWtHsurkZv8C3KTeWGXq09l2aEjuNNWUPwPltg2SnZxT7qyWZSEeiAutmEDeFsVb1QM0/RlcTWC+uSuAcMkg2R0uQjB9ULpyKU2gJ4CiFMXCxzmhuagkHRHNHLRWZfaQTcwViGfXD5U15/y8ORLq7t3dzFyBWojyqMz9MGWntSiunVgvwMO8ktiG79jwMxi8pfQg1uIWmHVVGerhM4MNGT9+uwkq8d7WHQqD87OyJFFNUi7BOay16kn5BWiGRlkpczAsZzBDjG2RKRMW4I+c/ZFTgYNpsNJ4cHMQWLRP4AfkQy9Nz6mvc4BU9hdQ9XdLUFzAd3u2b016BDuAxQuN2ZEdldZ8HBl8a2lHN8GqyIoJrMfPDJ5stX0GfmJw8yDOoO/HqShiSttiBuUCjGICVQz+/C6ws4f8BVjdTSC5xsRxAkOFBER6Bq47/mgNSevaGaxpW/CZoPMFWBd88OyR+SfwSIbzWA4JuYcoeZBVg2WeFRM4v1yxI7NnHzPle6uhcdttusnnCXR+Bt80AOU5GD5irbwfg3gEyfnhDL51DOaXYKSJ96PF5xk0AOd2HsgB1E9RR/RhtG7L7YbMHAskhmtwkxIc1gTnep4wHocG9PDDEmzLH+Ls45prN6YLuLL+aPUEKt4SnfHryqDiru2HR9D5A5EjmTO4O2TruzngkviwHxb9qOM0c7OQWxz06iAVIRT+ziwbbPQdvuRWpMDBL+ycRDySYHt2cbbdkVZSIuAIfL0p+C0EzJbjcNX+iZTG3rZAGOSAIZaetdf+DMqWxBJUllx7NSy8OTmUlGr1Omdwx2/pBJp4PaO9TTGgmrRU8CwDCIiDcpHHqSV4Cq4+NaTZvlzvcDEI2DvPlpcy9pi3pjGFLxUujv/dbHmp8uQMdwXO4LbkgBUZFMGL2fTUB9cQacsxAFScmRgHVvhMZQxcgPiTW694wePejWF3PPXRWZocdewsz3A3J90xJZj3DAaY5czA8O0Bso+xjYB7j3sEN7y6DaYYfUCpHsHCv1N6dVtSC5S19hGrEdhvZQVgkmEA9meJLdvEwfnP5RePA8mDu/ngPgAAAABJRU5ErkJggg==',
+      'searchUrl': 'https://www.brothers-of-usenet.net/search/1234567/?q=%tt%&o=date',
+      'loggedOutRegex': /Cloudflare|Ray ID|Passwort vergessen|Forgot your password/,
+      'matchRegex': /No results found|Keine Ergebnisse gefunden/,
       'both': true},
   {   'name': 'DOGnzb',
       'searchUrl': 'https://dognzb.cr/movies/%tt%',
@@ -5366,9 +5355,6 @@ var icon_sites_main = [
   {   'name': 'iCheckMovies',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIwAAACMAgMAAADTrqmtAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAAAMUExURf///xwcHMImKf////Y3wksAAAABdFJOUwBA5thmAAACVElEQVRYw+3YPXKzQAwG4KTIEXKfHCGF8c6koc8lOEWa9CmyFD4Cp+AS9DQ7ExTD/kkr7U++ceHio/Q8Rq8WG7Q8PNzd8dSVjtfDdOVjJ48V81ItZYs9V8yp0XRdPfQ9mXODeWsw73Vz1rcxum7ODeatwbxLRsFMS3HTA0DFwHH8oK6Y6a2J5bjxJJS7dqW/qBmCWXNGASQn2kvR38+AzOzNNzWI2NaOUsT02IA3H8QMxKy+FDaKkL3YmRlaai9m42AzJGber3liEnINdKwONio1Py4OMmkcgE9bqmo+iEkjw+biIAN1wyKDcXFKZnFxouGRfalo8pELxrgVREaM81UxoVQw6l/MFuLkjeHn6W1MGvkyM3P96oXEmagZbIKRrCA3+9k1McDM/mkoZo6TrsS4b4ZiR+SM0ThyzkwoMjM2jwtkI7v7IjILCmQjc2NQIBuZGgU0kM4YV+wS2yoaF1kwcRVNxejYlmBcsSm0VTQ6bzYf2q9B1oyhLcm4SxYii2YpmQ79YfTk2xKNCx0uW97oooFoIGsWT0b0xPyLGXBj4Wctmo2auWgmwfRJYyWz4NabjHyvM7j1srngESe9P2/tZhLNQJqf8ICTMWSaYs+vpWAUNqR1bgxriz+XDWuLP9+3GGctmZEOiXyWCKWA7wtiY2MykPL5ZxvpGFmZo7jh8xg3fK4T9jLA5kNuBjkOMUoulZ9p14zppa7S/ZdYqqvM89I+TkjDjBJOw/aDKg0j7hkHst+5wz3sf3Mb83wDc2p433JqeG/z2vhupxao+V3TXR2/bieEjYde6F4AAAAASUVORK5CYII=',
       'searchUrl': 'https://www.icheckmovies.com/search/movies/?query=%tt%'},
-  {   'name': 'InterSinema (TR)',
-      'searchUrl': 'https://www.intersinema.com/ara.asp?ara=%search_string_orig%',
-      'showByDefault': false},
   {   'name': 'JustWatch',
       'icon': 'https://www.justwatch.com/appassets/favicon.ico',
       'searchUrl': 'https://justwatch.com/us/search?q=%search_string%',
@@ -5774,6 +5760,7 @@ function getTMDbID(movie_id) {
 }
 
 function getDoubanID0(movie_id) {
+  console.log("IMDb Scout Mod (getDoubanID0): Started.");
   return new Promise(resolve => {
     GM.xmlHttpRequest({
       method: "GET",
@@ -5924,6 +5911,7 @@ function getDoubanID3(movie_id) {
 }
 
 function getAllocineID(movie_id) {
+  console.log("IMDb Scout Mod (getAllocineID): Started.");
   return new Promise(resolve => {
     GM.xmlHttpRequest({
       method: "GET",
@@ -5964,6 +5952,7 @@ function getAllocineID(movie_id) {
 }
 
 function getAnimeID(movie_id) {
+  console.log("IMDb Scout Mod (getAnimeID): Started.");
   const url = 'https://query.wikidata.org/sparql?format=json&query=SELECT * WHERE {?s wdt:P345 "tt' +movie_id+ '". OPTIONAL {?s wdt:P4086 ?MyAnimeList_ID.}  OPTIONAL {?s wdt:P8729 ?AniList_ID.}}';
   $('.AnimeUserRatingUrl').attr('href', url);
   return new Promise(resolve => {
@@ -6002,6 +5991,7 @@ function getAnimeID(movie_id) {
 }
 
 function getMetacriticID1(movie_id) {
+  console.log("IMDb Scout Mod (getMetacriticID1): Started.");
   return new Promise(resolve => {
     GM.xmlHttpRequest({
       method: "GET",
@@ -6040,6 +6030,7 @@ function getMetacriticID1(movie_id) {
 }
 
 function getRottenID1(movie_id) {
+  console.log("IMDb Scout Mod (getRottenID1): Started.");
   return new Promise(resolve => {
     GM.xmlHttpRequest({
       method: "GET",
@@ -8996,10 +8987,14 @@ async function getMetacriticRatings(imdbid, meta_icon, meta_badge) {
       let meta_crit, meta_user;
       if ($(result).find('a.metascore_anchor span.larger').length) {
         const x = $(result).find('a.metascore_anchor span.larger:eq(0)').text().trim();
-        if ($.isNumeric(x)) {
-          meta_crit = x;
-        } else {
+        if (Boolean(x.match('\\.'))) { // fixes: if meta_crit missing then it picks meta_user element where score is with dot
           meta_crit = "-";
+        } else {
+          if ($.isNumeric(x)) {
+            meta_crit = x;
+          } else {
+            meta_crit = "-";
+          }
         }
       }
       if ($(result).find('a.metascore_anchor span.user').length) {
@@ -9010,6 +9005,9 @@ async function getMetacriticRatings(imdbid, meta_icon, meta_badge) {
           meta_user = "-";
         }
       }
+      //console.log("!!!!!!!!!!!!!: " + meta_crit);
+      //console.log("!!!!!!!!!!!!!: " + meta_count);
+      //console.log("!!!!!!!!!!!!!: " + meta_url);
       if ($(result).find('.must-see').length) {
         $('.MetaCritRatingImg').attr('src', meta_badge);
       } else {
@@ -9133,7 +9131,7 @@ function getRTandMetaRatings_OMDb(key, imdbid, meta_icon, rott_rotten, rott_cert
       if (response.status == 200) {
         responseJSON = JSON.parse(response.responseText);
         GM.setValue("OMDb_last", JSON.stringify(responseJSON));
-        if (responseJSON['Response'] == "False" || responseJSON['Ratings'].length < 1 || responseJSON['Type'] == "series") {
+        if (responseJSON['Response'] == "False" || responseJSON['Ratings'].length < 1 || responseJSON['Type'] == "series" || responseJSON['Type'] == "episode") {
           console.log("IMDb Scout Mod (OMDb Ratings): Ratings not found. Starting getRotten.");
           const rott_url = '00000000';
           getRotten(rott_url, rott_rotten, rott_certified, rott_fresh, rott_user_up, rott_user_down, imdbid);
@@ -9222,8 +9220,8 @@ async function getRotten(rott_url, rott_rotten, rott_certified, rott_fresh, rott
       const result = parser.parseFromString(response.responseText, "text/html");
 
       let rott_state, rott_user, rott_crit;
-      if ($(result).find('#score-details-json').length) {
-        const scoreTxt = $(result).find('#score-details-json').text();
+      if ($(result).find('#scoreDetails').length) {
+        const scoreTxt = $(result).find('#scoreDetails').text();
         const scoreJsn = JSON.parse(scoreTxt);
         const x = scoreJsn.scoreboard.audienceScore.value;
         const y = scoreJsn.scoreboard.tomatometerScore.value;
