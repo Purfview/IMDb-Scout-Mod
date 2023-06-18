@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      19.6.2
+// @version      19.6.3
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from hundreds various sites. Adds movies/series to Radarr/Sonarr. Adds external ratings from Metacritic, Rotten Tomatoes, Letterboxd, Douban, Allocine, MyAnimeList, AniList. Media Server indicators for Plex, Jellyfin, Emby. Dark theme/style for Reference View. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAMFBMVEUAAAD/AAAcAAA1AABEAABVAAC3AADnAAD2AACFAAClAABlAAB3AADHAACVAADYAABCnXhrAAAD10lEQVRIx73TV4xMURgH8H/OnRmZWe3T7h2sOWaNXu7oJRg9UccuHgTRBatMtAgSg+gJu9q+kFmihcQoD8qLTkK0CIkoy0YJITsRD0rCKTHFrnkSv5e5c88/53znO+fiPwvsvrN038cPNqrG9pJmHkRVnPcpaTlHJY60cfPSpsrzl1LKihrmLvxhCM2i3OHvDx0d+H7e3F6JBv5iZMiJfhFTfPYDMHrMImpwimWWUdSgDQkbno7fFpUPVgh+pHFbZR4SovSctDCM9Hac9IKd9rO8EevtBCkXgY5IMmgquwypP7qqfcp/Tp4KLONDVsWh3RSBB2rnZfit69ocUdqLn2prrRZYM0Jg4JibamKsqe7gfEh5GOAfeYJjVHIPZvil97rcXkMog30byWRwXYRWoxHbzNFHJJpAarO8NdEBBsdCaP3WMJltTmQd4zlnekTq9Z5dgACwAlrpK4BxdV5mvLuspRgMSHbCIFF0iS8MZ5S8oYBYKY7rByC4dDM9uSIUmPOIwxgQBoYeF93auP4qFyPbIVXziWeGTH1EFM57kJo2hqQju6BwIyRf6RmCjdT4JOdiwNgiH/PPD3qoqlsNaXRd+fKtFfECxlZVNVF9SOsgTZEr2TUjJJbyeNX1IZrKIbyGlBABfpQPv2UDrly13LkJXDVhpQ5MhtGwcyF4HKjlU4E8xwB0AvDjd6AGmevZ87EcQRHgcO52e9uNsYELOrAa/Yh81YlmYLQJ5HWyq0+kzQ/DQKEusg6CRI27ryy8nReRS0wsoetkmRwogHSprliCckfEjXG9yAQc74J0WB99vu6DF3i3pMucsXM6tpBbxd2mVJAwXwGogNRBvGRA4jtHKTXkAIwLGCR/mT4Lh75oneQXXP9sAYfGRDCsnw7pX/jRZkU3M44kjw2l5zRIzb4CbZ8dULdL6wbNPZOpK0B6gN1UR1mdoxAaL/GrWiLPL3SEwW9YMTU/d64BtLahAVyucWhj9Mm8ign9IfQaBtd2/GbvCAEBpG5eMcrj2I0ktpKLeaqXQ3Pst42KGIshpdTmQLAeTgFGJ2wvh+tayMOR0n1RZ8B9z13vnOPBnsBq4E1ffgZpPFZHWVpO2cvhjYpOcbBd5TlhpDu5zq9mHGZcVi0y+VFkcFkDdyKJfTt99wEyHSEzDM90KH0nexpwZHJHKYYhjzlwGe0pP/IKfxociaEb7YDbi6KGJY1R2cR76E6NAtXqY4pPH3plLcl8LD7V+cOLUbUWRFZRPTAbVZO3mxK18Xc1ZaAiS8ARJXpZliXAomR94siiiMx8ZBOkXGTlnH0F/9ov1xPtWwEqP9wAAAAASUVORK5CYII=
@@ -1217,6 +1217,8 @@
 
 19.6.2  -   Updated: Aither.
 
+19.6.3  -   Updated: TGx.
+
 
 //==============================================================================
 //    Notes.
@@ -1814,7 +1816,8 @@ var public_sites = [
   {   'name': 'TGx',
       'icon': 'data:image/png;base64,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',
       'searchUrl': 'https://tgx.rs/torrents.php?search=%tt%',
-      'matchRegex': /No results found/,
+      'matchRegex': /magnet download/,
+      'positiveMatch': true,
       'both': true},
   {   'name': 'TheRostrum',
       'icon': 'https://forum.emule-project.net/favicon.ico',
