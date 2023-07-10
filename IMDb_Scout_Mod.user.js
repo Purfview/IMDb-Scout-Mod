@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      19.6.3
+// @version      19.6.4
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from hundreds various sites. Adds movies/series to Radarr/Sonarr. Adds external ratings from Metacritic, Rotten Tomatoes, Letterboxd, Douban, Allocine, MyAnimeList, AniList. Media Server indicators for Plex, Jellyfin, Emby. Dark theme/style for Reference View. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAMFBMVEUAAAD/AAAcAAA1AABEAABVAAC3AADnAAD2AACFAAClAABlAAB3AADHAACVAADYAABCnXhrAAAD10lEQVRIx73TV4xMURgH8H/OnRmZWe3T7h2sOWaNXu7oJRg9UccuHgTRBatMtAgSg+gJu9q+kFmihcQoD8qLTkK0CIkoy0YJITsRD0rCKTHFrnkSv5e5c88/53znO+fiPwvsvrN038cPNqrG9pJmHkRVnPcpaTlHJY60cfPSpsrzl1LKihrmLvxhCM2i3OHvDx0d+H7e3F6JBv5iZMiJfhFTfPYDMHrMImpwimWWUdSgDQkbno7fFpUPVgh+pHFbZR4SovSctDCM9Hac9IKd9rO8EevtBCkXgY5IMmgquwypP7qqfcp/Tp4KLONDVsWh3RSBB2rnZfit69ocUdqLn2prrRZYM0Jg4JibamKsqe7gfEh5GOAfeYJjVHIPZvil97rcXkMog30byWRwXYRWoxHbzNFHJJpAarO8NdEBBsdCaP3WMJltTmQd4zlnekTq9Z5dgACwAlrpK4BxdV5mvLuspRgMSHbCIFF0iS8MZ5S8oYBYKY7rByC4dDM9uSIUmPOIwxgQBoYeF93auP4qFyPbIVXziWeGTH1EFM57kJo2hqQju6BwIyRf6RmCjdT4JOdiwNgiH/PPD3qoqlsNaXRd+fKtFfECxlZVNVF9SOsgTZEr2TUjJJbyeNX1IZrKIbyGlBABfpQPv2UDrly13LkJXDVhpQ5MhtGwcyF4HKjlU4E8xwB0AvDjd6AGmevZ87EcQRHgcO52e9uNsYELOrAa/Yh81YlmYLQJ5HWyq0+kzQ/DQKEusg6CRI27ryy8nReRS0wsoetkmRwogHSprliCckfEjXG9yAQc74J0WB99vu6DF3i3pMucsXM6tpBbxd2mVJAwXwGogNRBvGRA4jtHKTXkAIwLGCR/mT4Lh75oneQXXP9sAYfGRDCsnw7pX/jRZkU3M44kjw2l5zRIzb4CbZ8dULdL6wbNPZOpK0B6gN1UR1mdoxAaL/GrWiLPL3SEwW9YMTU/d64BtLahAVyucWhj9Mm8ign9IfQaBtd2/GbvCAEBpG5eMcrj2I0ktpKLeaqXQ3Pst42KGIshpdTmQLAeTgFGJ2wvh+tayMOR0n1RZ8B9z13vnOPBnsBq4E1ffgZpPFZHWVpO2cvhjYpOcbBd5TlhpDu5zq9mHGZcVi0y+VFkcFkDdyKJfTt99wEyHSEzDM90KH0nexpwZHJHKYYhjzlwGe0pP/IKfxociaEb7YDbi6KGJY1R2cR76E6NAtXqY4pPH3plLcl8LD7V+cOLUbUWRFZRPTAbVZO3mxK18Xc1ZaAiS8ARJXpZliXAomR94siiiMx8ZBOkXGTlnH0F/9ov1xPtWwEqP9wAAAAASUVORK5CYII=
@@ -1218,6 +1218,8 @@
 19.6.2  -   Updated: Aither.
 
 19.6.3  -   Updated: TGx.
+
+19.6.4  -   Removed: 2Embed.to, 2Embed.org.
 
 
 //==============================================================================
@@ -5022,32 +5024,6 @@ var other_sites = [
 ];
 
 var streaming_sites = [
-  {   'name': '2Embed.org',
-      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAB+FBMVEUAAADmIayWBcgWtMH9yw2zC9r4BlP/8gnEH+8Rmav7iDXkG6n7+wod4N1kAXFB3eVjIZTxiyj6C2b8dEkWwcT4IU//5gj0CEm7FuYws8D00h/7TVL+4wqaHMwVrLf1BVeyG+Ia2dT/SGH+1AoVpLh3AIL+0gn0A1D+2Qq4HugUobTjHnygILj+zBIck7LzCWKtHNz+0wsUoLYe6OJcBWD8Ylv9sQkj9fFaCnD8alj8oQ7yAU3+4QrAJO8Tl6wZ4dz/SWeMAJ/+4Qj8fkhijrNwP8HepU0SkaL90w7qFXGtJNKfkq8vhK7LQ3b9uyjyAE3+6woRiJ/HK/X7G2oLqa/CE+f//wL7alkf8+tfCF/9tQn8xxwegavCRpG/SbMi9vFDGV8Ob4n9+Aoa0NX+swiPCbOKAKh+AKcneaNwAJD8U1/3Fkz2SUL+vhz+1gn+0An+ywn+xAkd9vIe8O0n7O0c7uws4uUi29wc2NsZx9CnBtAYxMqeBMoYxsSfCMMVtLh/h7eRjbWBALESoq4wd65ZRa5BYKYwaqG8UpzDVZXDQJGoO5HPRJChJY2uLIlvAIeqOYJvAH/8GXT/LGz9GGzOUWn8O2n/PmX8MWLMeVr6E1r7PFj5QU3zEEf2PUX8lS/9qSn9xhn5thb9zBX7rxL+wAn+vAn9rQnTiIsMAAAAY3RSTlMABP7+/v2DgoGAGgwE/v79/f38/Pv7++7t7e3s7Ovr5+bm5ubl5eXd3Nvb1dTU08zLy8m8u7u6s7KysamnpqaTk5KRj46NjYKBgH9cWlpYSUlIRzw7Ojo4Nzc1IyIiIRsbDAxYN6KqAAAA90lEQVQY02MAAkZ/a3V5fc9YBijgZhOfm509S0jbJYQRLM8mOi8nZ87sGVO6JDkTgQLB0vNzFy9cIJw1bVKDiDtQjXNuXn6+mpOfZdbkjnK5QIZo3YKlKWZRDAxcptN7yqrtGDxYli234gIZFq7UWZKsxWBYmCLoC7HOobEoWYVBuTBlqiNEwJu/tNKIQaNgSZ9qJIgfb15cwczJYJO3qHeiSQIDQ4QxbzKzXgxDgAzLhEw+Cx97xdr65hZXBgYedrGZ6Zn9Am0ZGe2tsqFArUnsUt1N6Wlpqal1rBxgz/CEuekwMdVUsUpwcMM8HOdloKBpGwSSBwBPJz4cDst02AAAAABJRU5ErkJggg==',
-      'searchUrl': 'https://2embed.org/embed/movie?imdb=%tt%',
-      'loggedOutRegex': /Cloudflare|Ray ID/,
-      'matchRegex': /Not Found|We can't find/,
-      'inThirdSearchBar': true},
-  {   'name': '2Embed.org',
-      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAB+FBMVEUAAADmIayWBcgWtMH9yw2zC9r4BlP/8gnEH+8Rmav7iDXkG6n7+wod4N1kAXFB3eVjIZTxiyj6C2b8dEkWwcT4IU//5gj0CEm7FuYws8D00h/7TVL+4wqaHMwVrLf1BVeyG+Ia2dT/SGH+1AoVpLh3AIL+0gn0A1D+2Qq4HugUobTjHnygILj+zBIck7LzCWKtHNz+0wsUoLYe6OJcBWD8Ylv9sQkj9fFaCnD8alj8oQ7yAU3+4QrAJO8Tl6wZ4dz/SWeMAJ/+4Qj8fkhijrNwP8HepU0SkaL90w7qFXGtJNKfkq8vhK7LQ3b9uyjyAE3+6woRiJ/HK/X7G2oLqa/CE+f//wL7alkf8+tfCF/9tQn8xxwegavCRpG/SbMi9vFDGV8Ob4n9+Aoa0NX+swiPCbOKAKh+AKcneaNwAJD8U1/3Fkz2SUL+vhz+1gn+0An+ywn+xAkd9vIe8O0n7O0c7uws4uUi29wc2NsZx9CnBtAYxMqeBMoYxsSfCMMVtLh/h7eRjbWBALESoq4wd65ZRa5BYKYwaqG8UpzDVZXDQJGoO5HPRJChJY2uLIlvAIeqOYJvAH/8GXT/LGz9GGzOUWn8O2n/PmX8MWLMeVr6E1r7PFj5QU3zEEf2PUX8lS/9qSn9xhn5thb9zBX7rxL+wAn+vAn9rQnTiIsMAAAAY3RSTlMABP7+/v2DgoGAGgwE/v79/f38/Pv7++7t7e3s7Ovr5+bm5ubl5eXd3Nvb1dTU08zLy8m8u7u6s7KysamnpqaTk5KRj46NjYKBgH9cWlpYSUlIRzw7Ojo4Nzc1IyIiIRsbDAxYN6KqAAAA90lEQVQY02MAAkZ/a3V5fc9YBijgZhOfm509S0jbJYQRLM8mOi8nZ87sGVO6JDkTgQLB0vNzFy9cIJw1bVKDiDtQjXNuXn6+mpOfZdbkjnK5QIZo3YKlKWZRDAxcptN7yqrtGDxYli234gIZFq7UWZKsxWBYmCLoC7HOobEoWYVBuTBlqiNEwJu/tNKIQaNgSZ9qJIgfb15cwczJYJO3qHeiSQIDQ4QxbzKzXgxDgAzLhEw+Cx97xdr65hZXBgYedrGZ6Zn9Am0ZGe2tsqFArUnsUt1N6Wlpqal1rBxgz/CEuekwMdVUsUpwcMM8HOdloKBpGwSSBwBPJz4cDst02AAAAABJRU5ErkJggg==',
-      'searchUrl': 'https://2embed.org/embed/series?imdb=%seriesid%&s=%seasonid%&e=%episodeid%',
-      'loggedOutRegex': /Cloudflare|Ray ID/,
-      'matchRegex': /Not Found|We can't find/,
-      'inThirdSearchBar': true,
-      'TV': true},
-  {   'name': '2Embed.to',
-      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAHlBMVEUAAAAAm/8AqP8AlP8Asv8Aof8Ajf8Auf8Ag/8Aev+DTgm9AAAAAXRSTlMAQObYZgAAAgRJREFUSMfNlUFqwzAQRXWECOOuW2F3XWPoOhiXbGODeoGA6TKUgg8QCMkNkttW80fKWJIPkFk/3nyN5LF6jjq1mqq0o0H1qN3s6gjg1jJhY4IANlxPbVNoPZTW1jUBFRNBoC6kaFgxmsp0jybKA6RwRKY4BsApopyVV6gHEFJYKDqv2Abg53JFivSoKtR0udxPIIYBOZ2jcgIBWNFwCms8oQRIFDWabBdApOAmlVFSnw4IilJ7xesCaNGDFIWkUEuAFFcoClbEAlWIwt9qHQmUBnANKUo3rdcY4B6cghUqBnwPTkGKfQKIwt+qimsQBZqUmwSwGjFFoZKqtS5cj6DQmwyQHlCotIwNMaH4yIFYoXIAiskrnCA3LGLe1QogPdaBzowS87zSol8obod2DRDFee2YfUfn4JiHtUH1vTvHgJNONMlNBpCCexzw7HKAFUULgc4Ufw/FRIJcMTsAis+Df7b7BHAKNwqrIZBHKwAUo32hiE4gz14AUrzRGVhgTAIg5svU+kU0jrFihuKLBLLJIgCKbxoCBNYkX+9Mig5TZAEZTALM7yLApqy2MfA7hSFQROxBAVjgp8gR4zXoBXwG7NqKAFEEQdPIqo1W8UIwLAT9LgAk4CmKAMDRAyTgKZalEyAi/3E8IAK6J1cdCx6/JBY0JKAhiCAoSCAXjQ7yW3yK+gdCPiwH6opzegAAAABJRU5ErkJggg==',
-      'searchUrl': 'https://www.2embed.to/embed/imdb/movie?id=%tt%',
-      'loggedOutRegex': /Cloudflare|Ray ID/,
-      'matchRegex': /We're Sorry/,
-      'inThirdSearchBar': true},
-  {   'name': '2Embed.to',
-      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAHlBMVEUAAAAAm/8AqP8AlP8Asv8Aof8Ajf8Auf8Ag/8Aev+DTgm9AAAAAXRSTlMAQObYZgAAAgRJREFUSMfNlUFqwzAQRXWECOOuW2F3XWPoOhiXbGODeoGA6TKUgg8QCMkNkttW80fKWJIPkFk/3nyN5LF6jjq1mqq0o0H1qN3s6gjg1jJhY4IANlxPbVNoPZTW1jUBFRNBoC6kaFgxmsp0jybKA6RwRKY4BsApopyVV6gHEFJYKDqv2Abg53JFivSoKtR0udxPIIYBOZ2jcgIBWNFwCms8oQRIFDWabBdApOAmlVFSnw4IilJ7xesCaNGDFIWkUEuAFFcoClbEAlWIwt9qHQmUBnANKUo3rdcY4B6cghUqBnwPTkGKfQKIwt+qimsQBZqUmwSwGjFFoZKqtS5cj6DQmwyQHlCotIwNMaH4yIFYoXIAiskrnCA3LGLe1QogPdaBzowS87zSol8obod2DRDFee2YfUfn4JiHtUH1vTvHgJNONMlNBpCCexzw7HKAFUULgc4Ufw/FRIJcMTsAis+Df7b7BHAKNwqrIZBHKwAUo32hiE4gz14AUrzRGVhgTAIg5svU+kU0jrFihuKLBLLJIgCKbxoCBNYkX+9Mig5TZAEZTALM7yLApqy2MfA7hSFQROxBAVjgp8gR4zXoBXwG7NqKAFEEQdPIqo1W8UIwLAT9LgAk4CmKAMDRAyTgKZalEyAi/3E8IAK6J1cdCx6/JBY0JKAhiCAoSCAXjQ7yW3yK+gdCPiwH6opzegAAAABJRU5ErkJggg==',
-      'searchUrl': 'https://www.2embed.to/embed/imdb/tv?id=%seriesid%&s=%seasonid%&e=%episodeid%',
-      'loggedOutRegex': /Cloudflare|Ray ID/,
-      'matchRegex': /We're Sorry/,
-      'inThirdSearchBar': true,
-      'TV': true},
   {   'name': '9anime',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEQAAABEAgMAAABFfXshAAAADFBMVEUAAACHIL3s2/S5ftmdkvnwAAAAAXRSTlMAQObYZgAAAJNJREFUOMu11LENwkAUBNFtCFHNYAkh13EiQDRB7qbIXQYhIdJOYAf4h6Ony/bytzt/urymZ5U3owo0gkYIIYQQQgghhBBCCCGEEEIIIYQQQgghhBBCCFGoy0VlUmFHmXa8fFNZu8xJIhKRiEQkIhGJSEQiEpH8SJVHuqxd5nRZuly1lKXLfXtxY3u5Y/MHOI0ccl8JdMZ/7cEcZAAAAABJRU5ErkJggg==',
       'searchUrl': 'https://9anime.gs/filter?keyword=%search_string%',
