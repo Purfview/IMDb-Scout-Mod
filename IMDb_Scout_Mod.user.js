@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      19.6.4
+// @version      19.6.5
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from hundreds various sites. Adds movies/series to Radarr/Sonarr. Adds external ratings from Metacritic, Rotten Tomatoes, Letterboxd, Douban, Allocine, MyAnimeList, AniList. Media Server indicators for Plex, Jellyfin, Emby. Dark theme/style for Reference View. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAMFBMVEUAAAD/AAAcAAA1AABEAABVAAC3AADnAAD2AACFAAClAABlAAB3AADHAACVAADYAABCnXhrAAAD10lEQVRIx73TV4xMURgH8H/OnRmZWe3T7h2sOWaNXu7oJRg9UccuHgTRBatMtAgSg+gJu9q+kFmihcQoD8qLTkK0CIkoy0YJITsRD0rCKTHFrnkSv5e5c88/53znO+fiPwvsvrN038cPNqrG9pJmHkRVnPcpaTlHJY60cfPSpsrzl1LKihrmLvxhCM2i3OHvDx0d+H7e3F6JBv5iZMiJfhFTfPYDMHrMImpwimWWUdSgDQkbno7fFpUPVgh+pHFbZR4SovSctDCM9Hac9IKd9rO8EevtBCkXgY5IMmgquwypP7qqfcp/Tp4KLONDVsWh3RSBB2rnZfit69ocUdqLn2prrRZYM0Jg4JibamKsqe7gfEh5GOAfeYJjVHIPZvil97rcXkMog30byWRwXYRWoxHbzNFHJJpAarO8NdEBBsdCaP3WMJltTmQd4zlnekTq9Z5dgACwAlrpK4BxdV5mvLuspRgMSHbCIFF0iS8MZ5S8oYBYKY7rByC4dDM9uSIUmPOIwxgQBoYeF93auP4qFyPbIVXziWeGTH1EFM57kJo2hqQju6BwIyRf6RmCjdT4JOdiwNgiH/PPD3qoqlsNaXRd+fKtFfECxlZVNVF9SOsgTZEr2TUjJJbyeNX1IZrKIbyGlBABfpQPv2UDrly13LkJXDVhpQ5MhtGwcyF4HKjlU4E8xwB0AvDjd6AGmevZ87EcQRHgcO52e9uNsYELOrAa/Yh81YlmYLQJ5HWyq0+kzQ/DQKEusg6CRI27ryy8nReRS0wsoetkmRwogHSprliCckfEjXG9yAQc74J0WB99vu6DF3i3pMucsXM6tpBbxd2mVJAwXwGogNRBvGRA4jtHKTXkAIwLGCR/mT4Lh75oneQXXP9sAYfGRDCsnw7pX/jRZkU3M44kjw2l5zRIzb4CbZ8dULdL6wbNPZOpK0B6gN1UR1mdoxAaL/GrWiLPL3SEwW9YMTU/d64BtLahAVyucWhj9Mm8ign9IfQaBtd2/GbvCAEBpG5eMcrj2I0ktpKLeaqXQ3Pst42KGIshpdTmQLAeTgFGJ2wvh+tayMOR0n1RZ8B9z13vnOPBnsBq4E1ffgZpPFZHWVpO2cvhjYpOcbBd5TlhpDu5zq9mHGZcVi0y+VFkcFkDdyKJfTt99wEyHSEzDM90KH0nexpwZHJHKYYhjzlwGe0pP/IKfxociaEb7YDbi6KGJY1R2cR76E6NAtXqY4pPH3plLcl8LD7V+cOLUbUWRFZRPTAbVZO3mxK18Xc1ZaAiS8ARJXpZliXAomR94siiiMx8ZBOkXGTlnH0F/9ov1xPtWwEqP9wAAAAASUVORK5CYII=
@@ -1221,6 +1221,8 @@
 
 19.6.4  -   Removed: 2Embed.to, 2Embed.org.
 
+19.6.5  -   Added: AnimeSub (PL).
+
 
 //==============================================================================
 //    Notes.
@@ -1612,7 +1614,7 @@ var public_sites = [
       'matchRegex': /Nothing Found/,
       'TV': true},
   {   'name': 'MovieParadise',
-      'icon': 'https://movieparadise.org/wp-content/uploads/2018/01/favicon.png',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwAQMAAABtzGvEAAAABlBMVEX///9qod7G9e/zAAAAtklEQVQY00WQ0QnDMAxErzU0n/7uV1boBNEqHaEDBCejeRSPoE8HTJWTY0gIPBndwekAhAL/tj/8YZaJaKbEbNZ8lYMvrf+PBsiOULnOmJTigqnAx0hvUMw7ZbXjXSEAPq3jt2IhNCFR4XD9gpXuC3GgChowa4eUC7vju0EoKckRtIGGqLXjcKRwKBIHK4QwPVZCMhojMVQlogeM+YWgDP/sUHAch40zr6PvCoSFjHrusmCu6Gac489ij03y9hMAAAAASUVORK5CYII=',
       'searchUrl': 'https://movieparadise.org/?s=%tt%',
       'matchRegex': /No results to show with/,
       'both': true},
@@ -3040,14 +3042,14 @@ var private_sites = [
       'matchRegex': /Nothing here/,
       'both': true},
   {   'name': 'PTP',
-      'icon': 'https://passthepopcorn.me/static/common/touch-icon-iphone.png',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADkAAAA5CAMAAAC7xnO3AAAAV1BMVEUAAAD///9oiM2CacFm5Mj/jGb842dn3auC3X/z82j/uWZw14xudcRwbsBmpdz83GZm4NBq26KP4Hrm9Wr/rmdmr91u2ZNmntln5L/902b/l2Zt1otnseEVRKmYAAAAeUlEQVRIx+3WtwqAMBCAYU2zpNlii+//nAZFCDooSIaQ+5fjhm89LoNCl7u+TpCvM8kopUNda81YVfVu78rS8rEtCkJI4/ZNKYSQkBJjfJerk4sv+SHnUxo1/ZMCJEiQIKOV8pKPe8s8aa317q3x7m2SxfUnxCWhAO24CSsei22B/wAAAABJRU5ErkJggg==',
       'searchUrl': 'https://passthepopcorn.me/torrents.php?imdb=%tt%',
       'loggedOutRegex': /Cloudflare|Ray ID|Keep me logged in|Your popcorn quota/,
       'matchRegex': /Your search did not match anything/,
       'rateLimit': 250,
       'both': true},
   {   'name': 'PTP-Req',
-      'icon': 'https://passthepopcorn.me/static/common/touch-icon-iphone.png',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADkAAAA5CAMAAAC7xnO3AAAAV1BMVEUAAAD///9oiM2CacFm5Mj/jGb842dn3auC3X/z82j/uWZw14xudcRwbsBmpdz83GZm4NBq26KP4Hrm9Wr/rmdmr91u2ZNmntln5L/902b/l2Zt1otnseEVRKmYAAAAeUlEQVRIx+3WtwqAMBCAYU2zpNlii+//nAZFCDooSIaQ+5fjhm89LoNCl7u+TpCvM8kopUNda81YVfVu78rS8rEtCkJI4/ZNKYSQkBJjfJerk4sv+SHnUxo1/ZMCJEiQIKOV8pKPe8s8aa317q3x7m2SxfUnxCWhAO24CSsei22B/wAAAABJRU5ErkJggg==',
       'searchUrl': 'https://passthepopcorn.me/requests.php?submit=true&search=%tt%',
       'loggedOutRegex': /Cloudflare|Ray ID|Keep me logged in|Your popcorn quota/,
       'matchRegex': /Your search did not match anything/,
@@ -3514,6 +3516,7 @@ var private_sites = [
       'matchRegex': /Nothing found/,
       'both': true},
   {   'name': 'Uniongang',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgBAMAAACBVGfHAAAAGFBMVEUFBgYoKSpjYmJISEl6eXmQjY6sqKff3dwr5BcNAAAA8klEQVQoz2WR4XHDIAyF4w2sMEGBDgDqBFTOAD3jLlDTCRKvnyflYpPL+yPu40kC6WQilz3TadfgYq0ldSAv27aGcQf0+b9tt5/D4mCA5QDnXwXXj73EuSloHVgatB7ATRWaDZjewaWtSOkdDfpLB4hatXsY5anKHKj7SyzevwDpwTBaigSCrEKifGkNNRynUf2eeQJglyUoiLWwToyz1G8AjG8uXgWqgKKIGEC0FGZcGgtaFBYsAWni2drCQo93lCdAez+hESyJbF5eCuwgEgxk3RrplxebwPC1zLZXwiE9HNrdBleSRa/BrnBjbRFM2vUOQYREF1Xy+W4AAAAASUVORK5CYII=',
       'searchUrl': 'https://www.uniongang.tv/browse.php?search=&incldead=1&cat=0&dsearch=%tt%',
       'loggedOutRegex': /Cloudflare|Ray ID|Ещё не зарегистрированы/,
       'matchRegex': /Ничего не найдено/,
@@ -4419,7 +4422,7 @@ var subs_sites = [
       'inSecondSearchBar': true,
       'both': true},
   {   'name': 'AnimeSub (PL)',
-      'icon': 'data:image/x-icon;base64,AAABAAEAEBAAAAEACABoBQAAFgAAACgAAAAQAAAAIAAAAAEACAAAAAAAAAEAAAAAAAAAAAAAAAEAAAABAAAAAAAAERAQABYVFAARESQAFBQyABQUNQAVJD8AOjo6AA8+VQAjI0UALi1RABwcagA0NG4ALCx0AC0teQAvL30AMDB4ADQ0ewA0NH0AF0ZxAA5cegASUXUAW1BIAFBQVQBaUVwAW1tfAElvbQBOZXoAa2dkAHJycgAyMoIALy+XADo6lwAvL7EAJESCADNDmgANaocAD22OAAt4lABMTJYAOTnNAD8/0AAmVMEALm3dAEBAxwBERMgAX1/LAEhI0wBSUtcAXV3cAHNzygBpaeEAdHTmAH5+6gAKh6IAC4ikAAmVoQAIla8AB6O8ADmkrAAui90ABLDHAAWxyAAKttYABL/XADiV6gAXo+sAHantACO/9QBlhOkAQ7D0AAXA1wACzeMAA87kABXA7gAB2/EAAdzyAA3Y9wAb1vsADuL3AAXg/AAA6v8AEuT5AJ2dnQCHh+0AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB0HUwAAAAAAHQdTAAAAAFJHBhcAAAAAT0AGGQAcHDtRUSQDAQECOFFRFQocISEqUVFJPj4+PktRSw8LIVRUVE5RUVFRUVFRUTYRMlQ1NTVGUVFJP0pQUVETDDU1NDQ0RVFROgQJTVFJHic0NDMzMzNEUUsECFFRJhEuMzMxMTExQVFRFDdRUSIRMTExMDAwMDBQUTlJUToNIDAwMC8vLy8vQ1FLUVElDy0vLy8pKSkpKStRUVFLIx8pKSkpKSgpKCkoQlFRPC0oKSgpKBYWFhYWFhYaGxgWFhYWFhYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPHxAADh4QAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//8AAP//AAA=',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAzFBMVEUAAAD/6gDQPz9IUFvXUlLTSEjcXV3haWnNOTnqfn7mdHTx2wHth4fIsQXkzgNkZ2t7NDSxLy8RERKdnZ1ycnJdVlrIREQ6OjpxMDB9Ly/spho/JBX51xQyFBT44xCLaw6jiAq8owf84AXXwATKc3PphGXLX19VUFB6ZU6WTExtb0n0sEOXOjqspDnqlTiaQzOCMjKXLy/diy7dbS5RLS7BVCaCRCT1vyNFIyNqHBxxRhfuwBV1URIkERFVPg96XA6UeAvWtgqhlQmvlQgbghLTAAAAAXRSTlMAQObYZgAAAKFJREFUGNOFxtUWwjAURNE7WElSariUCu7uDv//TyRtF6/seZhD/6Vj42E5Dkrl1RrAuhIVpZQNALFYqaSs0oAAvHpFJmWUEB8DQW0qk3LSHHj4wN6STZp0gHDvwNPqaxpxzntA4B5bMJYjzokxNgGM1yUEzjXGSNf1FhK+1dXJtneAUZAERP1kk2nOAO/mOM4buG5Nktqd5iD5MkVK1eLvv6RTDTXmdDasAAAAAElFTkSuQmCC',
       'searchUrl': 'http://animesub.info/szukaj.php?szukane=%search_string_orig%&pTitle=org',
       'matchRegex': /Nie znaleziono/,
       'inSecondSearchBar': true,
@@ -5301,7 +5304,7 @@ var icon_sites_main = [
       'searchUrl': 'https://ddunlimited.net/search.php?keywords=%search_string_orig%&terms=all&gsearch=0&sv=0&fid[]=1381&fid[]=1572&fid[]=1573&fid[]=1577&fid[]=1582&fid[]=1583&fid[]=1925&fid[]=1926&sc=1&sf=firstpost&sr=topics&sk=t&sd=d&st=0&ch=300&t=0&submit=Search',
       'showByDefault': false},
   {   'name': 'Douban (CN)',
-      'icon': 'https://img9.doubanio.com/favicon.ico',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABAAgMAAADXB5lNAAAACVBMVEUAAAABdhD9/v2am9qEAAAAAXRSTlMAQObYZgAAAHNJREFUOMvN07EJwCAQheFL4Qju4wgpPAtHuH0cwUKnDEE48kQIiIb85dc8ODg6GHJkEE6yCJ74BXgOpGplG0DrQHRkKbSBH0JrJ+huzXr1OIQAkG5ICmEIESAjcANGEIDSgQDUR5MAfQSebP/7BsERIdAFZIivQa95DQkAAAAASUVORK5CYII=',
       'searchUrl': 'https://search.douban.com/movie/subject_search?search_text=%tt%',
       'showByDefault': false},
   {   'name': 'DuckDuckGo',
@@ -8939,7 +8942,7 @@ function getMetacriticRatings_IMDb(imdbid, meta_icon, meta_badge) {
   const url = "https://www.imdb.com/title/tt" +imdbid+ "/criticreviews";
   GM.xmlHttpRequest({
     method: "GET",
-    timeout: 10000,
+    timeout: 20000,
     url:    url,
     headers: { "User-Agent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:108.0) Gecko/20100101 Firefox/108.0" },
     onload: function(response) {
@@ -9273,7 +9276,7 @@ async function getRotten(rott_url, rott_rotten, rott_certified, rott_fresh, rott
   }
   GM.xmlHttpRequest({
     method: "GET",
-    timeout: 14000,
+    timeout: 20000,
     url:     rott_url,
     headers: { "User-Agent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:108.0) Gecko/20100101 Firefox/108.0" },
     onload: function(response) {
@@ -9373,7 +9376,7 @@ async function getDoubanRatings(imdbid, douban_icon) {
   $('.DoubanUserRatingUrl').attr('href', url);
   GM.xmlHttpRequest({
     method: "GET",
-    timeout: 10000,
+    timeout: 20000,
     url:    url,
     headers: { "User-Agent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:108.0) Gecko/20100101 Firefox/108.0" },
     onload: function(response) {
@@ -9418,7 +9421,7 @@ async function getAllocineRatings(imdbid, allocine_icon) {
   $('.AllocineUserRatingUrl').attr('href', url);
   GM.xmlHttpRequest({
     method: "GET",
-    timeout: 10000,
+    timeout: 20000,
     url:    url,
     headers: { "User-Agent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:108.0) Gecko/20100101 Firefox/108.0" },
     onload: function(response) {
@@ -9658,7 +9661,7 @@ function getIMDbTopReview() {
   const url = "https://www.imdb.com/title/tt" +imdbid+ "/reviews?spoiler=hide&sort=helpfulnessScore";
   GM.xmlHttpRequest({
     method: "GET",
-    timeout: 10000,
+    timeout: 20000,
     url:    url,
     headers: { "User-Agent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:108.0) Gecko/20100101 Firefox/108.0" },
     onload: function(response) {
