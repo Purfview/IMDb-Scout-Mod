@@ -28,7 +28,7 @@ Meanings of the color borders around the icons:
 
 ## Installing:
 
-[Press here to install](https://greasyfork.org/scripts/407284-imdb-scout-mod/code/IMDb%20Scout%20Mod.user.js)
+[Press here to install](https://greasyfork.org/en/scripts/407284-imdb-scout-mod)
 
 ## Contributing:
 
