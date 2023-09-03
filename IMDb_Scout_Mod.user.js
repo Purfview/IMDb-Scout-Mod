@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      19.6.6
+// @version      19.6.7
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from hundreds various sites. Adds movies/series to Radarr/Sonarr. Adds external ratings from Metacritic, Rotten Tomatoes, Letterboxd, Douban, Allocine, MyAnimeList, AniList. Media Server indicators for Plex, Jellyfin, Emby. Dark theme/style for Reference View. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAMFBMVEUAAAD/AAAcAAA1AABEAABVAAC3AADnAAD2AACFAAClAABlAAB3AADHAACVAADYAABCnXhrAAAD10lEQVRIx73TV4xMURgH8H/OnRmZWe3T7h2sOWaNXu7oJRg9UccuHgTRBatMtAgSg+gJu9q+kFmihcQoD8qLTkK0CIkoy0YJITsRD0rCKTHFrnkSv5e5c88/53znO+fiPwvsvrN038cPNqrG9pJmHkRVnPcpaTlHJY60cfPSpsrzl1LKihrmLvxhCM2i3OHvDx0d+H7e3F6JBv5iZMiJfhFTfPYDMHrMImpwimWWUdSgDQkbno7fFpUPVgh+pHFbZR4SovSctDCM9Hac9IKd9rO8EevtBCkXgY5IMmgquwypP7qqfcp/Tp4KLONDVsWh3RSBB2rnZfit69ocUdqLn2prrRZYM0Jg4JibamKsqe7gfEh5GOAfeYJjVHIPZvil97rcXkMog30byWRwXYRWoxHbzNFHJJpAarO8NdEBBsdCaP3WMJltTmQd4zlnekTq9Z5dgACwAlrpK4BxdV5mvLuspRgMSHbCIFF0iS8MZ5S8oYBYKY7rByC4dDM9uSIUmPOIwxgQBoYeF93auP4qFyPbIVXziWeGTH1EFM57kJo2hqQju6BwIyRf6RmCjdT4JOdiwNgiH/PPD3qoqlsNaXRd+fKtFfECxlZVNVF9SOsgTZEr2TUjJJbyeNX1IZrKIbyGlBABfpQPv2UDrly13LkJXDVhpQ5MhtGwcyF4HKjlU4E8xwB0AvDjd6AGmevZ87EcQRHgcO52e9uNsYELOrAa/Yh81YlmYLQJ5HWyq0+kzQ/DQKEusg6CRI27ryy8nReRS0wsoetkmRwogHSprliCckfEjXG9yAQc74J0WB99vu6DF3i3pMucsXM6tpBbxd2mVJAwXwGogNRBvGRA4jtHKTXkAIwLGCR/mT4Lh75oneQXXP9sAYfGRDCsnw7pX/jRZkU3M44kjw2l5zRIzb4CbZ8dULdL6wbNPZOpK0B6gN1UR1mdoxAaL/GrWiLPL3SEwW9YMTU/d64BtLahAVyucWhj9Mm8ign9IfQaBtd2/GbvCAEBpG5eMcrj2I0ktpKLeaqXQ3Pst42KGIshpdTmQLAeTgFGJ2wvh+tayMOR0n1RZ8B9z13vnOPBnsBq4E1ffgZpPFZHWVpO2cvhjYpOcbBd5TlhpDu5zq9mHGZcVi0y+VFkcFkDdyKJfTt99wEyHSEzDM90KH0nexpwZHJHKYYhjzlwGe0pP/IKfxociaEb7YDbi6KGJY1R2cR76E6NAtXqY4pPH3plLcl8LD7V+cOLUbUWRFZRPTAbVZO3mxK18Xc1ZaAiS8ARJXpZliXAomR94siiiMx8ZBOkXGTlnH0F/9ov1xPtWwEqP9wAAAAASUVORK5CYII=
@@ -1227,12 +1227,15 @@
             Renamed: 9anime to Aniwave.
             Removed: Hawkmenblues.
 
+19.6.7  -   Added: Sky of Usenet (DE), House of Usenet (DE), OnlyEncodes, RareShare2.
+            Removed: HoU, SpiderTK, Telly.
+
 
 //==============================================================================
 //    Notes.
 //==============================================================================
 
-UNIT3D (new at top [UNIT3D v6.5.0]):
+UNIT3D:
 
        v6.5.0:
       'matchRegex': /torrent-listings-name/,
@@ -1244,13 +1247,13 @@ UNIT3D (new at top [UNIT3D v6.5.0]):
        v6.4.1:
       'matchRegex': /torrent-listings-no-result/,
 
-       v5.3.0:
+       v5.3.0 - v6.0.6:
       'matchRegex': /"Download">/,
       'positiveMatch': true,
 
       'matchRegex': /<tbody>\s*<\/tbody>/,
 
-UNIT3D Req (new at top [a circle at Requests - Status]) :
+UNIT3D Req:
 
        v6.5.0:
       'matchRegex': /fa-circle text-red/,
@@ -2950,9 +2953,17 @@ var private_sites = [
       'positiveMatch': true,
       'both': true},
   {   'name': 'OnlyEncodes',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQAQMAAAAlPW0iAAAABlBMVEUAAAD+rDOnX3XmAAAAAXRSTlMAQObYZgAAADZJREFUCNdjYBBgYDBgYEhgYDzAwHyAgb2Bgb+BQf4Pg/0PBsYPDIwPQILMDQxsDAw8DAwcDADWOQi/lM68WwAAAABJRU5ErkJggg==',
       'searchUrl': 'https://onlyencodes.cc/torrents?imdbId=%nott%',
       'loggedOutRegex': /Cloudflare|Ray ID|Forgot Your Password|Service Unavailable/,
       'matchRegex': /torrent-listings-name/,
+      'positiveMatch': true,
+      'both': true},
+  {   'name': 'OnlyEncodes-Req',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQAQMAAAAlPW0iAAAABlBMVEUAAAD+rDOnX3XmAAAAAXRSTlMAQObYZgAAADZJREFUCNdjYBBgYDBgYEhgYDzAwHyAgb2Bgb+BQf4Pg/0PBsYPDIwPQILMDQxsDAw8DAwcDADWOQi/lM68WwAAAABJRU5ErkJggg==',
+      'searchUrl': 'https://onlyencodes.cc/requests?unfilled=1&tmdbId=%tmdbid%',
+      'loggedOutRegex': /Cloudflare|Ray ID|Forgot Your Password|Service Unavailable/,
+      'matchRegex': /fa-circle text-red/,
       'positiveMatch': true,
       'both': true},
   {   'name': 'Peeratiko',
@@ -3079,6 +3090,18 @@ var private_sites = [
       'searchUrl': 'https://pixelhd.me/torrents.php?imdbid=%tt%',
       'loggedOutRegex': /You appear to have javascript disabled/,
       'matchRegex': /Your search did not match anything/},
+  {   'name': 'RareShare2',
+      'searchUrl': 'https://rareshare2.me/torrents?tmdbId=%tmdbid%',
+      'loggedOutRegex': /Cloudflare|Forgot Your Password|Service Unavailable/,
+      'matchRegex': /"Download">/,
+      'positiveMatch': true,
+      'TV': true},
+  {   'name': 'RareShare2-Req',
+      'searchUrl': 'https://rareshare2.me/requests?unfilled=1&tmdbId=%tmdbid%',
+      'loggedOutRegex': /Cloudflare|Forgot Your Password|Service Unavailable/,
+      'matchRegex': /label-danger/,
+      'positiveMatch': true,
+      'TV': true},
   {   'name': 'RedBits',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADwAAAA8BAMAAADI0sRBAAAAGFBMVEUAAAD6AQGsAQHQAgKMBARZAwP5Ly/FPz/1JFdTAAAAAXRSTlMAQObYZgAAASlJREFUOMvt0LFqwzAQBuBL0tirjcFzUQxZU2vIaopKn8C7Q6GzGvr+9H7fCSvIWpp2yw+RLvp0Z2x65G9SXGpOm1Fg1gvFz7qectp6VFVGpW1l+kV0U6FOeKPKvzWelQFLOrwQJV4xqVqZLUM8lemL6dcCY9Atlqzisk/Jg/U8ZdUWT9CcYrU4We75r8bG+gINL9/w4MYu7RaZ6Cxs0fix8A7Kl4569TyfPcfNJz5QBiiH5gNvPXgXuA98sNbwtjVgVgb8E+bCoARjsb25YcMhYVw9CpiIUYGuXPuZS9P5wB0pI7x3jq44FO6GmIetce7VdO/Kzsn+xF0GnfTtOEPgQRlHDpdLMGlQKOuiqyZhJMdvGd67ETzmeASP9/D+P5nuYeS3TI9ofgArj0YZoy/t6AAAAABJRU5ErkJggg==',
       'searchUrl': 'https://redbits.xyz/torrents?imdbId=%tt%',
@@ -3301,18 +3324,6 @@ var private_sites = [
       'loggedOutRegex': /404 - Not Found|You need cookies enabled/,
       'matchRegex': /Try again with a refined search string/,
       'TV': true},
-  {   'name': 'Telly',
-      'searchUrl': 'https://telly.wtf/torrents?imdbId=%nott%',
-      'loggedOutRegex': /Cloudflare|Ray ID|Forgot Your Password/,
-      'matchRegex': /torrent-listings-name/,
-      'positiveMatch': true,
-      'both': true},
-  {   'name': 'Telly-Req',
-      'searchUrl': 'https://telly.wtf/requests?unfilled=1&tmdbId=%tmdbid%',
-      'loggedOutRegex': /Cloudflare|Ray ID|Forgot Your Password/,
-      'matchRegex': /fa-circle text-red/,
-      'positiveMatch': true,
-      'both': true},
   {   'name': 'TeRaCoD',
       'searchUrl': 'https://teracod.net/browse.php?search=%search_string_orig%+%year%&cat=0&genre=0&incldead=0&blah=0',
       'loggedOutRegex': /Cloudflare|Ray ID|Nem vagy bejelentkezve/,
@@ -3901,11 +3912,6 @@ var french_sites = [
       'matchRegex': /btn-danger/,
       'positiveMatch': true,
       'both': true},
-  {   'name': 'SpiderTK',
-      'searchUrl': 'https://spidertk.top/torrents.php?incldead=1&search=%tt%&search_area=4',
-      'loggedOutRegex': /Cloudflare|Ray ID|Le site est en maintenance|Pas connecté|Site is down/,
-      'matchRegex': /Pas de résultats/,
-      'both': true},
   {   'name': 'TCTG',
       'searchUrl': 'https://tctg.pm/torrents-search.php?search="%search_string_orig% %year%"&cat=0&incldead=0&freeleech=0&lang=0',
       'loggedOutRegex': /Cloudflare|Ray ID|Entrer le total/,
@@ -4151,12 +4157,12 @@ var german_sites = [
       'matchRegex': /recordsTotal":0/,
       'TV': true},
   {   'name': 'TorSyndikat',
-      'searchUrl': 'https://tee-stube.org/browse.php?searchstring=%tt%&searchtype=imdbId',
+      'searchUrl': 'https://torrent-syndikat.org/browse.php?searchstring=%tt%&searchtype=imdbId',
       'loggedOutRegex': /Cloudflare|Ray ID|Domain erwerben/,
       'matchRegex': /Keine Ergebnisse/,
       'both': true},
   {   'name': 'TorSyndikat-Req',
-      'searchUrl': 'https://tee-stube.org/rsystem/requests.php?cats[]=Serie&cats[]=Film&sname=%search_string_orig%&rtype=all&rfill=unfilled',
+      'searchUrl': 'https://torrent-syndikat.org/rsystem/requests.php?cats[]=Serie&cats[]=Film&sname=%search_string_orig%&rtype=all&rfill=unfilled',
       'loggedOutRegex': /Cloudflare|Ray ID|Domain erwerben/,
       'matchRegex': /Keine Ergebnisse/,
       'both': true},
@@ -4274,11 +4280,12 @@ var usenet_sites = [
       'loggedOutRegex': /Cloudflare|Ray ID|not logged/,
       'matchRegex': /keine Ergebnisse gefunden|no results were returned|No se encontraron resultados|aucun résultat|Nic nie znaleziono|нет результатов|sonuç bulunamadı/,
       'positiveMatch': true},
-  {   'name': 'HoU',
+  {   'name': 'House of Usenet (DE)',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABAAgMAAADXB5lNAAAACVBMVEUAAABDQkIAi//s9KSQAAAAAXRSTlMAQObYZgAAAIdJREFUOMvt06sRgEAMhOEgroRDUA0lIC6GEqiHEkCQKpkhC8vDMAc4Vv7im5jIh4uq6RAqs+EPbwbV1mxUFazobNlUr8Gw2+FqSOthlHWlh34LwUMjPIQEESeIgCACgggIIiCIgCACgggIIk5wMZ1CAJG3oLs1/ghc2oVaohS3A5cXroc93wzg8pjeUhsyUQAAAABJRU5ErkJggg==',
-      'searchUrl': 'https://house-of-usenet.com/search.php?action=do_search&keywords=%tt%&postthread=1&showresults=threads',
+      'searchUrl': 'https://house-of-usenet.com/tags/imdb_%tt%/',
       'loggedOutRegex': /Cloudflare|Ray ID|bist du schon ein Mitglied/,
-      'matchRegex': /keine Ergebnisse gefunden/,
+      'matchRegex': /error-2-r/,
+      'ignore404': true,
       'both': true},
   {   'name': 'MIAtrix',
       'searchUrl': 'https://www.miatrix.com/search/%search_string% %year%?t=2000',
@@ -4428,6 +4435,12 @@ var usenet_sites = [
       'loggedOutRegex': /Cloudflare|Ray ID|Register/,
       'matchRegex': /did not match any releases/,
       'TV': true},
+  {   'name': 'Sky of Usenet (DE)',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABAAQMAAACQp+OdAAAABlBMVEUAAAAHvtUs1wonAAAAAXRSTlMAQObYZgAAAQFJREFUKM+VkrGtBCEMRI0ICCmBTpbGVkBplEIJhATW+s9Y96Xb8BywT8j2zNoIomzxCGbDIZtth26mDobgNxKYlAiLxU/Vzuy6Ly2HRfO6k7JotBYe9pXWxAAqT5M+JB7RKnVK2kHrKFPyiqeMvADplJm2lJk3bgEDdxslTEwnAFAa1aEPKKh4ewec0uWWBjFUNLmR56ARUBzgN8/rGxahiiZA+g28/NUQooQCaB/Rfz805g5VKj2bQ5/xCfzBfooCyqhmJwImdxE3x2K2EiGYcVDgqkjgMOPkMKkgHG8wAg/uinpQEPGlVBo7gEIb21c5o63v5Qrh/QBo4/VIPl3+ANZUzCSFnBiSAAAAAElFTkSuQmCC',
+      'searchUrl': 'https://sky-of-use.net/index.php?search/=&q=%tt%',
+      'loggedOutRegex': /Cloudflare|Ray ID|Kennwort vergessen/,
+      'matchRegex': /Keine Ergebnisse/,
+      'both': true},
   {   'name': 'WtFnZb',
       'icon': 'https://0ccec98d8962a17294688363537bfe2e.wtfnzb.pw/templates/bookstrap/images/icons/favicon.ico',
       'searchUrl': 'https://0ccec98d8962a17294688363537bfe2e.wtfnzb.pw/movies/?imdb=%nott%',
