@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      19.6.8
+// @version      19.6.9
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from hundreds various sites. Adds movies/series to Radarr/Sonarr. Adds external ratings from Metacritic, Rotten Tomatoes, Letterboxd, Douban, Allocine, MyAnimeList, AniList. Media Server indicators for Plex, Jellyfin, Emby. Dark theme/style for Reference View. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAMFBMVEUAAAD/AAAcAAA1AABEAABVAAC3AADnAAD2AACFAAClAABlAAB3AADHAACVAADYAABCnXhrAAAD10lEQVRIx73TV4xMURgH8H/OnRmZWe3T7h2sOWaNXu7oJRg9UccuHgTRBatMtAgSg+gJu9q+kFmihcQoD8qLTkK0CIkoy0YJITsRD0rCKTHFrnkSv5e5c88/53znO+fiPwvsvrN038cPNqrG9pJmHkRVnPcpaTlHJY60cfPSpsrzl1LKihrmLvxhCM2i3OHvDx0d+H7e3F6JBv5iZMiJfhFTfPYDMHrMImpwimWWUdSgDQkbno7fFpUPVgh+pHFbZR4SovSctDCM9Hac9IKd9rO8EevtBCkXgY5IMmgquwypP7qqfcp/Tp4KLONDVsWh3RSBB2rnZfit69ocUdqLn2prrRZYM0Jg4JibamKsqe7gfEh5GOAfeYJjVHIPZvil97rcXkMog30byWRwXYRWoxHbzNFHJJpAarO8NdEBBsdCaP3WMJltTmQd4zlnekTq9Z5dgACwAlrpK4BxdV5mvLuspRgMSHbCIFF0iS8MZ5S8oYBYKY7rByC4dDM9uSIUmPOIwxgQBoYeF93auP4qFyPbIVXziWeGTH1EFM57kJo2hqQju6BwIyRf6RmCjdT4JOdiwNgiH/PPD3qoqlsNaXRd+fKtFfECxlZVNVF9SOsgTZEr2TUjJJbyeNX1IZrKIbyGlBABfpQPv2UDrly13LkJXDVhpQ5MhtGwcyF4HKjlU4E8xwB0AvDjd6AGmevZ87EcQRHgcO52e9uNsYELOrAa/Yh81YlmYLQJ5HWyq0+kzQ/DQKEusg6CRI27ryy8nReRS0wsoetkmRwogHSprliCckfEjXG9yAQc74J0WB99vu6DF3i3pMucsXM6tpBbxd2mVJAwXwGogNRBvGRA4jtHKTXkAIwLGCR/mT4Lh75oneQXXP9sAYfGRDCsnw7pX/jRZkU3M44kjw2l5zRIzb4CbZ8dULdL6wbNPZOpK0B6gN1UR1mdoxAaL/GrWiLPL3SEwW9YMTU/d64BtLahAVyucWhj9Mm8ign9IfQaBtd2/GbvCAEBpG5eMcrj2I0ktpKLeaqXQ3Pst42KGIshpdTmQLAeTgFGJ2wvh+tayMOR0n1RZ8B9z13vnOPBnsBq4E1ffgZpPFZHWVpO2cvhjYpOcbBd5TlhpDu5zq9mHGZcVi0y+VFkcFkDdyKJfTt99wEyHSEzDM90KH0nexpwZHJHKYYhjzlwGe0pP/IKfxociaEb7YDbi6KGJY1R2cR76E6NAtXqY4pPH3plLcl8LD7V+cOLUbUWRFZRPTAbVZO3mxK18Xc1ZaAiS8ARJXpZliXAomR94siiiMx8ZBOkXGTlnH0F/9ov1xPtWwEqP9wAAAAASUVORK5CYII=
@@ -1232,6 +1232,8 @@
 
 19.6.8  -   Moved "Sky of Usenet (DE)" to the icon sites.
 
+19.6.9  -   Added: RateYourMusic, TheRARBG, Tapochek, Zone Telechargement.
+
 
 //==============================================================================
 //    Notes.
@@ -1752,11 +1754,11 @@ var public_sites = [
       'TV': true},
   {   'name': 'RuT',
       'searchUrl': 'https://rutracker.org/forum/tracker.php?f=100,101,103,1105,1114,1213,1235,124,1247,1278,1280,1281,1327,1363,1389,1391,140,1453,1457,1467,1468,1469,1475,1543,1576,1577,1666,1670,187,1900,1908,1936,194,1950,2076,208,2082,209,2090,2091,2092,2093,2107,2109,2110,2112,212,2123,2139,2159,2160,2163,2164,2166,2168,2169,2176,2177,2178,2198,2199,22,2200,2201,2220,2221,2258,2323,2339,2343,2365,2380,2459,249,2491,251,2535,2538,2540,294,312,313,33,352,376,4,484,500,505,511,521,539,549,552,56,572,599,656,671,672,7,709,752,821,822,851,863,876,877,893,905,921,93,930,934,941,97,979,98&nm=%search_string_orig%',
-      'loggedOutRegex': /Введите ваше имя/,
+      'loggedOutRegex': /Введите ваше имя|Форум временно отключен/,
       'matchRegex': 'Не найдено'},
   {   'name': 'RuT',
       'searchUrl': 'https://rutracker.org/forum/tracker.php?f=103,1102,1105,1114,1120,1214,1242,1248,1278,1280,1281,1288,1301,1327,1359,1363,1389,1391,1453,1459,1460,1463,1467,1468,1469,1475,1493,1498,1531,1537,1539,1574,1690,1803,193,1938,1939,1940,195,2076,2082,2104,2107,2110,2112,2123,2139,2159,2160,2163,2164,2166,2168,2169,2176,2177,2178,2323,235,2380,2412,242,249,2491,251,2535,2538,266,294,315,325,387,489,500,534,552,56,594,599,607,656,671,672,694,704,717,718,721,752,775,781,815,816,819,821,825,842,851,863,864,876,893,915,97,979,98&nm=%search_string_orig%',
-      'loggedOutRegex': /Введите ваше имя/,
+      'loggedOutRegex': /Введите ваше имя|Форум временно отключен/,
       'matchRegex': 'Не найдено',
       'TV': true},
   {   'name': 'Rutor',
@@ -1839,6 +1841,13 @@ var public_sites = [
       'icon': 'data:image/png;base64,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',
       'searchUrl': 'https://tgx.rs/torrents.php?search=%tt%',
       'matchRegex': /magnet download/,
+      'positiveMatch': true,
+      'both': true},
+  {   'name': 'TheRARBG',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABAAQMAAACQp+OdAAAABlBMVEUAAAA3YLu9DUt5AAAAAXRSTlMAQObYZgAAAHRJREFUKM+t0DEOgCAQBMAzFJY+wafwNHgaT+EJlFcQVpNjTQQrdaupbjcn/8cDiEQhlKhEIzAj3qCyIhkcsbyCuw4S3vA4o02blciEdDSDBnRsSIYV2eBQDAshUKJ2BMI3Ah07sSES83/ygLPMINABVvYpB5v7oLp5P2HDAAAAAElFTkSuQmCC',
+      'searchUrl': 'https://therarbg.com/get-posts/keywords:%tt%/',
+      'loggedOutRegex': /Cloudflare|Ray ID/,
+      'matchRegex': /imdb_icon/,
       'positiveMatch': true,
       'both': true},
   {   'name': 'TheRostrum',
@@ -3302,6 +3311,17 @@ var private_sites = [
       'loggedOutRegex': /Cloudflare|Ray ID|Remember me/,
       'matchRegex': /did not match/,
       'TV': true},
+  {   'name': 'Tapochek',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgBAMAAACBVGfHAAAAMFBMVEUAAAD///+huNY3aahGdrFUg7pdi8Bplcfs8ffV4e+KqtDx9fp8n8ni6vO0yeHH1uiZm8UwAAAAAXRSTlMAQObYZgAAATlJREFUKM9jYGBSQgIKDAwMioJI4BIDg5IcsoqLCgyKysZIIFCJQbEYWcACKHAYzApPBlMeUAET54etJs4IARMTk4niJiZwAefKJV4b5ZLzVVwgAi6mjfIXBQX3NUqZOEMEXD5CXLXdBSaQCxFY4uISARHIEBSc9xtZQFFQKMT9ouAUE7DAEbd3jYJfQkMWCsq/ggh4AbWrhIZWCwpKggWWgARUU0EC8hABt0UXBaeFhSoK7lsOEQBrLyvaKPjFNSQaLBAKdMdOoFuXhsIETkMc9jQ0NBssEHYRIiAFEwi/uA/om3sT4QKp55dlNcqV1ammQgXS0tLLL0qlp6WlQQTC0tLKy1/cKS+HCiwNAyooP3McJADXUg4CZWkQM56CVAABWMVCJQYm2ZlIQBoY27odCND7iQEjOQAA0fCeOxpu0gAAAAAASUVORK5CYII=',
+      'searchUrl': 'https://tapochek.net/tracker.php?nm=%search_string_orig%+%year%',
+      'loggedOutRegex': /Введите ваше имя|Форум временно отключен/,
+      'matchRegex': 'row1 tCenter pad_8'},
+  {   'name': 'Tapochek',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgBAMAAACBVGfHAAAAMFBMVEUAAAD///+huNY3aahGdrFUg7pdi8Bplcfs8ffV4e+KqtDx9fp8n8ni6vO0yeHH1uiZm8UwAAAAAXRSTlMAQObYZgAAATlJREFUKM9jYGBSQgIKDAwMioJI4BIDg5IcsoqLCgyKysZIIFCJQbEYWcACKHAYzApPBlMeUAET54etJs4IARMTk4niJiZwAefKJV4b5ZLzVVwgAi6mjfIXBQX3NUqZOEMEXD5CXLXdBSaQCxFY4uISARHIEBSc9xtZQFFQKMT9ouAUE7DAEbd3jYJfQkMWCsq/ggh4AbWrhIZWCwpKggWWgARUU0EC8hABt0UXBaeFhSoK7lsOEQBrLyvaKPjFNSQaLBAKdMdOoFuXhsIETkMc9jQ0NBssEHYRIiAFEwi/uA/om3sT4QKp55dlNcqV1ammQgXS0tLLL0qlp6WlQQTC0tLKy1/cKS+HCiwNAyooP3McJADXUg4CZWkQM56CVAABWMVCJQYm2ZlIQBoY27odCND7iQEjOQAA0fCeOxpu0gAAAAAASUVORK5CYII=',
+      'searchUrl': 'https://tapochek.net/tracker.php?nm=%search_string_orig%&f=161,160,321,693,677,96,660,95&o=1&s=2&tm=-1&sns=-1',
+      'loggedOutRegex': /Введите ваше имя|Форум временно отключен/,
+      'matchRegex': 'row1 tCenter pad_8',
+      'TV': true},
   {   'name': 'Tasmanites',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAGFBMVEUAAAACKn0pKTCTkphcYW7GuLvt6uzNGSwV7+IKAAAAAXRSTlMAQObYZgAAAZBJREFUSMft1EtugzAQgOGqPcGUqOvW+AL4QdZ+5ACpg3OAgLNvFXH9jnEIJolQl1nkXyCk+UBmFrw8e6TIQp84p3pJRCD5TcJaPYEmdWUYoVyPwAmLGExvAfCGWhMBKp2A070DgGJ9aiH1TjmjgpQsAXaMwKxPoYJRcFZqTUQCCsF8jpwZwnMwn5sKgab6DOpj7/ensINLvi0ZHoBmIAy1GaDcSpZAf+kHUiuFz5dcpD24HIwhwP4L5L6XzdBuAoJQo89gOGRXHzivcsAt1wlY3EMd1r8KIAPxmCwBQAB16E+D2KgEplW7VQRR8DgL2wgKYYidARRdL3AFfpdAqcsRQAIoGF6tSiCeYQR3KsVl1eVdYAQx0pEbkO+BULIACgRkAtvbN2TgUNi2WAYhdIsAfGgXwSaEoBZAZ3xwFeQZNQPwEeZzqNtNBvzXprj6Tj8HSoGaA1PJ3QSab7hp5TIgOwVXEZMD7jthSTalRjY5MBL3EP8wNsZ5M5QARfBmpQ+XmjE3AI3g1S70+fLscfoDqTfRq0vyAP4AAAAASUVORK5CYII=',
       'searchUrl': 'https://tasmanit.es/browse.php?do=search&search_type=t_name&keywords=%search_string%',
@@ -3575,7 +3595,7 @@ var private_sites = [
       'matchRegex': /Nothing found/,
       'both': true},
   {   'name': 'WF',
-      'icon': 'https://warezforums.com/images/favicon.ico',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwAQMAAABtzGvEAAAABlBMVEUAAAAYP4l76Fq/AAAAAXRSTlMAQObYZgAAAD9JREFUGNNjoAVg/Pjj5/8GgtQHoMrPPz6CqT+YFMPnPR+BKuHUXDD1G4X6Px+oEoOSh1IPkSl+ZKoeRNECAACMh1jDPasv+QAAAABJRU5ErkJggg==',
       'searchUrl': 'https://warezforums.com/search.php?action=do_search&keywords=%tt%&postthread=imdbid',
       'loggedOutRegex': /Cloudflare|Ray ID|You are not logged/,
       'matchRegex': /no results were returned/,
@@ -3682,7 +3702,7 @@ var chinese_sites = [
       'both': true},
   {   'name': 'HDA',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAACRUlEQVQ4y7WTS0iUARSFv/kbw2eYio8onFr0LuhdRNEiicKkNrnJ2jSbgh5EVFQitZIosiJ7+MKgpwjWIloUIlL5IFBRe5BazqTVlDoz+vNP889pYVabXkRnd7mHy7n3nAv/CMefkCR/MmYglpgE0+GY4PvjAZI/hcbLeTRczSPrRBWdR3JJmtNO0rwW0lbVk7qq6dcDzri68fW4CCdEOP7AS/nSKUR/bZrA9p584xu5636WyjbcVUfVAQB5mxYwLj2FhVsDHHj4lm5PFa7cIESLCJC8yPIZmfFfpSpKJ6JMnZxu9cmqUVt1tu7tKlLFutc6OCGsoe59AJ+kbJXG27qI5LnRLyndCUBryTbsz9GE3kXSj8ZsxIjkEAXYQMZiqy/WlQkwsaN4EkbQwBkXGUrLrUt0OPpHV2i+4iYMDA8ZTF5rMn/98GgNbDo4kOGkEIDnZ/dgA7PdgXEObo7K97XOVD5S6frhV5ZaeqWTurS6SwVIx+Lt97ZuAOhDw2JVIBUjaaB57HYGdYWHCAA5ewenjWf55M47tXTVTcUCVrj90QbXAXhxxY2AtJWmL5RY892qJ8VFOrXE7DNVMea9Gsseq2CWNSj/I0lOtRXuVznSGaT+Gq+klB/CImMwrB2hkBbI/2yGypHqd5+39W6n2k9XqXKSRxeQKjND6qro/zSiaz8PzsubW1QaZ6sE6SLSOaRby0x9fODtDap2JKzNv839ZwUP62Hee1WvGdFwx5u3I7odCmnZX32YpFRPQE8tS3P53/gC401Ev6fyBOQAAAAASUVORK5CYII=',
-      'searchUrl': 'https://www.hdarea.co/torrents.php?incldead=1&search=%tt%&search_area=4',
+      'searchUrl': 'https://hdarea.club/torrents.php?incldead=1&search=%tt%&search_area=4',
       'loggedOutRegex': /Cloudflare|Ray ID|recover.php/,
       'matchRegex': /Nothing found|没有种子|沒有種子/,
       'both': true},
@@ -3969,6 +3989,13 @@ var french_sites = [
       'searchUrl': 'https://www5.yggtorrent.la/engine/search?name=%search_string_orig%&category=2145&sub_category=all&do=search',
       'loggedOutRegex': /Ray ID|security check to access/,
       'matchRegex': 'Aucun résultat',
+      'both': true},
+  {   'name': 'Zone Telechargement',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgAgMAAAAOFJJnAAAADFBMVEURERH+/v5EREShoaFmb2g0AAAAsUlEQVQY013OoQrCUBiG4deJYYgm1ywKw2TUbBQsIn4eBYUV+zCpaXgP65Zdgn3Zvr5L8RzPQPAN///ED41lewtllUWWs2YqXRmxJ5BKQhK+BT/07XlCl0I+Zv4b5nROl/w+YUB8qKN0wpDZrXSAqiRKgUCZR2uHR3hs0Fk3yJMG1cKjbQhrh9DQ89jSKx0KN93hZdGWyYD/zQsa7OlKCS02xNKRGAWyPSK0clgKGYezPhUiNw3ZqfRIAAAAAElFTkSuQmCC',
+      'searchUrl': 'https://www.zone-telechargement.store/index.php?q=%search_string_orig%',
+      'loggedOutRegex': /Cloudflare|Ray ID/,
+      'matchRegex': />Found/,
+      'positiveMatch': true,
       'both': true}
 ];
 
@@ -4415,7 +4442,7 @@ var usenet_sites = [
       'matchRegex': /did not match any/,
       'TV': true},
   {   'name': 'OmgWtf',
-      'searchUrl': 'https://omgwtfnzbs.me/browse?search=%tt%&cat=default&sort=3',
+      'searchUrl': 'https://omgwtfnzbs.org/browse?search=%tt%&cat=default&sort=3',
       'loggedOutRegex': /Cloudflare|Ray ID|Forgot your username/,
       'matchRegex': /returned no results/,
       'both': true},
@@ -5587,7 +5614,7 @@ var icon_sites_main = [
       'searchUrl': 'https://www.ratingraph.com/search-results/%search_string_orig%/',
       'showByDefault': false},
   {   'name': 'RateYourMusic',
-      'icon': 'https://e.snmc.io/2.5/img/sonemic.png',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAMFBMVEUAAADn5eSFxOoURYsWPXdqs+AlZ68vXKcsUp5Cn9Qedbu2zd8HPo1FcbBgir+FnsDpLqxmAAAAAXRSTlMAQObYZgAAA0VJREFUSMeFlc9r02Acxrf/wHgSihsLxMtwlzfMHSIy+iIDGUIghzDmZaOBMHdRmh4sQxgmh81b0XaIh0GgOQgpCLqil1x2qAdB1h2cMA/uIEN2UhiIzzdvkpr+oE+S9n3f55Pn+2229p3okyTlpgMuaSQzKWW6MsYHMcYHMcYHMcbvJ7Dw1tDzRF/A+0aj+XpUBAKmG/V6vbkyPAIBBRM2znB4BBWox9obGoGAeqqhEfgEsEZHAEAHZq1Wq5tmPiKtcLVm1mHXIHNvsMYkKpiQgQtgOACggiFsw6iZZu55Jp+hZhgGXBSgwUo+gioYeV0WxgCGftluhzjaAKgFRY9Xxanoum4oGNKiJBFQMBRd1hUI67gMRdZpCjAUgJhiVVYUWaYXcml1RqIW2jpWcZFAibESs2iCnqOcaW612/0m9zQTAy2McEGrlaUFz9vVM2A2BYTOPaHbKzRrJSWkDHjhpXqeZjyQJADJ5AxORnyXZ+WW8mP3P+DmUmJWHNetuA9fnZ9U3CoBhVbc/7ZwPderVCqO4wJ0yr0E5dglx/UcrAuVq1XHyoAzcpHtkuWVHafrWF2rXA0JaKEBD2Z6L+dL5RIdpZKNBDyHWQWNiVjHKj/inM9bVom0KQD5ZVK1TMRjjgi6G9cb8beYS+34tm0OwfVtP7gjHvUxGjpCURGrwmfzgQ1//14MXH9mWWXRFORrTFW1oOQHdqAuApiQpiyYiYuTqYwxO4DW+Wn8HzUtPMrEur1eLEaMfJ/zixiQjnzyS2tcXQOxj4B54XMJAJq4UbJte42TiiBYxOwGFeD3k+/FQeD78AWBeyknWMBkMQGm7WCfp7rbDJpB0Fin8SkB1ATq9VTCz13AaLSMFgRwoCKbq1wtxlXmGc3RAgGiBpZVVS1CeOc0o+MCFZKIL5hCjBGjsphknxCQAtcieOQQRgykfQaQ/QzuFIusyIQoCjoMUSGL+BDRYswgh960pxTQi/jK8tKWJQroRUxFeaBzioDcdvCOiAV2yFiEl84WAvo2lD9RdBixDW2DaRudTSz0b0mF35q2oyFA60Rb4dBN6+OTThTBv/Vz2LYnQe2/J8dW9VebxqP25RDhpHFb89jNfbQG3H8cqcwnP1tF0AAAAABJRU5ErkJggg==',
       'searchUrl': 'https://rateyourmusic.com/search?searchtype=F&searchterm=%search_string%',
       'showByDefault': false},
   {   'name': 'Reelgood',
@@ -10575,7 +10602,7 @@ $.each(other_sites, function(index, site) {
 
 $.each(streaming_sites, function(index, site) {
   config_fields[configName(site)] = {
-    'section': (index == 0) ? ['Streaming sites/tools (in 3rd bar):'] : '',
+    'section': (index == 0) ? ['Streaming sites (in 3rd bar):'] : '',
     'type': 'checkbox',
     'label': ' ' + site['name'] + (site['TV'] ? ' (TV)' : '')
   };
