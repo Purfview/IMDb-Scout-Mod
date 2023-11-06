@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      19.8
+// @version      19.8.1
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from hundreds various sites. Adds movies/series to Radarr/Sonarr. Adds external ratings from Metacritic, Rotten Tomatoes, Letterboxd, Douban, Allocine, MyAnimeList, AniList. Media Server indicators for Plex, Jellyfin, Emby. Dark theme/style for Reference View. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAMFBMVEUAAAD/AAAcAAA1AABEAABVAAC3AADnAAD2AACFAAClAABlAAB3AADHAACVAADYAABCnXhrAAAD10lEQVRIx73TV4xMURgH8H/OnRmZWe3T7h2sOWaNXu7oJRg9UccuHgTRBatMtAgSg+gJu9q+kFmihcQoD8qLTkK0CIkoy0YJITsRD0rCKTHFrnkSv5e5c88/53znO+fiPwvsvrN038cPNqrG9pJmHkRVnPcpaTlHJY60cfPSpsrzl1LKihrmLvxhCM2i3OHvDx0d+H7e3F6JBv5iZMiJfhFTfPYDMHrMImpwimWWUdSgDQkbno7fFpUPVgh+pHFbZR4SovSctDCM9Hac9IKd9rO8EevtBCkXgY5IMmgquwypP7qqfcp/Tp4KLONDVsWh3RSBB2rnZfit69ocUdqLn2prrRZYM0Jg4JibamKsqe7gfEh5GOAfeYJjVHIPZvil97rcXkMog30byWRwXYRWoxHbzNFHJJpAarO8NdEBBsdCaP3WMJltTmQd4zlnekTq9Z5dgACwAlrpK4BxdV5mvLuspRgMSHbCIFF0iS8MZ5S8oYBYKY7rByC4dDM9uSIUmPOIwxgQBoYeF93auP4qFyPbIVXziWeGTH1EFM57kJo2hqQju6BwIyRf6RmCjdT4JOdiwNgiH/PPD3qoqlsNaXRd+fKtFfECxlZVNVF9SOsgTZEr2TUjJJbyeNX1IZrKIbyGlBABfpQPv2UDrly13LkJXDVhpQ5MhtGwcyF4HKjlU4E8xwB0AvDjd6AGmevZ87EcQRHgcO52e9uNsYELOrAa/Yh81YlmYLQJ5HWyq0+kzQ/DQKEusg6CRI27ryy8nReRS0wsoetkmRwogHSprliCckfEjXG9yAQc74J0WB99vu6DF3i3pMucsXM6tpBbxd2mVJAwXwGogNRBvGRA4jtHKTXkAIwLGCR/mT4Lh75oneQXXP9sAYfGRDCsnw7pX/jRZkU3M44kjw2l5zRIzb4CbZ8dULdL6wbNPZOpK0B6gN1UR1mdoxAaL/GrWiLPL3SEwW9YMTU/d64BtLahAVyucWhj9Mm8ign9IfQaBtd2/GbvCAEBpG5eMcrj2I0ktpKLeaqXQ3Pst42KGIshpdTmQLAeTgFGJ2wvh+tayMOR0n1RZ8B9z13vnOPBnsBq4E1ffgZpPFZHWVpO2cvhjYpOcbBd5TlhpDu5zq9mHGZcVi0y+VFkcFkDdyKJfTt99wEyHSEzDM90KH0nexpwZHJHKYYhjzlwGe0pP/IKfxociaEb7YDbi6KGJY1R2cR76E6NAtXqY4pPH3plLcl8LD7V+cOLUbUWRFZRPTAbVZO3mxK18Xc1ZaAiS8ARJXpZliXAomR94siiiMx8ZBOkXGTlnH0F/9ov1xPtWwEqP9wAAAAASUVORK5CYII=
@@ -1241,6 +1241,8 @@
 19.8    -   New feature: "_Check URLs (for Dev tests)" - special button to quick check for the dead sites.
             Added: DvDFr (FR), Le-Cinephile, SceneLinks, AnimeVibe.
             Removed: BD25, DVD-Basen, LimitOfEden, AnimeVibe Lite, MH, Acervos, Subs.com.ru (RU).
+
+19.8.1  -   Update: Filmweb (PL).
 
 
 //==============================================================================
@@ -5479,8 +5481,8 @@ var icon_sites_main = [
       'searchUrl': 'https://filmow.com/buscar/?year_start=%year%&q=%search_string_orig%',
       'showByDefault': false},
   {   'name': 'Filmweb (PL)',
-      'icon': 'https://fwcdn.pl/front/ogfx/icons2/32x32.png',
-      'searchUrl': 'https://www.filmweb.pl/search?q=%search_string_orig%+%year%',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAABqlBMVEUAAAD7vSfwtBvtsBT5wwv9yQjrrRj6wwvinx/npxzfmx/6xAv6xQnhnx7ushTclyLmphr1vg/usxbsrRnflSv/1QvxsBz/vBjxtxL3wAzwtRPnphrxthP1vQ/tsRXnpRzsrBf0uxL0uRbfmx/alCLopxn0vA7lpBv0uxD+yQjrrBfoqRjbkyT/zAfemyDgnR7koxz4wgvbkyTqrRfusxP+zAbdmSD5wgvyug/2wA7koxztrxXbkyPnqhn/zAjioB72vw/ioB3qrBjushXjnx7vsxTnpxn8xgnoqBj/zAf+ywfbliPbliLioB3zug/1vBDmpRnyug/4wgzvtRHssRTwtxHgnCDrrhX2vg33wA/gnh/yuw/4wg3oqhnnpxrmphnfnSD3wA35xAvsrRf/zQbdkyj5vxPkpBrkohvemh/pqhfwtRHmphnnpxjvtBLblSLtshPxthD7xwjrrhXusxLclyHdmCDioBz0uw75xArfnB7nqRfqrBbsrxTxuBDyug/yuA/6xQn3wQv8yQfgnh30vQ32vwz2vg34wgrtsBThnh7hnxz9ygb6xQicjTGoAAAAZ3RSTlMABhji2pZrSEc58/PCwKOWlVNHMBgYEQr2v7urg3JuXlA8Hvn09PPx8fHu5OPj2dnYzcfHx8e/oZaVkY2CgoJ8eWxoUkL+/fz09PTx8e/p4N3a1NLKv7W0sJ6diomHgHlwZVtELi0o8PshQgAAAohJREFUOMtlk2dbGlEQhWcpghSBaOw1dk00lti7pvfee6G3XZQOshCCoP85Z+7yRKP30zz7zjkzc+cunR7JZLQZrFZDx7JJoovnsnFcPkkmK2r5z+/E2JLuHJY27hVluZCslJnnD3Pt3dJ/8hvHRbkArqoaj4Zi82dMflxjblucUTV91O8PRY70zf/0zG+7EH0FT+SgB88q+rqHxP6yUcRvEnkYuHrbwRXfnNbHxnERBb6JuAf1/c+JmvWKkvGl10WBu0X5pJDsEQnv8zm/n8MrevD0MBcx8nyViqENceujXNQfi3QjbAQPBpzoYBz+yaSqzph+uZ4eRtF/JNuEjI/BYMA9KpFJlsX9ldE/6guuZHbgNhxwezxmMrLe9uHtSCKRz0EfA1cyEyjY5XZ74k6ygW9xV48Po4Ifcf++XaIG8LidDIXKM+Ljgr7zEk4/ePoTUb8nXitNk7WiLgLDAv03cdDm8wUDXZgjXquWLGRVyx0iYcAfCtUTgiJhr1ZNpSxkwIIG+HsnLuBFA05vGvOtEPWBe6eoAwsc2RrYfcn9Y0D4g2M82iylvN4FWq4vGDwCjgsGd1+Hpd3rPdh3kAlcm79z9bXi07inEfuCfj9sJmkMC8QAN/sh+n5L49uIX0Efvo+FL2n+YgByCn/oaRv6/bADka4dDyh21CsS+gJocBPB3iDzoRb+2M33m10VCZ/B4w9b6cvgAQqE17QnNx/DA5vQ8XuYxAJrpXd2r+CzEnMU0WezmczkTmPfE/B4lednfrVF4/wCM2K+APNSNQU985/M6h5z4EGujwXW9bPQnx5p/Y7gdf9weGjt/A+sc47CH/oU/B84IL9wJPOKfdpimVpwmM+o/wJq0QNtXN5O4wAAAABJRU5ErkJggg==',
+      'searchUrl': 'https://www.filmweb.pl/search#/?query=%search_string_orig%+%year%',
       'showByDefault': false},
   {   'name': 'FilmSpot (PT)',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAMAAABg3Am1AAABs1BMVEUAAAD4+vtfrNP09PRefo4yjryoqKj39/fx8fHs7Ozz8/OHh4f4+Phubm5paWkzmMtjY2NhYWHO4+5CcoqAgIB5eXl1g4yvsrNhYWFubm5lZWWKwt6FhYWTk5O6u7vm6ere3t7v8/b5+vpfX18yhKx7e3t4udl1dXWdnZ2Mwt2RkZGjpKXAwcHGxsbf5efc3Nzq6upcXFxnZ2dWVlZra2tdXV1wcHBQUFBkZGRLpNBQUFBZq9NnZ2eLi4tra2ttbW1nZ2eCgoJ9fX2xsbGey+OdnZ3CwsLMzMzA3u3AwMDQ0NDQ0NDPz8/W1tbs7OxcXFwwj74re6JfX184m8w1kL8sc5c9nMs2iLFkZGRUVFRsbGx1dXU1aYNycnJ4eHhcXFxKmMB7e3tkZGRFbYBCYnJbW1tbqM+Dg4NHboFvb29grdRTgZlTU1OCgoJ4eHhordCPj4+RkZFtttpZeopgfIt1uduRkZGhoaGkpKSNw96tra1/f397fn+UxNyJiYmLi4u2traQoKiampqlyt2n0ue9vb2u1em52+zCwsLIyMiysrLF2+XU1NTKysru7u4zmcxmZmbrIkkZAAAAj3RSTlMAB8YJsfhWCg4TDMMF7LT9/f071c6ekVH67r+QhnFFJB8UBv3116Wgno15Wz85LCIg+vn58+/q6ePez83Cu7uwoo6NfndmYU9NSklDLikR/fz6+Pf28/Dw8PDo4+Li3t7Zz8/NysrJycnJxcLAvbu5tbSzs6yompmSi4eFg4J+d3V1cG1ra2RWVVNNRDwzGdsnF+YAAAHlSURBVEjH1ZRXV9tAEIWtJLIkW4ptQrFj3INxMC6EXkPvkN577733Si+6PxmvVhQdg9Z7eIHvced+R0c7M+vYBfGy/8FkMhkcHI2UlB/tPKdTPBcf/pOY+aBH38KlMCs/a8nrx6oY+Vi7zifMeTiFoG5y5voRwuN6hvDWzF/4HlUM4vZ54akp3Is6SkI4YArvJE7h0MF9IMj5SD4WL2p0pyk8WyojyOZ55Kv7Zkug5VrNo9epgeHxrHGYHfzQ7tGt/KHfHTgBK0b/v+jFVKqk8pvkfYlEwguTX+T4+E7CagBo7OgPhUJ11dV9tbUnD3elbYUZoKF3o/OqKkiyYCukgNaMo5gf50VRXP/r06JBJSm4gQfKNsL0otOZvm0K99NOwiQplANH5VIbt0eFbqCLS0gBbVM8wjCAjwqHELsBQCt3U7o/L8isfZgPwMKdCdYCjT3xW4yrGdbGTYfrCkNq0NMG4KXMEEhJclGmXgCX63kegWXA/5dHcDXB26dyCJIGb4Wwv4U84OuPcwifgIaQ7bWOjExkI7JLIijjbwC02jZOqIFBk6ZpdAxP9coMwUrj88mN2iuR8p4KlLGKnru3mpv9fl+Bs1c6vuU2azknJWMdPJeSWwlXDRXe1p9D4ajqKJ3N7Boqllp0zpHP+AAAAABJRU5ErkJggg==',
@@ -7461,7 +7463,7 @@ async function activate_CheckURLs(button, completed_icon) {
   const interval = 100;
   const timeout = 45000;
   hosts_to_Process = deduped_hosts.length;
-  console.log("IMDb Scout Mod (CheckURLs): Unique hosts: " + hosts_to_Process);
+  console.log("IMDb Scout Mod (CheckURLs): Hosts to process: " + hosts_to_Process);
   const days_now = Math.round(new Date().getTime() / 1000 / 60 / 60 / 24);
 
   deduped_hosts.forEach(function (i, index) {
