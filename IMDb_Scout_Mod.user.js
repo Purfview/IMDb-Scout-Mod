@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      19.8.1
+// @version      19.9
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from hundreds various sites. Adds movies/series to Radarr/Sonarr. Adds external ratings from Metacritic, Rotten Tomatoes, Letterboxd, Douban, Allocine, MyAnimeList, AniList. Media Server indicators for Plex, Jellyfin, Emby. Dark theme/style for Reference View. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAMFBMVEUAAAD/AAAcAAA1AABEAABVAAC3AADnAAD2AACFAAClAABlAAB3AADHAACVAADYAABCnXhrAAAD10lEQVRIx73TV4xMURgH8H/OnRmZWe3T7h2sOWaNXu7oJRg9UccuHgTRBatMtAgSg+gJu9q+kFmihcQoD8qLTkK0CIkoy0YJITsRD0rCKTHFrnkSv5e5c88/53znO+fiPwvsvrN038cPNqrG9pJmHkRVnPcpaTlHJY60cfPSpsrzl1LKihrmLvxhCM2i3OHvDx0d+H7e3F6JBv5iZMiJfhFTfPYDMHrMImpwimWWUdSgDQkbno7fFpUPVgh+pHFbZR4SovSctDCM9Hac9IKd9rO8EevtBCkXgY5IMmgquwypP7qqfcp/Tp4KLONDVsWh3RSBB2rnZfit69ocUdqLn2prrRZYM0Jg4JibamKsqe7gfEh5GOAfeYJjVHIPZvil97rcXkMog30byWRwXYRWoxHbzNFHJJpAarO8NdEBBsdCaP3WMJltTmQd4zlnekTq9Z5dgACwAlrpK4BxdV5mvLuspRgMSHbCIFF0iS8MZ5S8oYBYKY7rByC4dDM9uSIUmPOIwxgQBoYeF93auP4qFyPbIVXziWeGTH1EFM57kJo2hqQju6BwIyRf6RmCjdT4JOdiwNgiH/PPD3qoqlsNaXRd+fKtFfECxlZVNVF9SOsgTZEr2TUjJJbyeNX1IZrKIbyGlBABfpQPv2UDrly13LkJXDVhpQ5MhtGwcyF4HKjlU4E8xwB0AvDjd6AGmevZ87EcQRHgcO52e9uNsYELOrAa/Yh81YlmYLQJ5HWyq0+kzQ/DQKEusg6CRI27ryy8nReRS0wsoetkmRwogHSprliCckfEjXG9yAQc74J0WB99vu6DF3i3pMucsXM6tpBbxd2mVJAwXwGogNRBvGRA4jtHKTXkAIwLGCR/mT4Lh75oneQXXP9sAYfGRDCsnw7pX/jRZkU3M44kjw2l5zRIzb4CbZ8dULdL6wbNPZOpK0B6gN1UR1mdoxAaL/GrWiLPL3SEwW9YMTU/d64BtLahAVyucWhj9Mm8ign9IfQaBtd2/GbvCAEBpG5eMcrj2I0ktpKLeaqXQ3Pst42KGIshpdTmQLAeTgFGJ2wvh+tayMOR0n1RZ8B9z13vnOPBnsBq4E1ffgZpPFZHWVpO2cvhjYpOcbBd5TlhpDu5zq9mHGZcVi0y+VFkcFkDdyKJfTt99wEyHSEzDM90KH0nexpwZHJHKYYhjzlwGe0pP/IKfxociaEb7YDbi6KGJY1R2cR76E6NAtXqY4pPH3plLcl8LD7V+cOLUbUWRFZRPTAbVZO3mxK18Xc1ZaAiS8ARJXpZliXAomR94siiiMx8ZBOkXGTlnH0F/9ov1xPtWwEqP9wAAAAASUVORK5CYII=
@@ -1244,6 +1244,9 @@
 
 19.8.1  -   Update: Filmweb (PL).
 
+19.9    -   Code fix for "_Check URLs (for Dev tests)".
+            Added: NordicHD.
+
 
 //==============================================================================
 //    Notes.
@@ -2012,7 +2015,7 @@ var private_sites = [
   {   'name': 'ADC2',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwAQMAAABtzGvEAAAABlBMVEXIyMgAAAAyQEDlAAAAxUlEQVQY04XNMQrCMBQG4D+NWKfESd9QrEdwDCjo4OAhRBQvUJzcrHgRT2LrLRxzAaGjQvCZZOmm//C+5X/8+JlyXkoH1LnVDqKmY9aBsGQMIC1lhaeIpBNSnq6JKIpoF8ldrJCi7AgYRWaWYJJSM1Io0srqDwpZQTTtbmojcxdhDlcwlx7JXIcGc+ho5qYlZ36FN1tFHicX2A4Ds1IHDkgCK4ibZwxsPDUwABIBdICeRF949tclFpg+75c3YXde4/LB/3wBcl9Cgxe+faAAAAAASUVORK5CYII=',
       'searchUrl': 'https://asiandvdclub.org/torrents/?searchbox=%tt%&search=Search',
-      'loggedOutRegex': /Cloudflare|Ray ID|Forgot password/,
+      'loggedOutRegex': /Cloudflare|Ray ID|Forgot password|title>Welcome/,
       'matchRegex': /No torrents found/,
       'both': true},
   {   'name': 'AE',
@@ -2979,6 +2982,17 @@ var private_sites = [
       'loggedOutRegex': /Cloudflare|Ray ID|Không đăng nhập/,
       'matchRegex': /Nothing found/,
       'both': true},
+  {   'name': 'NordicHD',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyAgMAAABjUWAiAAAADFBMVEUAAAD3Qjz98vH5l5OLNH03AAAAAXRSTlMAQObYZgAAANRJREFUKM+l0jEKwjAUBuA49Agexd0jOBgKRdrZuri4FDxG6tatQyPPrQ4O4iXSgkM2B9O5i1CwiZUkBTvYf/t4efACP0IT3GWF2jD8zVaP2iwRcrAOQjNDNzQ1NO8JG1mMFjyU9i5TAqWNT5R2SiFnDW4CqAMmlZS0yARASKSuPIkJAGRq73Qvzoe0pdRadEqVQksRj2P90ospJxWAIJ9bKpdFeROxP35Uaz0jj1p6EVNF/kOCeqVWJaQG97QuxJB/tO8cpcFO2O1xDNmt6zVSDvXoDTxXA2HcAh+IAAAAAElFTkSuQmCC',
+      'searchUrl': 'https://nordichd.org/?p=torrents&pid=10&keywords=%tt%&search_type=description',
+      'loggedOutRegex': /Cloudflare|Ray ID|loginbox_remember/,
+      'matchRegex': /no results found/},
+  {   'name': 'NordicHD',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyAgMAAABjUWAiAAAADFBMVEUAAAD3Qjz98vH5l5OLNH03AAAAAXRSTlMAQObYZgAAANRJREFUKM+l0jEKwjAUBuA49Agexd0jOBgKRdrZuri4FDxG6tatQyPPrQ4O4iXSgkM2B9O5i1CwiZUkBTvYf/t4efACP0IT3GWF2jD8zVaP2iwRcrAOQjNDNzQ1NO8JG1mMFjyU9i5TAqWNT5R2SiFnDW4CqAMmlZS0yARASKSuPIkJAGRq73Qvzoe0pdRadEqVQksRj2P90ospJxWAIJ9bKpdFeROxP35Uaz0jj1p6EVNF/kOCeqVWJaQG97QuxJB/tO8cpcFO2O1xDNmt6zVSDvXoDTxXA2HcAh+IAAAAAElFTkSuQmCC',
+      'searchUrl': 'https://nordichd.org/?p=torrents&pid=32&cid=2&keywords=%search_string_orig%&search_type=name',
+      'loggedOutRegex': /Cloudflare|Ray ID|loginbox_remember/,
+      'matchRegex': /no results found/,
+      'TV': true},
   {   'name': 'NTELogo',
       'searchUrl': 'https://ntelogo.org/torrents?imdbId=%nott%',
       'loggedOutRegex': /Cloudflare|Ray ID|Forgot Your Password/,
@@ -3222,9 +3236,17 @@ var private_sites = [
       'both': true},
   {   'name': 'SceneLinks',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQAgMAAABinRfyAAAACVBMVEUAAABmmcwzZpkhGq1QAAAAAXRSTlMAQObYZgAAAClJREFUCNdjAINQIIAQAUAelFi1ahWYAHG5wARICZQAAiixCgggBAgAAFi5EA+HS+2nAAAAAElFTkSuQmCC',
-      'searchUrl': 'https://www.scenelinks.io/browse.php?search=%tt%&cat=0&genre=3&Search=Search',
-      'loggedOutRegex': /Cloudflare|Ray ID|Login</,
-      'matchRegex': /page=2/,
+      'searchUrl': 'https://scenelinks.me/torrents?imdbId=%nott%',
+      'loggedOutRegex': /Cloudflare|Ray ID|Forgot Your Password/,
+      'matchRegex': /torrent-search--list__overview/,
+      'positiveMatch': true,
+      'both': true},
+  {   'name': 'SceneLinks-Req',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQAgMAAABinRfyAAAACVBMVEUAAABmmcwzZpkhGq1QAAAAAXRSTlMAQObYZgAAAClJREFUCNdjAINQIIAQAUAelFi1ahWYAHG5wARICZQAAiixCgggBAgAAFi5EA+HS+2nAAAAAElFTkSuQmCC',
+      'searchUrl': 'https://scenelinks.me/requests?unfilled=1&tmdbId=%tmdbid%',
+      'loggedOutRegex': /Cloudflare|Ray ID|Forgot Your Password/,
+      'matchRegex': /fa-circle text-red/,
+      'positiveMatch': true,
       'both': true},
   {   'name': 'SceneRush',
       'icon': 'https://www.scene-rush.pt/apple-touch-icon-57x57.png',
@@ -3348,12 +3370,12 @@ var private_sites = [
   {   'name': 'Tapochek',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgBAMAAACBVGfHAAAAMFBMVEUAAAD///+huNY3aahGdrFUg7pdi8Bplcfs8ffV4e+KqtDx9fp8n8ni6vO0yeHH1uiZm8UwAAAAAXRSTlMAQObYZgAAATlJREFUKM9jYGBSQgIKDAwMioJI4BIDg5IcsoqLCgyKysZIIFCJQbEYWcACKHAYzApPBlMeUAET54etJs4IARMTk4niJiZwAefKJV4b5ZLzVVwgAi6mjfIXBQX3NUqZOEMEXD5CXLXdBSaQCxFY4uISARHIEBSc9xtZQFFQKMT9ouAUE7DAEbd3jYJfQkMWCsq/ggh4AbWrhIZWCwpKggWWgARUU0EC8hABt0UXBaeFhSoK7lsOEQBrLyvaKPjFNSQaLBAKdMdOoFuXhsIETkMc9jQ0NBssEHYRIiAFEwi/uA/om3sT4QKp55dlNcqV1ammQgXS0tLLL0qlp6WlQQTC0tLKy1/cKS+HCiwNAyooP3McJADXUg4CZWkQM56CVAABWMVCJQYm2ZlIQBoY27odCND7iQEjOQAA0fCeOxpu0gAAAAAASUVORK5CYII=',
       'searchUrl': 'https://tapochek.net/tracker.php?nm=%search_string_orig%+%year%',
-      'loggedOutRegex': /Введите ваше имя|Форум временно отключен/,
+      'loggedOutRegex': /mode=register|Форум временно отключен/,
       'matchRegex': 'row1 tCenter pad_8'},
   {   'name': 'Tapochek',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgBAMAAACBVGfHAAAAMFBMVEUAAAD///+huNY3aahGdrFUg7pdi8Bplcfs8ffV4e+KqtDx9fp8n8ni6vO0yeHH1uiZm8UwAAAAAXRSTlMAQObYZgAAATlJREFUKM9jYGBSQgIKDAwMioJI4BIDg5IcsoqLCgyKysZIIFCJQbEYWcACKHAYzApPBlMeUAET54etJs4IARMTk4niJiZwAefKJV4b5ZLzVVwgAi6mjfIXBQX3NUqZOEMEXD5CXLXdBSaQCxFY4uISARHIEBSc9xtZQFFQKMT9ouAUE7DAEbd3jYJfQkMWCsq/ggh4AbWrhIZWCwpKggWWgARUU0EC8hABt0UXBaeFhSoK7lsOEQBrLyvaKPjFNSQaLBAKdMdOoFuXhsIETkMc9jQ0NBssEHYRIiAFEwi/uA/om3sT4QKp55dlNcqV1ammQgXS0tLLL0qlp6WlQQTC0tLKy1/cKS+HCiwNAyooP3McJADXUg4CZWkQM56CVAABWMVCJQYm2ZlIQBoY27odCND7iQEjOQAA0fCeOxpu0gAAAAAASUVORK5CYII=',
       'searchUrl': 'https://tapochek.net/tracker.php?nm=%search_string_orig%&f=161,160,321,693,677,96,660,95&o=1&s=2&tm=-1&sns=-1',
-      'loggedOutRegex': /Введите ваше имя|Форум временно отключен/,
+      'loggedOutRegex': /mode=register|Форум временно отключен/,
       'matchRegex': 'row1 tCenter pad_8',
       'TV': true},
   {   'name': 'Tasmanites',
@@ -3469,10 +3491,10 @@ var private_sites = [
       'matchRegex': /Nothing found/,
       'TV': true},
   {   'name': 'TM',
-      'icon': 'https://torrentmasters.info/images/tm.gif',
-      'searchUrl': 'https://torrentmasters.info/letoltes.php?search=%search_string_orig%+%year%',
+      'icon': 'https://torrentmasters.org/images/tm.gif',
+      'searchUrl': 'https://torrentmasters.org/browse/?sent=yes&sort=0&type=&viewMode=&search=%tt%&incldead=1',
       'loggedOutRegex': /Cloudflare|Ray ID|Jelszó visszaállítás|Elfelejtett jelszó/,
-      'matchRegex': /Nincs aktív torrent|Nincs találat/},
+      'matchRegex': /Nincs aktív torrent|Nincs találat|nincs egyetlen/},
   {   'name': 'TO',
       'searchUrl': 'https://theoccult.click/browse.php?incldead=0&country=&nonboolean=1&search=%tt%',
       'loggedOutRegex': /404 - Not Found|You need cookies enabled/,
@@ -3481,12 +3503,13 @@ var private_sites = [
   {   'name': 'TorrentLand',
       'searchUrl': 'https://torrentland.li/torrents?imdbId=%nott%',
       'loggedOutRegex': /Cloudflare|Ray ID|Recordar usuario/,
-      'matchRegex': /torrent-listings-no-result/,
+      'matchRegex': /torrent-listings-name/,
+      'positiveMatch': true,
       'both': true},
   {   'name': 'TorrentLand-Req',
       'searchUrl': 'https://torrentland.li/requests?unfilled=1&imdbId=%nott%',
       'loggedOutRegex': /Cloudflare|Ray ID|Recordar usuario/,
-      'matchRegex': /label-danger/,
+      'matchRegex': /fa-circle text-red/,
       'positiveMatch': true,
       'both': true},
   {   'name': 'TP',
@@ -3561,7 +3584,7 @@ var private_sites = [
   {   'name': 'TurkTor',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACMAAAAjBAMAAADs965qAAAAMFBMVEUAAAABAQEQERFRUVD+/v4wLy3x8e+8u7ienZtEQ0JfX17Y2NbNzMqEhILj4uFycG7V66CmAAAAAXRSTlMAQObYZgAAAYBJREFUKM+10c8rw3Ecx3F/gtf3ayw/4vPV8usi30ZzoPikpfyYibio5UdqckSzsa2huJiDqMUSkSQOo2gXqzm4WIuLlGgiJ9oJ5f3Zd+IP4Hl8vC/v3u+Mf44BkgKRYcnUYTUJIkmTukHzH5LnopvqjkYgYsg9DfMm1YRfVDIZ4vzeSDRNVCDo+iLBebOgdaKsDqLZk0HO26ogo5JIblCA92Dn61ajHytoJ0I/A2rYx2G1dzHXjSJB8QOgYmLgMTJhKQ2mSMrmwG54JM69limGTEEKt0Hu5k21Jr0HaeriTLa5RoeMt5ZvYolhne1z3xxoAVCgUX7Y3cn52cwdUSGRQpvOu3wO+9UDIypPEaA/ciSXW0dBFWuUx+rskajrslAjRpTjLh5rDdljKpGVSFzrafxmvP/l2GNNSkSKon+2ny/4DH0O8/abU+oVlBeIOSH10PKszCKtCjIw5A8pPbVGMwDdmiDxNqNEFBNUrxElCGliCkQ6q+qXaGzYy/jLvgDId3Lh+wykEwAAAABJRU5ErkJggg==',
       'searchUrl': 'https://turktorrent.us/?p=torrents&pid=10&keywords=%tt%&search_type=name',
-      'loggedOutRegex': /Cloudflare|Ray ID|Şifrenizi mi unuttunuz|unless you read all your|sürece bu sayfayi göremezsiniz|An error has occured/,
+      'loggedOutRegex': /Cloudflare|Ray ID|forgot-password/,
       'matchRegex': /Sonuç bulunamadı|no results found/,
       'both': true},
   {   'name': 'TurkTracker',
@@ -3919,13 +3942,14 @@ var french_sites = [
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwBAMAAAClLOS0AAAAJFBMVEUAAAABAwFcX1xCSEICjwJzdnMYLRgJZgkxjDFIpkhjvWOGz4ZXC3j+AAAAAXRSTlMAQObYZgAAAlpJREFUOMuNlM1vElEUxUcM3V9bhy6bV9s0rqovReKuyQvDEmnGlJ2PL3U5hpRWd7QK4o5aC8NOXQzD1kRg/jnPfcOXton9JZCZc+4995I3g3UHkkLkb5ETaSmErO3/qx89dQ3bpb/1lwfujKPqqn6f9b4/7HPPalrJdYujCEyvXHc3vwyCHg2hHftR1y0swpJV93gUuEzhc9QUi5Y11x3EuhCiMxGiuphQnOwY9QqfL9/F7mKlwceCAANUi72pwGLx6OIYAqRoKrilK0pxEi5x33j3aBQafyzTZqeSGApw0aiHYVNsS+nL9BbvJPYCNnpKhf1zCZ5fylfGeNxlw1cqlzNG5ofkhaXoNKFvhwqcy7Qmuy3LMMqiLwTqRkPlSJkmoMpps1RPMm2OedbQMOq6xh2ZQM5pKD84Iap4dt5KljOXM7WhVCeaXhNteLRlJWDEcp31yQnBOFwamQvsNIiuNcXGvpVYZyNjzq+na7Q0iI1OGA5b2j77TTSPSlIKRg3QaTj9RiAeblHKYdkf0vvw6yEBrEt5GLZDNU2nDqXaDhnqmvADNSkCKU1zINgwnnDBjM1PBBCxDuMeVUyyaRt7/J2lh3wefEFvWqb2Fy65kA8qQTaGfAg0GwEbSmNbM73ukd2LDQ9J2M1iXtCGg1uPjZ/aJD2IHzg0e5sIsf12C6bSPCLOqjjUV/ptkFMgy0lxFqqyZ8rpK4PGsjFJTFA5h0WnrjzCTosWqijVABzEo5ct9FoZ+GRX3vY1XhXl/PBgpRV2aQGCbnVKN/4aNAH7wLoJ3rYd6//8ARCX27OsDBPsAAAAAElFTkSuQmCC',
       'searchUrl': 'https://generation-free.org/torrents?imdbId=%nott%',
       'loggedOutRegex': /Cloudflare|Ray ID|Mot de passe oublié/,
-      'matchRegex': /torrent-listings-no-result/,
+      'matchRegex': /torrent-search--list__overview/,
+      'positiveMatch': true,
       'both': true},
   {   'name': 'G-Free-Req',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwBAMAAAClLOS0AAAAJFBMVEUAAAABAwFcX1xCSEICjwJzdnMYLRgJZgkxjDFIpkhjvWOGz4ZXC3j+AAAAAXRSTlMAQObYZgAAAlpJREFUOMuNlM1vElEUxUcM3V9bhy6bV9s0rqovReKuyQvDEmnGlJ2PL3U5hpRWd7QK4o5aC8NOXQzD1kRg/jnPfcOXton9JZCZc+4995I3g3UHkkLkb5ETaSmErO3/qx89dQ3bpb/1lwfujKPqqn6f9b4/7HPPalrJdYujCEyvXHc3vwyCHg2hHftR1y0swpJV93gUuEzhc9QUi5Y11x3EuhCiMxGiuphQnOwY9QqfL9/F7mKlwceCAANUi72pwGLx6OIYAqRoKrilK0pxEi5x33j3aBQafyzTZqeSGApw0aiHYVNsS+nL9BbvJPYCNnpKhf1zCZ5fylfGeNxlw1cqlzNG5ofkhaXoNKFvhwqcy7Qmuy3LMMqiLwTqRkPlSJkmoMpps1RPMm2OedbQMOq6xh2ZQM5pKD84Iap4dt5KljOXM7WhVCeaXhNteLRlJWDEcp31yQnBOFwamQvsNIiuNcXGvpVYZyNjzq+na7Q0iI1OGA5b2j77TTSPSlIKRg3QaTj9RiAeblHKYdkf0vvw6yEBrEt5GLZDNU2nDqXaDhnqmvADNSkCKU1zINgwnnDBjM1PBBCxDuMeVUyyaRt7/J2lh3wefEFvWqb2Fy65kA8qQTaGfAg0GwEbSmNbM73ukd2LDQ9J2M1iXtCGg1uPjZ/aJD2IHzg0e5sIsf12C6bSPCLOqjjUV/ptkFMgy0lxFqqyZ8rpK4PGsjFJTFA5h0WnrjzCTosWqijVABzEo5ct9FoZ+GRX3vY1XhXl/PBgpRV2aQGCbnVKN/4aNAH7wLoJ3rYd6//8ARCX27OsDBPsAAAAAElFTkSuQmCC',
       'searchUrl': 'https://generation-free.org/requests?unfilled=1&tmdbId=%tmdbid%',
       'loggedOutRegex': /Cloudflare|Ray ID|Mot de passe oublié/,
-      'matchRegex': /label-danger/,
+      'matchRegex': /fa-circle text-red/,
       'positiveMatch': true,
       'both': true},
   {   'name': 'HD-F',
@@ -5523,7 +5547,7 @@ var icon_sites_main = [
       'searchUrl': 'https://www.icheckmovies.com/search/movies/?query=%tt%'},
   {   'name': 'JustWatch',
       'icon': 'https://www.justwatch.com/appassets/favicon.ico',
-      'searchUrl': 'https://justwatch.com/us/search?q=%search_string%',
+      'searchUrl': 'https://www.justwatch.com/us/search?q=%search_string%',
       'showByDefault': false},
   {   'name': 'КиноПоиск (RU)',
       'searchUrl': 'https://www.kinopoisk.ru/index.php?kp_query=%search_string%',
@@ -7479,7 +7503,7 @@ async function activate_CheckURLs(button, completed_icon) {
             console.log("IMDb Scout Mod (CheckURLs): HTTP Status " + s +" - "+ i);
             log_CheckURLs(i, days_now)
           } else {
-            delete_log_CheckURLs(i);
+            // delete_log_CheckURLs(i); // no need to delete anything from "old_bad_hosts"
           }
         },
         onerror: function() {
@@ -7501,13 +7525,13 @@ async function activate_CheckURLs(button, completed_icon) {
   });
 }
 
-function delete_log_CheckURLs(host) {
-  for (var key in old_bad_hosts) {
-    if (old_bad_hosts[key]["host"] == host) {
-      xxx_bad_hosts.splice(key, 1);
-    }
-  }
-}
+// function delete_log_CheckURLs(host) {
+//   for (var key in old_bad_hosts) {
+//     if (old_bad_hosts[key]["host"] == host) {
+//       old_bad_hosts.splice(key, 1);
+//     }
+//   }
+// }
 
 function log_CheckURLs(host, days_now) {
   let error_days = 0
