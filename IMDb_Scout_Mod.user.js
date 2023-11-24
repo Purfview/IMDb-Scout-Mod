@@ -4423,7 +4423,7 @@ var usenet_sites = [
       'icon': 'https://nzbfinder.ws/img/appicons/favicon-32x32.png',
       'searchUrl': 'https://nzbfinder.ws/search?id=%search_string%&t=5000',
       'loggedOutRegex': /Cloudflare|Ray ID|Forgot password/,
-      'matchRegex': /No result!/,
+      'matchRegex': /No results found!/,
       'TV': true},
   {   'name': 'nzbforyou',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQBAMAAADt3eJSAAAAKlBMVEUAAAD+AAH////8AAD7AAH9/P3///v5AAL/+PT4///kf3/ke3bnCwziDgs/bjd5AAAAAXRSTlMAQObYZgAAAD1JREFUCNdjIAYIuygpBSkJOzMICippNCkZCoMYKZJJYIZKubgTmBErLHwIzFBbLg1VE6QKYSSpKoEYRAAAF9IK6F3BkiEAAAAASUVORK5CYII=',
