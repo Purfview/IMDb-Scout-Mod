@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      19.9.2
+// @version      20.0
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from hundreds various sites. Adds movies/series to Radarr/Sonarr. Adds external ratings from Metacritic, Rotten Tomatoes, Letterboxd, Douban, Allocine, MyAnimeList, AniList. Media Server indicators for Plex, Jellyfin, Emby. Dark theme/style for Reference View. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAMFBMVEUAAAD/AAAcAAA1AABEAABVAAC3AADnAAD2AACFAAClAABlAAB3AADHAACVAADYAABCnXhrAAAD10lEQVRIx73TV4xMURgH8H/OnRmZWe3T7h2sOWaNXu7oJRg9UccuHgTRBatMtAgSg+gJu9q+kFmihcQoD8qLTkK0CIkoy0YJITsRD0rCKTHFrnkSv5e5c88/53znO+fiPwvsvrN038cPNqrG9pJmHkRVnPcpaTlHJY60cfPSpsrzl1LKihrmLvxhCM2i3OHvDx0d+H7e3F6JBv5iZMiJfhFTfPYDMHrMImpwimWWUdSgDQkbno7fFpUPVgh+pHFbZR4SovSctDCM9Hac9IKd9rO8EevtBCkXgY5IMmgquwypP7qqfcp/Tp4KLONDVsWh3RSBB2rnZfit69ocUdqLn2prrRZYM0Jg4JibamKsqe7gfEh5GOAfeYJjVHIPZvil97rcXkMog30byWRwXYRWoxHbzNFHJJpAarO8NdEBBsdCaP3WMJltTmQd4zlnekTq9Z5dgACwAlrpK4BxdV5mvLuspRgMSHbCIFF0iS8MZ5S8oYBYKY7rByC4dDM9uSIUmPOIwxgQBoYeF93auP4qFyPbIVXziWeGTH1EFM57kJo2hqQju6BwIyRf6RmCjdT4JOdiwNgiH/PPD3qoqlsNaXRd+fKtFfECxlZVNVF9SOsgTZEr2TUjJJbyeNX1IZrKIbyGlBABfpQPv2UDrly13LkJXDVhpQ5MhtGwcyF4HKjlU4E8xwB0AvDjd6AGmevZ87EcQRHgcO52e9uNsYELOrAa/Yh81YlmYLQJ5HWyq0+kzQ/DQKEusg6CRI27ryy8nReRS0wsoetkmRwogHSprliCckfEjXG9yAQc74J0WB99vu6DF3i3pMucsXM6tpBbxd2mVJAwXwGogNRBvGRA4jtHKTXkAIwLGCR/mT4Lh75oneQXXP9sAYfGRDCsnw7pX/jRZkU3M44kjw2l5zRIzb4CbZ8dULdL6wbNPZOpK0B6gN1UR1mdoxAaL/GrWiLPL3SEwW9YMTU/d64BtLahAVyucWhj9Mm8ign9IfQaBtd2/GbvCAEBpG5eMcrj2I0ktpKLeaqXQ3Pst42KGIshpdTmQLAeTgFGJ2wvh+tayMOR0n1RZ8B9z13vnOPBnsBq4E1ffgZpPFZHWVpO2cvhjYpOcbBd5TlhpDu5zq9mHGZcVi0y+VFkcFkDdyKJfTt99wEyHSEzDM90KH0nexpwZHJHKYYhjzlwGe0pP/IKfxociaEb7YDbi6KGJY1R2cR76E6NAtXqY4pPH3plLcl8LD7V+cOLUbUWRFZRPTAbVZO3mxK18Xc1ZaAiS8ARJXpZliXAomR94siiiMx8ZBOkXGTlnH0F/9ov1xPtWwEqP9wAAAAASUVORK5CYII=
@@ -1251,6 +1251,9 @@
 
 19.9.2  -   Removed: Cuevana2, PTN, T [openlook], UltraHD, MRI, FFF Movie Posters, PlanetDP (TR).
 
+20.0    -   New feature: 2nd bar supported on Search/List/Watchlist pages.
+            Fixed: Bug with %search_string% & %search_string_orig% on Search/List/Watchlist pages if in IMDB's acc was enabled the reference view option.
+
 
 //==============================================================================
 //    Notes.
@@ -1345,7 +1348,7 @@ Use this to allow changing names without breaking existing users.
 
 #  'inSecondSearchBar' & 'inThirdSearchBar' (optional):
 Places site at the extra searchable bar. Subtitles and other sites are set to 2nd bar.
-3rd bar is empty, space for custom user's configuration. By defaut site goes to the 1st bar.
+3rd bar is for the streaming sites. By defaut site goes to the 1st bar.
 Extra bars can be enabled/disabled/swapped at the Settings.
 
 #  'rateLimit' (optional):
@@ -1509,10 +1512,12 @@ var public_sites = [
       'matchRegex': /No torrents found/,
       'both': true},
   {   'name': 'DevilTor',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgBAMAAACBVGfHAAAAMFBMVEUBAADGAgKJAwMrAgKpAQFcAwMmHR5TS07t7vKmQEOSaGimISKdi4xyLC3hVlbBsbOT0IBuAAABd0lEQVQoz12RsUvDQBTGD0Oyv+M6SBDblxTBIqRJ6uylcdApbdLBLSCI6GBBbEEKrlU62EkcdHDoWP8AJyehLoqiCCK4ORXcVDp4TdpC803vfnx87z4eibVJEsoZCZBPJYAMniVNXGKSeMq0dD9+ljFrkBIEWsAiT5kDyxo2MGrDamSxmetoJkBGp+hFgZwhFgAQqeXHFqCIAOqNNt7C3Ry69By08eKAI2cLzba7QsKohakjyyw2v92ickcCEWyZSPPrzWOaVmpkxjFk49FJ7c41W46nhER2LT2doakd9tOqhAJIiL6IpEftr9ZSlQgZFjGB0ffb+RN134+7a8Lx1lOvQE/HP3WFY+O6DZ9xXcUJAOjH2T3EbUO5KHMBXhpt5g2LeHZazgC9fNr+uzCGiSozKiWudk/3Gr2oKuJy0ea0/3BI6tGOA6dQnNHVfmeL1CLwrJmehLO/IRmpoJQ9UlC7VTJRRSStDTqJ4w7q08B8rU0DyR8N/+KWVOOQU8J2AAAAAElFTkSuQmCC',
       'searchUrl': 'https://devil-torrents.pl/szukaj.php?search=%search_string_orig%+%year%&cat=0',
       'loggedOutRegex': /Cloudflare|Ray ID|Nie zalogowany/,
       'matchRegex': /Nic tutaj nie ma/},
   {   'name': 'DevilTor',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgBAMAAACBVGfHAAAAMFBMVEUBAADGAgKJAwMrAgKpAQFcAwMmHR5TS07t7vKmQEOSaGimISKdi4xyLC3hVlbBsbOT0IBuAAABd0lEQVQoz12RsUvDQBTGD0Oyv+M6SBDblxTBIqRJ6uylcdApbdLBLSCI6GBBbEEKrlU62EkcdHDoWP8AJyehLoqiCCK4ORXcVDp4TdpC803vfnx87z4eibVJEsoZCZBPJYAMniVNXGKSeMq0dD9+ljFrkBIEWsAiT5kDyxo2MGrDamSxmetoJkBGp+hFgZwhFgAQqeXHFqCIAOqNNt7C3Ry69By08eKAI2cLzba7QsKohakjyyw2v92ickcCEWyZSPPrzWOaVmpkxjFk49FJ7c41W46nhER2LT2doakd9tOqhAJIiL6IpEftr9ZSlQgZFjGB0ffb+RN134+7a8Lx1lOvQE/HP3WFY+O6DZ9xXcUJAOjH2T3EbUO5KHMBXhpt5g2LeHZazgC9fNr+uzCGiSozKiWudk/3Gr2oKuJy0ea0/3BI6tGOA6dQnNHVfmeL1CLwrJmehLO/IRmpoJQ9UlC7VTJRRSStDTqJ4w7q08B8rU0DyR8N/+KWVOOQU8J2AAAAAElFTkSuQmCC',
       'searchUrl': 'https://devil-torrents.pl/szukaj.php?search=%search_string_orig%&cat=7',
       'loggedOutRegex': /Cloudflare|Ray ID|Nie zalogowany/,
       'matchRegex': /Nic tutaj nie ma/,
@@ -1611,10 +1616,12 @@ var public_sites = [
   {   'name': 'Knaben',
       'searchUrl': 'https://knaben.eu/search/?cat=All&q=%search_string_orig%+%year%&fast=0',
       'loggedOutRegex': /Cloudflare|Ray ID|please wait/,
+      'rateLimit': 525,
       'matchRegex': />Total hits: 0</},
   {   'name': 'Knaben',
       'searchUrl': 'https://knaben.eu/search/?cat=TV&q=%search_string_orig%&fast=0',
       'loggedOutRegex': /Cloudflare|Ray ID|please wait/,
+      'rateLimit': 525,
       'matchRegex': />Total hits: 0</,
       'TV': true},
   {   'name': 'KZ',
@@ -1946,7 +1953,7 @@ var public_sites = [
       'matchRegex': /Nothing Found/,
       'both': true},
   {   'name': 'WH',
-      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAQAAAD9CzEMAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAADsSURBVHja3NhbFoMwCEVR5j9p+ltr4B7Io0v1L6nslGSZoLntve0IIK/kefWY+hUcZg8o5qIKNNLNgfaMCiBeWKNrjPzGs2GDDJ4xKVALHiLhHIjgcR8D0vAqdSMiAch0auIKlEYPCA7c2ynxDYDxk1bXAF05JJ1XpTR+Z4v5DvgLAfVyyHoXAF4D1ox/GtD/dwog6ZwA2GwtALwH2JLwzwfsr4BtAhovC3KEgTtaG4i2TJtIUbwn2wogP1UAgvUiwMoAOdnhs2kb2H66PlAfVCocr1c40zWa8yrT91aZR+rkA5U+Qdi3ip33ZwAb5/CcnuFpKAAAAABJRU5ErkJggg==',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgBAMAAACBVGfHAAAAFVBMVEUAAACZWlyZYWCednWbZmifb3Cqf39bp5OxAAAAAXRSTlMAQObYZgAAALFJREFUKM+tzTESgjAQBdA/CNYsCDUEpEZ2Qk3AAzAwWnP/UwjGhGCr2+yfN3928eM0i961gVusozCiYmjIPkD0BfnlCEEeHsFbgwV+Q2dA58a8oxW2j0KY4yHO+QPoDVCIuYkAUexASQ9fjQ60CQKVOSBKcGsbhUdTuXAJC00sRSULC1SluDLXO1CNcpCjAyMKZgv51piZsx1igKVzI4qA0/SEGZV2gE93C/6wlRl/mxcElBcg/qnDjgAAAABJRU5ErkJggg==',
       'searchUrl': 'https://www.warezheaven.com/index.php?search/666/&q=%tt%&o=date',
       'loggedOutRegex': /Cloudflare|Ray ID/,
       'matchRegex': /search_results/,
@@ -3193,12 +3200,12 @@ var private_sites = [
       'positiveMatch': true,
       'both': true},
   {   'name': 'RoTor',
-      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAQAAAD9CzEMAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAADsSURBVHja3NhbFoMwCEVR5j9p+ltr4B7Io0v1L6nslGSZoLntve0IIK/kefWY+hUcZg8o5qIKNNLNgfaMCiBeWKNrjPzGs2GDDJ4xKVALHiLhHIjgcR8D0vAqdSMiAch0auIKlEYPCA7c2ynxDYDxk1bXAF05JJ1XpTR+Z4v5DvgLAfVyyHoXAF4D1ox/GtD/dwog6ZwA2GwtALwH2JLwzwfsr4BtAhovC3KEgTtaG4i2TJtIUbwn2wogP1UAgvUiwMoAOdnhs2kb2H66PlAfVCocr1c40zWa8yrT91aZR+rkA5U+Qdi3ip33ZwAb5/CcnuFpKAAAAABJRU5ErkJggg==',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQAgMAAABinRfyAAAADFBMVEUAAADx8fFaWlqpqak4zKzIAAAAKElEQVQI12PACUwPcIYwSDgwOTCIeh5yYBBkcQIRzg4MQq6HHXDqAgDpfQXWCJw+RQAAAABJRU5ErkJggg==',
       'searchUrl': 'https://rotorrent.ro/torrents-search.php?search=%search_string_orig%+%year%&cat=0&incldead=0',
       'loggedOutRegex': /Cloudflare|Ray ID|only for members/,
       'matchRegex': /No torrents were found/},
   {   'name': 'RoTor',
-      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAQAAAD9CzEMAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAADsSURBVHja3NhbFoMwCEVR5j9p+ltr4B7Io0v1L6nslGSZoLntve0IIK/kefWY+hUcZg8o5qIKNNLNgfaMCiBeWKNrjPzGs2GDDJ4xKVALHiLhHIjgcR8D0vAqdSMiAch0auIKlEYPCA7c2ynxDYDxk1bXAF05JJ1XpTR+Z4v5DvgLAfVyyHoXAF4D1ox/GtD/dwog6ZwA2GwtALwH2JLwzwfsr4BtAhovC3KEgTtaG4i2TJtIUbwn2wogP1UAgvUiwMoAOdnhs2kb2H66PlAfVCocr1c40zWa8yrT91aZR+rkA5U+Qdi3ip33ZwAb5/CcnuFpKAAAAABJRU5ErkJggg==',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQAgMAAABinRfyAAAADFBMVEUAAADx8fFaWlqpqak4zKzIAAAAKElEQVQI12PACUwPcIYwSDgwOTCIeh5yYBBkcQIRzg4MQq6HHXDqAgDpfQXWCJw+RQAAAABJRU5ErkJggg==',
       'searchUrl': 'https://rotorrent.ro/torrents-search.php?search=%search_string_orig%&cat=0&incldead=0',
       'loggedOutRegex': /Cloudflare|Ray ID|only for members/,
       'matchRegex': /No torrents were found/,
@@ -4850,7 +4857,7 @@ var subs_sites = [
       'inSecondSearchBar': true,
       'both': true},
   {   'name': 'Titrari (RO)',
-      'searchUrl': 'https://www.titrari.ro/index.php?page=cautaredevansata&z5=%nott%',
+      'searchUrl': 'https://www.titrari.ro/index.php?page=cautarecutare&z5=%nott%',
       'loggedOutRegex': /Cloudflare|Ray ID/,
       'matchRegex': />1-0\/0</,
       'inSecondSearchBar': true,
@@ -5037,13 +5044,13 @@ var other_sites = [
       'matchRegex': /No posts matching/,
       'inSecondSearchBar': true},
   {   'name': 'MrSkin',
-      'icon': 'https://www.mrskin.com/static-images/mrskin-apple-icon-57x57-precomposed.png',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADkAAAA5BAMAAAB+Np62AAAAGFBMVEVMddPs0JcLDA/88LhAQ0e1pn+Bd1pcjv7w2cwrAAACH0lEQVQ4y82UMZObMBCFGc9lrl4vcp2TZVLrVlAbWXBthIA6BkTtIv9/Is5pEPaVmbz2m/eedkFK/gdpzsUz9sIXCfHMyCvbcv39AdzxhZLio/7Y0gXWMxbi0oqH1qn2lHOreZz9qherIxp4pTiP6G0pRSI2CNFy/rEJrlg/2ylkZGkcrXmw3FWGeBGf2BldQjdrjoCKR2uq1DEPvSS9BCoiKtwwIgQhATHGo0MdGwd/1YouppcGZdfZAPMamY56s72bA72Hb+hR+SsFLWYtTDSRLzzmtbEScNj8A5obxGXXIxTCoo7WLE4yz/pueAOGYVkrWutshL377EWSET29i5J6KSFQOOhLs6LGci8RJjMusKradfKs6zBK5o3EZsr6nyv6bWiEhMMslMOpqF0aeYdMAhazteBZ55o1VTo0AoIFnPMOo1Mp6yCoA8CWENR59Y3sCB7u2juA4rwe2MvrJ2O2eMOIvgrKFyp7FxbayTS6f9CFQFS9uLyf1BjRRB9Z8NbSTxlgGdPdsZeQjkCpk2jbJFLVAXpCAqID/oppHWZlJZv9NJ3y84ZahFz72Xjt1Ob6v9hQrE5I+YmajXfnUwdMc8M9TslGGVyBHcIFZdJs6e4SosuUjz4/b+ktU4ito2I8PKCvOzZCLjpD++SBfl8qicqMONySB2YRipEkhGkfaFcjBOU/nryxZXCuatfX6Yp0+OIRFoYnX+ic/BP9ARIAg0GUZcJgAAAAAElFTkSuQmCC',
       'searchUrl': 'https://www.mrskin.com/search/titles?from_year=%year%&term=%search_string%&title_type=movie&to_year=%year%',
       'matchRegex': /thumbnail-image/,
       'positiveMatch': true,
       'inSecondSearchBar': true},
   {   'name': 'MrSkin',
-      'icon': 'https://www.mrskin.com/static-images/mrskin-apple-icon-57x57-precomposed.png',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADkAAAA5BAMAAAB+Np62AAAAGFBMVEVMddPs0JcLDA/88LhAQ0e1pn+Bd1pcjv7w2cwrAAACH0lEQVQ4y82UMZObMBCFGc9lrl4vcp2TZVLrVlAbWXBthIA6BkTtIv9/Is5pEPaVmbz2m/eedkFK/gdpzsUz9sIXCfHMyCvbcv39AdzxhZLio/7Y0gXWMxbi0oqH1qn2lHOreZz9qherIxp4pTiP6G0pRSI2CNFy/rEJrlg/2ylkZGkcrXmw3FWGeBGf2BldQjdrjoCKR2uq1DEPvSS9BCoiKtwwIgQhATHGo0MdGwd/1YouppcGZdfZAPMamY56s72bA72Hb+hR+SsFLWYtTDSRLzzmtbEScNj8A5obxGXXIxTCoo7WLE4yz/pueAOGYVkrWutshL377EWSET29i5J6KSFQOOhLs6LGci8RJjMusKradfKs6zBK5o3EZsr6nyv6bWiEhMMslMOpqF0aeYdMAhazteBZ55o1VTo0AoIFnPMOo1Mp6yCoA8CWENR59Y3sCB7u2juA4rwe2MvrJ2O2eMOIvgrKFyp7FxbayTS6f9CFQFS9uLyf1BjRRB9Z8NbSTxlgGdPdsZeQjkCpk2jbJFLVAXpCAqID/oppHWZlJZv9NJ3y84ZahFz72Xjt1Ob6v9hQrE5I+YmajXfnUwdMc8M9TslGGVyBHcIFZdJs6e4SosuUjz4/b+ktU4ito2I8PKCvOzZCLjpD++SBfl8qicqMONySB2YRipEkhGkfaFcjBOU/nryxZXCuatfX6Yp0+OIRFoYnX+ic/BP9ARIAg0GUZcJgAAAAAElFTkSuQmCC',
       'searchUrl': 'https://www.mrskin.com/search/titles?from_year=%year%&term=%search_string%&title_type=tvshow&to_year=%year%',
       'matchRegex': /thumbnail-image/,
       'positiveMatch': true,
@@ -5279,7 +5286,7 @@ var icon_sites_main = [
       'searchUrl': 'https://catalog.afi.com/Search?searchField=MovieName&searchText=%search_string%',
       'showByDefault': false},
   {   'name': 'AllMovie',
-      'icon': 'https://cdn-gce.allmovie.com/images/ios/AppIcon57x57.png',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADkAAAA5BAMAAAB+Np62AAAAMFBMVEUAJTUADRMAFyIFLj8rwf8nsusintEkp9wXcJUejr35+vsafqgQS2SwuLxyd3xQXmZ7IwYqAAACIklEQVQ4y9XTPWzTQBQH8MNeGEDKmbWF83VhASxlYw47UmK1AwMSdgRiqYQcr3wUqVIZiUSlbmwnJSHgCiRYKGPLAGPUCrF2qARjB8R7986+a5x06Na/4sj5//zxTrFZ85RELIKtjK7sryiC5iTag308l9kQ2tSVnVF9e2GrUuAHQ2oa0qWNHW/3hXCVGtLOOCzaDWYjoFlrG02ehS9XpEXvegz6xGj6aDONN530Y2hAIaCd1nLWcnIn77RiUjo3m3OuN+e+pBIU9gNRqWwkY9N4qHztAaJv/gWRjDmoJN3ae62vA0gKzbbRRkoTOopNpXFM6jf9JkOFptLky15h9JvPzJWLUnEq0kv7S6ycqq43hzP0vaQrs8uDSCs0laa9bqbVO1Z/tWJTW5E3UT9ZbUWPP6dabyk1EqjY1KZaVJOBmDlzIJh3W31XO4zJmXrhcLCofk9ruvWqj/tCjRbUW+GBmoZJUJpQXFPDf2rYcBqteY6rkzcUZCCrhjT50CxWAxkeK8wf05DSVKgTdXR0qH5gQ1O5Crfl/KoaBVP6jhWoB/uBvHLwK9ANHG+ngn3JYcMvakhpflQT05CGjfTNen9KH0KDGnI91X1XA5xqlXOjer/0kNf0Hney0LGKd0mXP63bfIzxvkZnv7+V9rp51uvaZDk8dUbxid1e8Zz392IMT2ypMENxlzsJcKo2abDxle8+x5LWw6l5Sjov51XlKRH/AXvKUdyuPn8KAAAAAElFTkSuQmCC',
       'searchUrl': 'https://www.allmovie.com/search/movies/%search_string%',
       'showByDefault': false},
   {   'name': 'AlloCiné (FR)',
@@ -5528,7 +5535,7 @@ var icon_sites_main = [
       'searchUrl': 'https://letterboxd.com/imdb/%nott%',
       'showByDefault': false},
   {   'name': 'Lumiere',
-      'icon': 'https://lumiere.obs.coe.int/assets/favicon.03b96b55.ico',
+      'icon': 'https://lumiere.obs.coe.int/assets/favicon-03b96b55.ico',
       'searchUrl': 'https://lumiere.obs.coe.int/web/search/',
       'mPOST': 'search=search&title=%search_string%&search.x=0&search.y=0',
       'showByDefault': false},
@@ -5586,11 +5593,11 @@ var icon_sites_main = [
       'searchUrl': 'https://www.mymovierack.com/title/topResultFor?q=%tt%',
       'showByDefault': false},
   {   'name': 'Netflix',
-      'icon': 'data:image/png;base64,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',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABAAgMAAADXB5lNAAAADFBMVEUAAACxBxDlCRSSBA7uTNqKAAAAAXRSTlMAQObYZgAAANdJREFUOMuNzisOwkAURuEJCYh6NlGPJGwBQWlCeHg8hlBgCRh0MaTtbUgVkrCKmi4BTwUBwm0w899MOj3yU0dxDlGsVNfzhupfpwkQQNsE+3pYGuAEMLHCms8AxlaY8wjATIJfrQJUq71aePCZDl7B0NfhZYAYoJSwZRgIIIBAwk7CglfvuQ68GkrIAAoBPq9GTwEpQCnhS5To4L357CMhkHADcAVsGEIJGYBjgEiHKUOa69DiVSuQDiPFsJJwBXANcJRwAeCzsxUSgFYTIABlggOAWwPQD/UX94Qp58qmAAAAAElFTkSuQmCC',
       'searchUrl': 'https://www.netflix.com/search/%search_string%',
       'showByDefault': false},
   {   'name': 'Netflix-DVD',
-      'icon': 'https://dvd.netflix.com/apple-touch-icon-180x180.png',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABAAgMAAADXB5lNAAAADFBMVEUAAACxBxDlCRSSBA7uTNqKAAAAAXRSTlMAQObYZgAAANdJREFUOMuNzisOwkAURuEJCYh6NlGPJGwBQWlCeHg8hlBgCRh0MaTtbUgVkrCKmi4BTwUBwm0w899MOj3yU0dxDlGsVNfzhupfpwkQQNsE+3pYGuAEMLHCms8AxlaY8wjATIJfrQJUq71aePCZDl7B0NfhZYAYoJSwZRgIIIBAwk7CglfvuQ68GkrIAAoBPq9GTwEpQCnhS5To4L357CMhkHADcAVsGEIJGYBjgEiHKUOa69DiVSuQDiPFsJJwBXANcJRwAeCzsxUSgFYTIABlggOAWwPQD/UX94Qp58qmAAAAAElFTkSuQmCC',
       'searchUrl': 'https://dvd.netflix.com/Search?v1=%search_string% %year%',
       'spaceEncode': ' ',
       'showByDefault': false},
@@ -6340,27 +6347,36 @@ function addLink(elem, site_name, target, site, state, scout_tick, post_data) {
   }
   // Create/find elements for Search/List pages.
   if (onSearchPage) {
-    var result_box = $(elem).find('td.result_box');
+    var result_box = $(elem).find('div.result_box');
     if (result_box.length == 0) {
-      $(elem).append($('<td />').addClass('result_box'));
+      $(elem).append($('<div />').addClass('result_box'));
       $.each(valid_states, function(i, name) {
-        $(elem).find('td.result_box').append("<span id='imdbscout_" + name + scout_tick + "'>"+'</span>');
+        $(elem).find('div.result_box').append("<span id='imdbscout_" + name + scout_tick + "'>"+'</span>');
+      });
+    }
+  }
+  if (onSearchPage && GM_config.get('load_second_bar_search')) {
+    var result_box2 = $(elem).find('div.result_box_2nd');
+    if (result_box2.length == 0) {
+      $(elem).append($('<div />').addClass('result_box_2nd'));
+      $.each(valid_states, function(i, name) {
+        $(elem).find('div.result_box_2nd').append("<span id='imdbscout2_" + name + scout_tick + "'>"+'</span>');
       });
     }
   }
   if (onSearchPage && GM_config.get('load_third_bar_search')) {
-    var result_box3 = $(elem).find('xd.result_box_3rd');
+    var result_box3 = $(elem).find('div.result_box_3rd');
     if (result_box3.length == 0) {
-      $(elem).append($('<xd />').addClass('result_box_3rd'));
+      $(elem).append($('<div />').addClass('result_box_3rd'));
       $.each(valid_states, function(i, name) {
-        $(elem).find('xd.result_box_3rd').append("<span id='imdbscout3_" + name + scout_tick + "'>"+'</span>');
+        $(elem).find('div.result_box_3rd').append("<span id='imdbscout3_" + name + scout_tick + "'>"+'</span>');
       });
     }
   }
   // Add links to IMDb page.
   var in_element_two = ('inSecondSearchBar' in site) ? site['inSecondSearchBar'] : false;
   var in_element_three = ('inThirdSearchBar' in site) ? site['inThirdSearchBar'] : false;
-  if (onSearchPage && in_element_two || in_element_three && !getPageSetting('load_third_bar') || in_element_two && in_element_three) {
+  if (in_element_two && !getPageSetting('load_second_bar') || in_element_three && !getPageSetting('load_third_bar') || in_element_two && in_element_three) {
     return;
   } else if (!onSearchPage && in_element_two) {
     $('#imdbscoutsecondbar_' + state).append(link).append(' ');
@@ -6368,8 +6384,10 @@ function addLink(elem, site_name, target, site, state, scout_tick, post_data) {
     $('#imdbscoutthirdbar_' + state).append(link).append(' ');
   } else if (!onSearchPage) {
     $('#imdbscout_' + state).append(link).append(' ');
-  } else if (!in_element_three) {
+  } else if (!in_element_three && !in_element_two) {
     $('#imdbscout_' + state + scout_tick).append(link);
+  } else if (in_element_two) {
+    $('#imdbscout2_' + state + scout_tick).append(link);
   } else {
     $('#imdbscout3_' + state + scout_tick).append(link);
   }
@@ -6445,11 +6463,7 @@ async function maybeAddLink(elem, site_name, search_url, site, scout_tick, movie
   // Don't check the second/third bar sites if a 2nd/3rd bar is disabled in the Settings.
   var in_element_two = ('inSecondSearchBar' in site) ? site['inSecondSearchBar'] : false;
   var in_element_three = ('inThirdSearchBar' in site) ? site['inThirdSearchBar'] : false;
-  if (in_element_two && !GM_config.get('load_second_bar') || in_element_three && !getPageSetting('load_third_bar') || in_element_two && in_element_three) {
-    return;
-  }
-  // Don't check the second bar sites on a Search/List/Watchlist page.
-  if (in_element_two && onSearchPage) {
+  if (in_element_two && !getPageSetting('load_second_bar') || in_element_three && !getPageSetting('load_third_bar') || in_element_two && in_element_three) {
     return;
   }
   // Connection rate limiter per domain.
@@ -6826,15 +6840,24 @@ function getIconsLinkArea() {
 
 function performSearch() {
   //Add css for the new table cells we're going to add
-  var styles  = '.result_box {width: 975px} ';
+  var styles  = '.result_box {width: 975px; margin-top: 5px; margin-bottom: 1px} ';
       styles += '.result_box a { margin-right: 5px; color: #444;} ';
       styles += '.result_box a:visited { color: #551A8B; } ';
       styles += '#content-2-wide #main, #content-2-wide ';
       styles += '.maindetails_center {margin-left: 5px; width: 1001px;} ';
   GM_addStyle(styles);
 
+  if (getPageSetting('load_second_bar')) {
+    var styles2  = '.result_box_2nd {width: 975px; margin-bottom: 1px} ';
+        styles2 += '.result_box_2nd a { margin-right: 5px; color: #444;} ';
+        styles2 += '.result_box_2nd a:visited { color: #551A8B; } ';
+        styles2 += '#content-2-wide #main, #content-2-wide ';
+        styles2 += '.maindetails_center {margin-left: 5px; width: 1001px;} ';
+    GM_addStyle(styles2);
+  }
+
   if (getPageSetting('load_third_bar')) {
-    var styles3  = '.result_box_3rd {width: 975px} ';
+    var styles3  = '.result_box_3rd {width: 975px; margin-bottom: 1px} ';
         styles3 += '.result_box_3rd a { margin-right: 5px; color: #444;} ';
         styles3 += '.result_box_3rd a:visited { color: #551A8B; } ';
         styles3 += '#content-2-wide #main, #content-2-wide ';
@@ -6903,6 +6926,7 @@ function performSearchSecondPart(elem, link, movie_id, showsites, scout_tick) {
     method: "GET",
     timeout: 10000,
     url:    "https://www.imdb.com" + link.attr('href'),
+    anonymous: true, // prevent it sending cookies and going to a reference page if such option is enabled in imdb's acc
     headers: { "User-Agent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:108.0) Gecko/20100101 Firefox/108.0" },
     onload: function(response) {
       var parser = new DOMParser();
@@ -6929,6 +6953,9 @@ function performSearchSecondPart(elem, link, movie_id, showsites, scout_tick) {
         if (movie_title === "" || movie_title === undefined) {
           movie_title = movie_title_orig;
         }
+      } else {
+        console.log("IMDb Scout Mod (Get a title Error): Element not found! Please report it.");
+        GM.notification("Element not found! Please report it.", "IMDb Scout Mod (Get a title Error)");
       }
       // Streaming APIs support
       var series_id  = "tt" + movie_id;
@@ -7035,14 +7062,14 @@ function performPage() {
   }
   if (!GM_config.get("disable_sites")) {
     perform(getLinkArea(), movie_id, movie_title, movie_title_orig, is_tv, is_movie, series_id, season_id, episode_id);
-    if (GM_config.get('load_second_bar') && !GM_config.get('load_third_bar_movie')) {
+    if (GM_config.get('load_second_bar_movie') && !GM_config.get('load_third_bar_movie')) {
       getLinkAreaSecond();
-    } else if (!GM_config.get('load_second_bar') && GM_config.get('load_third_bar_movie')) {
+    } else if (!GM_config.get('load_second_bar_movie') && GM_config.get('load_third_bar_movie')) {
       getLinkAreaThird();
-    } else if (GM_config.get('load_second_bar') && GM_config.get('load_third_bar_movie') && !GM_config.get('switch_bars')) {
+    } else if (GM_config.get('load_second_bar_movie') && GM_config.get('load_third_bar_movie') && !GM_config.get('switch_bars')) {
       getLinkAreaSecond();
       getLinkAreaThird();
-    } else if (GM_config.get('load_second_bar') && GM_config.get('load_third_bar_movie') && GM_config.get('switch_bars')) {
+    } else if (GM_config.get('load_second_bar_movie') && GM_config.get('load_third_bar_movie') && GM_config.get('switch_bars')) {
       getLinkAreaThird();
       getLinkAreaSecond();
     }
@@ -10019,7 +10046,7 @@ function countSites(task) {
       'remove_ads': {'type': 'checkbox'},
       'debug_sites': {'type': 'checkbox'},
       'loadmod_on_start_movie': {'type': 'checkbox'},
-      'load_second_bar': {'type': 'checkbox'},
+      'load_second_bar_movie': {'type': 'checkbox'},
       'load_third_bar_movie': {'type': 'checkbox'},
       'switch_bars': {'type': 'checkbox'},
       'sortReqOnNewLine': {'type': 'checkbox'},
@@ -10040,6 +10067,7 @@ function countSites(task) {
       'highlight_sites_movie': {'type': 'text'},
       'highlight_missing_movie': {'type': 'text'},
       'loadmod_on_start_search': {'type': 'checkbox'},
+      'load_second_bar_search': {'type': 'checkbox'},
       'load_third_bar_search': {'type': 'checkbox'},
       'call_http_mod_search': {'type': 'checkbox'},
       'hide_missing_search': {'type': 'checkbox'},
@@ -10277,7 +10305,7 @@ var config_fields = {
     'label': 'Load links to sites on start?',
     'default': true
   },
-  'load_second_bar': {
+  'load_second_bar_movie': {
     'type': 'checkbox',
     'label': 'Enable the 2nd search bar?',
     'default': false
@@ -10381,6 +10409,11 @@ var config_fields = {
     'section': 'Search/List/Watchlist Page:',
     'type': 'checkbox',
     'label': 'Load links to sites on start?',
+    'default': false
+  },
+  'load_second_bar_search': {
+    'type': 'checkbox',
+    'label': 'Enable the 2nd search bar?',
     'default': false
   },
   'load_third_bar_search': {
