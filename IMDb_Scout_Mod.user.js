@@ -4857,7 +4857,7 @@ var subs_sites = [
       'inSecondSearchBar': true,
       'both': true},
   {   'name': 'Titrari (RO)',
-      'searchUrl': 'https://www.titrari.ro/index.php?page=cautarecutare&z5=%nott%',
+      'searchUrl': 'https://www.titrari.ro/index.php?page=maicauta&z7=&z2=&z5=%nott%',
       'loggedOutRegex': /Cloudflare|Ray ID/,
       'matchRegex': />1-0\/0</,
       'inSecondSearchBar': true,
