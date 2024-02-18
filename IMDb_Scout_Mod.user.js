@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      20.1.2
+// @version      20.1.3
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from hundreds various sites. Adds movies/series to Radarr/Sonarr. Adds external ratings from Metacritic, Rotten Tomatoes, Letterboxd, Douban, Allocine, MyAnimeList, AniList. Media Server indicators for Plex, Jellyfin, Emby. Dark theme/style for Reference View. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAMFBMVEUAAAD/AAAcAAA1AABEAABVAAC3AADnAAD2AACFAAClAABlAAB3AADHAACVAADYAABCnXhrAAAD10lEQVRIx73TV4xMURgH8H/OnRmZWe3T7h2sOWaNXu7oJRg9UccuHgTRBatMtAgSg+gJu9q+kFmihcQoD8qLTkK0CIkoy0YJITsRD0rCKTHFrnkSv5e5c88/53znO+fiPwvsvrN038cPNqrG9pJmHkRVnPcpaTlHJY60cfPSpsrzl1LKihrmLvxhCM2i3OHvDx0d+H7e3F6JBv5iZMiJfhFTfPYDMHrMImpwimWWUdSgDQkbno7fFpUPVgh+pHFbZR4SovSctDCM9Hac9IKd9rO8EevtBCkXgY5IMmgquwypP7qqfcp/Tp4KLONDVsWh3RSBB2rnZfit69ocUdqLn2prrRZYM0Jg4JibamKsqe7gfEh5GOAfeYJjVHIPZvil97rcXkMog30byWRwXYRWoxHbzNFHJJpAarO8NdEBBsdCaP3WMJltTmQd4zlnekTq9Z5dgACwAlrpK4BxdV5mvLuspRgMSHbCIFF0iS8MZ5S8oYBYKY7rByC4dDM9uSIUmPOIwxgQBoYeF93auP4qFyPbIVXziWeGTH1EFM57kJo2hqQju6BwIyRf6RmCjdT4JOdiwNgiH/PPD3qoqlsNaXRd+fKtFfECxlZVNVF9SOsgTZEr2TUjJJbyeNX1IZrKIbyGlBABfpQPv2UDrly13LkJXDVhpQ5MhtGwcyF4HKjlU4E8xwB0AvDjd6AGmevZ87EcQRHgcO52e9uNsYELOrAa/Yh81YlmYLQJ5HWyq0+kzQ/DQKEusg6CRI27ryy8nReRS0wsoetkmRwogHSprliCckfEjXG9yAQc74J0WB99vu6DF3i3pMucsXM6tpBbxd2mVJAwXwGogNRBvGRA4jtHKTXkAIwLGCR/mT4Lh75oneQXXP9sAYfGRDCsnw7pX/jRZkU3M44kjw2l5zRIzb4CbZ8dULdL6wbNPZOpK0B6gN1UR1mdoxAaL/GrWiLPL3SEwW9YMTU/d64BtLahAVyucWhj9Mm8ign9IfQaBtd2/GbvCAEBpG5eMcrj2I0ktpKLeaqXQ3Pst42KGIshpdTmQLAeTgFGJ2wvh+tayMOR0n1RZ8B9z13vnOPBnsBq4E1ffgZpPFZHWVpO2cvhjYpOcbBd5TlhpDu5zq9mHGZcVi0y+VFkcFkDdyKJfTt99wEyHSEzDM90KH0nexpwZHJHKYYhjzlwGe0pP/IKfxociaEb7YDbi6KGJY1R2cR76E6NAtXqY4pPH3plLcl8LD7V+cOLUbUWRFZRPTAbVZO3mxK18Xc1ZaAiS8ARJXpZliXAomR94siiiMx8ZBOkXGTlnH0F/9ov1xPtWwEqP9wAAAAASUVORK5CYII=
@@ -1266,6 +1266,8 @@
 20.1.1  -   Update: FileLeechers (DE).
 
 20.1.2  -   Added: Usenet4all (DE).
+
+20.1.3  -   Added: JustWatch (CA).
 
 
 //==============================================================================
@@ -4548,7 +4550,7 @@ var usenet_sites = [
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgBAMAAACBVGfHAAAAElBMVEX+/v4ZFRJDPz51cnGkoqHX19cR5JDUAAAA8klEQVQoz22RQXbCMAxE9dL6AKOEfezCvrRkj9ILOM3j/ldhLAHeMO/Fib+kUWRL6C/rRbrSD6iv+tqf4RqfxIDjTVdgiv0HsHC57sC3gzMjKbPAMAr1CVRCWiTgSrDhIPIP5scng6wcwCiNlD0Bp57OatKx+QQwZg+tbgvA9yzGR3IARqfmybLVgbtmAhu9i3sJ+yfMHbSMTaUDeiw4dKBiKKgPcNsxtU8tpfUtRQfM7NQ1bWyZWPYcjoY1lgAejP8XIzjFXGzFcVcHxqw4IT/YCIlPVLlUj7isXdEpWdxLFOnlNzf8UFpBHat07VkXea87OgImlXedLr8AAAAASUVORK5CYII=',
       'searchUrl': 'https://usenet-4all.pw/forum/search.php?do=process&do=process&quicksearch=1&childforums=1&exactname=1&s=&query=%tt%&titleonly=0&showposts=0',
       'loggedOutRegex': /Cloudflare|Ray ID|lostpw/,
-      'matchRegex': /Deine Suchanfrage erzielte keine Treffer/,
+      'matchRegex': /no matches|Deine Suchanfrage erzielte keine Treffer/,
       'both': true},
   {   'name': 'WtFnZb',
       'icon': 'https://0ccec98d8962a17294688363537bfe2e.wtfnzb.pw/templates/bookstrap/images/icons/favicon.ico',
@@ -5547,8 +5549,12 @@ var icon_sites_main = [
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIwAAACMAgMAAADTrqmtAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAAAMUExURf///xwcHMImKf////Y3wksAAAABdFJOUwBA5thmAAACVElEQVRYw+3YPXKzQAwG4KTIEXKfHCGF8c6koc8lOEWa9CmyFD4Cp+AS9DQ7ExTD/kkr7U++ceHio/Q8Rq8WG7Q8PNzd8dSVjtfDdOVjJ48V81ItZYs9V8yp0XRdPfQ9mXODeWsw73Vz1rcxum7ODeatwbxLRsFMS3HTA0DFwHH8oK6Y6a2J5bjxJJS7dqW/qBmCWXNGASQn2kvR38+AzOzNNzWI2NaOUsT02IA3H8QMxKy+FDaKkL3YmRlaai9m42AzJGber3liEnINdKwONio1Py4OMmkcgE9bqmo+iEkjw+biIAN1wyKDcXFKZnFxouGRfalo8pELxrgVREaM81UxoVQw6l/MFuLkjeHn6W1MGvkyM3P96oXEmagZbIKRrCA3+9k1McDM/mkoZo6TrsS4b4ZiR+SM0ThyzkwoMjM2jwtkI7v7IjILCmQjc2NQIBuZGgU0kM4YV+wS2yoaF1kwcRVNxejYlmBcsSm0VTQ6bzYf2q9B1oyhLcm4SxYii2YpmQ79YfTk2xKNCx0uW97oooFoIGsWT0b0xPyLGXBj4Wctmo2auWgmwfRJYyWz4NabjHyvM7j1srngESe9P2/tZhLNQJqf8ICTMWSaYs+vpWAUNqR1bgxriz+XDWuLP9+3GGctmZEOiXyWCKWA7wtiY2MykPL5ZxvpGFmZo7jh8xg3fK4T9jLA5kNuBjkOMUoulZ9p14zppa7S/ZdYqqvM89I+TkjDjBJOw/aDKg0j7hkHst+5wz3sf3Mb83wDc2p433JqeG/z2vhupxao+V3TXR2/bieEjYde6F4AAAAASUVORK5CYII=',
       'searchUrl': 'https://www.icheckmovies.com/search/movies/?query=%tt%'},
   {   'name': 'JustWatch',
-      'icon': 'https://www.justwatch.com/appassets/favicon.ico',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgBAMAAACBVGfHAAAAElBMVEUAAAAYIivZs0BnXjaljDvxylNUOgvkAAAAAXRSTlMAQObYZgAAAJdJREFUKM9lkuENQjEIhOsGVljgQR2A6AING7yk+68iErUI/PxyXIFra62HalaXCK4uiJUEJjEBaiQGbsQZ0ExAkf+AdiQOALqB+xEUYmAABw/B0WHxBvToBtbxA+MpBk7RDxiCJHAKLHWAZmpd8u6aG+gG3jK9hb+mON2U87N5sDJ6Xa6uXw9UT1iPXGIoQeUoa9jlO7wA7EAu8zbNLQcAAAAASUVORK5CYII=',
       'searchUrl': 'https://www.justwatch.com/us/search?q=%search_string%',
+      'showByDefault': false},
+  {   'name': 'JustWatch (CA)',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgBAMAAACBVGfHAAAAElBMVEUAAAAYIivZs0BnXjaljDvxylNUOgvkAAAAAXRSTlMAQObYZgAAAJdJREFUKM9lkuENQjEIhOsGVljgQR2A6AING7yk+68iErUI/PxyXIFra62HalaXCK4uiJUEJjEBaiQGbsQZ0ExAkf+AdiQOALqB+xEUYmAABw/B0WHxBvToBtbxA+MpBk7RDxiCJHAKLHWAZmpd8u6aG+gG3jK9hb+mON2U87N5sDJ6Xa6uXw9UT1iPXGIoQeUoa9jlO7wA7EAu8zbNLQcAAAAASUVORK5CYII=',
+      'searchUrl': 'https://www.justwatch.com/ca/search?q=%search_string_org%',
       'showByDefault': false},
   {   'name': 'КиноПоиск (RU)',
       'searchUrl': 'https://www.kinopoisk.ru/index.php?kp_query=%search_string%',
