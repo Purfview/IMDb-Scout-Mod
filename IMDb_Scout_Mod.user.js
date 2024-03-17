@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      20.1.6
+// @version      20.1.7
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from hundreds various sites. Adds movies/series to Radarr/Sonarr. Adds external ratings from Metacritic, Rotten Tomatoes, Letterboxd, Douban, Allocine, MyAnimeList, AniList. Media Server indicators for Plex, Jellyfin, Emby. Dark theme/style for Reference View. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAMFBMVEUAAAD/AAAcAAA1AABEAABVAAC3AADnAAD2AACFAAClAABlAAB3AADHAACVAADYAABCnXhrAAAD10lEQVRIx73TV4xMURgH8H/OnRmZWe3T7h2sOWaNXu7oJRg9UccuHgTRBatMtAgSg+gJu9q+kFmihcQoD8qLTkK0CIkoy0YJITsRD0rCKTHFrnkSv5e5c88/53znO+fiPwvsvrN038cPNqrG9pJmHkRVnPcpaTlHJY60cfPSpsrzl1LKihrmLvxhCM2i3OHvDx0d+H7e3F6JBv5iZMiJfhFTfPYDMHrMImpwimWWUdSgDQkbno7fFpUPVgh+pHFbZR4SovSctDCM9Hac9IKd9rO8EevtBCkXgY5IMmgquwypP7qqfcp/Tp4KLONDVsWh3RSBB2rnZfit69ocUdqLn2prrRZYM0Jg4JibamKsqe7gfEh5GOAfeYJjVHIPZvil97rcXkMog30byWRwXYRWoxHbzNFHJJpAarO8NdEBBsdCaP3WMJltTmQd4zlnekTq9Z5dgACwAlrpK4BxdV5mvLuspRgMSHbCIFF0iS8MZ5S8oYBYKY7rByC4dDM9uSIUmPOIwxgQBoYeF93auP4qFyPbIVXziWeGTH1EFM57kJo2hqQju6BwIyRf6RmCjdT4JOdiwNgiH/PPD3qoqlsNaXRd+fKtFfECxlZVNVF9SOsgTZEr2TUjJJbyeNX1IZrKIbyGlBABfpQPv2UDrly13LkJXDVhpQ5MhtGwcyF4HKjlU4E8xwB0AvDjd6AGmevZ87EcQRHgcO52e9uNsYELOrAa/Yh81YlmYLQJ5HWyq0+kzQ/DQKEusg6CRI27ryy8nReRS0wsoetkmRwogHSprliCckfEjXG9yAQc74J0WB99vu6DF3i3pMucsXM6tpBbxd2mVJAwXwGogNRBvGRA4jtHKTXkAIwLGCR/mT4Lh75oneQXXP9sAYfGRDCsnw7pX/jRZkU3M44kjw2l5zRIzb4CbZ8dULdL6wbNPZOpK0B6gN1UR1mdoxAaL/GrWiLPL3SEwW9YMTU/d64BtLahAVyucWhj9Mm8ign9IfQaBtd2/GbvCAEBpG5eMcrj2I0ktpKLeaqXQ3Pst42KGIshpdTmQLAeTgFGJ2wvh+tayMOR0n1RZ8B9z13vnOPBnsBq4E1ffgZpPFZHWVpO2cvhjYpOcbBd5TlhpDu5zq9mHGZcVi0y+VFkcFkDdyKJfTt99wEyHSEzDM90KH0nexpwZHJHKYYhjzlwGe0pP/IKfxociaEb7YDbi6KGJY1R2cR76E6NAtXqY4pPH3plLcl8LD7V+cOLUbUWRFZRPTAbVZO3mxK18Xc1ZaAiS8ARJXpZliXAomR94siiiMx8ZBOkXGTlnH0F/9ov1xPtWwEqP9wAAAAASUVORK5CYII=
@@ -1273,6 +1273,8 @@
             Removed: Darius, UnleashTheCartoons, CaCh, ToonsForMe
 
 20.1.6  -   Removed: Netflix-DVD
+
+20.1.7  -   Added: Square Eyed, nzbCore (DE)
 
 
 //==============================================================================
@@ -4437,6 +4439,13 @@ var usenet_sites = [
       'matchRegex': /search did not match/,
       'spaceEncode': ' ',
       'TV': true},
+  {   'name': 'nzbCore (DE)',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQAgMAAABinRfyAAAACVBMVEVjhwD///86aRovd/sBAAAAMUlEQVQI12OAgNBQIJGZCSOywMRKGJG5EirBmpkZwMAYGuoA1SEaAiRYA4AEowPEIADbhQrnKgUJ3AAAAABJRU5ErkJggg==',
+      'searchUrl': 'https://nzbcore.info/nnplus/www/api?t=movie&imdbid=%nott%',
+      'loggedOutRegex': /Cloudflare|Ray ID|error code/,
+      'matchRegex': /getnzb/,
+      'positiveMatch': true,
+      'both': true},
   {   'name': 'NZBfinder',
       'icon': 'https://nzbfinder.ws/img/appicons/favicon-32x32.png',
       'searchUrl': 'https://nzbfinder.ws/Movies?imdb=%nott%',
@@ -4477,23 +4486,23 @@ var usenet_sites = [
       'matchRegex': /did not match any/,
       'both': true},
   {   'name': 'NzbNdx',
-      'icon': 'https://www.nzbndx.com/templates/bookstrap/images/icons/favicon.ico',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQAgMAAABinRfyAAAACVBMVEVjhwD///86aRovd/sBAAAAMUlEQVQI12OAgNBQIJGZCSOywMRKGJG5EirBmpkZwMAYGuoA1SEaAiRYA4AEowPEIADbhQrnKgUJ3AAAAABJRU5ErkJggg==',
       'searchUrl': 'https://www.nzbndx.com/search/%search_string% %year%?t=2000',
       'loggedOutRegex': /Cloudflare|Ray ID|Forgotten your password/,
       'matchRegex': /did not match any/},
   {   'name': 'NzbNdx',
-      'icon': 'https://www.nzbndx.com/templates/bookstrap/images/icons/favicon.ico',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQAgMAAABinRfyAAAACVBMVEVjhwD///86aRovd/sBAAAAMUlEQVQI12OAgNBQIJGZCSOywMRKGJG5EirBmpkZwMAYGuoA1SEaAiRYA4AEowPEIADbhQrnKgUJ3AAAAABJRU5ErkJggg==',
       'searchUrl': 'https://www.nzbndx.com/search/%search_string%?t=5000',
       'loggedOutRegex': /Cloudflare|Ray ID|Forgotten your password/,
       'matchRegex': /did not match any/,
       'TV': true},
   {   'name': 'NZBnoob',
-      'icon': 'https://nzbnoob.com/templates/bookstrap/images/icons/favicon.ico',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQAgMAAABinRfyAAAACVBMVEVjhwD///86aRovd/sBAAAAMUlEQVQI12OAgNBQIJGZCSOywMRKGJG5EirBmpkZwMAYGuoA1SEaAiRYA4AEowPEIADbhQrnKgUJ3AAAAABJRU5ErkJggg==',
       'searchUrl': 'https://nzbnoob.com/search/%search_string% %year%?t=2000',
       'loggedOutRegex': /Cloudflare|Ray ID|Forgotten your password/,
       'matchRegex': /did not match any/},
   {   'name': 'NZBnoob',
-      'icon': 'https://nzbnoob.com/templates/bookstrap/images/icons/favicon.ico',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQAgMAAABinRfyAAAACVBMVEVjhwD///86aRovd/sBAAAAMUlEQVQI12OAgNBQIJGZCSOywMRKGJG5EirBmpkZwMAYGuoA1SEaAiRYA4AEowPEIADbhQrnKgUJ3AAAAABJRU5ErkJggg==',
       'searchUrl': 'https://nzbnoob.com/search/%search_string%?t=5000',
       'loggedOutRegex': /Cloudflare|Ray ID|Forgotten your password/,
       'matchRegex': /did not match any/,
@@ -4554,6 +4563,13 @@ var usenet_sites = [
       'loggedOutRegex': /Cloudflare|Ray ID|Register/,
       'matchRegex': /did not match any releases/,
       'TV': true},
+  {   'name': 'Square Eyed',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwAgMAAAAqbBEUAAAADFBMVEX///8CAgJJSUnFxcVSjwsrAAAAYUlEQVQoz2MYDoD//x8QZf//A5DkDA0BcVRDYzA5EcgcsB7+qRDOAbBBcA5fAxLHdAMS5/YBJM78NUicRauROXZInMf7kDg6P5DtQRiwAuQAKxRXY3K4VoGVaa1awDA0AQAxpTGbStAy0AAAAABJRU5ErkJggg==',
+      'searchUrl': 'https://squareeyed.org/movies/?imdb=%nott%',
+      'loggedOutRegex': /Cloudflare|Ray ID|>Remember me/,
+      'matchRegex': /Download/,
+      'positiveMatch': true,
+      'both': true},
   {   'name': 'Usenet4all (DE)',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgBAMAAACBVGfHAAAAElBMVEX+/v4ZFRJDPz51cnGkoqHX19cR5JDUAAAA8klEQVQoz22RQXbCMAxE9dL6AKOEfezCvrRkj9ILOM3j/ldhLAHeMO/Fib+kUWRL6C/rRbrSD6iv+tqf4RqfxIDjTVdgiv0HsHC57sC3gzMjKbPAMAr1CVRCWiTgSrDhIPIP5scng6wcwCiNlD0Bp57OatKx+QQwZg+tbgvA9yzGR3IARqfmybLVgbtmAhu9i3sJ+yfMHbSMTaUDeiw4dKBiKKgPcNsxtU8tpfUtRQfM7NQ1bWyZWPYcjoY1lgAejP8XIzjFXGzFcVcHxqw4IT/YCIlPVLlUj7isXdEpWdxLFOnlNzf8UFpBHat07VkXea87OgImlXedLr8AAAAASUVORK5CYII=',
       'searchUrl': 'https://usenet-4all.pw/forum/search.php?do=process&do=process&quicksearch=1&childforums=1&exactname=1&s=&query=%tt%&titleonly=0&showposts=0',
@@ -4561,7 +4577,7 @@ var usenet_sites = [
       'matchRegex': /no matches|Deine Suchanfrage erzielte keine Treffer/,
       'both': true},
   {   'name': 'WtFnZb',
-      'icon': 'https://0ccec98d8962a17294688363537bfe2e.wtfnzb.pw/templates/bookstrap/images/icons/favicon.ico',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQAgMAAABinRfyAAAACVBMVEVjhwD///86aRovd/sBAAAAMUlEQVQI12OAgNBQIJGZCSOywMRKGJG5EirBmpkZwMAYGuoA1SEaAiRYA4AEowPEIADbhQrnKgUJ3AAAAABJRU5ErkJggg==',
       'searchUrl': 'https://0ccec98d8962a17294688363537bfe2e.wtfnzb.pw/movies/?imdb=%nott%',
       'matchRegex': /Director/,
       'positiveMatch': true,
