@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      20.1.9
+// @version      20.1.10
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from hundreds various sites. Adds movies/series to Radarr/Sonarr. Adds external ratings from Metacritic, Rotten Tomatoes, Letterboxd, Douban, Allocine, MyAnimeList, AniList. Media Server indicators for Plex, Jellyfin, Emby. Dark theme/style for Reference View. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAMFBMVEUAAAD/AAAcAAA1AABEAABVAAC3AADnAAD2AACFAAClAABlAAB3AADHAACVAADYAABCnXhrAAAD10lEQVRIx73TV4xMURgH8H/OnRmZWe3T7h2sOWaNXu7oJRg9UccuHgTRBatMtAgSg+gJu9q+kFmihcQoD8qLTkK0CIkoy0YJITsRD0rCKTHFrnkSv5e5c88/53znO+fiPwvsvrN038cPNqrG9pJmHkRVnPcpaTlHJY60cfPSpsrzl1LKihrmLvxhCM2i3OHvDx0d+H7e3F6JBv5iZMiJfhFTfPYDMHrMImpwimWWUdSgDQkbno7fFpUPVgh+pHFbZR4SovSctDCM9Hac9IKd9rO8EevtBCkXgY5IMmgquwypP7qqfcp/Tp4KLONDVsWh3RSBB2rnZfit69ocUdqLn2prrRZYM0Jg4JibamKsqe7gfEh5GOAfeYJjVHIPZvil97rcXkMog30byWRwXYRWoxHbzNFHJJpAarO8NdEBBsdCaP3WMJltTmQd4zlnekTq9Z5dgACwAlrpK4BxdV5mvLuspRgMSHbCIFF0iS8MZ5S8oYBYKY7rByC4dDM9uSIUmPOIwxgQBoYeF93auP4qFyPbIVXziWeGTH1EFM57kJo2hqQju6BwIyRf6RmCjdT4JOdiwNgiH/PPD3qoqlsNaXRd+fKtFfECxlZVNVF9SOsgTZEr2TUjJJbyeNX1IZrKIbyGlBABfpQPv2UDrly13LkJXDVhpQ5MhtGwcyF4HKjlU4E8xwB0AvDjd6AGmevZ87EcQRHgcO52e9uNsYELOrAa/Yh81YlmYLQJ5HWyq0+kzQ/DQKEusg6CRI27ryy8nReRS0wsoetkmRwogHSprliCckfEjXG9yAQc74J0WB99vu6DF3i3pMucsXM6tpBbxd2mVJAwXwGogNRBvGRA4jtHKTXkAIwLGCR/mT4Lh75oneQXXP9sAYfGRDCsnw7pX/jRZkU3M44kjw2l5zRIzb4CbZ8dULdL6wbNPZOpK0B6gN1UR1mdoxAaL/GrWiLPL3SEwW9YMTU/d64BtLahAVyucWhj9Mm8ign9IfQaBtd2/GbvCAEBpG5eMcrj2I0ktpKLeaqXQ3Pst42KGIshpdTmQLAeTgFGJ2wvh+tayMOR0n1RZ8B9z13vnOPBnsBq4E1ffgZpPFZHWVpO2cvhjYpOcbBd5TlhpDu5zq9mHGZcVi0y+VFkcFkDdyKJfTt99wEyHSEzDM90KH0nexpwZHJHKYYhjzlwGe0pP/IKfxociaEb7YDbi6KGJY1R2cR76E6NAtXqY4pPH3plLcl8LD7V+cOLUbUWRFZRPTAbVZO3mxK18Xc1ZaAiS8ARJXpZliXAomR94siiiMx8ZBOkXGTlnH0F/9ov1xPtWwEqP9wAAAAASUVORK5CYII=
@@ -1277,6 +1277,8 @@
 20.1.7  -   Added: Square Eyed, nzbCore (DE)
 
 20.1.8  -   Added: TVDB-ID, Apple TV
+
+20.1.10 -   Added: HHanClub, Audiences, Digital Carnage
 
 
 //==============================================================================
@@ -3729,6 +3731,12 @@ var private_sites = [
 ];
 
 var chinese_sites = [
+  {   'name': 'Audiences',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABAAgMAAADXB5lNAAAADFBMVEXi4uIGBgZ0dHSsrKx+oK7NAAABfUlEQVQ4y72QoU7DUBSGL1sm1oHsI9R0BlNTA3aCZBn724klMHAYxgOQ1EwMX4+BNG3F3oBr9ggVGBzJ0iZzGEw5t7TcU4XbnyYn/e6593w54pDplqUqZ6WsQR8IqGRY1qAHnFN5jxvgoDr7eG2ABVy3OkwP49Yb4dicCR7cWtOWBh4cn4MORiuPgyOsRuDgBF+PkAz0YS0QMNDzzAm561jTbE6qOuYsnIVjBuicehgIJ/Ba7lgA3L2DC2DrcdE16OOiW1CT5KI+SJWJkghXdfxsnl1hyczVCpm7+lFQi15i6fhMFTe4e/FIVa8YFMdnK1Zg5Wnzp5iyhjaXddHmAJg7mStA7nrFCug1m6jTqNL5fVl+Uk9jDnW7BzTuAAI1C9PGHJBKA7X7v4mifOMa0W7YiY3UlgrsI3cQ7YdGPEjjChSFa8i8cN8MmYgKDKmjSGwxSPNfYBPICwXc4O9KkbilIb83QuRp9eguUY8m1GE/s7FqSlc0ORXiWBwmP6Rhqjkj5tQlAAAAAElFTkSuQmCC',
+      'searchUrl': 'https://audiences.me/torrents.php?incldead=0&spstate=0&inclbookmarked=0&search=%tt%&search_area=4&search_mode=0',
+      'loggedOutRegex': /Cloudflare|Ray ID|SSL \(HTTPS\)/,
+      'matchRegex': /Nothing found|没有种子|沒有種子/,
+      'both': true},
   {   'name': 'BT4G',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQBAMAAADt3eJSAAAAGFBMVEX////ExMRGRkYaGhqqqqqYmJiIiIhvb2/FncXiAAAAU0lEQVQI12NgTGCAAFZzAQiD2UwFwioKFQkAM5RUWCBSxQGMEIZwIpTBpAZlsJkJQPUbqUAZzkpQOVZjRQcIK9hIxDERzAoyUjZWB7MYBQUY4AAAUfkIESxqP9YAAAAASUVORK5CYII=',
       'searchUrl': 'https://bt4g.org/search/%search_string_orig% %year%',
@@ -3744,7 +3752,7 @@ var chinese_sites = [
       'spaceEncode': ' ',
       'matchRegex': /did not match any/,
       'TV': true},
- {   'name': 'CarPT',
+  {   'name': 'CarPT',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAASFBMVEUAAAANrQXVHCLn9eOpCQsotyPQ8M1IwECI1oK557ZozGCo46SZ3JNDqTY2khF28njtoaTVWVZDz06tRjSYYjZ/oVerqHp8Uhv4MDNeAAAAAXRSTlMAQObYZgAAAU1JREFUOMt1komOhCAQBeVozlbx2Nn//9N9jbCYGaeScRKqaCJxesOtbvrKuoDZ47c+WDMvOWcj5Lwv6+fuaIwDMcacI4e3ZIaGr0jBHFK6+cWJN6DNQBDSPPZDVg/6CATJ9/NNFGEu7sFavYH/DFiCpR0AnidQqhPYuFK0fgoIfnesoYHZdCXGTTfUihNC0deC6+sY0IsZQdmKznh5h6DD4WgjJCiyJwIJ8JfxF048iJSaciqOmXXWLXjh0QOFYD1tCHxIEg9rbX5ZIZx41CD7LaGwbHMewZEkUACvaU8Ull/MEjBzkDv4vQUCFlsQqvcjmL1tBAlEw/cA9+CJevADUtWeFoBgl7smkiFVNY1N6mICXhGSO/Tv/STsShHotmtAsHUEoIHqmH26IPWIGV8tffOjoA+tmh+FuWtH1Mz9mGRMSPLxyg0+oAZj8Q9fshOwD3HVjAAAAABJRU5ErkJggg==',
       'searchUrl': 'https://carpt.net/torrents.php?incldead=0&spstate=0&inclbookmarked=0&search=%tt%&search_area=4&search_mode=0',
       'loggedOutRegex': /Cloudflare|Ray ID|SSL \(HTTPS\)/,
@@ -3829,6 +3837,12 @@ var chinese_sites = [
   {   'name': 'HDZ',
       'searchUrl': 'https://hdzone.me/torrents.php?search=%tt%&search_area=1',
       'loggedOutRegex': /Cloudflare|Ray ID|SSL \(HTTPS\)/,
+      'matchRegex': /Nothing found|没有种子|沒有種子/,
+      'both': true},
+  {   'name': 'HHanClub',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwAQMAAABtzGvEAAAABlBMVEX/Wj3+8vAVLMrsAAAAZElEQVQY053QMQrAIAwF0C8ZHHsEj1qP5lFyBMdCwfSrlbYIHczw3xIS+LA2b/JWKfCwBJACjuBwQBSoRCGJkRbQHzKjExpmM1yY0Afloxu/yrjiKi6inu4VZOboJcBOsn8bvABlfn9fBntNQQAAAABJRU5ErkJggg==',
+      'searchUrl': 'https://hhanclub.top/torrents.php?incldead=0&spstate=0&inclbookmarked=0&search=%tt%&search_area=4&search_mode=0',
+      'loggedOutRegex': /Cloudflare|Ray ID|type="password" name="password"/,
       'matchRegex': /Nothing found|没有种子|沒有種子/,
       'both': true},
   {   'name': 'Itzmx',
