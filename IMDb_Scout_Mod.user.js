@@ -3210,7 +3210,7 @@ var private_sites = [
   {   'name': 'Retroflix',
       'searchUrl': 'https://retroflix.club/torrents.php?incldead=0&spstate=0&inclbookmarked=0&search=%tt%&search_area=4&search_mode=0',
       'loggedOutRegex': /Cloudflare|Ray ID|Forget your password/,
-      'matchRegex': /Nothing found!/,
+      'matchRegex': /No results found/,
       'both': true},
   {   'name': 'Retroflix-Req',
       'searchUrl': 'https://retroflix.club/forums.php?action=search&keywords=%tt%',
