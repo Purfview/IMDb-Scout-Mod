@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      20.1.13
+// @version      20.1.14
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from hundreds various sites. Adds movies/series to Radarr/Sonarr. Adds external ratings from Metacritic, Rotten Tomatoes, Letterboxd, Douban, Allocine, MyAnimeList, AniList. Media Server indicators for Plex, Jellyfin, Emby. Dark theme/style for Reference View. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAMFBMVEUAAAD/AAAcAAA1AABEAABVAAC3AADnAAD2AACFAAClAABlAAB3AADHAACVAADYAABCnXhrAAAD10lEQVRIx73TV4xMURgH8H/OnRmZWe3T7h2sOWaNXu7oJRg9UccuHgTRBatMtAgSg+gJu9q+kFmihcQoD8qLTkK0CIkoy0YJITsRD0rCKTHFrnkSv5e5c88/53znO+fiPwvsvrN038cPNqrG9pJmHkRVnPcpaTlHJY60cfPSpsrzl1LKihrmLvxhCM2i3OHvDx0d+H7e3F6JBv5iZMiJfhFTfPYDMHrMImpwimWWUdSgDQkbno7fFpUPVgh+pHFbZR4SovSctDCM9Hac9IKd9rO8EevtBCkXgY5IMmgquwypP7qqfcp/Tp4KLONDVsWh3RSBB2rnZfit69ocUdqLn2prrRZYM0Jg4JibamKsqe7gfEh5GOAfeYJjVHIPZvil97rcXkMog30byWRwXYRWoxHbzNFHJJpAarO8NdEBBsdCaP3WMJltTmQd4zlnekTq9Z5dgACwAlrpK4BxdV5mvLuspRgMSHbCIFF0iS8MZ5S8oYBYKY7rByC4dDM9uSIUmPOIwxgQBoYeF93auP4qFyPbIVXziWeGTH1EFM57kJo2hqQju6BwIyRf6RmCjdT4JOdiwNgiH/PPD3qoqlsNaXRd+fKtFfECxlZVNVF9SOsgTZEr2TUjJJbyeNX1IZrKIbyGlBABfpQPv2UDrly13LkJXDVhpQ5MhtGwcyF4HKjlU4E8xwB0AvDjd6AGmevZ87EcQRHgcO52e9uNsYELOrAa/Yh81YlmYLQJ5HWyq0+kzQ/DQKEusg6CRI27ryy8nReRS0wsoetkmRwogHSprliCckfEjXG9yAQc74J0WB99vu6DF3i3pMucsXM6tpBbxd2mVJAwXwGogNRBvGRA4jtHKTXkAIwLGCR/mT4Lh75oneQXXP9sAYfGRDCsnw7pX/jRZkU3M44kjw2l5zRIzb4CbZ8dULdL6wbNPZOpK0B6gN1UR1mdoxAaL/GrWiLPL3SEwW9YMTU/d64BtLahAVyucWhj9Mm8ign9IfQaBtd2/GbvCAEBpG5eMcrj2I0ktpKLeaqXQ3Pst42KGIshpdTmQLAeTgFGJ2wvh+tayMOR0n1RZ8B9z13vnOPBnsBq4E1ffgZpPFZHWVpO2cvhjYpOcbBd5TlhpDu5zq9mHGZcVi0y+VFkcFkDdyKJfTt99wEyHSEzDM90KH0nexpwZHJHKYYhjzlwGe0pP/IKfxociaEb7YDbi6KGJY1R2cR76E6NAtXqY4pPH3plLcl8LD7V+cOLUbUWRFZRPTAbVZO3mxK18Xc1ZaAiS8ARJXpZliXAomR94siiiMx8ZBOkXGTlnH0F/9ov1xPtWwEqP9wAAAAASUVORK5CYII=
@@ -1285,6 +1285,8 @@
 20.1.12 -   Added: CapybaraBR
             Removed: preFYP, Feliratok (HU), TamilRockers, TurkTracker, BDC, ARAMovie, TheRebels, TvRoad.
 
+20.1.14 -   Added: ArabP2P
+
 
 //==============================================================================
 //    Notes.
@@ -2080,6 +2082,13 @@ var private_sites = [
       'searchUrl': 'https://alpharatio.cc/requests.php?submit=true&search=%search_string_orig%&showall=on',
       'loggedOutRegex': /Ray ID|<title>Login :: AlphaRatio|Something was wrong/,
       'matchRegex': /Nothing found/,
+      'both': true},
+  {   'name': 'ArabP2P',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAMFBMVEUAAAAICw8RFh8aIjAsN043RmIjLD5GWHpccJhyjL6KrtyPqrHG1dasw8ry9vjb5eolTPp7AAAAAXRSTlMAQObYZgAABCBJREFUSMetlUsMzEAYx3sVQmY3QeKiU8HRdnY3jthuEQevVl0kaLdISCS22nUQ73YRcfBo1+skbGVDnFCvo8QuLkKsxY2D18VFEN9M9bG4SPxPTb7f/P/fzHw7y/1fffw26vqd3uM3fy9P/vYiDHxb89zWq7/WH0Zh13dtVVWVyu2/1L9Ht8DAtVRZb6ypnP2j/n4QhWHg2ZYiE9HQG3d/Az71qYHn2aokEzxbJ/OfjBv0aQeBawNgEiwQgSwb30CfdehqkKCLmEo4PxYwvBXSBm2VtoCZ5r7JGQzAwLM1K04A8QihYykwpT+MwAAOQIUECiCq6Snwvj+60nUtzdLrcQuICV9LtzAchZdt2zXkisIS+JjYlrUY3uy0T6u6YbAWEotpn5OEQTfohScri7Ak6WIGoOO/Evov/M6LzqGqrEg6yQNb4z0M+t3AC7u6WLEkXaDlpInpccJgcOXm2vDSDnGWuYYloETF+xT4NhhFl5Z0mzvxLJFtkkep9rAWXg6iS1su4iqPBFMv5OtoOQNGw1sHl+wgpFgyTbGQj0Az2DkPhud2NhaJ5TKBhEIhD0yPT+GW5zpyqcFPhZtEY8BUuNEP/dENpe6aJYKmyjyPgECZngDQG51Ua2swL6DiogJCPMq3Cff1tXvnoGKupkC5RNfzQOX3+d0/Y0nGKoyKSEY8O+ectnPcwPdVubKIR7CwyC4iH7GA4/o3TktyZSMAfIHgBEg+5nFcLzqg6GURATD717giFsW+ZnJccOeEpBuIAkKyroB/iQfAj9qriclmME3AY4C3yd3AACFJiA0I5dcD4Hhes8YAnAFCSSCEiMIKjrvknuvWLDYoaQtQ5GdTgMA5PHMPB/vYoPGxNVjRtYIOGWQPAE7geyXElAHY3GiaukDgLr54AKxCiWhEsSpWzVpZWlQlMJTv3MBzmxlAL3yjIElSuU7kBszDBKsND08tBdh+DKmuys2KtBQmapK12YNnYUMOwGWoa8pqVd1Gh/bkVNeSpF9AAdM7gbptH5hjN3dzoOcbbQBKCcBjfpYEdWf/ZrvJHoAHlgZPW7oJsDDqmu0Fix1PYz/vidW6YtYSAwxzDQZO++Qu11/HUU1aWVGIyMoUILzQoAZrQ//0BY7p+ixF59MIQoyy7QQHO+Hl1v0YeIulBKAOVUO326d3vehdPPqGizMWzh4H1qz1nN6VyHsExTijmAECqUrqYq0TRjc76Us6AZFxgLTCK9GZ19lLu7eI84BZDwB4/ZFL9a6QAwhZfLAVdu/8gITMIgNEwdCc1uUjd8Ag08QNfLILAXpwmk4POsjrKYpFezBUW+lchYC8ppxKMuAk62qr84P7TZP2s3oMaO0sICMOMIMCIWZ97b1cIUu5sYHOLDQB/7x/14cbTVFotG6/4f5BPwEKnLxymUZCbAAAAABJRU5ErkJggg==',
+      'searchUrl': 'https://www.arabp2p.net/index.php?page=torrents&search=%search_string_orig%&category=0&active=0&search_type=exact',
+      'loggedOutRegex': /Cloudflare|Ray ID|signup/,
+      'matchRegex': /torFilename/,
+      'positiveMatch': true,
       'both': true},
   {   'name': 'ArabScene',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAJ1BMVEUAAACbFhq2Gx67Gx+oGRz////mIieFFBfDdHWvTlH05ubnycrYo6RuB1yYAAAAAXRSTlMAQObYZgAAAW9JREFUSMft0T9Pg1AUBXCcXH2JCYNO2kGNm58Achtb7XoSCszOMj1ZG4zYuGja+Gcuk47tYt2UxU/l5S2Vd+mgg0kTz/JuOD8e8HBMzhpjqj8DR41ZObDblJ/ssNOYf/BLsJ/nd4tBgsMCCN952JvxMKgDIupyz8WIqAQnJqI6OACeX4E+dYGXT2BkgxKB1kOErR5irWf4sIAPXCmVAtkp+ko9zTMLdBAmRMclJgyIXL1pgR4CvkRt9HsIM/KUDar7OFuIOwDeBkQWOKmAeZJXArzJEkDA7UXBIloCPP4+N71hkol3CKjKJSae1mmBqfiKyIB2BZUeY2KBrtnUn26bQ/baAvDDA/KHgQLiFvklpjYYA1GBqFrDeWH/LGV+A9iolEtOnChVB+521d8rl4/BDDZQOs2vteY1ecgfdSIANxyzmsECIqsIkqbedYQQvRCyX2St3m84Iuvf+3PZsxC9EKIXQvQi1vk0JHGdFcwXcSQMGaE3B04AAAAASUVORK5CYII=',
