@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      20.1.17
+// @version      20.2
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from hundreds various sites. Adds movies/series to Radarr/Sonarr. Adds external ratings from Metacritic, Rotten Tomatoes, Letterboxd, Douban, Allocine, MyAnimeList, AniList. Media Server indicators for Plex, Jellyfin, Emby. Dark theme/style for Reference View. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAMFBMVEUAAAD/AAAcAAA1AABEAABVAAC3AADnAAD2AACFAAClAABlAAB3AADHAACVAADYAABCnXhrAAAD10lEQVRIx73TV4xMURgH8H/OnRmZWe3T7h2sOWaNXu7oJRg9UccuHgTRBatMtAgSg+gJu9q+kFmihcQoD8qLTkK0CIkoy0YJITsRD0rCKTHFrnkSv5e5c88/53znO+fiPwvsvrN038cPNqrG9pJmHkRVnPcpaTlHJY60cfPSpsrzl1LKihrmLvxhCM2i3OHvDx0d+H7e3F6JBv5iZMiJfhFTfPYDMHrMImpwimWWUdSgDQkbno7fFpUPVgh+pHFbZR4SovSctDCM9Hac9IKd9rO8EevtBCkXgY5IMmgquwypP7qqfcp/Tp4KLONDVsWh3RSBB2rnZfit69ocUdqLn2prrRZYM0Jg4JibamKsqe7gfEh5GOAfeYJjVHIPZvil97rcXkMog30byWRwXYRWoxHbzNFHJJpAarO8NdEBBsdCaP3WMJltTmQd4zlnekTq9Z5dgACwAlrpK4BxdV5mvLuspRgMSHbCIFF0iS8MZ5S8oYBYKY7rByC4dDM9uSIUmPOIwxgQBoYeF93auP4qFyPbIVXziWeGTH1EFM57kJo2hqQju6BwIyRf6RmCjdT4JOdiwNgiH/PPD3qoqlsNaXRd+fKtFfECxlZVNVF9SOsgTZEr2TUjJJbyeNX1IZrKIbyGlBABfpQPv2UDrly13LkJXDVhpQ5MhtGwcyF4HKjlU4E8xwB0AvDjd6AGmevZ87EcQRHgcO52e9uNsYELOrAa/Yh81YlmYLQJ5HWyq0+kzQ/DQKEusg6CRI27ryy8nReRS0wsoetkmRwogHSprliCckfEjXG9yAQc74J0WB99vu6DF3i3pMucsXM6tpBbxd2mVJAwXwGogNRBvGRA4jtHKTXkAIwLGCR/mT4Lh75oneQXXP9sAYfGRDCsnw7pX/jRZkU3M44kjw2l5zRIzb4CbZ8dULdL6wbNPZOpK0B6gN1UR1mdoxAaL/GrWiLPL3SEwW9YMTU/d64BtLahAVyucWhj9Mm8ign9IfQaBtd2/GbvCAEBpG5eMcrj2I0ktpKLeaqXQ3Pst42KGIshpdTmQLAeTgFGJ2wvh+tayMOR0n1RZ8B9z13vnOPBnsBq4E1ffgZpPFZHWVpO2cvhjYpOcbBd5TlhpDu5zq9mHGZcVi0y+VFkcFkDdyKJfTt99wEyHSEzDM90KH0nexpwZHJHKYYhjzlwGe0pP/IKfxociaEb7YDbi6KGJY1R2cR76E6NAtXqY4pPH3plLcl8LD7V+cOLUbUWRFZRPTAbVZO3mxK18Xc1ZaAiS8ARJXpZliXAomR94siiiMx8ZBOkXGTlnH0F/9ov1xPtWwEqP9wAAAAASUVORK5CYII=
@@ -1289,6 +1289,10 @@
 
 20.1.16 -   Added: Plusteca
 
+20.2    -   New feature: New search URL parameter - %tmdb_orig_title%.
+                         To get the native original title instead of IMDb's latinized one.
+                         Atm, it's used for ArabP2P.
+
 
 //==============================================================================
 //    Notes.
@@ -1424,6 +1428,9 @@ The TVDb id.
 #  %tmdbid%:
 The TMDb id. [it's not unique]
 
+#  %tmdb_orig_title%:
+To get the native original title instead of IMDb's latinized one.
+
 #  %doubanid%:
 The Douban id.
 
@@ -1516,8 +1523,8 @@ var public_sites = [
       'matchRegex': />0 results found/,
       'TV': true},
   {   'name': 'Comando4K',
-      'icon': 'https://comando4kfilmes.org/favicon-32x32.png',
-      'searchUrl': 'https://comando4kfilmes.org/?s="%search_string_orig%"',
+      'icon': 'https://comando4ktorrent.org/favicon-32x32.png',
+      'searchUrl': 'https://comando4ktorrent.org/?s="%search_string_orig%"',
       'loggedOutRegex': /Cloudflare|Ray ID/,
       'matchRegex': /Nenhum Arquivo Encontrado/,
       'both': true},
@@ -2087,7 +2094,7 @@ var private_sites = [
       'both': true},
   {   'name': 'ArabP2P',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAMFBMVEUAAAAICw8RFh8aIjAsN043RmIjLD5GWHpccJhyjL6KrtyPqrHG1dasw8ry9vjb5eolTPp7AAAAAXRSTlMAQObYZgAABCBJREFUSMetlUsMzEAYx3sVQmY3QeKiU8HRdnY3jthuEQevVl0kaLdISCS22nUQ73YRcfBo1+skbGVDnFCvo8QuLkKsxY2D18VFEN9M9bG4SPxPTb7f/P/fzHw7y/1fffw26vqd3uM3fy9P/vYiDHxb89zWq7/WH0Zh13dtVVWVyu2/1L9Ht8DAtVRZb6ypnP2j/n4QhWHg2ZYiE9HQG3d/Az71qYHn2aokEzxbJ/OfjBv0aQeBawNgEiwQgSwb30CfdehqkKCLmEo4PxYwvBXSBm2VtoCZ5r7JGQzAwLM1K04A8QihYykwpT+MwAAOQIUECiCq6Snwvj+60nUtzdLrcQuICV9LtzAchZdt2zXkisIS+JjYlrUY3uy0T6u6YbAWEotpn5OEQTfohScri7Ak6WIGoOO/Evov/M6LzqGqrEg6yQNb4z0M+t3AC7u6WLEkXaDlpInpccJgcOXm2vDSDnGWuYYloETF+xT4NhhFl5Z0mzvxLJFtkkep9rAWXg6iS1su4iqPBFMv5OtoOQNGw1sHl+wgpFgyTbGQj0Az2DkPhud2NhaJ5TKBhEIhD0yPT+GW5zpyqcFPhZtEY8BUuNEP/dENpe6aJYKmyjyPgECZngDQG51Ua2swL6DiogJCPMq3Cff1tXvnoGKupkC5RNfzQOX3+d0/Y0nGKoyKSEY8O+ectnPcwPdVubKIR7CwyC4iH7GA4/o3TktyZSMAfIHgBEg+5nFcLzqg6GURATD717giFsW+ZnJccOeEpBuIAkKyroB/iQfAj9qriclmME3AY4C3yd3AACFJiA0I5dcD4Hhes8YAnAFCSSCEiMIKjrvknuvWLDYoaQtQ5GdTgMA5PHMPB/vYoPGxNVjRtYIOGWQPAE7geyXElAHY3GiaukDgLr54AKxCiWhEsSpWzVpZWlQlMJTv3MBzmxlAL3yjIElSuU7kBszDBKsND08tBdh+DKmuys2KtBQmapK12YNnYUMOwGWoa8pqVd1Gh/bkVNeSpF9AAdM7gbptH5hjN3dzoOcbbQBKCcBjfpYEdWf/ZrvJHoAHlgZPW7oJsDDqmu0Fix1PYz/vidW6YtYSAwxzDQZO++Qu11/HUU1aWVGIyMoUILzQoAZrQ//0BY7p+ixF59MIQoyy7QQHO+Hl1v0YeIulBKAOVUO326d3vehdPPqGizMWzh4H1qz1nN6VyHsExTijmAECqUrqYq0TRjc76Us6AZFxgLTCK9GZ19lLu7eI84BZDwB4/ZFL9a6QAwhZfLAVdu/8gITMIgNEwdCc1uUjd8Ag08QNfLILAXpwmk4POsjrKYpFezBUW+lchYC8ppxKMuAk62qr84P7TZP2s3oMaO0sICMOMIMCIWZ97b1cIUu5sYHOLDQB/7x/14cbTVFotG6/4f5BPwEKnLxymUZCbAAAAABJRU5ErkJggg==',
-      'searchUrl': 'https://www.arabp2p.net/index.php?page=torrents&search=%search_string_orig%&category=0&active=0&search_type=exact',
+      'searchUrl': 'https://www.arabp2p.net/index.php?page=torrents&search=%tmdb_orig_title%&category=0&active=0&search_type=exact',
       'loggedOutRegex': /Cloudflare|Ray ID|signup/,
       'matchRegex': /torFilename/,
       'positiveMatch': true,
@@ -5912,6 +5919,8 @@ async function replaceSearchUrlParams(site, movie_id, movie_title, movie_title_o
     movie_id = await getTVDbID(movie_id);
   } else if (search_url.match("%tmdbid%")) {
     movie_id = await getTMDbID(movie_id);
+  } else if (search_url.match("%tmdb_orig_title%")) {
+    movie_id = await getTMDb_original_title(movie_id);
   } else if (search_url.match("%doubanid%")) {
     movie_id = await getDoubanID0(movie_id);
   }
@@ -5933,6 +5942,7 @@ async function replaceSearchUrlParams(site, movie_id, movie_title, movie_title_o
                     .replace(/%nott%/g, movie_id)
                     .replace(/%tvdbid%/g, movie_id)
                     .replace(/%tmdbid%/g, movie_id)
+                    .replace(/%tmdb_orig_title%/g, movie_id)
                     .replace(/%doubanid%/g, movie_id)
                     .replace(/%seriesid%/g, series_id)
                     .replace(/%seasonid%/g, season_id)
@@ -6005,6 +6015,43 @@ function getTMDbID(movie_id) {
       onerror: function() {
         GM.notification("Request Error.", "IMDb Scout Mod (getTMDbID)");
         console.log("IMDb Scout Mod (getTMDbID): Request Error.");
+        resolve("00000000");
+      },
+      onabort: function() {
+        resolve("00000000");
+      },
+      ontimeout: function() {
+        resolve("00000000");
+      }
+    });
+  });
+}
+
+function getTMDb_original_title(movie_id) {
+  return new Promise(resolve => {
+    GM.xmlHttpRequest({
+      method: "GET",
+      timeout: 10000,
+      url:    "https://api.themoviedb.org/3/find/tt" + movie_id + "?api_key=d12b33d3f4fb8736dc06f22560c4f8d4&external_source=imdb_id",
+      onload: function(response) {
+        const result = JSON.parse(response.responseText);
+        if (String(response.responseText).match('movie_results":\\[{')) {
+          const tmdbtitle = result.movie_results[0].original_title;
+          resolve(tmdbtitle);
+        } else if (String(response.responseText).match('tv_results":\\[{')) {
+          const tmdbtitle = result.tv_results[0].original_title;
+          resolve(tmdbtitle);
+        } else if (String(response.responseText).match('tv_episode_results":\\[{')) {
+          const tmdbtitle = result.tv_episode_results[0].original_title;
+          resolve(tmdbtitle);
+        } else {
+          const tmdbtitle = "00000000";
+          resolve(tmdbtitle);
+        }
+      },
+      onerror: function() {
+        GM.notification("Request Error.", "IMDb Scout Mod (getTMDb_original_title)");
+        console.log("IMDb Scout Mod (getTMDb_original_title): Request Error.");
         resolve("00000000");
       },
       onabort: function() {
