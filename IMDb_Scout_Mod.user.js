@@ -1292,6 +1292,7 @@
 20.2    -   New feature: New search URL parameter - %tmdb_orig_title%.
                          To get the native original title instead of IMDb's latinized one.
                          Atm, it's used for ArabP2P.
+            Removed: HDSS (FR)
 
 
 //==============================================================================
@@ -5275,14 +5276,6 @@ var streaming_sites = [
       'positiveMatch': true,
       'inThirdSearchBar': true,
       'TV': true},
-  {   'name': 'HDSS (FR)',
-      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAn1BMVEUAAAD/aQD/aQD/aQD/aQD/aQD/aQD/aAD/aQD/aQD/aAD/aQD/aQD/aQD/aQD/agD/aQD/aQD/aAD/aQD/aAD/aAD/aQD/aAD/aAD/aQD/aQD/aQD/aQD/aQD/aQD/aQD/aQD/aAD/aQD/aQD/aQD/aQD/aQD/aQD/aQD/aQD/aQD/aQD/aAD/aQD/aQD/aQD/aQD/aQD/aQD/aQD/aQApCZHfAAAANXRSTlMAKubX7aLNcxfiiPUfeQydRhkRmn1T3nAPXtCwpYI9CHZrWCS6k03UxY9BBWY0776nNqwx+e6nRBgAAAGnSURBVDjLfdNrm3JAGMBxxhRDGI3zKbRCOaSe7//Znnto7a5c/V+N+l2D6U4QjJG2uSe/5Xl5QX0BwNXRE3WrpHWOAJS82btoKzdSLQ7sGGl4I62vdwcAh3LocbRbZ94lQoYzB6zWUKOvyuRkqFAtchCHmnRVeNYSXIjJHYULEIWTYSk3YWpeK7KJqgns9gBOIrUz5fW9mMJayUy0/wFGWsTsMANjdGC9AsfCluByyr/IsFZkRn6DQEXSAnRYr4FjL8C45oQD8w10xpRCPVKtAWxL3CCdonKJNkBGkB5MtQ0c0Rrw+2r111wo9fs3APfVhoj3iOoQ77ce0qXnKfEiLw+5/Zpj4EofAdzuI/BnAL/Fxx2s5IGr30Bf7yCz8Ou8DMx0/s95YubdbgfxQv1v0MH5AzjNoEiQNPpHSxSPBgCz1tyA6gxL3Q8gLR27Z5deX1OdeCz6A5DqBYVTtLkgWGrU/0MEYy18npaBgU9cHhEEeF8X4x5jMoi3GdC8wt9x3zbm43Hflbo1A5hwlcX3OIb/F+MDVtgqY2WT5MoLnNNMLaGmUdX/qJ40ksjVldMAAAAASUVORK5CYII=',
-      'searchUrl': 'https://hdss.film/?do=search_advanced&year_from=%year%&year_to=%year%&q=%search_string_orig%',
-      'loggedOutRegex': /Cloudflare|Ray ID/,
-      'matchRegex': /avons rien à montrer/,
-      'ignore404': true,
-      'inThirdSearchBar': true,
-      'both': true},
   {   'name': 'KinoX (DE)',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQAgMAAABinRfyAAAADFBMVEUAAAAJR2KbtsHN2t90IGJhAAAAAXRSTlMAQObYZgAAADRJREFUCNdjCAUCZGJpFojYCSSWPQUSq6cCifUgYtVVkMRSB5AsA5BIARKhASDCAUQwQAgAJK8YHJEJIrAAAAAASUVORK5CYII=',
       'searchUrl': 'https://kinox.to/Search.html?q=%search_string%',
