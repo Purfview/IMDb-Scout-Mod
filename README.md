@@ -64,7 +64,7 @@ Inside the script, there is a list of dictionaries that contains of all the site
   - `%tmdbid%`: The TMDb id.      
   - `%tmdb_orig_title%`: To get the native original title instead of IMDb's latinized one.   
   - `%doubanid%`: The Douban id.
-  - `%search_string%`: The movie title (e.g. Yojimbo). Depends on preferences at www.imdb.com/preferences/general   
+  - `%search_string%`: The local movie title. Depends on preferences at www.imdb.com/preferences/general   
   - `%search_string_orig%`: The original movie title (e.g. Yôjinbô). Reverts to %search_string% if an original title is not set at IMDb.
   - `%year%`: The movie year (e.g. 1961).
   - `%seriesid%`: For the streaming APIs. The IMDb ID of series.
