@@ -1436,7 +1436,7 @@ To get the native original title instead of IMDb's latinized one.
 The Douban id.
 
 #  %search_string%:
-The movie title (e.g. Yojimbo). Depends on your preferences at www.imdb.com/preferences/general.
+The local movie title. Depends on your preferences at www.imdb.com/preferences/general.
 
 #  %search_string_orig%:
 The original movie title (e.g. Yôjinbô). Reverts to %search_string% if original title is not set at IMDb.
@@ -3852,9 +3852,9 @@ var chinese_sites = [
       'matchRegex': /Nothing found! Try again with a refined search string/},
   {   'name': 'M-T',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgAgMAAACf9p+rAAAACVBMVEUAAAD2yl8AAABwY/xKAAAAAXRSTlMAQObYZgAAAM5JREFUSMft1jEOwyAMBdAvRm5S7kOGnCDiFFHv4J0FCXzKyolpVOSoS7fiCfMcIowSgdtwbMYOb0NGoGjEUhGiGRUPG7YJE/4PuOkXw+UDVtaJpBUdUvbnBINJQXPwsVKGLwqaw0vlusO1CySHk8oEgC3YAIQOWgiBCsCPIGtnAbpgE3gouN/C+HIbigGr5O990LBz6ju3mpgErLaP3Y1p9+2ACl+Go6XzUR10WLhF88xj6n9ZjhMmTPgKwYaKQBYs9f6K43TAGs9+KbqLFzcxCeYxF3pcAAAAAElFTkSuQmCC',
-      'searchUrl': 'https://kp.m-team.cc/torrents.php?incldead=0&spstate=0&inclbookmarked=0&search=%tt%&search_area=4&search_mode=0',
+      'searchUrl': 'https://xp.m-team.io/browse?keyword=%search_string_orig%&visible=0',
       'loggedOutRegex': /Cloudflare|Ray ID/,
-      'matchRegex': /download.php/,
+      'matchRegex': /search not working/,
       'positiveMatch': true,
       'both': true},
   {   'name': 'MonikaDesign',
@@ -4289,6 +4289,11 @@ var german_sites = [
       'both': true},
   {   'name': 'TorSyndikat-Req',
       'searchUrl': 'https://torrent-syndikat.org/rsystem/requests.php?cats[]=Serie&cats[]=Film&sname=%search_string_orig%&rtype=all&rfill=unfilled',
+      'loggedOutRegex': /Cloudflare|Ray ID|Domain erwerben/,
+      'matchRegex': /Keine Ergebnisse/,
+      'both': true},
+  {   'name': 'TorSyndikat-Produkt',
+      'searchUrl': 'https://torrent-syndikat.org/psystem/products.php?search=1&imdbId=%tt%',
       'loggedOutRegex': /Cloudflare|Ray ID|Domain erwerben/,
       'matchRegex': /Keine Ergebnisse/,
       'both': true},
@@ -6559,6 +6564,15 @@ function addLink(elem, site_name, target, site, state, scout_tick, post_data) {
         GM.openInTab(link);
       });
     }
+    if (site['name'] == "TorSyndikat-Produkt") {
+      const button = $('span[id*='+ scout_tick +']').find('img[title="TorSyndikat-Produkt"]').parent();
+      const link = button.attr('href');
+            button.prop("href", "javascript: void(0)");
+            button.removeAttr("target");
+      button.click(function() {
+        GM.openInTab(link);
+      });
+    }
   }
   // Hack: Same-origin problem with POST, so remove 'onclick' form (icons mode only).
   if (site['name'] == "SFP-Req") {
@@ -6585,6 +6599,15 @@ function iconToButtonHack() {
   }
   if ($('img[title="TorSyndikat-Req"]').length) {
     const button = $('img[title="TorSyndikat-Req"]').parent();
+    const link = button.attr('href');
+          button.prop("href", "javascript: void(0)");
+          button.removeAttr("target");
+    button.click(function() {
+      GM.openInTab(link);
+    });
+  }
+  if ($('img[title="TorSyndikat-Produkt"]').length) {
+    const button = $('img[title="TorSyndikat-Produkt"]').parent();
     const link = button.attr('href');
           button.prop("href", "javascript: void(0)");
           button.removeAttr("target");
