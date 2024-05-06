@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      20.2
+// @version      20.2.1
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from hundreds various sites. Adds movies/series to Radarr/Sonarr. Adds external ratings from Metacritic, Rotten Tomatoes, Letterboxd, Douban, Allocine, MyAnimeList, AniList. Media Server indicators for Plex, Jellyfin, Emby. Dark theme/style for Reference View. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAMFBMVEUAAAD/AAAcAAA1AABEAABVAAC3AADnAAD2AACFAAClAABlAAB3AADHAACVAADYAABCnXhrAAAD10lEQVRIx73TV4xMURgH8H/OnRmZWe3T7h2sOWaNXu7oJRg9UccuHgTRBatMtAgSg+gJu9q+kFmihcQoD8qLTkK0CIkoy0YJITsRD0rCKTHFrnkSv5e5c88/53znO+fiPwvsvrN038cPNqrG9pJmHkRVnPcpaTlHJY60cfPSpsrzl1LKihrmLvxhCM2i3OHvDx0d+H7e3F6JBv5iZMiJfhFTfPYDMHrMImpwimWWUdSgDQkbno7fFpUPVgh+pHFbZR4SovSctDCM9Hac9IKd9rO8EevtBCkXgY5IMmgquwypP7qqfcp/Tp4KLONDVsWh3RSBB2rnZfit69ocUdqLn2prrRZYM0Jg4JibamKsqe7gfEh5GOAfeYJjVHIPZvil97rcXkMog30byWRwXYRWoxHbzNFHJJpAarO8NdEBBsdCaP3WMJltTmQd4zlnekTq9Z5dgACwAlrpK4BxdV5mvLuspRgMSHbCIFF0iS8MZ5S8oYBYKY7rByC4dDM9uSIUmPOIwxgQBoYeF93auP4qFyPbIVXziWeGTH1EFM57kJo2hqQju6BwIyRf6RmCjdT4JOdiwNgiH/PPD3qoqlsNaXRd+fKtFfECxlZVNVF9SOsgTZEr2TUjJJbyeNX1IZrKIbyGlBABfpQPv2UDrly13LkJXDVhpQ5MhtGwcyF4HKjlU4E8xwB0AvDjd6AGmevZ87EcQRHgcO52e9uNsYELOrAa/Yh81YlmYLQJ5HWyq0+kzQ/DQKEusg6CRI27ryy8nReRS0wsoetkmRwogHSprliCckfEjXG9yAQc74J0WB99vu6DF3i3pMucsXM6tpBbxd2mVJAwXwGogNRBvGRA4jtHKTXkAIwLGCR/mT4Lh75oneQXXP9sAYfGRDCsnw7pX/jRZkU3M44kjw2l5zRIzb4CbZ8dULdL6wbNPZOpK0B6gN1UR1mdoxAaL/GrWiLPL3SEwW9YMTU/d64BtLahAVyucWhj9Mm8ign9IfQaBtd2/GbvCAEBpG5eMcrj2I0ktpKLeaqXQ3Pst42KGIshpdTmQLAeTgFGJ2wvh+tayMOR0n1RZ8B9z13vnOPBnsBq4E1ffgZpPFZHWVpO2cvhjYpOcbBd5TlhpDu5zq9mHGZcVi0y+VFkcFkDdyKJfTt99wEyHSEzDM90KH0nexpwZHJHKYYhjzlwGe0pP/IKfxociaEb7YDbi6KGJY1R2cR76E6NAtXqY4pPH3plLcl8LD7V+cOLUbUWRFZRPTAbVZO3mxK18Xc1ZaAiS8ARJXpZliXAomR94siiiMx8ZBOkXGTlnH0F/9ov1xPtWwEqP9wAAAAASUVORK5CYII=
@@ -1294,7 +1294,8 @@
                          Atm, it's used for ArabP2P.
             Removed: HDSS (FR)
 
-20.2.1  -   Added: TorSyndikat-Produkt
+20.2.1  -   Added: TorSyndikat-Produkt, Subdbs, Subdl
+            Removed: Subscene
 
 
 //==============================================================================
@@ -3855,8 +3856,8 @@ var chinese_sites = [
   {   'name': 'M-T',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgAgMAAACf9p+rAAAACVBMVEUAAAD2yl8AAABwY/xKAAAAAXRSTlMAQObYZgAAAM5JREFUSMft1jEOwyAMBdAvRm5S7kOGnCDiFFHv4J0FCXzKyolpVOSoS7fiCfMcIowSgdtwbMYOb0NGoGjEUhGiGRUPG7YJE/4PuOkXw+UDVtaJpBUdUvbnBINJQXPwsVKGLwqaw0vlusO1CySHk8oEgC3YAIQOWgiBCsCPIGtnAbpgE3gouN/C+HIbigGr5O990LBz6ju3mpgErLaP3Y1p9+2ACl+Go6XzUR10WLhF88xj6n9ZjhMmTPgKwYaKQBYs9f6K43TAGs9+KbqLFzcxCeYxF3pcAAAAAElFTkSuQmCC',
       'searchUrl': 'https://kp.m-team.cc/browse?keyword=%search_string_orig%&visible=0',
-      'loggedOutRegex': /Cloudflare|Ray ID/,
-      'matchRegex': /search not working/,
+      'loggedOutRegex': /Cloudflare|Ray ID|m-team/,
+      'matchRegex': /search is not working/,
       'positiveMatch': true,
       'both': true},
   {   'name': 'MonikaDesign',
@@ -3986,12 +3987,12 @@ var french_sites = [
       'both': true},
   {   'name': 'HD-F',
       'searchUrl': 'https://hdf.world/torrents.php?searchstr=%search_string_orig%+%year%&order_by=time&order_way=desc&group_results=1&action=basic&searchsubmit=1',
-      'loggedOutRegex': /Cloudflare|Ray ID|Mot de passe perdu/,
+      'loggedOutRegex': /Cloudflare|Ray ID|>Se souvenir de moi</,
       'matchRegex': /Aucun fichier trouvé/,
       'both': true},
   {   'name': 'HD-F-Req',
       'searchUrl': 'https://hdf.world/requests.php?submit=true&search=%search_string_orig%&showall=on',
-      'loggedOutRegex': /Cloudflare|Ray ID|Mot de passe perdu/,
+      'loggedOutRegex': /Cloudflare|Ray ID|>Se souvenir de moi</,
       'matchRegex': /Aucun résultat/,
       'both': true},
   {   'name': 'HD-O',
@@ -4873,17 +4874,13 @@ var subs_sites = [
       'matchRegex': /Nu au fost gasite subtitrari/,
       'inSecondSearchBar': true,
       'both': true},
-  {   'name': 'Subs4free (GR|EN)',
-      'icon': 'https://www.subs4free.club/images/icons/favicon-32x32.png',
-      'searchUrl': 'https://www.subs4free.club/search_report.php?search=%search_string%&searchType=1',
-      'matchRegex': /any subtitles using your criteria|There is no subtitle/,
-      'inSecondSearchBar': true},
-  {   'name': 'Subs4free (GR|EN)',
-      'icon': 'https://www.subs4free.club/images/icons/favicon-32x32.png',
-      'searchUrl': 'https://www.subs4free.club/search_report.php?search=%search_string%&searchType=2',
-      'matchRegex': /any subtitles using your criteria|There is no subtitle/,
+  {   'name': 'Subdbs',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAMAAAAp4XiDAAAA6lBMVEUAAAAApqYApqYApqYApqYApqYApqYApqYApqYApqYApqYApqYApqYApqYApqYApqYApqYApqYApqYApqYApqYApqYApqYApqYApqYApqYApqYApqYApqYApqYApqYApqYApqYApqYApqYApqYApqYApqYApqYApqYApqYApqYApqYApqYApqYApqYApqYApqYApqYApqYApqYApqYApqYAU1MASkoASkoAPj4AU1MApqYAUFAAU1MAU1MAWFgAfHwApqYATU0ApqYAfHwAfHwAYWEAfHwAU1MAfHwAfHwAfHwAfHwAU1MAfHybudQyAAAATnRSTlMA587z7dJ93rxb2ta3duOGcm2Br8B5S6pTpaFn+MpqNseJXsRkYZZXTkD+s0dEPJqQk1CdjTwJDgRHOQxBMCQdMB8mbDETYlNLPpOFXlcFrcBiAAACuklEQVRIx8WV13LiQBREhYgiR4EISzBxicJLMgiTwWv7/39n7yTNaBBVVO2D+4kqONXQ6r4o/6nz6uuYjMViuVwuAEqDElTpr4ULsGmrqt8fiYTDwWDc4/H4fD6vt1wu/ybyXWTAKr681CoqoghEKK9AfTqJ71AolM0CVMGQTfkwRaGNSBz7/WgUQdwqcm8VEohLPp/JAESoWo1ZyRSP4KNoGAgiViFsVXHLwmLEwnwtIujeSpWsbERrt8evlMpg6kEW8Tkl1vWJabbHY4Ao9SgL0/4l9fqfycQUrdyz8O8Z0oBWIMoE6oEVptQPhSkWCBAIKIDGD7Jo721iCS0EiFolZ0wbrBXV7KxwLZNQXoAQVU8slSe0/JVKEQqggPIU0iwxCKjbdr/fIlmr1WYGsvYuxlqrWWIU+1VGGHXKS5rl/9xKyFBrtJpgBRS1SoegHER0ZRkndOpoWqMhWhm0hiC2F+9RRNbTQgdRrRa1ygU9IB8IEHvQf0Wm2p0WCtQKZdGGOsUZxfciMuuB3kUUszKgg0EGBfmgxe+2HQ50HUOYMmjdMRVGr6mVJTC73nBAKYAmuLjUStxLX3ycu1FviK2A6qRw2ynlGPRMZA6jUc+2MuxhhdWaeNxMRdR79Y1QAGlR9kHVOWi/szzzA4WA0gwyrKw8aEsu6Pn9sKtW3xDZqhv54hj2lnEM+qo8ocVEPG4X5RldxUGnniHmafG4lYQ3TlPSZWFt+P+oPobjkbcvzpUnrN2tzP24WZxo0JVxC/fjNmfh6qzEspV83HK2SbdLSywPWv6Clt1jXmI+aH7cuFXAUX3dsTKanGzFT+wBNYuvjGQhWSXA6uZSYmnQUhbf4gOuoi5KVpoc+03aCohZuWeRPClOHaoE4ivrOo+bvlBknXcE4ivjVpp+IoCs5ZxpTbQgWi+VH9E/buqsMDuTDsAAAAAASUVORK5CYII=',
+      'searchUrl': 'https://subdbs.com/search?q=%tt%',
+      'loggedOutRegex': /Cloudflare|Ray ID/,
+      'matchRegex': /No results/,
       'inSecondSearchBar': true,
-      'TV': true},
+      'both': true},
   {   'name': 'SubDivX (ES)',
       'searchUrl': 'https://www.subdivx.com/index.php?buscar2=%search_string_orig%+%year%&accion=5&subtitulos=1',
       'matchRegex': /titulo_menu/,
@@ -4895,6 +4892,14 @@ var subs_sites = [
       'positiveMatch': true,
       'inSecondSearchBar': true,
       'TV': true},
+  {   'name': 'Subdl',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwAgMAAAAqbBEUAAAADFBMVEUAAAD+7ioyMjOlmy53V6WFAAAAAXRSTlMAQObYZgAAALhJREFUKM9t0rERgzAMBVBTMAL7MAIFhrsUzh7skRHcKEfpUbxEdsgR83Xin2NU+YEksGWH6Cd3xeD9bOvel7B3HqHrTjFqhWJmFvKQxbzeMLEERTX8FVofRNLZAXiI7CfQbFNMN0hBMRCzIq5fojwn3gZ8J0P4m0VexCqR8J/dwA5ooB0MiyRrXUKiwjoQG4AtPHOo99Oi47bHGo7A8eIQedbHkRUcyf+wnKEdMEfPvPq6tBeJV+wHsSepYe5VEiIAAAAASUVORK5CYII=',
+      'searchUrl': 'https://api.subdl.com/api/v1/subtitles?api_key=1NH41qxOs5JKcS7ICGHchmNrZcx7zUWf&imdb_id=%tt%',
+      'goToUrl': 'https://subdl.com/search?query=%search_string_orig%',
+      'loggedOutRegex': /Cloudflare|Ray ID/,
+      'matchRegex': /can't find/,
+      'inSecondSearchBar': true,
+      'both': true},
   {   'name': 'SubHD (CN)',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAA21BMVEUAAAAAie4BiewCie0Bie0DiesBie4BiewCiewAie4AiO0BiewBiO0Cie4CiewCiewFiOsFiOsAkOQAkvQAgNABie0CiOwBiewBiewBiOwBiOwDiukAh+EAgN8Biu4Aie7///8FjO7y+f6p2PqXz/nf8P3K5/y03fpquvZBp/MrnfEOkO/1+//u9/643vul1vmd0vl8w/c6pPI0ofIXlPD4/P/p9v7T6/y73/uj1PmQzPiJyPeDxfdetfVZs/ROrfQ4o/Ivn/L5/P/U6/zO6PzB4/t3wPYkmvEimfDDD6utAAAAH3RSTlMA+MujrUzstn3+/d7SqJGJNC8NBQS2f+fU1LlKERDte24wGgAAAXlJREFUOMt1k9eagkAMhSOgYO+udQcEUbH3stbt7/9EOyMhsCr/1fmSQwoBQAoNTVal2itjsZpUlrVGAYLk0xF2RySdp3Qpm2BPSGRLmFdYCIrryLJQsrf+WP9pFzFHmhH9gznuWseBH0nz/Wj+xUZ3ac8M2qUAUU/PhzrRJUcUNFRGhyeG2113LRwzz6CBjOrMw19L4XzjauSVkKGMSoTnrvzkcoFhFSRUlm84WZZ1xbAEKVQzbvjos3tSkPSW1AVrs+f8MyQh5smJjozMk0GGF99g7N91j86FDLwFseyN297L/KEWOCRiXHvmzTSlIaWHwQeWaEJrqqi6tm0bWGbFe2C4TK/a5o+dsUSgggwVVAcRdW55MzCDRudejsRs9mS3FUOuHDp3K4KyP9R9jhiMtADom3bGXnpDN1EAIBenBX97+4k5/b5QIJ4DToaFkgFBUQ3Lq0VwHZn4s3Q8g3kxh/L48yo5CNKMVuS6VOXHj1WlulyJNjHxB35ccGfJ6bGeAAAAAElFTkSuQmCC',
       'searchUrl': 'https://subhd.tv/search/%tt%',
@@ -4907,19 +4912,15 @@ var subs_sites = [
       'matchRegex': /Pagina solicitată/,
       'inSecondSearchBar': true,
       'both': true},
-  {   'name': 'Subscene',
-      'searchUrl': 'https://subscene.com/subtitles/searchbytitle?query=%search_string%',
-      'loggedOutRegex': /Please do not hammer|HTTP Error 404/,
-      'matchRegex': />Exact</,
-      'positiveMatch': true,
-      'rateLimit': 7500,
+  {   'name': 'Subs4free (GR|EN)',
+      'icon': 'https://www.subs4free.club/images/icons/favicon-32x32.png',
+      'searchUrl': 'https://www.subs4free.club/search_report.php?search=%search_string%&searchType=1',
+      'matchRegex': /any subtitles using your criteria|There is no subtitle/,
       'inSecondSearchBar': true},
-  {   'name': 'Subscene',
-      'searchUrl': 'https://subscene.com/subtitles/searchbytitle?query=%search_string%',
-      'loggedOutRegex': /Please do not hammer|HTTP Error 404/,
-      'matchRegex': />TV-Series</,
-      'positiveMatch': true,
-      'rateLimit': 7500,
+  {   'name': 'Subs4free (GR|EN)',
+      'icon': 'https://www.subs4free.club/images/icons/favicon-32x32.png',
+      'searchUrl': 'https://www.subs4free.club/search_report.php?search=%search_string%&searchType=2',
+      'matchRegex': /any subtitles using your criteria|There is no subtitle/,
       'inSecondSearchBar': true,
       'TV': true},
   {   'name': 'SubsLand (BG)',
