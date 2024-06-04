@@ -5901,6 +5901,10 @@ var special_buttons = [
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAMAAABg3Am1AAACTFBMVEUAAAD//////////////vu1t7j/zFCGiYz////+/v4xNjs7QEUpLjP////7+/smKzBHS09VWV1obG/////////////Z2tv/////////////////////yUdQVFg/Q0imqKp2enz19va2t7n///+XmZyTlZj/4JOOkJOEh4n/8tTY2trV1tf/9+L////r7Oz///////84PEEuMjdLT1RCRkv/zlmMj5FaXWGVl5plaGzq6+yYmpx0d3rU1dZ8f4L8/f3v7/C+wMG6u72bnaD/5qmgo6WsrrD/67mxs7XOz9H//PT///////////////////////////////////////////////82Oj//xDX/xj3/zE2JjI9SVlr/0mVdYWV4e3//1nLn5+jg4eKGiYttcHSAg4b/2XzMzc+wsrTGx8ijpqj/5KCdn6H/7cC9vsC6vL2+wMH////Q0dL/8c3k5eX/+evp6en19fXy8vL9/f3////l5ubz8/T///////////////////////////////////////////////////9YXGD/z1r/13b////c3d7HyMmqrK7s7O2Ii43/24X4+Pjy8/Opq63/7sT4+PjExcf9/f3R0tP/89bf4OHl5ubl5ebk5ebj4+Tt7u7/////////////////////////////////////////////////////wjAkKS4XHCEaHyT/wCkiJywYHiMfJSobICYhJiv/vyQeIygcIicVGh//wSz/vyctMTYSGB0KDxUSFx1vUO58AAAAsHRSTlMA5eTH5u77+uPx/fz+8uX++/r31Xkg9drSOhIJ/Pv79vb19fPz8/Pz8+vq6uno57yj/f38+/r5+fj49/f39vb19fT09PDw7+7u6+bOybimlHFgWCkeGAb+/v38+vn4+Pf39vb29vX19PTz8/Hw7e3t7Ovr6+jn5+bm5d3Y18G0sZuPi4J9ZF5EDwz5+fb19fX19PT08/Pv7ezs6+vq6ejo6Ojn3suvl5GHbFRQSjECARZmqHoAAAO5SURBVEjHjZXle9NQFMbblEFSN9Yic0UmbGMbc2FjbsBwd3d3d3d3t+ZG2yTrgH+MJPfmCQ8k3c6Hfjq/5n3Pvee9Fq0uDZw8Fg509XwabxlVDdhcqzObq2/W1h8OThy5/WKxq7HCSQHAMt7mjM7+wRH6J3Y3+HkqSsrF8KBso6voQsL+H8UZKRJDaiVSFbW7ihNZ6XfVSXJjlKV4llO+Qnlurwr1TTQVFM5kGfmPneltO/IcIKqwoKT6bvj8d2PgK+Gj5H7HbhzD8MJ8j0KTHChtdJ2YYAicTiYZMuqcilnlwrBpyzlescILa5OtH42snEgDJMnW4HI7RB6lANUK66lreBOc9B9gW6IArZjarCLurXZkxbGZsH35DxgnA1SS0jtlukpY8Zfp0IoALm8giueaAWMWR3I7cGTFz4uKFYqblYy9H28CjI3FFs/BkPskB7LizM4I9A8aA3SEpldOQcjBPDuAIy7bSHRfMAEikVhk/T70kf01UQreFt8GImgGRIZii7aMQUh7BRDU2xLNyzptDEBk5h6k61CLg+XUEWdnnTMCUMWHlk3B4UEeaHYqVhiQdnieKaBaye1AyFS/IH9EsFedMQOQrsmzNStJw/KhSJWdZgAqOnblAbSCt5dwJJ8SMAc0K/TK6ZBopUhuxlFzQLeycDaU5eOjw0dGAcTjufATbdRoAFo5EDQqUliQUJI+JwjsLWFLzU0j+bkdaKwKMPyzPJwIiNNXpyM1r/OeyZI4z+pec4Cmx2qL4U5y/NqMYfd/VeJzjQAkfo52yNtLeQHk425H+rWg2eWLRe7sQ2qep4s8Q0rZeM6s+p5BLTUkHVDFL3uKLsTBHHXnGOHJi0yiVwscWyarA8oqbEPira2pcKt/risgwuf1FX3oBRoQ/2vZdvsoUV02cQ1RcGa+RQcet8+QfrcpwOSh9dooX+V7KEZZZzGlseAdClkEbMIK81O3K43btMA4kDMMs09KbXIdg+06UD4Nxw65oQ74u8OrRdKahlDfv+l6vNKPWWGh0FvL81roWXvnWf6tD7UgG9f7C1eQMFbZpZuInm8Gcf+Z8EpbMQymt7tlBgpue0t914DFqOaH0iRq+c5Ct9W9f6ePFaD4ulWhs2avXF+WH/CC3bvUaxfg48P7kwtOQfFGNam7ygEYTuRFDr4JZU2uIjhKkxpvu+5jRfhSc2BBzr235/RRGtsoykpLFQBgAWVfdws/e9EyUl0KhjJuVK+oKW+q2nVSf6ESygoe7woEOotOTUjc9weXiUPgDnteIQAAAABJRU5ErkJggg==',
       'searchUrl': 'https://radarr.video',
       'showByDefault': false},
+  {   'name': 'Radarr2',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAMAAABg3Am1AAACTFBMVEUAAAD//////////////vu1t7j/zFCGiYz////+/v4xNjs7QEUpLjP////7+/smKzBHS09VWV1obG/////////////Z2tv/////////////////////yUdQVFg/Q0imqKp2enz19va2t7n///+XmZyTlZj/4JOOkJOEh4n/8tTY2trV1tf/9+L////r7Oz///////84PEEuMjdLT1RCRkv/zlmMj5FaXWGVl5plaGzq6+yYmpx0d3rU1dZ8f4L8/f3v7/C+wMG6u72bnaD/5qmgo6WsrrD/67mxs7XOz9H//PT///////////////////////////////////////////////82Oj//xDX/xj3/zE2JjI9SVlr/0mVdYWV4e3//1nLn5+jg4eKGiYttcHSAg4b/2XzMzc+wsrTGx8ijpqj/5KCdn6H/7cC9vsC6vL2+wMH////Q0dL/8c3k5eX/+evp6en19fXy8vL9/f3////l5ubz8/T///////////////////////////////////////////////////9YXGD/z1r/13b////c3d7HyMmqrK7s7O2Ii43/24X4+Pjy8/Opq63/7sT4+PjExcf9/f3R0tP/89bf4OHl5ubl5ebk5ebj4+Tt7u7/////////////////////////////////////////////////////wjAkKS4XHCEaHyT/wCkiJywYHiMfJSobICYhJiv/vyQeIygcIicVGh//wSz/vyctMTYSGB0KDxUSFx1vUO58AAAAsHRSTlMA5eTH5u77+uPx/fz+8uX++/r31Xkg9drSOhIJ/Pv79vb19fPz8/Pz8+vq6uno57yj/f38+/r5+fj49/f39vb19fT09PDw7+7u6+bOybimlHFgWCkeGAb+/v38+vn4+Pf39vb29vX19PTz8/Hw7e3t7Ovr6+jn5+bm5d3Y18G0sZuPi4J9ZF5EDwz5+fb19fX19PT08/Pv7ezs6+vq6ejo6Ojn3suvl5GHbFRQSjECARZmqHoAAAO5SURBVEjHjZXle9NQFMbblEFSN9Yic0UmbGMbc2FjbsBwd3d3d3d3t+ZG2yTrgH+MJPfmCQ8k3c6Hfjq/5n3Pvee9Fq0uDZw8Fg509XwabxlVDdhcqzObq2/W1h8OThy5/WKxq7HCSQHAMt7mjM7+wRH6J3Y3+HkqSsrF8KBso6voQsL+H8UZKRJDaiVSFbW7ihNZ6XfVSXJjlKV4llO+Qnlurwr1TTQVFM5kGfmPneltO/IcIKqwoKT6bvj8d2PgK+Gj5H7HbhzD8MJ8j0KTHChtdJ2YYAicTiYZMuqcilnlwrBpyzlescILa5OtH42snEgDJMnW4HI7RB6lANUK66lreBOc9B9gW6IArZjarCLurXZkxbGZsH35DxgnA1SS0jtlukpY8Zfp0IoALm8giueaAWMWR3I7cGTFz4uKFYqblYy9H28CjI3FFs/BkPskB7LizM4I9A8aA3SEpldOQcjBPDuAIy7bSHRfMAEikVhk/T70kf01UQreFt8GImgGRIZii7aMQUh7BRDU2xLNyzptDEBk5h6k61CLg+XUEWdnnTMCUMWHlk3B4UEeaHYqVhiQdnieKaBaye1AyFS/IH9EsFedMQOQrsmzNStJw/KhSJWdZgAqOnblAbSCt5dwJJ8SMAc0K/TK6ZBopUhuxlFzQLeycDaU5eOjw0dGAcTjufATbdRoAFo5EDQqUliQUJI+JwjsLWFLzU0j+bkdaKwKMPyzPJwIiNNXpyM1r/OeyZI4z+pec4Cmx2qL4U5y/NqMYfd/VeJzjQAkfo52yNtLeQHk425H+rWg2eWLRe7sQ2qep4s8Q0rZeM6s+p5BLTUkHVDFL3uKLsTBHHXnGOHJi0yiVwscWyarA8oqbEPira2pcKt/risgwuf1FX3oBRoQ/2vZdvsoUV02cQ1RcGa+RQcet8+QfrcpwOSh9dooX+V7KEZZZzGlseAdClkEbMIK81O3K43btMA4kDMMs09KbXIdg+06UD4Nxw65oQ74u8OrRdKahlDfv+l6vNKPWWGh0FvL81roWXvnWf6tD7UgG9f7C1eQMFbZpZuInm8Gcf+Z8EpbMQymt7tlBgpue0t914DFqOaH0iRq+c5Ct9W9f6ePFaD4ulWhs2avXF+WH/CC3bvUaxfg48P7kwtOQfFGNam7ygEYTuRFDr4JZU2uIjhKkxpvu+5jRfhSc2BBzr235/RRGtsoykpLFQBgAWVfdws/e9EyUl0KhjJuVK+oKW+q2nVSf6ESygoe7woEOotOTUjc9weXiUPgDnteIQAAAABJRU5ErkJggg==',
+      'searchUrl': 'https://radarr.video',
+      'showByDefault': false},
   {   'name': 'Sonarr',
       'icon': 'data:image/png;base64,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',
       'searchUrl': 'https://sonarr.tv',
@@ -6962,6 +6966,10 @@ function addIconBar(movie_id, movie_title, movie_title_orig) {
       if (site['name'] == "Radarr"){
       get_radarr_movies(movie_id);
       }
+      // Call to Radarr2 funcs.
+      if (site['name'] == "Radarr2"){
+      get_radarr_movies(movie_id, true);
+      }
       // Call to Sonarr funcs.
       if (site['name'] == "Sonarr"){
       get_sonarr_tvseries(movie_id);
@@ -6992,6 +7000,7 @@ function addIconBar(movie_id, movie_title, movie_title_orig) {
         $('img[title="Jellyfin"]').parent().removeClass('iconbar_icon').addClass('iconbar_spec_icon');
         $('img[title="Plex"]').parent().removeClass('iconbar_icon').addClass('iconbar_spec_icon');
         $('img[title="Radarr"]').parent().attr('class','iconbar_spec_icon');
+        $('img[title="Radarr2"]').parent().attr('class','iconbar_spec_icon');
         $('img[title="Sonarr"]').parent().attr('class','iconbar_spec_icon');
         $('img[title="Trakt-Watchlist"]').parent().attr('class','iconbar_spec_icon');
       }, 300);
@@ -8480,13 +8489,17 @@ function getInfoFromPlex(title, movie_id, tvdb_id, plex_url, plex_token) {
 }
 
 //==============================================================================
-//    Special button: Radarr
+//    Special buttons: Radarr and Radarr2
 //==============================================================================
 
-function get_radarr_movies(movie_id) {
+function get_radarr_movies(movie_id, second_instance = false) {
+  let title = "Radarr";
+  if (second_instance == true) title = "Radarr2";
+  let radarr = "radarr";
+  if (second_instance == true) radarr = "radarr2";
   let imdbid = "tt" + movie_id;
-  let radarr_url = GM_config.get("radarr_url").replace(/\/$/, "");
-  let radarr_apikey = GM_config.get("radarr_apikey");
+  let radarr_url = GM_config.get(radarr + '_url').replace(/\/$/, '');
+  let radarr_apikey = GM_config.get(radarr + '_apikey');
   const error_icon = "data:image/png;base64,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";
   GM.xmlHttpRequest({
     method: "GET",
@@ -8500,37 +8513,39 @@ function get_radarr_movies(movie_id) {
         const responseJSON = JSON.parse(response.responseText);
         GM.setValue("IMDb_Scout_Mod_Radarr_movies", JSON.stringify(responseJSON));
         console.log("IMDb Scout Mod (Radarr): Sync movies complete!");
-        buttonBuilder(imdbid, radarr_url, radarr_apikey);
+        radarrButtonBuilder(imdbid, radarr_url, radarr_apikey, second_instance);
       } else if (response.status == 401) {
-          $('a[href="https://radarr.video"]').find('img').prop("src", error_icon);
+          $("img[title='" + title + "']").prop("src", error_icon);
           console.log("IMDb Scout Mod (Radarr): Error: Invalid Radarr API Key.");
           GM.notification("Error: Invalid Radarr API Key.", "IMDb Scout Mod (Radarr)");
       } else {
-          $('a[href="https://radarr.video"]').find('img').prop("src", error_icon);
+          $("img[title='" + title + "']").prop("src", error_icon);
           console.log("IMDb Scout Mod (Radarr): Error: Status " + response.status);
           GM.notification("Error: Status " + response.status, "IMDb Scout Mod (Radarr)");
       }
     },
     onerror: function() {
-      $('a[href="https://radarr.video"]').find('img').prop("src", error_icon);
+      $("img[title='" + title + "']").prop("src", error_icon);
       console.log("IMDb Scout Mod (Radarr): Request Error. Check that Radarr is running or your Radarr URL.");
       if (GM_config.get("app_notification")) {
         GM.notification("Error: No response. \nPlease check your Radarr URL.", "IMDb Scout Mod (Radarr)");
       }
     },
     onabort: function() {
-      $('a[href="https://radarr.video"]').find('img').prop("src", error_icon);
+      $("img[title='" + title + "']").prop("src", error_icon);
       console.log("IMDb Scout Mod (Radarr): Request is aborted.");
     }
   });
 }
 
-async function buttonBuilder(imdbid, radarr_url, radarr_apikey) {
+async function radarrButtonBuilder(imdbid, radarr_url, radarr_apikey, second_instance = false) {
+  let Radarr = "Radarr"
+  if (second_instance == true) Radarr = "Radarr2";
   let exists = await check_exists(imdbid);
   const exists_icon = "data:image/png;base64,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";
-  let button = $('a[href="https://radarr.video"]');
-      button.prop("href", "javascript: void(0)");
-      button.removeAttr("target");
+  let button = $("[title='" + Radarr + "']").parent();
+    button.prop("href", "javascript: void(0)");
+    button.removeAttr("target");
   if (exists) {
     button.find('img').prop("src", exists_icon);
     button.click(function() {
@@ -8538,7 +8553,7 @@ async function buttonBuilder(imdbid, radarr_url, radarr_apikey) {
     });
   } else {
     button.click(function() {
-      new_movie_lookup(imdbid, radarr_url, radarr_apikey, exists_icon);
+      new_movie_lookup(imdbid, radarr_url, radarr_apikey, exists_icon, second_instance);
     });
   }
 }
@@ -8565,7 +8580,7 @@ async function check_exists(imdbid) {
   }
 }
 
-function new_movie_lookup(imdbid, radarr_url, radarr_apikey, exists_icon) {
+function new_movie_lookup(imdbid, radarr_url, radarr_apikey, exists_icon, second_instance = false) {
   GM.xmlHttpRequest({
     method: "GET",
     url: radarr_url + "/api/v3/movie/lookup/imdb?imdbId=" + imdbid,
@@ -8582,22 +8597,26 @@ function new_movie_lookup(imdbid, radarr_url, radarr_apikey, exists_icon) {
           return;
         }
         responseJSON = JSON.parse(response.responseText);
-        add_movie(responseJSON, imdbid, radarr_url, radarr_apikey, exists_icon);
+        radarr_add_movie(responseJSON, imdbid, radarr_url, radarr_apikey, exists_icon, second_instance);
       }
     }
   });
 }
 
-function add_movie(movie, imdbid, radarr_url, radarr_apikey, exists_icon) {
-  movie.rootFolderPath = GM_config.get("radarr_rootfolderpath");
-  movie.monitored = GM_config.get("radarr_monitored");
-  movie.minimumAvailability = GM_config.get("radarr_minimumavailability");
-  if (GM_config.get("radarr_searchformovie")) {
+function radarr_add_movie(movie, imdbid, radarr_url, radarr_apikey, exists_icon, second_instance = false) {
+  let title = "Radarr";
+  if (second_instance == true) title = "Radarr2";
+  let radarr = "radarr";
+  if (second_instance == true) radarr = "radarr2";
+  movie.rootFolderPath = GM_config.get(radarr + "_rootfolderpath");
+  movie.monitored = GM_config.get(radarr + "_monitored");
+  movie.minimumAvailability = GM_config.get(radarr + "_minimumavailability");
+  if (GM_config.get(radarr + "_searchformovie")) {
     movie.addOptions = {searchForMovie: true};
   } else {
     movie.addOptions = {searchForMovie: false};
   }
-  const qProID = GM_config.get("radarr_profileid");
+  const qProID = GM_config.get(radarr + "_profileid");
   if (qProID == "Any") {
     movie.qualityProfileId = 1;
   } else if (qProID == "HD - 720p/1080p") {
@@ -8611,7 +8630,7 @@ function add_movie(movie, imdbid, radarr_url, radarr_apikey, exists_icon) {
   } else if (qProID == "Ultra-HD") {
     movie.qualityProfileId = 5;
   } else if (qProID == "Custom") {
-    movie.qualityProfileId = parseInt(GM_config.get("radarr_customprofileid"));
+    movie.qualityProfileId = parseInt(GM_config.get(radarr + "_customprofileid"));
   }
   GM.xmlHttpRequest({
     method: "POST",
@@ -8625,7 +8644,7 @@ function add_movie(movie, imdbid, radarr_url, radarr_apikey, exists_icon) {
     onload: function(response) {
       const responseJSON = JSON.parse(response.responseText);
       if (response.status == 201) {
-        let button = $('img[title="Radarr"]');
+        let button = $('img[title="' + title + '"]');
             button.prop("src", exists_icon);
             button.parent().off("click");
         button.click(function() {
@@ -10301,6 +10320,14 @@ function countSites(task) {
       'radarr_profileid': {'type': 'select', 'options': ['Any', 'HD - 720p/1080p', 'HD-1080p', 'HD-720p', 'SD', 'Ultra-HD', 'Custom']},
       'radarr_customprofileid': {'type': 'text'},
       'radarr_minimumavailability': {'type': 'select', 'options': ['announced', 'inCinemas', 'released']},
+      'radarr2_searchformovie': {'type': 'checkbox'},
+      'radarr2_monitored': {'type': 'checkbox'},
+      'radarr2_url': {'type': 'text'},
+      'radarr2_apikey': {'type': 'text'},
+      'radarr2_rootfolderpath': {'type': 'text'},
+      'radarr2_profileid': {'type': 'select', 'options': ['Any', 'HD - 720p/1080p', 'HD-1080p', 'HD-720p', 'SD', 'Ultra-HD', 'Custom']},
+      'radarr2_customprofileid': {'type': 'text'},
+      'radarr2_minimumavailability': {'type': 'select', 'options': ['announced', 'inCinemas', 'released']},
       'sonarr_searchformissing': {'type': 'checkbox'},
       'sonarr_searchforcutoff': {'type': 'checkbox'},
       'sonarr_seasonfolder': {'type': 'checkbox'},
@@ -10754,6 +10781,49 @@ var config_fields = {
     'options': ['announced', 'inCinemas', 'released'],
     'default': 'inCinemas'
   },
+  'radarr2_searchformovie': {
+    'section': 'Radarr2 settings:',
+    'type': 'checkbox',
+    'label': 'Search for movie on add?',
+    'default': true
+  },
+  'radarr2_monitored': {
+    'type': 'checkbox',
+    'label': 'Add monitored?',
+    'default': true
+  },
+  'radarr2_url': {
+    'label': 'Radarr2 URL:' + radarr_url_spacing,
+    'type': 'text',
+    'default': 'http://localhost:7979'
+  },
+  'radarr2_apikey': {
+    'label': 'Radarr2 API Key:' + radarr_apikey_spacing,
+    'type': 'text',
+    'default': ''
+  },
+  'radarr2_rootfolderpath': {
+    'label': 'Radarr2 Root Folder Path:' + radarr_rootfolderpath_spacing,
+    'type': 'text',
+    'default': 'D:\\Movies'
+  },
+  'radarr2_profileid': {
+    'label': 'Radarr2 Quality Profile: &nbsp &nbsp &nbsp',
+    'type': 'select',
+    'options': ['Any', 'HD - 720p/1080p', 'HD-1080p', 'HD-720p', 'SD', 'Ultra-HD', 'Custom'],
+    'default': 'Any'
+  },
+  'radarr2_customprofileid': {
+    'label': 'Custom Quality ProfileID:' + radarr_rootfolderpath_spacing,
+    'type': 'text',
+    'default': '1'
+  },
+  'radarr2_minimumavailability': {
+    'label': 'Minimum Availability: &nbsp &nbsp &nbsp &nbsp',
+    'type': 'select',
+    'options': ['announced', 'inCinemas', 'released'],
+    'default': 'inCinemas'
+  },
   'sonarr_searchformissing': {
     'section': 'Sonarr settings:',
     'type': 'checkbox',
@@ -11068,6 +11138,7 @@ GM_config.init({
       $('#imdb_scout').contents().find('input#imdb_scout_field_mod_icons_size').attr('size', '1');
       $('#imdb_scout').contents().find('input#imdb_scout_field_cfg_iconsize').attr('size', '1');
       $('#imdb_scout').contents().find('input#imdb_scout_field_radarr_customprofileid').attr('size', '1');
+      $('#imdb_scout').contents().find('input#imdb_scout_field_radarr2_customprofileid').attr('size', '1');
       $('#imdb_scout').contents().find('input#imdb_scout_field_sonarr_customprofileid').attr('size', '1');
       $('#imdb_scout').contents().find('input#imdb_scout_field_sonarr_languageprofileid').attr('size', '1');
       $('#imdb_scout').contents().find('input#imdb_scout_field_ratings_cfg_color_scheme').attr('size', '2');
