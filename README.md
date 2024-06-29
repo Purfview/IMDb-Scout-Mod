@@ -16,7 +16,7 @@ Auto loads Reference View without login.
 Dark theme/style for Reference View.   
 Compact mode for Reference View.   
 Removes ads.   
-Supports mobile: [Firefox Nightly](https://play.google.com/store/apps/details?id=org.mozilla.fenix), Firefox for Android. [Orion](https://apps.apple.com/us/app/orion-browser-by-kagi/id1484498200), for iOS.       
+Supports mobile: [Firefox Nightly](https://play.google.com/store/apps/details?id=org.mozilla.fenix), Firefox for Android. [Orion](https://apps.apple.com/us/app/orion-browser-by-kagi/id1484498200) for iOS.       
 Supports browsers: Firefox, Chrome, Opera, Safari, Waterfox, Brave, Pale Moon, Edge.    
 Supports: [Violentmonkey](https://violentmonkey.github.io/), [Tampermonkey](https://www.tampermonkey.net/), [Greasemonkey](https://www.greasespot.net/), [Greasemonkey v3](https://web.archive.org/web/20171009185612/https://addons.mozilla.org/en-US/firefox/addon/greasemonkey/versions/) & [Greasemonkey for Pale Moon](https://github.com/janekptacijarabaci/greasemonkey/releases).  
 
