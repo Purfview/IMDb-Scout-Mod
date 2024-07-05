@@ -2899,7 +2899,7 @@ var private_sites = [
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwAgMAAAAqbBEUAAAACVBMVEUAAAAAAAD///+D3c/SAAAAAXRSTlMAQObYZgAAAKlJREFUKM990rERgzAMBVCnYISk8DQZgQJR0KfxPmwQF9aUkZSzv/8dBwXwsCRzlpJfD5G3Pfo79HRsYwFLyx8roiwOUR6HKItjRAqSZFzI9wqMBVg9HxVyFdm1iap+U24iRZVwDmjH4TglbhdogBWoMxTYrdqAlBliSUABPn0lx69EzuaoBN8n8LKvh/rOhvkMCDfnlgA6+Nv+oI3cYG49hoLHhQeJRuwHxie7qwtJseAAAAAASUVORK5CYII=',
       'searchUrl': 'https://lst.gg/torrents?imdbId=%tt%',
       'loggedOutRegex': /Cloudflare|Ray ID|Forgot Your Password|Service Unavailable/,
-      'matchRegex': /torrent-listings-name/,
+      'matchRegex': /torrent-search--list__overview/,
       'positiveMatch': true,
       'both': true},
   {   'name': 'LST-Req',
