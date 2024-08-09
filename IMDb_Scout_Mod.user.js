@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      21.1
+// @version      21.2
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from hundreds various sites. Adds movies/series to Radarr/Sonarr. Adds external ratings from Metacritic, Rotten Tomatoes, Letterboxd, Douban, Allocine, MyAnimeList, AniList. Media Server indicators for Plex, Jellyfin, Emby. Dark theme/style for Reference View. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAMFBMVEUAAAD/AAAcAAA1AABEAABVAAC3AADnAAD2AACFAAClAABlAAB3AADHAACVAADYAABCnXhrAAAD10lEQVRIx73TV4xMURgH8H/OnRmZWe3T7h2sOWaNXu7oJRg9UccuHgTRBatMtAgSg+gJu9q+kFmihcQoD8qLTkK0CIkoy0YJITsRD0rCKTHFrnkSv5e5c88/53znO+fiPwvsvrN038cPNqrG9pJmHkRVnPcpaTlHJY60cfPSpsrzl1LKihrmLvxhCM2i3OHvDx0d+H7e3F6JBv5iZMiJfhFTfPYDMHrMImpwimWWUdSgDQkbno7fFpUPVgh+pHFbZR4SovSctDCM9Hac9IKd9rO8EevtBCkXgY5IMmgquwypP7qqfcp/Tp4KLONDVsWh3RSBB2rnZfit69ocUdqLn2prrRZYM0Jg4JibamKsqe7gfEh5GOAfeYJjVHIPZvil97rcXkMog30byWRwXYRWoxHbzNFHJJpAarO8NdEBBsdCaP3WMJltTmQd4zlnekTq9Z5dgACwAlrpK4BxdV5mvLuspRgMSHbCIFF0iS8MZ5S8oYBYKY7rByC4dDM9uSIUmPOIwxgQBoYeF93auP4qFyPbIVXziWeGTH1EFM57kJo2hqQju6BwIyRf6RmCjdT4JOdiwNgiH/PPD3qoqlsNaXRd+fKtFfECxlZVNVF9SOsgTZEr2TUjJJbyeNX1IZrKIbyGlBABfpQPv2UDrly13LkJXDVhpQ5MhtGwcyF4HKjlU4E8xwB0AvDjd6AGmevZ87EcQRHgcO52e9uNsYELOrAa/Yh81YlmYLQJ5HWyq0+kzQ/DQKEusg6CRI27ryy8nReRS0wsoetkmRwogHSprliCckfEjXG9yAQc74J0WB99vu6DF3i3pMucsXM6tpBbxd2mVJAwXwGogNRBvGRA4jtHKTXkAIwLGCR/mT4Lh75oneQXXP9sAYfGRDCsnw7pX/jRZkU3M44kjw2l5zRIzb4CbZ8dULdL6wbNPZOpK0B6gN1UR1mdoxAaL/GrWiLPL3SEwW9YMTU/d64BtLahAVyucWhj9Mm8ign9IfQaBtd2/GbvCAEBpG5eMcrj2I0ktpKLeaqXQ3Pst42KGIshpdTmQLAeTgFGJ2wvh+tayMOR0n1RZ8B9z13vnOPBnsBq4E1ffgZpPFZHWVpO2cvhjYpOcbBd5TlhpDu5zq9mHGZcVi0y+VFkcFkDdyKJfTt99wEyHSEzDM90KH0nexpwZHJHKYYhjzlwGe0pP/IKfxociaEb7YDbi6KGJY1R2cR76E6NAtXqY4pPH3plLcl8LD7V+cOLUbUWRFZRPTAbVZO3mxK18Xc1ZaAiS8ARJXpZliXAomR94siiiMx8ZBOkXGTlnH0F/9ov1xPtWwEqP9wAAAAASUVORK5CYII=
@@ -1303,6 +1303,9 @@
             Removed: HDC, ComandoFilmes, SkipTheTrailers, AnimeVibe, NzbNdx, CT, HDZ
 
 21.1    -   Fixed: Stopped working with Chrome 127.0.6533.73
+
+21.2    -   Fixed: For some users stopped working with Firefox on the reference pages.
+                   (Note: Because of ".ipc-page-section" [redesign elem] present on the reference pages. Fix: Made check for reference page first.)
 
 
 //==============================================================================
@@ -6835,12 +6838,12 @@ function displayButton() {
   // advanced search
   } else if (onSearchPage && $('div.ipc-title hgroup h1.ipc-title__text').length) {
     $('div.ipc-title hgroup h1.ipc-title__text').parent().append(p);
-  // title
-  } else if (!onSearchPage && $('.ipc-page-section').length) {
-    $('.ipc-page-section:eq(0)').parent().before(p);
-  // reference
+  // title reference
   } else if (!onSearchPage && $('.titlereference-header').length) {
     $('.titlereference-header').append(p);
+  // title redesign
+  } else if (!onSearchPage && $('.ipc-page-section').length) {
+    $('.ipc-page-section:eq(0)').parent().before(p);
   } else {
     console.log("IMDb Scout Mod (displayButton Error): Element not found! Please report it.");
     GM.notification("Element not found! Please report it.", "IMDb Scout Mod (displayButton Error)");
@@ -6854,19 +6857,24 @@ function displayButton() {
 // Unlike the other URLs, they aren't checked to see if the movie exists.
 function addIconBar(movie_id, movie_title, movie_title_orig) {
   var iconbar;
-  if ($('.ipc-page-section').length) {
-    iconbar = getIconsLinkArea();
   // reference + remove "Reference View" txt and a link to settings
-  } else if ($('.titlereference-header div script').length) {
+  if ($('.titlereference-header div script').length) {
     // wrap text node for removal
     $($('.titlereference-header div script')[0].nextSibling).wrap('<span class="removethis"/>');
     $('.removethis').remove();
     $('.titlereference-change-view-link').remove();
     iconbar = getIconsLinkArea();
   // in case if code above breaks
-  } else if ($('h3[itemprop="name"]').length) {
-    iconbar = $('h3[itemprop="name"]').append($('<br/>'));
+  } else if ($('.titlereference-header').length) {
+    console.log("IMDb Scout Mod (addIconBar Error): Some Reference code failed! Please report it.");
+    if ($('h3[itemprop="name"]').length) {
+      iconbar = $('h3[itemprop="name"]').append($('<br/>'));
+    }
+  // redesign
+  } else if ($('.ipc-page-section').length) {
+    iconbar = getIconsLinkArea();
   }
+
 
   $.each(icon_sites, async function(index, site) {
     if (site['show']) {
@@ -6995,12 +7003,13 @@ function getIconsLinkArea() {
     'overflow': 'hidden',
   });
   const hr = $('<hr />').css({'margin-top':'7px', 'margin-bottom':'7px', 'color':'#0d0d0d' }).prop('color','#0d0d0d');
-  if ($('.ipc-page-section').length) {
+  // reference
+  if ($('.titlereference-header div hr').first().length) {
+    $('.titlereference-header div hr').first().after(p);
+  // redesign
+  } else if ($('.ipc-page-section').length) {
     $('#scout_rating_table').after(hr);
     $('.ipc-page-section:eq(0)').parent().before(p);
-  // reference
-  } else if ($('.titlereference-header div hr').first().length) {
-    $('.titlereference-header div hr').first().after(p);
   }
   var styles = '#imdbscout_iconsheader {line-height: 16px;} ';
   GM_addStyle(styles);
@@ -7306,16 +7315,17 @@ function getLinkArea() {
   });
 
   const hr = $('<hr />').css({'margin-top':'7px', 'margin-bottom':'7px', 'color':'#0d0d0d' }).prop('color','#0d0d0d');
-  if ($('.ipc-page-section').length) {
-    $('#imdbscout_iconsheader').after(hr);
-    $('.ipc-page-section:eq(0)').parent().before(p);
   // reference
-  } else if ($('.titlereference-header').length) {
+  if ($('.titlereference-header').length) {
     $('.titlereference-header').append(p);
     if (GM_config.get('dark_reference_view')) {
       const hr = $('<hr>').css({'margin': '0px'});
       $('#imdbscout_header').after(hr);
     }
+  // redesign
+  } else if ($('.ipc-page-section').length) {
+    $('#imdbscout_iconsheader').after(hr);
+    $('.ipc-page-section:eq(0)').parent().before(p);
   }
   return $('#imdbscout_header');
 }
@@ -7359,15 +7369,16 @@ function getLinkAreaSecond() {
     }
   });
 
-  if ($('.ipc-page-section').length) {
-    $('.ipc-page-section:eq(0)').parent().before(p);
   // reference
-  } else if ($('.titlereference-header').length) {
+  if ($('.titlereference-header').length) {
     $('.titlereference-header').append(p);
     if (GM_config.get('dark_reference_view')) {
       const hr = $('<hr>').css({'margin': '0px'});
       $('#imdbscoutsecondbar_header').after(hr);
     }
+  // redesign
+  } else if ($('.ipc-page-section').length) {
+    $('.ipc-page-section:eq(0)').parent().before(p);
   }
   return $('#imdbscoutsecondbar_header');
 }
@@ -7411,15 +7422,16 @@ function getLinkAreaThird() {
     }
   });
 
-  if ($('.ipc-page-section').length) {
-    $('.ipc-page-section:eq(0)').parent().before(p);
   // reference
-  } else if ($('.titlereference-header').length) {
+  if ($('.titlereference-header').length) {
     $('.titlereference-header').append(p);
     if (GM_config.get('dark_reference_view')) {
       const hr = $('<hr>').css({'margin': '0px'});
       $('#imdbscoutthirdbar_header').after(hr);
     }
+  // redesign
+  } else if ($('.ipc-page-section').length) {
+    $('.ipc-page-section:eq(0)').parent().before(p);
   }
   return $('#imdbscoutthirdbar_header');
 }
@@ -9242,7 +9254,7 @@ function addRatingsElements(imdbid, title, title_orig) {
   if ($('.titlereference-header').length) {
     $('#main').children().first().prepend(table);
     $('#scout_rating_table').after(hr);
-  // new layout
+  // redesign
   } else if ($('.ipc-page-section').length) {
     $('.ipc-page-section:eq(0)').parent().parent().prepend(table);
   } else {
