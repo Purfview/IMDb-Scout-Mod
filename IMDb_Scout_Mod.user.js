@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      21.3.1
+// @version      21.4
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from hundreds various sites. Adds movies/series to Radarr/Sonarr. Adds external ratings from Metacritic, Rotten Tomatoes, Letterboxd, Douban, Allocine, MyAnimeList, AniList. Media Server indicators for Plex, Jellyfin, Emby. Dark theme/style for Reference View. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAMFBMVEUAAAD/AAAcAAA1AABEAABVAAC3AADnAAD2AACFAAClAABlAAB3AADHAACVAADYAABCnXhrAAAD10lEQVRIx73TV4xMURgH8H/OnRmZWe3T7h2sOWaNXu7oJRg9UccuHgTRBatMtAgSg+gJu9q+kFmihcQoD8qLTkK0CIkoy0YJITsRD0rCKTHFrnkSv5e5c88/53znO+fiPwvsvrN038cPNqrG9pJmHkRVnPcpaTlHJY60cfPSpsrzl1LKihrmLvxhCM2i3OHvDx0d+H7e3F6JBv5iZMiJfhFTfPYDMHrMImpwimWWUdSgDQkbno7fFpUPVgh+pHFbZR4SovSctDCM9Hac9IKd9rO8EevtBCkXgY5IMmgquwypP7qqfcp/Tp4KLONDVsWh3RSBB2rnZfit69ocUdqLn2prrRZYM0Jg4JibamKsqe7gfEh5GOAfeYJjVHIPZvil97rcXkMog30byWRwXYRWoxHbzNFHJJpAarO8NdEBBsdCaP3WMJltTmQd4zlnekTq9Z5dgACwAlrpK4BxdV5mvLuspRgMSHbCIFF0iS8MZ5S8oYBYKY7rByC4dDM9uSIUmPOIwxgQBoYeF93auP4qFyPbIVXziWeGTH1EFM57kJo2hqQju6BwIyRf6RmCjdT4JOdiwNgiH/PPD3qoqlsNaXRd+fKtFfECxlZVNVF9SOsgTZEr2TUjJJbyeNX1IZrKIbyGlBABfpQPv2UDrly13LkJXDVhpQ5MhtGwcyF4HKjlU4E8xwB0AvDjd6AGmevZ87EcQRHgcO52e9uNsYELOrAa/Yh81YlmYLQJ5HWyq0+kzQ/DQKEusg6CRI27ryy8nReRS0wsoetkmRwogHSprliCckfEjXG9yAQc74J0WB99vu6DF3i3pMucsXM6tpBbxd2mVJAwXwGogNRBvGRA4jtHKTXkAIwLGCR/mT4Lh75oneQXXP9sAYfGRDCsnw7pX/jRZkU3M44kjw2l5zRIzb4CbZ8dULdL6wbNPZOpK0B6gN1UR1mdoxAaL/GrWiLPL3SEwW9YMTU/d64BtLahAVyucWhj9Mm8ign9IfQaBtd2/GbvCAEBpG5eMcrj2I0ktpKLeaqXQ3Pst42KGIshpdTmQLAeTgFGJ2wvh+tayMOR0n1RZ8B9z13vnOPBnsBq4E1ffgZpPFZHWVpO2cvhjYpOcbBd5TlhpDu5zq9mHGZcVi0y+VFkcFkDdyKJfTt99wEyHSEzDM90KH0nexpwZHJHKYYhjzlwGe0pP/IKfxociaEb7YDbi6KGJY1R2cR76E6NAtXqY4pPH3plLcl8LD7V+cOLUbUWRFZRPTAbVZO3mxK18Xc1ZaAiS8ARJXpZliXAomR94siiiMx8ZBOkXGTlnH0F/9ov1xPtWwEqP9wAAAAASUVORK5CYII=
@@ -1311,6 +1311,8 @@
                   (Note: Ads removal code on the mobile browsers + the redesigned pages is disabled now.)
 
 20.3.1  -   Added: MyWarez, SceneSource, SoftArchive, Tabula Rasa.
+
+21.4    -   Fixed: Stopped working on the list & watchlist pages.
 
 
 //==============================================================================
@@ -2696,11 +2698,13 @@ var private_sites = [
       'searchUrl': 'https://hdbits.org/browse.php?c1=1&c2=1&c3=1&c4=1&c5=1&c7=1&c8=1&imdb=%tt%',
       'loggedOutRegex': /Make sure your passcode generating|nginx/,
       'matchRegex': /Nothing here!/,
+      'rateLimit': 250,
       'both': true},
   {   'name': 'HDb-Req',
       'searchUrl': 'https://hdbits.org/requests?open=&category=0&medium=0&resolution=&origin=0&is_subtitle_reseed=0&search=%tt%&filter=Filter',
       'loggedOutRegex': /Make sure your passcode generating|nginx/,
       'matchRegex': /There are no open bounty/,
+      'rateLimit': 250,
       'both': true},
   {   'name': 'HDSpace',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAACJVBMVEUAAAAICAgMDAwUFBQYGBgcHBweHh4gICAgICIkJCQmJiYoKCgqKiosLCwuLi4wMDAyMjIyMjQ0NDQ0NDY0ODg4NjY4ODg4ODw4Ojw6PD48PDw8PD48PEA8PkA+PkJAQEBAQERAQkJAQkRCQkZEREREREZEREhERkhGREZGRkhGSEpISEhISExISkpISkxITExITE5KSkxKTE5MTExMTFBMTlBMUFBOTExOUFJQUFBQUFJQUFRQUlRSUlZSVFZUVFRUVFZUVFhUVlhWVlpYWFpYWFxYWlxaWlxcXGBcXmBcYGBeXmBeYGJgYGBgYGJgYGRgYmRgZGRiZGZkZGRkZGhkZmhmaGpoaGxoamxobGxqampqam5sbGxsbHBsbnBscHBucHBucHJwcHBwcHRwcnBwdHBwdHRydHR0dHR0dHh0eHh2dnZ2eHh4eHh4eHp4eHx4enx4fHx8fIB8gIB+foKAgISAhISChIaEhIiEiIiIiIyIjIqIjIyMjI6MjJCMkI6QkJCQkJSQkpKQkpSQlJSUlJiUmJiYmJiYnJyanJyanJ6cnKCcoKCgoKCgpKSkpKimpqqmqqioqKyoqqqsrLCwsLCwsLSwtLS0tLi4uLi4uLy8vLy8vMC+wL7AwMDAwMTAxMDAxMTExMjIyMjIyMzMzMzM0NDO0tDQ0NDU2NjY2NjY2NzY3Njc4Nzc4ODg4ODk5OTk6Ojo7Ozs8PDw9PD0+PT4+PweuDG8AAADNElEQVQYGV3By25bVRQG4H/vtfY+F5/YTuLESVyqgNQSqQgGVAhRxICCuAnEpJ0xYNIBPATPwQMwYwoCBJ2WQAdQAapUNWrqxCEXJ/E5ts9l36gAMeD7xEs1FLOFMhyaTE+cS1xZKX3ACJIF0aZr+dC4kIagJZVBqQVbIgQlnL3sp4IpcQjoqLkSAk3HWHFiktJ4awKPagFJmohhglBdz9H6kmq8ayiEYJzLbSC66IT0WgpvLLGYt5MqFsEiSNG1ThuS3grFqW6gPFEC1coGKWlNIJLCwrNUsRM+CL5jk2u1n3bqY2Q21zqfeFhB0msJJZtSeLng6twn9d4UilQWgzlW4Mhbkqb16k+EFPrer/ym+cXhb1IvwrCuAyEsrHmFXit16kr3QEr8w51nCUsNRNL+cRyj37UaV0Qe4z/cYxZkKAonLsnai4cJLhWvnMyNMSTyCUA169KlXqqGsvV+8jhr92KKjoY5LqlIVfAVg4MgJPMYHdU6ia+mkGSHsb6G722MhthCERIyjKfSUPFyRGxSz8nYGzB8zaqRJJP49hTXW8NtfCg1WrNt9Jss3imQboobIro9Cvi/Txa8+bzEi4nU8ov9gCdab+BfsgOR5ad7JZKu4ulXHunbB3fw3us3b+HTdz3s5BZot4i/Bl6QQf5osfrB4n3Qa+kRcNH64MoGmccPFVZ7MuJz4IY/Pcf7ld8Gnqa6qh4B6f7PBulVE8AWcnP8ZZDPH9O3iKdw5/V3wGgErF2nwwAWCOHuMT6eTiYN1kddXZwNAVD/ZdKloERc2MMTz71T6Ggpn6tlOT6f2YDIt58Z3483OvTZ7wX05a2z5U5qDqpa1mdVYznl6NkNsb7VYZYf2c7+nxdXUJTFWFvfnlml1hVtrFS8Gj/e47t1MjyKBr2dh6IVO9ipEytZItpr5nBcmwcFl8iHSbt5cM9m7blQDKWVnIamqk9OHyW9Ne4fRDqqv/EpTaeFlqWqcTpD0lCv26Kl/li8NSHXEUUsfeMz8qwhBQYFBoPFyuh8h0u2yQwizJ2NrffOcmswxJa7sATMdn+r2M+1KrwuQFQL3+md2tkodNfLFC7ffdiovwAwkJZAwmXSqAAAAABJRU5ErkJggg==',
@@ -6708,6 +6712,7 @@ async function maybeAddLink(elem, site_name, search_url, site, scout_tick, movie
       onload: function(response) {
         if (GM_config.get('debug_sites')) {
           const name = (site['TV']) ? site['name'] + ' (TV)' : site['name'];
+          console.log(name + " URL: " + search_url + "\n ");
           console.log(name + " POST Response Status: " + response.status + "\n ");
           console.log(name + " POST Response Headers: " + response.responseHeaders + "\n ");
           console.log(name + " POST Response: " + response.responseText + "\n ");
@@ -6775,6 +6780,7 @@ async function maybeAddLink(elem, site_name, search_url, site, scout_tick, movie
     onload: function(response) {
       if (GM_config.get('debug_sites')) {
         const name = (site['TV']) ? site['name'] + ' (TV)' : site['name'];
+        console.log(name + " URL: " + search_url + "\n ");
         console.log(name + " GET Response Status: " + response.status + "\n ");
         console.log(name + " GET Response Headers: " + response.responseHeaders + "\n ");
         console.log(name + " GET Response: " + response.responseText + "\n ");
@@ -6873,8 +6879,11 @@ function displayButton() {
   }));
 
   // list
-  if (onSearchPage && $('#sidebar').length) {
-    $('#sidebar').prepend(p);
+  if (Boolean(location.href.match('/list/')) && $('.ipc-page-content-container').length) {
+    $('.ipc-page-content-container:eq(4)').append(p);
+  // watchlist
+  } else if (Boolean(location.href.match('watchlist')) && $('.ipc-page-content-container').length) {
+    $('.ipc-page-content-container:eq(4)').append(p);
   // advanced search
   } else if (onSearchPage && $('div.ipc-title hgroup h1.ipc-title__text').length) {
     $('div.ipc-title hgroup h1.ipc-title__text').parent().append(p);
@@ -7097,13 +7106,12 @@ function performSearch() {
 //   var showsites = public_sites.concat(private_sites, chinese_sites, french_sites, german_sites, usenet_sites).reduce(function (n, site) {
 //       return n + (site['show'] == true); }, 0);
 
-  var search_page = (Boolean(location.href.match('/search/'))) ? true : false;
 
-  if($('.lister-list').children().length !== 0 || $('.ipc-metadata-list-summary-item').children().length !== 0) {
-    const elems    = (search_page) ? $('.ipc-metadata-list-summary-item') : $('.lister-list');
+  if($('.ipc-metadata-list-summary-item').children().length !== 0) {
+    var elems    = $('.ipc-metadata-list-summary-item');
     elems.children().each(function() {
-      var elem     = (search_page) ? $(this).find('div:eq(0)')     : $(this);
-      var link     = (search_page) ? $(this).find('.ipc-poster>a') : $(this).find('.lister-item-image>a');
+      var elem     = $(this).find('div:eq(0)');
+      var link     = $(this).find('.ipc-poster>a');
       var movie_id = link.attr('href').match(/tt([0-9]*)\/?.*/)[1];
 
       var scout_tick = window.localStorage['_imdbscoutmod_tick'];
@@ -10219,7 +10227,7 @@ function adsRemovalReference() {
 }
 
 function adsRemoval() {
-  if (!GM_config.get('remove_ads')) {
+  if (!GM_config.get('remove_ads') || onSearchPage) {
     return;
   }
   // v21.3 fix https://github.com/Purfview/IMDb-Scout-Mod/issues/227
