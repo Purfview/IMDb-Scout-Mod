@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      21.4
+// @version      21.5
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from hundreds various sites. Adds movies/series to Radarr/Sonarr. Adds external ratings from Metacritic, Rotten Tomatoes, Letterboxd, Douban, Allocine, MyAnimeList, AniList. Media Server indicators for Plex, Jellyfin, Emby. Dark theme/style for Reference View. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAMFBMVEUAAAD/AAAcAAA1AABEAABVAAC3AADnAAD2AACFAAClAABlAAB3AADHAACVAADYAABCnXhrAAAD10lEQVRIx73TV4xMURgH8H/OnRmZWe3T7h2sOWaNXu7oJRg9UccuHgTRBatMtAgSg+gJu9q+kFmihcQoD8qLTkK0CIkoy0YJITsRD0rCKTHFrnkSv5e5c88/53znO+fiPwvsvrN038cPNqrG9pJmHkRVnPcpaTlHJY60cfPSpsrzl1LKihrmLvxhCM2i3OHvDx0d+H7e3F6JBv5iZMiJfhFTfPYDMHrMImpwimWWUdSgDQkbno7fFpUPVgh+pHFbZR4SovSctDCM9Hac9IKd9rO8EevtBCkXgY5IMmgquwypP7qqfcp/Tp4KLONDVsWh3RSBB2rnZfit69ocUdqLn2prrRZYM0Jg4JibamKsqe7gfEh5GOAfeYJjVHIPZvil97rcXkMog30byWRwXYRWoxHbzNFHJJpAarO8NdEBBsdCaP3WMJltTmQd4zlnekTq9Z5dgACwAlrpK4BxdV5mvLuspRgMSHbCIFF0iS8MZ5S8oYBYKY7rByC4dDM9uSIUmPOIwxgQBoYeF93auP4qFyPbIVXziWeGTH1EFM57kJo2hqQju6BwIyRf6RmCjdT4JOdiwNgiH/PPD3qoqlsNaXRd+fKtFfECxlZVNVF9SOsgTZEr2TUjJJbyeNX1IZrKIbyGlBABfpQPv2UDrly13LkJXDVhpQ5MhtGwcyF4HKjlU4E8xwB0AvDjd6AGmevZ87EcQRHgcO52e9uNsYELOrAa/Yh81YlmYLQJ5HWyq0+kzQ/DQKEusg6CRI27ryy8nReRS0wsoetkmRwogHSprliCckfEjXG9yAQc74J0WB99vu6DF3i3pMucsXM6tpBbxd2mVJAwXwGogNRBvGRA4jtHKTXkAIwLGCR/mT4Lh75oneQXXP9sAYfGRDCsnw7pX/jRZkU3M44kjw2l5zRIzb4CbZ8dULdL6wbNPZOpK0B6gN1UR1mdoxAaL/GrWiLPL3SEwW9YMTU/d64BtLahAVyucWhj9Mm8ign9IfQaBtd2/GbvCAEBpG5eMcrj2I0ktpKLeaqXQ3Pst42KGIshpdTmQLAeTgFGJ2wvh+tayMOR0n1RZ8B9z13vnOPBnsBq4E1ffgZpPFZHWVpO2cvhjYpOcbBd5TlhpDu5zq9mHGZcVi0y+VFkcFkDdyKJfTt99wEyHSEzDM90KH0nexpwZHJHKYYhjzlwGe0pP/IKfxociaEb7YDbi6KGJY1R2cR76E6NAtXqY4pPH3plLcl8LD7V+cOLUbUWRFZRPTAbVZO3mxK18Xc1ZaAiS8ARJXpZliXAomR94siiiMx8ZBOkXGTlnH0F/9ov1xPtWwEqP9wAAAAASUVORK5CYII=
@@ -1314,6 +1314,9 @@
 
 21.4    -   Fixed: Stopped working on the list & watchlist pages.
 
+21.5    -   New feature: Support the dynamic elements on the List/Watchlist/Advanced Title Search pages.
+            Removed: MovieTorrentz, PS (aka Polishsource).
+
 
 //==============================================================================
 //    Notes.
@@ -1544,8 +1547,8 @@ var public_sites = [
       'matchRegex': />0 results found/,
       'TV': true},
   {   'name': 'Comando4K',
-      'icon': 'https://comando4ktorrent.org/favicon-32x32.png',
-      'searchUrl': 'https://comando4ktorrent.org/?s="%search_string_orig%"',
+      'icon': 'https://comando4kfilmes.site/favicon-32x32.png',
+      'searchUrl': 'https://comando4kfilmes.site/?s="%search_string_orig%"',
       'loggedOutRegex': /Cloudflare|Ray ID/,
       'matchRegex': /Nenhum Arquivo Encontrado/,
       'both': true},
@@ -2976,15 +2979,6 @@ var private_sites = [
       'loggedOutRegex': /Cloudflare|Ray ID|Niste prijavljeni|Prijava!|Prijava</,
       'matchRegex': /ni vrnilo rezultatov/,
       'TV': true},
-  {   'name': 'MovieTorrentz',
-      'searchUrl': 'https://m2g.link/torrents-search.php?c112=1&c127=1&c113=1&c108=1&c110=1&c109=1&c126=1&c107=1&search=%search_string%+%year%',
-      'loggedOutRegex': /Cloudflare|Ray ID|Recover Account/,
-      'matchRegex': /Nothing Found/},
-  {   'name': 'MovieTorrentz',
-      'searchUrl': 'https://m2g.link/torrents-search.php?c116=1&c115=1&c128=1&c114=1&search=%search_string%',
-      'loggedOutRegex': /Cloudflare|Ray ID|Recover Account/,
-      'matchRegex': /Nothing Found/,
-      'TV': true},
   {   'name': 'MP',
       'searchUrl': 'https://majomparade.eu/letoltes.php?tipus=1&k=yes&name=https://www.imdb.com/title/%tt%&category[]=&tipuska=0&imdb_search=yes',
       'loggedOutRegex': /Cloudflare|Ray ID|Az oldal használatához/,
@@ -3147,17 +3141,6 @@ var private_sites = [
       'searchUrl': 'https://portugas.org/requests?unfilled=1&imdbId=%tt%',
       'loggedOutRegex': /Cloudflare|Ray ID|content="Login/,
       'matchRegex': /fa-circle/,
-      'positiveMatch': true,
-      'both': true},
-  {   'name': 'PS',
-      'searchUrl': 'https://polishsource.cz/browse.php?search=%tt%&incldead=1&scene=0&pl=0&sub=&search_in=nfo',
-      'loggedOutRegex': /Cloudflare|Ray ID|Rejestracja</,
-      'matchRegex': /Nic nie znaleziono/,
-      'both': true},
-  {   'name': 'PS-Req',
-      'searchUrl': 'https://polishsource.cz/viewrequests.php?action=search&keywords=%search_string_orig%&filter=hide',
-      'loggedOutRegex': /Cloudflare|Ray ID|Rejestracja</,
-      'matchRegex': />Nie</,
       'positiveMatch': true,
       'both': true},
   {   'name': 'PTE',
@@ -4079,8 +4062,7 @@ var french_sites = [
       'matchRegex': /Nothing found/,
       'both': true},
   {   'name': 'Tor911',
-      'icon': 'https://www.torrent911.tv/themes/default/img/favicon.ico',
-      'searchUrl': 'https://www.torrent911.tv/recherche/%search_string_orig%',
+      'searchUrl': 'https://www.torrent911.news//recherche/%search_string_orig%',
       'loggedOutRegex': /Cloudflare|Ray ID/,
       'matchRegex': /Pas de torrents disponibles/,
       'both': true},
@@ -5668,7 +5650,7 @@ var icon_sites_main = [
       'searchUrl': 'https://letterboxd.com/imdb/%nott%',
       'showByDefault': false},
   {   'name': 'Lumiere',
-      'icon': 'https://lumiere.obs.coe.int/assets/favicon-03b96b55.ico',
+      'icon': 'https://lumiere.obs.coe.int/assets/favicon-C0fz857l.ico',
       'searchUrl': 'https://lumiere.obs.coe.int/web/search/',
       'mPOST': 'search=search&title=%search_string%&search.x=0&search.y=0',
       'showByDefault': false},
@@ -7107,27 +7089,51 @@ function performSearch() {
 //       return n + (site['show'] == true); }, 0);
 
 
-  if($('.ipc-metadata-list-summary-item').children().length !== 0) {
-    var elems    = $('.ipc-metadata-list-summary-item');
-    elems.children().each(function() {
-      var elem     = $(this).find('div:eq(0)');
-      var link     = $(this).find('.ipc-poster>a');
-      var movie_id = link.attr('href').match(/tt([0-9]*)\/?.*/)[1];
-
-      var scout_tick = window.localStorage['_imdbscoutmod_tick'];
-      if (!scout_tick) {
-        scout_tick = 1;
-        window.localStorage['_imdbscoutmod_tick'] = scout_tick;
-      }
-
-      performSearchSecondPart(elem, link, movie_id, showsites, scout_tick);
-      scout_tick = parseInt(scout_tick) + 1;
-      window.localStorage['_imdbscoutmod_tick'] = scout_tick;
+  if($('.ipc-metadata-list').length && $('.ipc-metadata-list-summary-item').children().length !== 0) {
+    $('.ipc-metadata-list-summary-item').each(function() {
+      processListElement($(this), showsites);
     });
+
+    // MutationObserver callback // Because 25+/50+ '.ipc-metadata-list-summary-item' elems are dynamically loaded
+    var observerCallback = function(mutationsList, observer) {
+      mutationsList.forEach(function(mutation) {
+        if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+          $(mutation.addedNodes).each(function() {
+            // Only process if the added node is a new '.ipc-metadata-list-summary-item' element
+            if ($(this).hasClass('ipc-metadata-list-summary-item')) {
+              processListElement($(this), showsites);
+            }
+          });
+        }
+      });
+    };
+
+    var targetNode = document.querySelector('.ipc-metadata-list'); // Select the parent node of '.ipc-metadata-list-summary-item' to observe
+    var observerOptions = {childList: true, subtree: true};        // Observer options
+    var observer = new MutationObserver(observerCallback);         // Create a MutationObserver instance
+    observer.observe(targetNode, observerOptions);                 // Start observing
   } else {
     console.log("IMDb Scout Mod (Lists): Element not found! Please report it.");
     GM.notification("Element not found! Please report it.", "IMDb Scout Mod (Lists)");
   }
+}
+
+function processListElement(element, showsites) {
+  element.children().each(function() {
+    const elem     = $(this).find('div:eq(0)');
+    const link     = $(this).find('.ipc-poster>a');
+    const movie_id = link.attr('href').match(/tt([0-9]*)\/?.*/)[1];
+
+    let scout_tick = window.localStorage['_imdbscoutmod_tick'];
+    if (!scout_tick) {
+      scout_tick = 1;
+      window.localStorage['_imdbscoutmod_tick'] = scout_tick;
+    }
+
+    performSearchSecondPart(elem, link, movie_id, showsites, scout_tick);
+    scout_tick = parseInt(scout_tick) + 1;
+    window.localStorage['_imdbscoutmod_tick'] = scout_tick;
+  });
 }
 
 function performSearchSecondPart(elem, link, movie_id, showsites, scout_tick) {
