@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      21.5
+// @version      21.5.1
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from hundreds various sites. Adds movies/series to Radarr/Sonarr. Adds external ratings from Metacritic, Rotten Tomatoes, Letterboxd, Douban, Allocine, MyAnimeList, AniList. Media Server indicators for Plex, Jellyfin, Emby. Dark theme/style for Reference View. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAMFBMVEUAAAD/AAAcAAA1AABEAABVAAC3AADnAAD2AACFAAClAABlAAB3AADHAACVAADYAABCnXhrAAAD10lEQVRIx73TV4xMURgH8H/OnRmZWe3T7h2sOWaNXu7oJRg9UccuHgTRBatMtAgSg+gJu9q+kFmihcQoD8qLTkK0CIkoy0YJITsRD0rCKTHFrnkSv5e5c88/53znO+fiPwvsvrN038cPNqrG9pJmHkRVnPcpaTlHJY60cfPSpsrzl1LKihrmLvxhCM2i3OHvDx0d+H7e3F6JBv5iZMiJfhFTfPYDMHrMImpwimWWUdSgDQkbno7fFpUPVgh+pHFbZR4SovSctDCM9Hac9IKd9rO8EevtBCkXgY5IMmgquwypP7qqfcp/Tp4KLONDVsWh3RSBB2rnZfit69ocUdqLn2prrRZYM0Jg4JibamKsqe7gfEh5GOAfeYJjVHIPZvil97rcXkMog30byWRwXYRWoxHbzNFHJJpAarO8NdEBBsdCaP3WMJltTmQd4zlnekTq9Z5dgACwAlrpK4BxdV5mvLuspRgMSHbCIFF0iS8MZ5S8oYBYKY7rByC4dDM9uSIUmPOIwxgQBoYeF93auP4qFyPbIVXziWeGTH1EFM57kJo2hqQju6BwIyRf6RmCjdT4JOdiwNgiH/PPD3qoqlsNaXRd+fKtFfECxlZVNVF9SOsgTZEr2TUjJJbyeNX1IZrKIbyGlBABfpQPv2UDrly13LkJXDVhpQ5MhtGwcyF4HKjlU4E8xwB0AvDjd6AGmevZ87EcQRHgcO52e9uNsYELOrAa/Yh81YlmYLQJ5HWyq0+kzQ/DQKEusg6CRI27ryy8nReRS0wsoetkmRwogHSprliCckfEjXG9yAQc74J0WB99vu6DF3i3pMucsXM6tpBbxd2mVJAwXwGogNRBvGRA4jtHKTXkAIwLGCR/mT4Lh75oneQXXP9sAYfGRDCsnw7pX/jRZkU3M44kjw2l5zRIzb4CbZ8dULdL6wbNPZOpK0B6gN1UR1mdoxAaL/GrWiLPL3SEwW9YMTU/d64BtLahAVyucWhj9Mm8ign9IfQaBtd2/GbvCAEBpG5eMcrj2I0ktpKLeaqXQ3Pst42KGIshpdTmQLAeTgFGJ2wvh+tayMOR0n1RZ8B9z13vnOPBnsBq4E1ffgZpPFZHWVpO2cvhjYpOcbBd5TlhpDu5zq9mHGZcVi0y+VFkcFkDdyKJfTt99wEyHSEzDM90KH0nexpwZHJHKYYhjzlwGe0pP/IKfxociaEb7YDbi6KGJY1R2cR76E6NAtXqY4pPH3plLcl8LD7V+cOLUbUWRFZRPTAbVZO3mxK18Xc1ZaAiS8ARJXpZliXAomR94siiiMx8ZBOkXGTlnH0F/9ov1xPtWwEqP9wAAAAASUVORK5CYII=
@@ -1310,12 +1310,14 @@
 21.3    -   Fixed: Stopped working with the mobile browsers on the redesigned pages.
                   (Note: Ads removal code on the mobile browsers + the redesigned pages is disabled now.)
 
-20.3.1  -   Added: MyWarez, SceneSource, SoftArchive, Tabula Rasa.
+21.3.1  -   Added: MyWarez, SceneSource, SoftArchive, Tabula Rasa.
 
 21.4    -   Fixed: Stopped working on the list & watchlist pages.
 
 21.5    -   New feature: Support the dynamic elements on the List/Watchlist/Advanced Title Search pages.
             Removed: MovieTorrentz, PS (aka Polishsource).
+
+21.5.1  -   Added: Vimeo.
 
 
 //==============================================================================
@@ -3422,8 +3424,8 @@ var private_sites = [
       'positiveMatch': true,
       'TV': true},
   {   'name': 'TBD',
-      'icon': 'https://1.bp.blogspot.com/-F2JeKtPCJYI/VgjpVxwMO4I/AAAAAAAAADg/VyNyp-yW9Ac/s1600/TBD.ico',
-      'searchUrl': 'https://www.torrentbd.net/torrent/movies.php?module=torrents&id=%nott%',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAyVBMVEUAAABotPRotPRotPRotPRotPRotPNotPRotPNotPRotPRotPRotPRotPRotPRotPRotPRotPRotPRIeqtotPNotPNkreo8ZZBPh7totPNotPRotPVntPRotPRotPQnPmAmPF5ptvZfpOAuS3Bns/JmsfAvTXQpQWRkru1EcqJCb509ZpI5XoksSW1jq+lgp+RUkMdMgrU/apc7Y441V4AyUnleot5YmNBKfrAlO11iqudcoNpWlMxPiL1HeKk2WoQqQ2ZFdaU0Vn4rPl1mAAAAHnRSTlMA2TX96t+sl/ts8okawEE4KsMp/Yka8vLZw4hoJxgge5THAAABh0lEQVQ4y2WTh3KCQBCGT1GasWt6FgEpIiIg2GJL3v+hcguGFfhmZHT+77h1b48RI0VsqIKgNkRlxOo0pbYMd+S21KzET50WlGh1nkrLhwJUEIYPL+k1KCAavWI95WWjed+/Cw/oCOR0vxjSKRKw3KNhbI310Z1nv98x77cwBXcb7j3/NzXNlWmnycaLTobV6nNB4nEQLq4rZ4ZonPyLY/o7ibFBG+CU8FAj0OCfg7NrD5giQ5ActDL28hKN401kyQoTAdY2X47vvMfOwphjiXNenMh4D6zlYabZcRT+3DLBs3TqBVP5c7vwzrjI8rGS1TfloDLhvwv4WOBeVxcIgQtELiznJUGFB+KaoPIiCctHYYMCFSkC4SY1QcRGFQRpdQtZwVYX5B2LgeCtZhL9iVzwgJCy4y4Ew8SDuug0un0aGBL2JExo5EjQzoXQndLQkuCEOg0tjT0Jt51OY1+6OCjQYQpvzcrVQ2HFa0yDrP7JtH55BcPmc7Wny1vh80N8ffHHz+Xr/wc0EWKQhxzK5AAAAABJRU5ErkJggg==',
+      'searchUrl': 'https://www.torrentbd.net/torrent/movies.php?module=torrents&id=%tt%',
       'loggedOutRegex': /<title>TorrentBD : Login</,
       'matchRegex': /This title is not available!/,
       'both': true},
@@ -5840,6 +5842,10 @@ var icon_sites_main = [
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFQAAABUAQMAAAAmpYKCAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAAAGUExURcIuFP///1hzcc8AAACXSURBVCjP5dHBDcMgDAVQIw4cGYFNwmIVsEFWYoOuwAblyMEqjalSWxEskH7pS+9o+QPcLf7o43QSzguXhatwWxjZWxCOwn5YF7Bpc2lum9mmzK0rW7W5AYXfwkHYL+wS2+a5TWHrOrdqbMCv3dUB2fRGVY+1LnbkBpFsyaj6aej7i2yG+/Pn2HeyJrs+blBki4YMDf45H2h2eZI+A8LwAAAAAElFTkSuQmCC',
       'searchUrl': 'https://unogs.com/?q=%search_string%',
       'showByDefault': false},
+  {   'name': 'Vimeo',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgBAMAAACBVGfHAAAAGFBMVEUAAAAAre/+///N7/yc3/ley/UYtfE0vvJYPvcWAAAAAXRSTlMAQObYZgAAAKpJREFUKM+N0k0OwiAQBWC8gaP9Wfto7brEuLc3QL0ANh6gev9EJlIGZdHOgsCXlwxhUEpRUiqeRTa/sM2B/motPCe/3E/TDAU6ohE4BqgMNNEAtAHeAFwJoPlCDV+2MBHKxgAXKiOQe3jgYCdd0HOiD8D7A+0BO0PF6Su03NSgZRQYoG+AFXgB3FRgx3AW4L7QLoE6BCKQ4UAKI7dIgdz6R16eXDbs7Dt8AIGVLrSKQeLDAAAAAElFTkSuQmCC',
+      'searchUrl': 'https://vimeo.com/search?q=%search_string_orig%',
+      'showByDefault': false},
   {   'name': 'VHS Collector',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACAAgMAAAC+UIlYAAAADFBMVEUAAAD5+fmUlJRPT09kaVR8AAACCUlEQVRYw+3VMY6bUBAG4MHIBQVJxREcKQegSMcRUMIA0aKIOhVH8CWQIqWOFKEUe4R3CY6QFKn2ACt5Z8Z+zABau1l3/JKFn/iM3/Dm6cGWLVu23DEjXklFoL8GSgI/T1fyj8APuJIPbwN2w/CHrv9/05cjXWUUDhx3BogFl1sHiBmXXdPoL3LOIDyDpDEgvhQpABCrOfAPqC6gJ0ogVxAiPtBbeL6AEZFBqyBCdECZg07BAQswIBE/KqBPbgB5pPr7TAFitwAZgeMEdvILBancQAXBAuz5iSG6CcSIzgAuqiUArwIa57AzINK/UBCUM5AZwDcaCKoZaC2gqmqI56C2IORxVMwmWS5AAVE9A9gZIA2xNyAgUDoF0hBpo2CHLB4V8HqnuQJAEW4GDq0Bo4jGA2mIxIIUJc4DboixMyA+g84DXm8L/JZvDOj6zIJIQOEBNwQeYbWzSg/ItwsQ/mLhQYz4BZ0BLHouQ8FnBAbfh8Gv5CcCRwFy51vJF44HoQJuiK8EIplYT0AyKmBc8fui1KMH6RwUAB95Dm4CkQIQYKqQxAb0MrM1cB6MrwDwIEFsViDC0oJ8BfZYecAFtitwwHoC6QrIzHMLuiV4ZzoK9gvQowQmILt11dW1gnhRRSLgUUGweA+ybA+gIDydnsDk/YkCAu5/JN08Fm8erLeP5i1btmy5X14AdyCxIih+5IwAAAAASUVORK5CYII=',
       'searchUrl': 'https://vhscollector.com/artwork?search_api_title=%search_string%',
@@ -6592,6 +6598,15 @@ function addLink(elem, site_name, target, site, state, scout_tick, post_data) {
         GM.openInTab(link);
       });
     }
+    if (site['name'] == "TBD") {
+      const button = $('span[id*='+ scout_tick +']').find('img[title="TBD"]').parent();
+      const link = button.attr('href');
+            button.prop("href", "javascript: void(0)");
+            button.removeAttr("target");
+      button.click(function() {
+        GM.openInTab(link);
+      });
+    }
   }
   // Hack: Same-origin problem with POST, so remove 'onclick' form (icons mode only).
   if (site['name'] == "SFP-Req") {
@@ -6627,6 +6642,15 @@ function iconToButtonHack() {
   }
   if ($('img[title="TorSyndikat-Produkt"]').length) {
     const button = $('img[title="TorSyndikat-Produkt"]').parent();
+    const link = button.attr('href');
+          button.prop("href", "javascript: void(0)");
+          button.removeAttr("target");
+    button.click(function() {
+      GM.openInTab(link);
+    });
+  }
+  if ($('img[title="TBD"]').length) {
+    const button = $('img[title="TBD"]').parent();
     const link = button.attr('href');
           button.prop("href", "javascript: void(0)");
           button.removeAttr("target");
