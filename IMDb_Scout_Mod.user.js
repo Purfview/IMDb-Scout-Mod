@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      21.5.2
+// @version      21.5.3
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from hundreds various sites. Adds movies/series to Radarr/Sonarr. Adds external ratings from Metacritic, Rotten Tomatoes, Letterboxd, Douban, Allocine, MyAnimeList, AniList. Media Server indicators for Plex, Jellyfin, Emby. Dark theme/style for Reference View. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAMFBMVEUAAAD/AAAcAAA1AABEAABVAAC3AADnAAD2AACFAAClAABlAAB3AADHAACVAADYAABCnXhrAAAD10lEQVRIx73TV4xMURgH8H/OnRmZWe3T7h2sOWaNXu7oJRg9UccuHgTRBatMtAgSg+gJu9q+kFmihcQoD8qLTkK0CIkoy0YJITsRD0rCKTHFrnkSv5e5c88/53znO+fiPwvsvrN038cPNqrG9pJmHkRVnPcpaTlHJY60cfPSpsrzl1LKihrmLvxhCM2i3OHvDx0d+H7e3F6JBv5iZMiJfhFTfPYDMHrMImpwimWWUdSgDQkbno7fFpUPVgh+pHFbZR4SovSctDCM9Hac9IKd9rO8EevtBCkXgY5IMmgquwypP7qqfcp/Tp4KLONDVsWh3RSBB2rnZfit69ocUdqLn2prrRZYM0Jg4JibamKsqe7gfEh5GOAfeYJjVHIPZvil97rcXkMog30byWRwXYRWoxHbzNFHJJpAarO8NdEBBsdCaP3WMJltTmQd4zlnekTq9Z5dgACwAlrpK4BxdV5mvLuspRgMSHbCIFF0iS8MZ5S8oYBYKY7rByC4dDM9uSIUmPOIwxgQBoYeF93auP4qFyPbIVXziWeGTH1EFM57kJo2hqQju6BwIyRf6RmCjdT4JOdiwNgiH/PPD3qoqlsNaXRd+fKtFfECxlZVNVF9SOsgTZEr2TUjJJbyeNX1IZrKIbyGlBABfpQPv2UDrly13LkJXDVhpQ5MhtGwcyF4HKjlU4E8xwB0AvDjd6AGmevZ87EcQRHgcO52e9uNsYELOrAa/Yh81YlmYLQJ5HWyq0+kzQ/DQKEusg6CRI27ryy8nReRS0wsoetkmRwogHSprliCckfEjXG9yAQc74J0WB99vu6DF3i3pMucsXM6tpBbxd2mVJAwXwGogNRBvGRA4jtHKTXkAIwLGCR/mT4Lh75oneQXXP9sAYfGRDCsnw7pX/jRZkU3M44kjw2l5zRIzb4CbZ8dULdL6wbNPZOpK0B6gN1UR1mdoxAaL/GrWiLPL3SEwW9YMTU/d64BtLahAVyucWhj9Mm8ign9IfQaBtd2/GbvCAEBpG5eMcrj2I0ktpKLeaqXQ3Pst42KGIshpdTmQLAeTgFGJ2wvh+tayMOR0n1RZ8B9z13vnOPBnsBq4E1ffgZpPFZHWVpO2cvhjYpOcbBd5TlhpDu5zq9mHGZcVi0y+VFkcFkDdyKJfTt99wEyHSEzDM90KH0nexpwZHJHKYYhjzlwGe0pP/IKfxociaEb7YDbi6KGJY1R2cR76E6NAtXqY4pPH3plLcl8LD7V+cOLUbUWRFZRPTAbVZO3mxK18Xc1ZaAiS8ARJXpZliXAomR94siiiMx8ZBOkXGTlnH0F/9ov1xPtWwEqP9wAAAAASUVORK5CYII=
@@ -1321,6 +1321,8 @@
 
 21.5.2  -   Removed: STC, Subdbs, TSP, Aniwave
 
+21.5.3  -   Removed: GD (GreekDiamond)
+
 
 //==============================================================================
 //    Notes.
@@ -1781,6 +1783,7 @@ var public_sites = [
       'matchRegex': /cols":\["id/,
       'TV': true},
   {   'name': 'PB',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAM1BMVEXN/wAAAAA5RwBuiQCcwwANEQBUaQApNACx3QCn0AC97ACRtQCGpwBiegBFVwAcIwB6mADOJ1nPAAAAmUlEQVQ4y9WQSxKEIAxEiXT4qKNz/9NOQg2oKWStvekAj0rS7jGaSMUbpIYXBYphtoBqdc7XmlMHoHQAFC5ABPTJFwBYmIgvwCQWibYCSP1Rs4BaBRaxPAIglkbAOmhRZ9jvAeCrG1kAdc0aQy+o3AD2PSC0qG2L9uk/5BzlaKMuuZxzgN3iUQCAKJZuAZVejQHOQ2APyb1GPxX4A4UYVbGOAAAAAElFTkSuQmCC',
       'searchUrl': 'https://pb.wtf/tracker/?ss=%search_string_orig%+%year%',
       'loggedOutRegex': /Cloudflare|Ray ID/,
       'matchRegex': /Не найдено|No matches found/,
@@ -2640,11 +2643,6 @@ var private_sites = [
       'searchUrl': 'https://gay-torrents.org/torrents_beta.php?search=%search_string_orig%',
       'loggedOutRegex': /Cloudflare|Ray ID|not authorized/,
       'matchRegex': /No torrents here/},
-  {   'name': 'GD',
-      'searchUrl': 'https://greekdiamond.info/index.php?page=torrents&search=%search_string_orig%',
-      'loggedOutRegex': /Cloudflare|Ray ID|Δεν είστε εξουσιοδοτημένος/,
-      'matchRegex': />0<\/span> matches/,
-      'both': true},
   {   'name': 'GimmePeers',
       'searchUrl': 'https://www.gimmepeers.com/browse.php?search=%search_string_orig%+%year%&cat=0&blah=0',
       'loggedOutRegex': /Cloudflare|Ray ID|Reset Password/,
@@ -3932,17 +3930,11 @@ var french_sites = [
       'TV': true},
   {   'name': 'Cpasbien',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADwAAAA8BAMAAADI0sRBAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAAAPUExUReYbI/8AAP///+YbI/8AAFZq/VQAAAADdFJOUwAAAPp2xN4AAAECSURBVDjLpdXtDQIhDAbgah1ANrjoAo3vAl7C/jP54xDpByXm+u/yAMmVttAjDTrLG/2CAfSPq2G0iBk9xDMDxhUD1keGCc0M7wM7hQzsNwMDBwrpHG0GOoeKV2PW2Zqx6Ox+Dzfalothfa/9x9hsPo4Xw6TLoifVbyaCGCYiuuyllFLKnZgCvtW9MRmWg6vjp+K64Boyda4L3nOue871fYYXh///Y9O0bHlS1Y0dVzbl2YVCVDkM1cK+mMZaC0pRNbCrRVXnvg10l7Bx1j3Get6x6VAa5xG5/l5NB85nSzg98sEl+djLZ6po5nwiG/evARu1j4WZfu6paQv0S3TimfsA3CnPz7CoD14AAAAASUVORK5CYII=',
-      'searchUrl': 'https://cpasbien.tw/search_torrent/films/%search_string_orig%.html',
+      'searchUrl': 'https://cpasbien.st/recherche/%search_string_orig%',
       'loggedOutRegex': /Cloudflare|Ray ID/,
-      'matchRegex': />0 torrents/,
-      'spaceEncode': ' '},
-  {   'name': 'Cpasbien',
-      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADwAAAA8BAMAAADI0sRBAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAAAPUExUReYbI/8AAP///+YbI/8AAFZq/VQAAAADdFJOUwAAAPp2xN4AAAECSURBVDjLpdXtDQIhDAbgah1ANrjoAo3vAl7C/jP54xDpByXm+u/yAMmVttAjDTrLG/2CAfSPq2G0iBk9xDMDxhUD1keGCc0M7wM7hQzsNwMDBwrpHG0GOoeKV2PW2Zqx6Ox+Dzfalothfa/9x9hsPo4Xw6TLoifVbyaCGCYiuuyllFLKnZgCvtW9MRmWg6vjp+K64Boyda4L3nOue871fYYXh///Y9O0bHlS1Y0dVzbl2YVCVDkM1cK+mMZaC0pRNbCrRVXnvg10l7Bx1j3Get6x6VAa5xG5/l5NB85nSzg98sEl+djLZ6po5nwiG/evARu1j4WZfu6paQv0S3TimfsA3CnPz7CoD14AAAAASUVORK5CYII=',
-      'searchUrl': 'https://cpasbien.tw/search_torrent/series/%search_string_orig%.html',
-      'loggedOutRegex': /Cloudflare|Ray ID/,
-      'matchRegex': />0 torrents/,
+      'matchRegex': /Pas de torrents disponibles/,
       'spaceEncode': ' ',
-      'TV': true},
+      'both': true},
   {   'name': 'Francomac',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADwAAAA8BAMAAADI0sRBAAAAMFBMVEUAAACap4p6pJqisJiwrIS0to9pmpaYu5uNqqOOfT9mi3yGmoDExZOdvLCwmlRIf3Udke/SAAAAAXRSTlMAQObYZgAAAulJREFUOMvtjzGL1EAYhucvfJvIiVs5YgxnNY5hA2IRdlIpwnEJCp6FIwwSq/M4ZwstdgM6KBaWUbjiioA58NhTD7kBbdwujQruFqYQLFyU/ICziJO9fyE+MJDwfO8376D//GOoU3QzZmBdXbGGVm/D7k0fTKu7nAv86JGUaHTSOt8HgN66DZY81hu4Usq7QnDnDmzE6C6WG1IOl5bWgSjZk/f45np3jDnXr37YIZrKliUIlgaWlA/ksnhfz190zmxGV+bZwZGmNoBZUlUPBrl4mWXZd3n/4zzLNGrthkd7BKxWSyfJDM+ulh/nv7KfqDTa6km5DnJaTQczt9vqrcvlpK5/vUZlWcYsJGZo8+pAOtjsbvXvlehKPaZGG792Xa+VkxUHVzwx2vC28+ZKTVs9mZTlNWKGHPe2/1UcaY5Pskv0IooZC8uJfxbIPn/6GStnoZ/nHO+dcFMU2PFafH1vljs5V0Lw2UK/yJNtvCxuIS+K7CieKcwf7m5j7NzJWnRR5ImZR0/AgkvUVQ5/XGzHPheL3TxpDpN3TxUqCrG/K0xMFMVt75x77mVWZJlFm2bnYjVDy8Xhi0Lrg6JpjH54u2O+s621smn+VJVCB8+LBY1BfXt8ajTuagCV7h6evWh0V2stTCIvmlytftgpdosiSVJKUhaau8s4YtCFfkckfKQS0ZY4FOl5xur6p0LjS1pwnJgjzBkphdVy7qR1Xc+36jE6W+S54A7HBp5SSoBYhFJ74beQHdgAgBeI05RSCGMDi72IaI1s1kI7Joudm9RjXmtXFyMsRMCOACxM/hhlcRnHUTvhBUZ3CQvPmwvCoOMI96Rncob+l9CjbTogNgsIgBXHZGj5qRdGYUxtn8arNgkRUYwFT3Y0WKaSV1HKzL+vfEVcdQHQp1aPdRfAXg29trnN+v4IK9yC/D3THQKtCAQAQNTQSoEed4+3T+FoxU9Nhb5SykjreFp9ufFp3IUhaL0vXPSff4u/Gsl2CI3KRskAAAAASUVORK5CYII=',
       'searchUrl': 'https://kebekmac.forum-canada.com/search?search_keywords=%tt%&search_by=text',
@@ -4035,9 +4027,11 @@ var french_sites = [
       'matchRegex': /Nothing found/,
       'both': true},
   {   'name': 'Tor911',
-      'searchUrl': 'https://www.torrent911.news//recherche/%search_string_orig%',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAACbSURBVHjaYjQ2Nv7PMACAiWGAwMizmAXGePToEcPr169pZhE7OzuDqKgog7i4OKrFr1+/Zjhz5gzNLH769ClDWFgY3OLRxDWCUrWoqCiDiYkJXsVBQUEMVVVVWBOOv78/Uakaw2I5OTkGOTk5nBrfvHlD0GAdHZ3ROB61eNTiUYtHLR61eAhbzEhKTwJXSxS9BUl1i0fjmBIAGAAcECVlm4BIrAAAAABJRU5ErkJggg==',
+      'searchUrl': 'https://www.torrent911.ps/recherche/%search_string_orig%',
       'loggedOutRegex': /Cloudflare|Ray ID/,
       'matchRegex': /Pas de torrents disponibles/,
+      'spaceEncode': ' ',
       'both': true},
   {   'name': 'TOS',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABAAgMAAADXB5lNAAAADFBMVEUAAADyFXnyWZ7vMofMliBtAAAAAXRSTlMAQObYZgAAAdFJREFUOMudk71KxEAUhcOk2oRg5SOIoGS3WgQrH8K7YyGrj5DSzmF9BvuUElGrgIg/eQiHbacUKxthETSeO7mTKHZe2GHnY3Luz5yJ/h2qqswvcNm2rz/3lY9hn3zxelMOBy543bruFVdYIDoJupMy+Yrb1iUrAY/Rts6ITvBHvlDv+wBHTr5J3TYd5IQjqeskzAMVU4A51L2EsnRsCWE6kVVK1HjgJl7T5aTPWg6XNqxpatKq4ihjVl0zlmah5jcs44Wlg9DFLX53SFLwZnTaumuGnJUBkhVjzhpZarwAap14UOuuB2gBqJcylyTnNE9NpMr7bN6BKekEwDyPJCsqVgaFLuOiAyMAB2Ab14E4gCIUbvXCg5NQOMAxg3kAtYBZABsCdAC5ALQieUUUzUrepeqA5M0UAwUQSt9bKm6uptBcscPNuSvS0v5hkhoMKKcwIB35iWUURqjNJg85JRkyAA95N1l+eoCTjsHY4A59VoBbf5VRP9IFXyUy9UNXztshbTkiC081wTAIZWGY3lJEOkbWRzFdDTDL2HTBlgCHGduyNy4ufhqMCxGuqViHtQfzw4FPZW9+1qq8eiTR9ZIASiQfwxP7+wiHZ/r3If83vgHfvOgPcdehwgAAAABJRU5ErkJggg==',
@@ -5627,11 +5621,11 @@ var icon_sites_main = [
       'showByDefault': false},
   {   'name': 'Movie-Web (Movie)',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwAgMAAAAqbBEUAAAADFBMVEUrHDfBbtB8SIpWM2Nt8a5XAAAAoklEQVQoz73PsQ0DIQwFUJSOSCkzAiPQ3Rj5QCSk0KTPCLcESpulyCbXH5bP4AnuV/zi2cacm596X7IqVhf3UaWWMgmeaZIXwiSlYR0kA0VIAJDGlgqEQe4AhCQAD0WQloM0dPNnkom0wCQS8Tz7W3uJnrcuDj31uIeIk6VErJxDxxDh2YoYC/gwfx2JDLR1IuiNTgRZIpJbUsUXXVZVrubU7E+yMdlRcx+BAAAAAElFTkSuQmCC',
-      'searchUrl': 'https://mw.lonelil.com/media/tmdb-movie-%tmdbid%',
+      'searchUrl': 'https://www.vidbinge.com/media/tmdb-movie-%tmdbid%',
       'showByDefault': false},
   {   'name': 'Movie-Web (TV)',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwAgMAAAAqbBEUAAAADFBMVEUrHDfBbtB8SIpWM2Nt8a5XAAAAoklEQVQoz73PsQ0DIQwFUJSOSCkzAiPQ3Rj5QCSk0KTPCLcESpulyCbXH5bP4AnuV/zi2cacm596X7IqVhf3UaWWMgmeaZIXwiSlYR0kA0VIAJDGlgqEQe4AhCQAD0WQloM0dPNnkom0wCQS8Tz7W3uJnrcuDj31uIeIk6VErJxDxxDh2YoYC/gwfx2JDLR1IuiNTgRZIpJbUsUXXVZVrubU7E+yMdlRcx+BAAAAAElFTkSuQmCC',
-      'searchUrl': 'https://mw.lonelil.com/media/tmdb-tv-%tmdbid%',
+      'searchUrl': 'https://www.vidbinge.com/media/tmdb-tv-%tmdbid%',
       'showByDefault': false},
   {   'name': 'MovieBuff',
       'searchUrl': 'https://www.moviebuff.com/search?q=%search_string_orig%',
@@ -7688,7 +7682,7 @@ async function activate_CheckURLs(button, completed_icon) {
       deduped_hosts = deduped_hosts.filter(function (e) {return e !== 'https://www.torrentdownloads.pro';}); // ISP block
       deduped_hosts = deduped_hosts.filter(function (e) {return e !== 'https://www.dnoid.to';});             // ISP block
       deduped_hosts = deduped_hosts.filter(function (e) {return e !== 'https://search.rlsbb.cc';});          // ISP block
-      deduped_hosts = deduped_hosts.filter(function (e) {return e !== 'https://www.scnsrc.me';});          // ISP block
+      deduped_hosts = deduped_hosts.filter(function (e) {return e !== 'https://www.scnsrc.me';});            // ISP block
 
   const interval = 100;
   const timeout = 45000;
@@ -7705,11 +7699,11 @@ async function activate_CheckURLs(button, completed_icon) {
         onload: function(response) {
           const s = response.status;
           countdown_CheckURLs(button, completed_icon);
-          if (s != 200 && s != 403 && s != 302) {
+          if (s != 200 && s != 403 && s != 302) {  // 403 - cloudflare challenge, 302 - www.bit-hdtv.com
             console.log("IMDb Scout Mod (CheckURLs): HTTP Status " + s +" - "+ i);
             log_CheckURLs(i, days_now)
           } else {
-            // delete_log_CheckURLs(i); // no need to delete anything from "old_bad_hosts"
+            // delete_log_CheckURLs(i); // no need to delete anything from "old_bad_hosts" as we just count error_days from it
           }
         },
         onerror: function() {
