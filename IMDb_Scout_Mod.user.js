@@ -1327,6 +1327,8 @@
 
 21.5.5  -   Removed: STT, SceneLinks, Yugen
 
+21.5.6  -   Added: Prime Video, Max.
+
 
 //==============================================================================
 //    Notes.
@@ -5688,6 +5690,16 @@ var icon_sites_main = [
   {   'name': 'Netflix',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABAAgMAAADXB5lNAAAADFBMVEUAAACxBxDlCRSSBA7uTNqKAAAAAXRSTlMAQObYZgAAANdJREFUOMuNzisOwkAURuEJCYh6NlGPJGwBQWlCeHg8hlBgCRh0MaTtbUgVkrCKmi4BTwUBwm0w899MOj3yU0dxDlGsVNfzhupfpwkQQNsE+3pYGuAEMLHCms8AxlaY8wjATIJfrQJUq71aePCZDl7B0NfhZYAYoJSwZRgIIIBAwk7CglfvuQ68GkrIAAoBPq9GTwEpQCnhS5To4L357CMhkHADcAVsGEIJGYBjgEiHKUOa69DiVSuQDiPFsJJwBXANcJRwAeCzsxUSgFYTIABlggOAWwPQD/UX94Qp58qmAAAAAElFTkSuQmCC',
       'searchUrl': 'https://www.netflix.com/search/%search_string_orig%',
+      'spaceEncode': ' ',
+      'showByDefault': false},
+  {   'name': 'Prime Video',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAMAAABF0y+mAAAAilBMVEUFeP8AdP8Ad/9fov8Aev8gf/8rhf+01/82if8Adv9wq//N4//f7f+Gtv+oyf+w0v91sP/S5v/l8f+81//q9f+Fs/9ppf/X6f8Acv/B1v+Cuf/K3f+Iu/98sf++2f9Bj/9jnf+TwP+yzf9zqP9Rmf+jzP8Ab/8Aaf+cxP9Tnf/G3P9Mlf////8Abf8vOGooAAABHElEQVR4AcWPVXbEMAwAJVOjOA2Dl8IM9z9eGbyv/d8xewwSPBpk8B+MvVcu3seP1R0SBagnh0mUhBLIes7V3rOvn4IwipM0ywstf++aLFHpKRPR+cIjfvGuhYu/8lZW8cl9k2V9qd9kU5ElvSJrO1He2vrUn3Idqd9n8TaQEYreY33DSCIrESlx7Mtx6uZxNMyMCLYMYF58tSatszbmduFoSSiWuI/a2ff11Qu9PhXs1xo/aTd9yd3A84eznnZpSVz2vC9unm7nUjtRuRLYbEJW1DuK1RXK2n4VmDMSI0BiDEl018q+iTxRx5sCYGREOLcGLIybJrnC40CnS2Z/Qbizyk/3D3RnNoR7yECV39xeIgLBHxihMcjgsbwCDZYVxYRdCUMAAAAASUVORK5CYII=',
+      'searchUrl': 'https://www.primevideo.com/search/ref=atv_nb_sug?ie=UTF8&phrase=%search_string_orig%',
+      'spaceEncode': ' ',
+      'showByDefault': false},
+  {   'name': 'Max',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAMAAABF0y+mAAAAVFBMVEUAAGcAAGcAAGcAAm8ABXkACoUADZEAEJkAAGcAE6EAFqgAGLAAG7kAHsQAI9EAJ94AK+wAFNAACuwAGf4DM/xDUti5wf5wfOnh5P35+v+Tnv7///9hjdTjAAAACXRSTlMMyP///////8mRhKc9AAAA6ElEQVR4AbXTBXLFMAwE0F0ZSve/aTm2ttboMw02nLwxbwgSIInYY1PsEtC/+fybRDugK1m0sEU8KanFobQ0A9OWCp5KCy08FISCNSU5i6UlpirVWWlmN3rr7mJjlK1wwsBZBwxZ6VxohXwhuDVSGnhyao7hms4eBV8rNisAFljcvkcUDbTaK8638Tt84dMqmbjRopRABOoUx0BpmENo5RLnRi3cJvXvGEO5iZ5Ivl7hp1bJnL63hb+WSO8LPxTTFxN/WLGKsV8z19TjJXu42FcxgQ4xuQ6YcAjY42iSd0PdiRX527+D9Af9JhClFkGWhQAAAABJRU5ErkJggg==',
+      'searchUrl': 'https://play.max.com/search/result?q=%search_string_orig%',
       'spaceEncode': ' ',
       'showByDefault': false},
   {   'name': 'NextEpisode',
