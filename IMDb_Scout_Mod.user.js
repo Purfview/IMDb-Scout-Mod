@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      21.5.5
+// @version      22.0
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from hundreds various sites. Adds movies/series to Radarr/Sonarr. Adds external ratings from Metacritic, Rotten Tomatoes, Letterboxd, Douban, Allocine, MyAnimeList, AniList. Media Server indicators for Plex, Jellyfin, Emby. Dark theme/style for Reference View. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAMFBMVEUAAAD/AAAcAAA1AABEAABVAAC3AADnAAD2AACFAAClAABlAAB3AADHAACVAADYAABCnXhrAAAD10lEQVRIx73TV4xMURgH8H/OnRmZWe3T7h2sOWaNXu7oJRg9UccuHgTRBatMtAgSg+gJu9q+kFmihcQoD8qLTkK0CIkoy0YJITsRD0rCKTHFrnkSv5e5c88/53znO+fiPwvsvrN038cPNqrG9pJmHkRVnPcpaTlHJY60cfPSpsrzl1LKihrmLvxhCM2i3OHvDx0d+H7e3F6JBv5iZMiJfhFTfPYDMHrMImpwimWWUdSgDQkbno7fFpUPVgh+pHFbZR4SovSctDCM9Hac9IKd9rO8EevtBCkXgY5IMmgquwypP7qqfcp/Tp4KLONDVsWh3RSBB2rnZfit69ocUdqLn2prrRZYM0Jg4JibamKsqe7gfEh5GOAfeYJjVHIPZvil97rcXkMog30byWRwXYRWoxHbzNFHJJpAarO8NdEBBsdCaP3WMJltTmQd4zlnekTq9Z5dgACwAlrpK4BxdV5mvLuspRgMSHbCIFF0iS8MZ5S8oYBYKY7rByC4dDM9uSIUmPOIwxgQBoYeF93auP4qFyPbIVXziWeGTH1EFM57kJo2hqQju6BwIyRf6RmCjdT4JOdiwNgiH/PPD3qoqlsNaXRd+fKtFfECxlZVNVF9SOsgTZEr2TUjJJbyeNX1IZrKIbyGlBABfpQPv2UDrly13LkJXDVhpQ5MhtGwcyF4HKjlU4E8xwB0AvDjd6AGmevZ87EcQRHgcO52e9uNsYELOrAa/Yh81YlmYLQJ5HWyq0+kzQ/DQKEusg6CRI27ryy8nReRS0wsoetkmRwogHSprliCckfEjXG9yAQc74J0WB99vu6DF3i3pMucsXM6tpBbxd2mVJAwXwGogNRBvGRA4jtHKTXkAIwLGCR/mT4Lh75oneQXXP9sAYfGRDCsnw7pX/jRZkU3M44kjw2l5zRIzb4CbZ8dULdL6wbNPZOpK0B6gN1UR1mdoxAaL/GrWiLPL3SEwW9YMTU/d64BtLahAVyucWhj9Mm8ign9IfQaBtd2/GbvCAEBpG5eMcrj2I0ktpKLeaqXQ3Pst42KGIshpdTmQLAeTgFGJ2wvh+tayMOR0n1RZ8B9z13vnOPBnsBq4E1ffgZpPFZHWVpO2cvhjYpOcbBd5TlhpDu5zq9mHGZcVi0y+VFkcFkDdyKJfTt99wEyHSEzDM90KH0nexpwZHJHKYYhjzlwGe0pP/IKfxociaEb7YDbi6KGJY1R2cR76E6NAtXqY4pPH3plLcl8LD7V+cOLUbUWRFZRPTAbVZO3mxK18Xc1ZaAiS8ARJXpZliXAomR94siiiMx8ZBOkXGTlnH0F/9ov1xPtWwEqP9wAAAAASUVORK5CYII=
@@ -1327,7 +1327,16 @@
 
 21.5.5  -   Removed: STT, SceneLinks, Yugen
 
-21.5.6  -   Added: Prime Video, Max.
+22.0    -   Added: Prime Video, Max.
+            New feature: Replace Featured reviews with Helpful reviews. [optional, enabled by default]
+                         Option to allow spoilers in Helpful reviews. [disabled by default]
+                         Featured reviews tends to show random useless ones even with negative helpfulness.
+                         Helpful review is selected by the highest helpfulness ratio from the top voted reviews.
+            Fixed: Reviews broken in the compact Reference View mode as IMDb started switching to the redesigned reviews pages.
+            Deleted the "URLs to fullcredits" feature as IMDb removed those pages.
+            Improved ads removal.
+            Adjusted the settings position to be more compatible with mobile browsers.
+            Re-enabled ads removal for mobile browsers (v21.3 fix). [tested only Firefox]
 
 
 //==============================================================================
@@ -2520,6 +2529,7 @@ var private_sites = [
       'positiveMatch': true,
       'both': true},
   {   'name': 'DC',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQBAMAAADt3eJSAAAAGFBMVEUAAABESlMiJSoiJSoiJSr+/v58pca90uLSz/MtAAAABXRSTlMA/kB/e7s4J2gAAAA2SURBVAjXY0AARUEgEAEyREOBIBCZYQiSEgIyBMEAyBALDU1LS0SogQEUNaWlQDUIEUw1mAAA8LUL4ehpLh4AAAAASUVORK5CYII=',
       'searchUrl': 'https://digitalcore.club/api/v1/torrents?categories[]=1&categories[]=2&categories[]=3&categories[]=4&categories[]=5&categories[]=6&categories[]=7&dead=false&limit=1&page=search&searchText=%search_string%+%year%',
       'goToUrl': 'https://digitalcore.club/search?search=%search_string%+%year%&cats=1,2,5,6,3,4,7&fc=true',
       'loggedOutRegex': /It doesnt work here/,
@@ -2527,6 +2537,7 @@ var private_sites = [
       'rateLimit': 250,
       'positiveMatch': true},
   {   'name': 'DC',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQBAMAAADt3eJSAAAAGFBMVEUAAABESlMiJSoiJSoiJSr+/v58pca90uLSz/MtAAAABXRSTlMA/kB/e7s4J2gAAAA2SURBVAjXY0AARUEgEAEyREOBIBCZYQiSEgIyBMEAyBALDU1LS0SogQEUNaWlQDUIEUw1mAAA8LUL4ehpLh4AAAAASUVORK5CYII=',
       'searchUrl': 'https://digitalcore.club/api/v1/torrents?categories[]=8&categories[]=9&categories[]=10&categories[]=11&categories[]=12&categories[]=13&categories[]=14&dead=false&limit=1&page=search&searchText=%search_string%',
       'goToUrl': 'https://digitalcore.club/search?search=%search_string%&cats=8,9,10,11,13,12,14&fc=true',
       'loggedOutRegex': /It doesnt work here/,
@@ -4120,6 +4131,7 @@ var german_sites = [
       'positiveMatch': true,
       'both': true},
   {   'name': 'BTF',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAABNVBMVEUAAAABAQD2lAARDgP+mABaOwUHBgOYYAUOCwL7lgDujwDoiwCnp6eXlpNkRAdhQQe6cgRFLgSUXAMJBwJUNAExHwH8lwD4lQDzkgC4bgCSWAA3IACmpaOenpxhYWH3uFihg1T1s05FRUXunyrJghTwlAlwSgfCdwS/dQOybQJ2SgLHeAHkiQDghwDTfgDPfACkYgAoGACgnpiYmJjDsZSRkZG+qouLi4uJh4CAgICMiX6GhH58fHx1dXXruWzPpmqrkGh0cWhtamPJnlxaVkxQTUXJlUOtgz2TcDy9iDk5NiwrKyvjmCUlJSVjTyQxLSOzeCHYjx7xmx18VRrYihOeaBLAeg8UEw+eZgzmjgrqjwdgQAclHgcZFAWoaQTLfAPJewMdFANMMAHVgABnPgBiOwBdOADYnnXuAAAAAXRSTlMAQObYZgAAAOJJREFUGNMty1WWwkAUBNDXGg9xEgIMMMDgMu7u7u62/yXQEO5fVZ2Cocnixmbh6PoJxiZm5xZW86WTm0qS12f0rLG4tXv8gLqj3dD13D5VcEgQ6oj/fC47vXxwq2i11zfy3YHiknGqBM/n6alUq90mEeysrVyFZfooCq1rkV8o5LfL6l1aCpqm+v4ix3BY2rvXVFylnybGmMRweXZhaVUs0Q8zqDPXgwonlupgidkpKhHkQOtProVYacguo47bjwB+uM2YLSP05fk8A0IPcY4SDRipx0nsiz3R7P37vpeJQBgAvNQbP4KjuDwAAAAASUVORK5CYII=',
       'searchUrl': 'https://bittorrentfiles.me/browse.php?search=%tt%&search_where=4',
       'loggedOutRegex': /Cloudflare|Ray ID|Server nicht zur Verfügung/,
       'matchRegex': /keine Torrents/,
@@ -4878,6 +4890,7 @@ var subs_sites = [
       'inSecondSearchBar': true,
       'both': true},
   {   'name': 'RegieLive (RO)',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAMAAABg3Am1AAAASFBMVEUAAADqLCXqLCXqLCXqLCVHsuVHsuVHsuVHsuXqLCXqLCVHsuVHsuXqLCVHsuVHsuXqLCVHsuXqLCVHsuXqLCXqLCVHsuXqLCULaus+AAAAFnRSTlMADcUi5GB3FNKR8uYiMvO0rj7UjkVuLjKkqAAAAMpJREFUSMft1csOgyAQQFEewjCoIIrw/39agTYu2tQx6aJpves5ySgksA/GcdpCTgcib3XyTwAAUAEEtXhvjB9IICzGpVpPAcGXaTrQfZmkA+3SKaBcOgXA7MOuJ/wl/Zg2iwoDwOHB+fsmGmgnPfRtGUW9GsG1fYAKVKot7CTQF7jAdwA2FWAjHWAuIR2sFVjkVCC7XJsxjpLzQ9B2atluFuMxkCLvWQJgo6CDlkRLB62Is30GwdQUe5WMK06ifvQe1N69kJyzn+kGzLkr0z22EOEAAAAASUVORK5CYII=',
       'searchUrl': 'https://subtitrari.regielive.ro/cauta.html?s=%search_string_orig%',
       'matchRegex': /Nu au fost gasite subtitrari/,
       'inSecondSearchBar': true,
@@ -5622,6 +5635,11 @@ var icon_sites_main = [
       'searchUrl': 'https://lumiere.obs.coe.int/web/search/',
       'mPOST': 'search=search&title=%search_string%&search.x=0&search.y=0',
       'showByDefault': false},
+  {   'name': 'Max',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAMAAABF0y+mAAAAVFBMVEUAAGcAAGcAAGcAAm8ABXkACoUADZEAEJkAAGcAE6EAFqgAGLAAG7kAHsQAI9EAJ94AK+wAFNAACuwAGf4DM/xDUti5wf5wfOnh5P35+v+Tnv7///9hjdTjAAAACXRSTlMMyP///////8mRhKc9AAAA6ElEQVR4AbXTBXLFMAwE0F0ZSve/aTm2ttboMw02nLwxbwgSIInYY1PsEtC/+fybRDugK1m0sEU8KanFobQ0A9OWCp5KCy08FISCNSU5i6UlpirVWWlmN3rr7mJjlK1wwsBZBwxZ6VxohXwhuDVSGnhyao7hms4eBV8rNisAFljcvkcUDbTaK8638Tt84dMqmbjRopRABOoUx0BpmENo5RLnRi3cJvXvGEO5iZ5Ivl7hp1bJnL63hb+WSO8LPxTTFxN/WLGKsV8z19TjJXu42FcxgQ4xuQ6YcAjY42iSd0PdiRX527+D9Af9JhClFkGWhQAAAABJRU5ErkJggg==',
+      'searchUrl': 'https://play.max.com/search/result?q=%search_string_orig%',
+      'spaceEncode': ' ',
+      'showByDefault': false},
   {   'name': 'Media History Digital Library',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQBAMAAADt3eJSAAAAMFBMVEX////d7v/u//+qzO7M3fCIu927zO673e6Iqt3u7v+Zu+6Zu910qt1mmdKZzO7M7v+n2SNhAAAAbElEQVQI12NgYGCZwAAFgTDGcQcFEMWieCXQACwQfD3CKgHEMHUQThVOYuAUFGdgzLrIwMBYc4iBYdcToAyTJVC2xYGBQf81A2MySL9E+kbhVJAmB+2lPavB5ogwS1RCrGCSgVmmAWNwAjUBANCnEycINOX5AAAAAElFTkSuQmCC',
       'searchUrl': 'https://lantern.mediahist.org/?q="%search_string%"',
@@ -5692,16 +5710,6 @@ var icon_sites_main = [
       'searchUrl': 'https://www.netflix.com/search/%search_string_orig%',
       'spaceEncode': ' ',
       'showByDefault': false},
-  {   'name': 'Prime Video',
-      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAMAAABF0y+mAAAAilBMVEUFeP8AdP8Ad/9fov8Aev8gf/8rhf+01/82if8Adv9wq//N4//f7f+Gtv+oyf+w0v91sP/S5v/l8f+81//q9f+Fs/9ppf/X6f8Acv/B1v+Cuf/K3f+Iu/98sf++2f9Bj/9jnf+TwP+yzf9zqP9Rmf+jzP8Ab/8Aaf+cxP9Tnf/G3P9Mlf////8Abf8vOGooAAABHElEQVR4AcWPVXbEMAwAJVOjOA2Dl8IM9z9eGbyv/d8xewwSPBpk8B+MvVcu3seP1R0SBagnh0mUhBLIes7V3rOvn4IwipM0ywstf++aLFHpKRPR+cIjfvGuhYu/8lZW8cl9k2V9qd9kU5ElvSJrO1He2vrUn3Idqd9n8TaQEYreY33DSCIrESlx7Mtx6uZxNMyMCLYMYF58tSatszbmduFoSSiWuI/a2ff11Qu9PhXs1xo/aTd9yd3A84eznnZpSVz2vC9unm7nUjtRuRLYbEJW1DuK1RXK2n4VmDMSI0BiDEl018q+iTxRx5sCYGREOLcGLIybJrnC40CnS2Z/Qbizyk/3D3RnNoR7yECV39xeIgLBHxihMcjgsbwCDZYVxYRdCUMAAAAASUVORK5CYII=',
-      'searchUrl': 'https://www.primevideo.com/search/ref=atv_nb_sug?ie=UTF8&phrase=%search_string_orig%',
-      'spaceEncode': ' ',
-      'showByDefault': false},
-  {   'name': 'Max',
-      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAMAAABF0y+mAAAAVFBMVEUAAGcAAGcAAGcAAm8ABXkACoUADZEAEJkAAGcAE6EAFqgAGLAAG7kAHsQAI9EAJ94AK+wAFNAACuwAGf4DM/xDUti5wf5wfOnh5P35+v+Tnv7///9hjdTjAAAACXRSTlMMyP///////8mRhKc9AAAA6ElEQVR4AbXTBXLFMAwE0F0ZSve/aTm2ttboMw02nLwxbwgSIInYY1PsEtC/+fybRDugK1m0sEU8KanFobQ0A9OWCp5KCy08FISCNSU5i6UlpirVWWlmN3rr7mJjlK1wwsBZBwxZ6VxohXwhuDVSGnhyao7hms4eBV8rNisAFljcvkcUDbTaK8638Tt84dMqmbjRopRABOoUx0BpmENo5RLnRi3cJvXvGEO5iZ5Ivl7hp1bJnL63hb+WSO8LPxTTFxN/WLGKsV8z19TjJXu42FcxgQ4xuQ6YcAjY42iSd0PdiRX527+D9Af9JhClFkGWhQAAAABJRU5ErkJggg==',
-      'searchUrl': 'https://play.max.com/search/result?q=%search_string_orig%',
-      'spaceEncode': ' ',
-      'showByDefault': false},
   {   'name': 'NextEpisode',
       'icon': 'https://static.next-episode.net/favicon_comb.ico',
       'searchUrl': 'https://next-episode.net/search/?name=%search_string%',
@@ -5712,6 +5720,11 @@ var icon_sites_main = [
   {   'name': 'Posteritati',
       'icon': 'https://posteritati.com/icons/apple-touch-icon.png',
       'searchUrl': 'https://posteritati.com/search?query=%search_string%',
+      'showByDefault': false},
+  {   'name': 'Prime Video',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAMAAABF0y+mAAAAilBMVEUFeP8AdP8Ad/9fov8Aev8gf/8rhf+01/82if8Adv9wq//N4//f7f+Gtv+oyf+w0v91sP/S5v/l8f+81//q9f+Fs/9ppf/X6f8Acv/B1v+Cuf/K3f+Iu/98sf++2f9Bj/9jnf+TwP+yzf9zqP9Rmf+jzP8Ab/8Aaf+cxP9Tnf/G3P9Mlf////8Abf8vOGooAAABHElEQVR4AcWPVXbEMAwAJVOjOA2Dl8IM9z9eGbyv/d8xewwSPBpk8B+MvVcu3seP1R0SBagnh0mUhBLIes7V3rOvn4IwipM0ywstf++aLFHpKRPR+cIjfvGuhYu/8lZW8cl9k2V9qd9kU5ElvSJrO1He2vrUn3Idqd9n8TaQEYreY33DSCIrESlx7Mtx6uZxNMyMCLYMYF58tSatszbmduFoSSiWuI/a2ff11Qu9PhXs1xo/aTd9yd3A84eznnZpSVz2vC9unm7nUjtRuRLYbEJW1DuK1RXK2n4VmDMSI0BiDEl018q+iTxRx5sCYGREOLcGLIybJrnC40CnS2Z/Qbizyk/3D3RnNoR7yECV39xeIgLBHxihMcjgsbwCDZYVxYRdCUMAAAAASUVORK5CYII=',
+      'searchUrl': 'https://www.primevideo.com/search/ref=atv_nb_sug?ie=UTF8&phrase=%search_string_orig%',
+      'spaceEncode': ' ',
       'showByDefault': false},
   {   'name': 'ratehouse',
       'icon': 'https://rate.house/favicon-32x32.png',
@@ -10123,14 +10136,16 @@ function compactReferenceStyles() {
 }
 
 function compactReferenceElemRemoval() {
-  // Replace urls to fullcredits
-  if (GM_config.get('fullcredits_reference_view')) {
-    $('a[href^="/name/nm"]').attr('href', (n, old) => old.split('/?ref_=')[0] + '/fullcredits');
-  }
+  // Replace urls to fullcredits  // Removed in v22.0 as imdb removed these pages
+//   if (GM_config.get('fullcredits_reference_view')) {
+//     $('a[href^="/name/nm"]').attr('href', (n, old) => old.split('/?ref_=')[0] + '/fullcredits');
+//   }
 
   if (!GM_config.get('compact_reference_view') || !onReferencePage) {
     return;
   }
+  console.log("IMDb Scout Mod (compactReference): Started.");
+
   $('.titlereference-section-credits').nextUntil('.titlereference-section-storyline').remove();
   $('.titlereference-section-credits').remove();
   if (Boolean($('.titlereference-section-storyline .ipl-zebra-list__item').first().text().match("Plot Summary"))) {
@@ -10145,14 +10160,38 @@ function compactReferenceElemRemoval() {
   // Inject Top Review
   if ($('.titlereference-overview-review-list').length) {
     if ($('.titlereference-overview-review-list').text().match('User')) {
-      getIMDbTopReview();
+      if (GM_config.get("helpful_reviews_spoilers")) {
+        getIMDbBestReview(old_page=false, use_spoilers=true);
+      } else {
+        getIMDbBestReview();
+      }
     }
   }
 }
 
-function getIMDbTopReview() {
+function getIMDbBestReview(old_page=false, use_spoilers=false) {
   const imdbid = document.URL.match(/\/tt([0-9]+)\//)[1].trim('tt');
-  const url = "https://www.imdb.com/title/tt" +imdbid+ "/reviews?spoiler=hide&sort=helpfulnessScore";
+  // Note: Redesigned reviews pages + show spoilers = shows wrong numbers of votes [numbers are OK in JSON]
+  const new_url1 = "https://www.imdb.com/title/tt" +imdbid+ "/reviews/?sort=num_votes,desc&spoilers=EXCLUDE";
+  const new_url2 = "https://www.imdb.com/title/tt" +imdbid+ "/reviews/?sort=num_votes,desc";
+  const old_url1 = "https://www.imdb.com/title/tt" +imdbid+ "/reviews?sort=totalVotes&dir=desc&ratingFilter=0&spoiler=hide";
+  const old_url2 = "https://www.imdb.com/title/tt" +imdbid+ "/reviews?sort=totalVotes&dir=desc&ratingFilter=0";
+
+  let url;
+  if (old_page && use_spoilers) {
+    url = old_url2
+    console.log("IMDb Scout Mod (getIMDbBestReview): Started. Using old reviews URL with spoilers.");
+  } else if (old_page) {
+    url = old_url1
+    console.log("IMDb Scout Mod (getIMDbBestReview): Started. Using old reviews URL without spoilers.");
+  } else if (!old_page && use_spoilers) {
+    url = new_url2
+    console.log("IMDb Scout Mod (getIMDbBestReview): Started. Using new reviews URL with spoilers.");
+  } else if (!old_page) {
+    url = new_url1
+    console.log("IMDb Scout Mod (getIMDbBestReview): Started. Using new reviews URL without spoilers.");
+  }
+
   GM.xmlHttpRequest({
     method: "GET",
     timeout: 20000,
@@ -10161,47 +10200,195 @@ function getIMDbTopReview() {
     onload: function(response) {
       const parser = new DOMParser();
       const result = parser.parseFromString(response.responseText, "text/html");
+      var mostvotes, helpfulnessratio, topreview, hasspoilers;
+      var xTitle, xRevLink, xReview, xUser, xUsrLink, xDate, xRating, xSpoiler;
 
-      const xTitle = $(result).find('.imdb-user-review:eq(0)').find('.title').text().trim();
-      const xRevLink = $(result).find('.imdb-user-review:eq(0)').find('.title').attr('href');
-      const xReview = $(result).find('.imdb-user-review:eq(0)').find('.text').html();
-      const xUser = $(result).find('.imdb-user-review:eq(0)').find('.display-name-link').text().trim();
-      const xUsrLink = $(result).find('.imdb-user-review:eq(0)').find('.display-name-link a').attr('href');
-      const xDate = $(result).find('.imdb-user-review:eq(0)').find('.review-date').text().trim();
-      const xRating = $(result).find('.imdb-user-review:eq(0)').find('.ipl-star-icon').next().text().trim();
+      // Sometimes randomly imdb loads pre-redesigned reviews page, https://www.imdb.com/title/tt1828194/reviews/?ref_=tt_urv_sm  (in private window):
+      if (!old_page && $(result).find('.imdb-user-review').length) {
+        console.log("IMDb Scout Mod (getIMDbBestReview): Pre-redesigned reviews page detected. Restarting!");
+        getIMDbBestReview(old_page=true, use_spoilers);
+        return;
+      }
 
-      let x = '' +
-              '<section class="scout_review">' +
-              '  <div><h4 class="ipl-list-title">Top Review</h4></div>' +
-              '  <table class="titlereference-list ipl-zebra-list">' +
-              '    <tbody>' +
-              '      <tr class="ipl-zebra-list__item">' +
-              '        <td>' +
-              '          <a class="scout_review_rating">' +
-              '            <span class="ipl-rating-star__star">' +
-              '              <svg class="ipl-icon ipl-star-icon" xmlns="http://www.w3.org/2000/svg" fill="#000000" height="24" viewBox="0 0 24 24" width="24">' +
-              '                <path d="M0 0h24v24H0z" fill="none"></path>' +
-              '                <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>' +
-              '                <path d="M0 0h24v24H0z" fill="none"></path>' +
-              '              </svg></span>' +
-              '            <span class="point-scale"> xRating</span><span> |</span></a>' +
-              '          <a class="scout_review_title" href="xRevLink"> xTitle</a>' +
-              '          <div class="display-name-date" style="font-size:11px">' +
-              '            <span class="display-name-link">' +
-              '              <a href="xUsrLink">xUser</a></span>' +
-              '            <span class="review-date"> xDate</span></div>' +
-              '          <p>xReview</p></td></tr></tbody></table></section>' +
-              '';
-      x = x.replace('xTitle', xTitle);
-      x = x.replace('xRevLink', xRevLink);
-      x = x.replace('xReview', xReview);
-      x = x.replace('xUser', xUser);
-      x = x.replace('xUsrLink', xUsrLink);
-      x = x.replace('xDate', xDate);
-      x = x.replace('xRating', xRating);
+      if ($(result).find('[id=__NEXT_DATA__]:eq(0)').length) {
+        console.log("IMDb Scout Mod (getIMDbBestReview): Redesigned reviews page detected.");
+        const rawJsn   = $(result).find('[id=__NEXT_DATA__]:eq(0)').text();
+        const parseJsn = JSON.parse(rawJsn);
+        const reviews  = parseJsn.props.pageProps.contentData.reviews;
 
-      let y = jQuery.parseHTML(x);
-      $('.titlereference-section-media').after(y);
+        if (!old_page && !use_spoilers && !reviews.length) {
+          console.log("IMDb Scout Mod (getIMDbBestReview): Reviews not found! Restarting with spoilers enabled!.");
+          getIMDbBestReview(old_page=false, use_spoilers=true);
+          return;
+        }
+
+        reviews.forEach((item) => {
+          const spoiler   = item.review.spoiler;
+          let upvotes, downvotes;
+          if (item.review.helpfulnessVotes === undefined) { // review doesn't have votes
+            upvotes   = 0;
+            downvotes = 0;
+          } else {
+            upvotes   = item.review.helpfulnessVotes.upVotes;
+            downvotes = item.review.helpfulnessVotes.downVotes;
+          }
+          const itemtotal = upvotes + downvotes;
+          if (downvotes == 0) {downvotes = 1;}
+          const itemratio = upvotes / downvotes;
+
+          if(mostvotes === undefined) {
+              mostvotes        = itemtotal;
+              helpfulnessratio = itemratio;
+              topreview        = item;
+              hasspoilers      = spoiler;
+          } else if(mostvotes / itemtotal < 4 && itemratio > helpfulnessratio) {
+              helpfulnessratio = itemratio;
+              topreview        = item;
+              hasspoilers      = spoiler;
+              // console.log("!!!!!!!!!!: " + topreview.review.reviewSummary);
+          }
+        });
+
+        xTitle   = htmlDecode(topreview.review.reviewSummary);
+        xRevLink = "/review/" + topreview.review.reviewId;
+        xReview  = htmlDecode(topreview.review.reviewText);
+        xUser    = htmlDecode(topreview.review.author.nickName);
+        xUsrLink = "/user/" + topreview.review.author.userId;
+        xDate    = topreview.review.submissionDate;
+        xRating  = topreview.review.authorRating;
+        xSpoiler = "";
+
+        if(xRating === undefined) {xRating = "x"}
+        if(hasspoilers) {xSpoiler = "Warning: Spoilers"}
+
+      } else if ($(result).find('.imdb-user-review').length) {
+          console.log("IMDb Scout Mod (getIMDbBestReview): Pre-redesigned reviews page detected.");
+
+          $(result).find('.imdb-user-review').each(function(index, value) {
+            const spoiler   = Boolean($(this).find('.spoiler-warning').length);
+            const str       = $(this).find('.text-muted').text().trim();
+            const match     = str.match(/(\d+)\D+(\d+)/);
+            const upvotes   = parseInt(match[1], 10);
+            const itemtotal = parseInt(match[2], 10);
+            let   downvotes = itemtotal - upvotes;
+            if (downvotes == 0) {downvotes = 1;}
+            const itemratio = upvotes / downvotes;
+
+            if(mostvotes === undefined) {
+                mostvotes        = itemtotal;
+                helpfulnessratio = itemratio;
+                topreview        = this;
+                hasspoilers      = spoiler;
+            } else if(mostvotes / itemtotal < 4 && itemratio > helpfulnessratio) {
+                helpfulnessratio = itemratio;
+                topreview        = this;
+                hasspoilers      = spoiler;
+                // console.log("!!!!!!!!!!: " + $(this).find('.title').text().trim());
+            }
+          });
+
+          xTitle   = $(topreview).find('.title').text().trim();
+          xRevLink = $(topreview).find('.title').attr('href');
+          xReview  = $(topreview).find('.text').html();
+          xUser    = $(topreview).find('.display-name-link').text().trim();
+          xUsrLink = $(topreview).find('.display-name-link a').attr('href');
+          xDate    = $(topreview).find('.review-date').text().trim();
+          xRating  = $(topreview).find('.ipl-star-icon').next().text().trim();
+          xSpoiler = "";
+          if(xRating === undefined || xRating == "") {xRating = "x"}
+          if(hasspoilers) {xSpoiler = "Warning: Spoilers"}
+
+      } else if (old_page && !use_spoilers) {
+          console.log("IMDb Scout Mod (getIMDbBestReview): Element/Reviews not found! Restarting with spoilers enabled!.");
+          getIMDbBestReview(old_page=true, use_spoilers=true);
+          return;
+      } else {
+          console.log("IMDb Scout Mod (getIMDbBestReview): Element not found! Please report it.");
+          GM.notification("Element not found! Please report it.", "IMDb Scout Mod (getIMDbBestReview)");
+          return;
+      }
+
+      if (onReferencePage) {
+        let x = '' +
+                '<section class="scout_review">' +
+                '  <div><h4 class="ipl-list-title">Helpful Review</h4></div>' +
+                '  <table class="titlereference-list ipl-zebra-list">' +
+                '    <tbody>' +
+                '      <tr class="ipl-zebra-list__item">' +
+                '        <td>' +
+                '          <a class="scout_review_rating">' +
+                '            <span class="ipl-rating-star__star">' +
+                '              <svg class="ipl-icon ipl-star-icon" xmlns="http://www.w3.org/2000/svg" fill="#000000" height="24" viewBox="0 0 24 24" width="24">' +
+                '                <path d="M0 0h24v24H0z" fill="none"></path>' +
+                '                <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>' +
+                '                <path d="M0 0h24v24H0z" fill="none"></path>' +
+                '              </svg></span>' +
+                '            <span class="point-scale"> xRating</span><span> |</span></a>' +
+                '          <a class="scout_review_title" href="xRevLink"> xTitle</a>' +
+                '          <div class="display-name-date" style="font-size:11px">' +
+                '            <span class="display-name-link">' +
+                '              <a href="xUsrLink">xUser</a></span>' +
+                '            <span class="review-date"> xDate</span></div>' +
+                '          <p class="spoiler-warning" style="font-weight:bold; color:red;">xSpoiler</p>' +
+                '          <p>xReview</p></td></tr></tbody></table></section>' +
+                '';
+        x = x.replace('xTitle', xTitle);
+        x = x.replace('xRevLink', xRevLink);
+        x = x.replace('xReview', xReview);
+        x = x.replace('xUser', xUser);
+        x = x.replace('xUsrLink', xUsrLink);
+        x = x.replace('xDate', xDate);
+        x = x.replace('xRating', xRating);
+        x = x.replace('xSpoiler', xSpoiler);
+
+        let y = jQuery.parseHTML(x);
+        $('.titlereference-section-media').after(y);
+      // if on redesigned:
+      } else {
+//         console.log("!!!!!!!_1: " + $('.review-top-review').find('.ipc-signpost__text').length);
+//         console.log("!!!!!!!_2: " + $('[data-testid=review-summary]').length);
+//         console.log("!!!!!!!_3: " + $('[data-testid=permalink-link]').length);
+//         console.log("!!!!!!!_4: " + $('[data-testid=review-overflow]').find('.ipc-html-content-inner-div').length);
+//         console.log("!!!!!!!_5: " + $('[data-testid=author-link]').length);
+//         console.log("!!!!!!!_6: " + $('.review-date').length);
+//         console.log("!!!!!!!_7: " + $('.review-rating').find('.ipc-rating-star--rating').length);
+//         console.log("!!!!!!!_8: " + $('[data-testid=review-card-parent]').find('.ipc-list-card__actions').length);
+
+        $('.review-top-review').find('.ipc-signpost__text').contents().filter(function() {
+          return this.nodeType === Node.TEXT_NODE;
+        }).replaceWith('Helpful Review');
+
+        $('[data-testid=review-summary]').contents().filter(function() {
+          return this.nodeType === Node.TEXT_NODE;
+        }).replaceWith(xTitle);
+
+        $('[data-testid=permalink-link]').attr('href', xRevLink);
+
+        $('[data-testid=review-overflow]').find('.ipc-html-content-inner-div').contents().filter(function() {
+          return this.nodeType === Node.TEXT_NODE;
+        }).replaceWith(xReview);
+
+        $('[data-testid=author-link]').contents().filter(function() {
+          return this.nodeType === Node.TEXT_NODE;
+        }).replaceWith(xUser);
+
+        $('[data-testid=author-link]').attr('href', xUsrLink);
+
+        $('.review-date').contents().filter(function() {
+          return this.nodeType === Node.TEXT_NODE;
+        }).replaceWith(xDate);
+
+        $('.review-rating').find('.ipc-rating-star--rating').contents().filter(function() {
+          return this.nodeType === Node.TEXT_NODE;
+        }).replaceWith(xRating);
+
+        if (hasspoilers) {
+          const yy = jQuery.parseHTML('<div class="spoiler-warning" style="font-weight:bold; color:red;">Warning: Spoilers</div>');
+          $('[data-testid=review-overflow]').find('.ipc-html-content-inner-div').before(yy);
+        }
+
+        $('[data-testid=review-card-parent]').find('.ipc-list-card__actions').remove();
+      }
     },
     onerror: function() {
       console.log("IMDb Scout Mod (Review): Request Error.");
@@ -10235,29 +10422,35 @@ function adsRemovalReference() {
   $('#wrapper').attr('style', 'background: 000000 !important');
 }
 
-function adsRemoval() {
+async function adsRemoval() {
   if (!GM_config.get('remove_ads') || onSearchPage) {
     return;
   }
-  // v21.3 fix https://github.com/Purfview/IMDb-Scout-Mod/issues/227
-  const isMobile = Boolean(navigator.userAgent.toLowerCase().match(/android|webos|iphone|ipad|ipod|mobile|mini|crios/));
-  if (isMobile) {
-    console.log("IMDb Scout Mod (adsRemoval): Mobile browser detected, disabling adsRemoval!");
-    return;
-  }
+  // v21.3 fix https://github.com/Purfview/IMDb-Scout-Mod/issues/227  // reenabled in v22.0
+//   const isMobile = Boolean(navigator.userAgent.toLowerCase().match(/android|webos|iphone|ipad|ipod|mobile|mini|crios/));
+//   if (isMobile) {
+//     console.log("IMDb Scout Mod (adsRemoval): Mobile browser detected, disabling adsRemoval!");
+//     return;
+//   }
 
-  // removing 5th ".nas-slot" breaks dynamic reflow when window is resized.
-  if ($('.nas-slot').length == 7) {
-    $('.nas-slot')[0].remove();
-    $('.nas-slot')[0].remove();
-    $('.nas-slot')[0].remove();
-    $('.nas-slot')[0].remove();
-    $('.nas-slot')[1].remove();
-    $('.nas-slot')[1].remove();
-    $('#inline40_wrapper').remove();
-  } else {
-    $('.nas-slot').remove();
-  }
+  $('.nas-slot').empty(); // empty() removes all children // removing 4th or 5th ".nas-slot" breaks dynamic reflow when window is resized.
+  $('#inline40_wrapper').remove();
+  $('#adLink').remove();
+
+  $('[class^=Banner]').remove();
+  $('[id^=taboola]').remove();
+  $('[class*=ProLink]').remove();
+  $('[class^=IMDbPro]').remove();
+  $('.imdb-editorial-single').remove();
+  $('.imdb-footer').remove();
+  $('.navbar__imdbpro').remove();
+  $('[class^=Root__Separator]').remove();
+
+  // after 3 secs run same again:
+  await sleep(3000);
+  $('.nas-slot').empty();
+  $('#inline40_wrapper').remove();
+  $('#adLink').remove();
 
   $('[class^=Banner]').remove();
   $('[id^=taboola]').remove();
@@ -10322,8 +10515,9 @@ function countSites(task) {
       'dark_reference_view': {'type': 'checkbox'},
       'compact_reference_view': {'type': 'checkbox'},
       'greybackground_reference_view': {'type': 'checkbox'},
-      'fullcredits_reference_view': {'type': 'checkbox'},
       'app_notification': {'type': 'checkbox'},
+      'helpful_reviews': {'type': 'checkbox'},
+      'helpful_reviews_spoilers': {'type': 'checkbox'},
       'disable_iconsites': {'type': 'checkbox'},
       'disable_sites': {'type': 'checkbox'},
       'highlight_sites_movie': {'type': 'text'},
@@ -10645,15 +10839,20 @@ var config_fields = {
     'label': 'Reference View: Enable grey background for searchable sites?',
     'default': true
   },
-  'fullcredits_reference_view': {
-    'type': 'checkbox',
-    'label': 'Reference View: Enable fullcredits URLs?',
-    'default': true
-  },
   'app_notification': {
     'type': 'checkbox',
     'label': "Notify when Radarr/Sonarr doesn't respond?",
     'default': true
+  },
+  'helpful_reviews': {
+    'type': 'checkbox',
+    'label': "Replace Featured reviews with Helpful reviews?",
+    'default': true
+  },
+  'helpful_reviews_spoilers': {
+    'type': 'checkbox',
+    'label': "Allow Helpful reviews with spoilers?",
+    'default': false
   },
   'disable_iconsites': {
     'type': 'checkbox',
@@ -11162,7 +11361,7 @@ GM_config.init({
       // Iframe position.
       this.frame.style.top    = '50px';
       this.frame.style.left   = 'auto';
-      this.frame.style.right  = '150px';
+      this.frame.style.right  = '20px';
       this.frame.style.height = '90%';
       this.frame.style.width  = '450px';
 
@@ -11407,6 +11606,19 @@ function startIMDbScout() {
     return;
   }
   console.log("IMDb Scout Mod (Start): Starting main functions.");
+
+  if (!onSearchPage && !onReferencePage && GM_config.get("helpful_reviews")) {
+    if ($('[data-testid=review-overflow]').length) {
+      if (GM_config.get("helpful_reviews_spoilers")) {
+        getIMDbBestReview(old_page=false, use_spoilers=true);
+      } else {
+        getIMDbBestReview();
+      }
+    } else {
+      console.log("IMDb Scout Mod (getIMDbBestReview): Not starting as element not found.");
+    }
+  }
+
   if (!onSearchPage && GM_config.get('loadmod_on_start_movie')) {
     $('#ipc-wrap-background-id').remove(); // This div steals focus from the scout links. v19.1 fix
     performPage();
