@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      23.1
+// @version      23.2
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from hundreds various sites. Adds movies/series to Radarr/Sonarr. Adds external ratings from Metacritic, Rotten Tomatoes, Letterboxd, Douban, Allocine, MyAnimeList, AniList. Media Server indicators for Plex, Jellyfin, Emby. Dark theme/style for Reference View. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAMFBMVEUAAAD/AAAcAAA1AABEAABVAAC3AADnAAD2AACFAAClAABlAAB3AADHAACVAADYAABCnXhrAAAD10lEQVRIx73TV4xMURgH8H/OnRmZWe3T7h2sOWaNXu7oJRg9UccuHgTRBatMtAgSg+gJu9q+kFmihcQoD8qLTkK0CIkoy0YJITsRD0rCKTHFrnkSv5e5c88/53znO+fiPwvsvrN038cPNqrG9pJmHkRVnPcpaTlHJY60cfPSpsrzl1LKihrmLvxhCM2i3OHvDx0d+H7e3F6JBv5iZMiJfhFTfPYDMHrMImpwimWWUdSgDQkbno7fFpUPVgh+pHFbZR4SovSctDCM9Hac9IKd9rO8EevtBCkXgY5IMmgquwypP7qqfcp/Tp4KLONDVsWh3RSBB2rnZfit69ocUdqLn2prrRZYM0Jg4JibamKsqe7gfEh5GOAfeYJjVHIPZvil97rcXkMog30byWRwXYRWoxHbzNFHJJpAarO8NdEBBsdCaP3WMJltTmQd4zlnekTq9Z5dgACwAlrpK4BxdV5mvLuspRgMSHbCIFF0iS8MZ5S8oYBYKY7rByC4dDM9uSIUmPOIwxgQBoYeF93auP4qFyPbIVXziWeGTH1EFM57kJo2hqQju6BwIyRf6RmCjdT4JOdiwNgiH/PPD3qoqlsNaXRd+fKtFfECxlZVNVF9SOsgTZEr2TUjJJbyeNX1IZrKIbyGlBABfpQPv2UDrly13LkJXDVhpQ5MhtGwcyF4HKjlU4E8xwB0AvDjd6AGmevZ87EcQRHgcO52e9uNsYELOrAa/Yh81YlmYLQJ5HWyq0+kzQ/DQKEusg6CRI27ryy8nReRS0wsoetkmRwogHSprliCckfEjXG9yAQc74J0WB99vu6DF3i3pMucsXM6tpBbxd2mVJAwXwGogNRBvGRA4jtHKTXkAIwLGCR/mT4Lh75oneQXXP9sAYfGRDCsnw7pX/jRZkU3M44kjw2l5zRIzb4CbZ8dULdL6wbNPZOpK0B6gN1UR1mdoxAaL/GrWiLPL3SEwW9YMTU/d64BtLahAVyucWhj9Mm8ign9IfQaBtd2/GbvCAEBpG5eMcrj2I0ktpKLeaqXQ3Pst42KGIshpdTmQLAeTgFGJ2wvh+tayMOR0n1RZ8B9z13vnOPBnsBq4E1ffgZpPFZHWVpO2cvhjYpOcbBd5TlhpDu5zq9mHGZcVi0y+VFkcFkDdyKJfTt99wEyHSEzDM90KH0nexpwZHJHKYYhjzlwGe0pP/IKfxociaEb7YDbi6KGJY1R2cR76E6NAtXqY4pPH3plLcl8LD7V+cOLUbUWRFZRPTAbVZO3mxK18Xc1ZaAiS8ARJXpZliXAomR94siiiMx8ZBOkXGTlnH0F/9ov1xPtWwEqP9wAAAAASUVORK5CYII=
@@ -1358,6 +1358,11 @@
 23.1    -   Added: MovieHunterz, Data-Load, Kino (DE).
             Fixed: Cosmetic Rotten Tomatoes bug if there is no "Tomatometer" rating. ( www.imdb.com/title/tt1009017 )
 
+23.2    -   Fixed: The script was not working on very slow PCs with Chrome
+            Fixed: Trakt-Watchlist & MP urls were triggering the script.
+            Notification for Chrome/Cromium users as Chrome bug with requests + Violenmonkey may be banned soon. It's shown 3 times.
+            Added: UHD100
+
 
 //==============================================================================
 //    Notes.
@@ -1592,12 +1597,6 @@ var public_sites = [
       'searchUrl': 'https://comando4kfilmes.site/?s="%search_string_orig%"',
       'loggedOutRegex': /Cloudflare|Ray ID/,
       'matchRegex': /Nenhum Arquivo Encontrado/,
-      'both': true},
-  {   'name': 'CPS',
-      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAe1BMVEUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD////9/f1DQ0Pz8/Pb29u0tLTPz8+kpKSampqAgIB2dnYbGxsXFxcNDQ35+fnq6uri4uLg4ODMzMzCwsK4uLivr6+fn59ycnJkZGRbW1tVVVVMTEw6OjozMzMoKCgTExOIphIuAAAACHRSTlMA9uazgHAmteZOzVUAAACTSURBVBjTbY9XDoNADEQXWOCZpYaS3uv9T5j1KkiRkvfhD9ujmTFKZpM4TmxmPqQRgSg1gRxl1JGHO3CpClnun5B6fQSdFLu6lPJFlBkLTgoHbKQDaxJo5YBnGIDExLCVBTOxLqrvhUpqOeJ5uCCxcJJyQh9rsMG2kXXfN1Lc1VaDTa14VldI5+jj7ew0+p9yP/Xfd34IhrTo2L8AAAAASUVORK5CYII=',
-      'searchUrl': 'https://mycarpathians.net/browse.php?search=https%3A%2F%2Fwww.imdb.com%2Ftitle%2F%tt%%2F&incldead=0&onlyname2=false&imdbcat=0',
-      'loggedOutRegex': /Nem vagy bejelentkezve!/,
-      'matchRegex': /Nincs itt semmi|Nem található/,
       'both': true},
   {   'name': 'Deildu',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAdVBMVEUAAAD//wD6/gCYmgCJiwAJCgBQUQBNTgDy9gBhYgA5OgAcHQDe4QDKzADGyACfoQCRkwCChABwcQBkZQBFRQAQEQD3+gD1+ADp6wDm6ADNzwC7vQC6vACqrQCLjQCKjQB5egB3eABJSgA/QAAzNAAmJgAhIgAGhVfNAAAAg0lEQVQY00XIRxaDMAADUQ2ODYTe0nu7/xGDiSH/aaORZ0sj1aXVzMArg7MmqVUPEsSSkxp/zE6Kjj62qkmkHA1sfWikCivoOlBGpRGJheIEA8jLSYgYt+Eg704UkGryD/rZExQhPC6xy94uNusQbB+3xqRu/msWH3lXFjd5zqwC85S+fkgEtfHKD5YAAAAASUVORK5CYII=',
@@ -2494,6 +2493,12 @@ var private_sites = [
       'loggedOutRegex': /Cloudflare|Ray ID|Zapomniałeś hasła/,
       'matchRegex': /was not found|nie został odnaleziony/,
       'both': true},
+  {   'name': 'CPS',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAe1BMVEUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD////9/f1DQ0Pz8/Pb29u0tLTPz8+kpKSampqAgIB2dnYbGxsXFxcNDQ35+fnq6uri4uLg4ODMzMzCwsK4uLivr6+fn59ycnJkZGRbW1tVVVVMTEw6OjozMzMoKCgTExOIphIuAAAACHRSTlMA9uazgHAmteZOzVUAAACTSURBVBjTbY9XDoNADEQXWOCZpYaS3uv9T5j1KkiRkvfhD9ujmTFKZpM4TmxmPqQRgSg1gRxl1JGHO3CpClnun5B6fQSdFLu6lPJFlBkLTgoHbKQDaxJo5YBnGIDExLCVBTOxLqrvhUpqOeJ5uCCxcJJyQh9rsMG2kXXfN1Lc1VaDTa14VldI5+jj7ew0+p9yP/Xfd34IhrTo2L8AAAAASUVORK5CYII=',
+      'searchUrl': 'https://mycarpathians.net/browse.php?search=https%3A%2F%2Fwww.imdb.com%2Ftitle%2F%tt%%2F&incldead=0&onlyname2=false&imdbcat=0',
+      'loggedOutRegex': /Nem vagy bejelentkezve!/,
+      'matchRegex': /Nincs itt semmi|Nem található/,
+      'both': true},
   {   'name': 'CrazyHD',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQBAMAAADt3eJSAAAALVBMVEUAAAAEAQGVJSV/ICB3HR0YBgZlGBi3Li7GMTFWFRU5Dg4nCQmsKyucJydJEhKcFbDSAAAAAXRSTlMAQObYZgAAAFVJREFUCNdjwAOSjcHAjEFVEAyCGBSlp0ZGzVwoxKAoUjpjbU0fkCHbW7M89TCQEX6l6MXrEiBjxdOyjOOngYxtodnLMjcKMahKCDaCtSe7gIEZHjsBTJAa4T3xLWsAAAAASUVORK5CYII=',
       'searchUrl': 'https://www.crazyhd.com/index.php?page=searchlist',
@@ -3134,7 +3139,7 @@ var private_sites = [
       'TV': true},
   {   'name': 'MP',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgBAMAAACBVGfHAAAAGFBMVEUAAABvb2/+ogE/Pz9UU1LKjymSelChdiobAMtKAAAAAXRSTlMAQObYZgAAAOtJREFUKM9t0FFOwzAMBmAjdgGjNjzX4O4VKTnAqgTeU4F47sQugOD+++MuWSfNUtL40x9XLdGOa3VddyCi1qFSInpoganUgaZNl1C4cRKRb3aziP4YSKnPY9nHAk5x45h/M3O/v8LrfAv9KHwfAkDY4ai2hwiwoyr3gHiBhWXgU70CyAW+AD6uMwaes0Hw1DndgPfEH4CRnxanm4Qa1ARm2DsNWsI1mMoMWfB9NdGgJQSQt6ArzBdIBoPBc0voyCw1kURkj6VYLwbvon//+O94RgNU8DiuRbsuxRhD7d+IUkyh9YGIHpHw18AZSp9NQwPrZt4AAAAASUVORK5CYII=',
-      'searchUrl': 'https://majomparade.eu/letoltes.php?tipus=1&k=yes&name=https://www.imdb.com/title/%tt%&category[]=&tipuska=0&imdb_search=yes',
+      'searchUrl': 'https://majomparade.eu/letoltes.php?tipus=1&k=yes&name=https%3A%2F%2Fwww.imdb.com/title/%tt%&category[]=&tipuska=0&imdb_search=yes',
       'loggedOutRegex': /Cloudflare|Ray ID|Az oldal használatához/,
       'matchRegex': /Nincs találat/,
       'both': true},
@@ -4890,6 +4895,12 @@ var usenet_sites = [
       'loggedOutRegex': /Cloudflare|Ray ID|Remember me/,
       'matchRegex': /did not match/,
       'TV': true},
+  {   'name': 'UHD100',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADQAAAA0BAMAAAA3VgbYAAAAGFBMVEUAAAAEBAHNpBmyjxmZexrrvSVwWxU3LQx1VtTdAAAAAXRSTlMAQObYZgAAAdRJREFUOMvF0UF3ojAQB/C89RNMZclZELmuTCpnSCrXPrq4Z7S25wD7/PqdiVDTWi+99P80QH6ZEBIhfkXvSZpLHoUQfr8fIWbKfAgqjZz7RxG18GWC5iaFjUhuU/NNksZUMJiTMVu+HWiZdqo61hbCv9A1r3CkkcluqNuR7p4AYAHzBuCuBnj4B/93EEaf6cnRvP5E9Ugp9dsz/Z6qti97ui1zovaa4om8CdcQ0ITB8kyNR5IoHimlvbVu8e79YeFovuRl8OAzyaSSBwtBZKGj//1OPuQjwRBhBVLjRiLmPSJugMmdl7TX2xsxcX6c8EaIbuXblPElfuG2Grh9HXyqrKQ2DduO2sDuPVKO2i4No8geFwHPM1JSEMWwX0G2pKPkcZgxcQE9raDcwTGFLIUS8QNRzxK6BWQr2CPlitZMnUf8rgXTvGDqEZX2aA0ldRauRWW0N2HOK+wK0Dn0hvJOMaZMfc50ILlUIa6YDjn/SBQyIWZchbbPpVZwqCS674qRY0EjtkERKt32ReCO0lFWnewJcSPts9EbeSoxojhChYait8/uQUfn7cUxTHzlgomoQ3ENcrIRiDIm5RVMwHs4M4ZlJLzkjxDozeSbEGLGvX6mojeMyOEYfAedCwAAAABJRU5ErkJggg==',
+      'searchUrl': 'https://uhd100.com/search/1234567/?q=%tt%&o=date',
+      'loggedOutRegex': /Cloudflare|Ray ID|You must be logged/,
+      'matchRegex': /No results found/,
+      'both': true},
   {   'name': 'WtFnZb',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQAgMAAABinRfyAAAACVBMVEVjhwD///86aRovd/sBAAAAMUlEQVQI12OAgNBQIJGZCSOywMRKGJG5EirBmpkZwMAYGuoA1SEaAiRYA4AEowPEIADbhQrnKgUJ3AAAAABJRU5ErkJggg==',
       'searchUrl': 'https://0ccec98d8962a17294688363537bfe2e.wtfnzb.pw/movies/?imdb=%nott%',
@@ -6207,7 +6218,7 @@ var special_buttons = [
       'showByDefault': false},
   {   'name': 'Trakt-Watchlist',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMwAAADMAQMAAAAF7N6xAAAABlBMVEUAAADtIiSf7FjNAAAAAXRSTlMAQObYZgAABW9JREFUWMOVmE/K1TAUR79SoTOrM2d1CQ4dCHVJglOxigtwSxU3UnADBScRS+MvuTc5CSroQ7/32nN7k9P8aZOHyGd/eFg5Oht0POjzR3Qn8jD1iIv02UBcZJ8ZxC/7DJygev5ZQV0+KgIKFQ2gLh91BOVSLGLp0VWqbYUZoqjiMPToqK5eGOiDTtSgBZRjx1hLnVt0WShRoFP5aIEBxKFXdmvQbjKn3821QVbUh/K1gBS4eYvl7BPoykV5I6uwEXTqoDTzlgJBh4JVhF+my0H7w1qbeUxBa0UflCY4OVOSxZFl2A1N16qTc0F3ylK64b2oHpOj/PNytFyThRoKShAcrWFQhqGgUzU6HG3nw6ZqFXSkI0fxeL2qSpujXX9q/9yPOaVx9GGIVxX+eE4qeHGkE6F2+DEosKBbJ86qNV0POjM70o+9as236qDghPLlH6rWcqfD0VBQfZxIa71SksGQJG8n0tqCsh0VxQut3OSHnU7fAa3cJ5Uoo10/0UqVzcULpeocaOVBcxU0tVoxKUggo4e511KE7kJC+mq1bFQXtHRaz1QbFWJOa6f1KqF9NLR1Wu/17ShkhFZMVx/J1f6h9VHV1ZmCjkZrzM5+XoWjpeuSRDA0CqE13zkmX7inFGgtV85sKKVAaw12p1YhibdailZVHaXsaOXqKnqpCK0dpDJ7rZRaF2QUeq2Kbp3ptLyuU0ZnpwVKcp2WRxk6Oi1Ho5C+Oi0rNqFgCC2vkaG90zKPcxCy5kILdA4pEC3PEEBoOXoQGmOv5eWC0LLaJnQ4Qgs03Z1WRW9AaKUUNwgt0F5UVHPXArlKvGbXss7xoiBp3ZNpmQlIB3HMWqAPjqYYP5oWaAnlWbIXLZBrxYOBoXv+pCBpbWfVAnlrharVo3gsl2uBTm+t+Z5Dh7zzjmmcqVuWDyi11hg/uRbIW+tj/LKD9FPIW0v34jfkrcUdBLkW9x1EJwSBpBVpY5B3QnoGyDth7U+gwzshvRDknZC+CzKtSI8H+dhinFAN10IMVMYWYiAbW3R5kI8tBgrIxxbDC+Rj6xNiIBtbXxAD2ZRxJDGQ9Q1rrRMxuo1pBcToojZlXEUMFEwr3oiBbMqIiIFsyoiIgWzKiIiBslaMiDEDWCeMVQzkWlsVA/lMuCLGVTYTLo3YdCekvzYTzogx6b3L4RNioJe5kNHFQDr5LFdtQCxPsDYtmxBiQmUyt+gqBvowWBkuxtNBd9IneMRA7oOY2sIfUh7sYjy/1K+sCMRAh1UMsfxAtCes6yCmc4bOEotYTOgWKiUgVh70YbN6ITZUtJoNYkN5qbiWHNqIjRU9tgIQM6Q/9yOrFmLNu43JIDYb2hViWojp/2rog2khpiuF8vPHtBAT2gx9MS3E/HVObfnNtBDbgr9SCmWAmJ9XwHfTQszfRZX2Z9ZCbHCkev7IWoiVl1uhK2shJtOpvEg/d+Jinx3F8vqN2KxzhibTQsxe2nnVR+z9dvmr/m4LBMRepaqxrGjFniZXFiOtmJwM6b9y92KKZuHTik0qg+VSK3YvGqcssvZG7FbkyNLsaMQu5Z8MxbygQywoz+xIwzw0Ym9ZIaZC70Ys5VjbJSdiqeTN0aGgvYoFFqrpz0IV5zOyvGVRnMW+2qKYpfRdxWYdjwXdiqKhV2WY2mU7hW0s2/vFfkqwsw+g3wtLeot0ZBn2UtTNxoLvTQTP129HXCnOp0/ft+i3PoJdpMwzyPdIDkWUg36bhU2r9e+bM7Eg9mo8wwBiY8ju2gTKxwP55g7tlpE9P9DhaXK7/b7BtXnMACrBE98gv4GztcwC8sLopP++cdeMsP/YJGy7DYiM5AOxI8kxiA2u3xB9A9QeiHD0C22p6PDcZ/DbAAAAAElFTkSuQmCC',
-      'searchUrl': 'https://trakt.tv/oauth/authorize?client_id=325c09f8f8d6e3466c7ced12c11cc32d4af00e1af1f6310da4f6dfb702c7b8c2&redirect_uri=https://www.imdb.com/title/tt0052077/reference&response_type=code',
+      'searchUrl': 'https://trakt.tv/oauth/authorize?client_id=325c09f8f8d6e3466c7ced12c11cc32d4af00e1af1f6310da4f6dfb702c7b8c2&redirect_uri=https%3A%2F%2Fwww.imdb.com/title/tt0052077/reference&response_type=code',
       'showByDefault': false}
 ];
 
@@ -9236,7 +9247,7 @@ function sonarrErrorNotificationHandler(error, expected, errormsg) {
 async function start_trakt(movie_id, movie_title) {
   const imdbid = "tt" + movie_id;
   const title = movie_title.trim();
-  let button = $('a[href="https://trakt.tv/oauth/authorize?client_id=325c09f8f8d6e3466c7ced12c11cc32d4af00e1af1f6310da4f6dfb702c7b8c2&redirect_uri=https://www.imdb.com/title/tt0052077/reference&response_type=code"]');
+  let button = $('a[href="https://trakt.tv/oauth/authorize?client_id=325c09f8f8d6e3466c7ced12c11cc32d4af00e1af1f6310da4f6dfb702c7b8c2&redirect_uri=https%3A%2F%2Fwww.imdb.com/title/tt0052077/reference&response_type=code"]');
   const access_token = await GM.getValue("IMDb_Scout_Mod_Trakt_access_token", "none");
 
   if (access_token == 'none') {
@@ -10537,6 +10548,14 @@ function compactReferenceElemRemoval() {
     return;
   }
   console.log("IMDb Scout Mod (compactReferenceElemRemoval): Started.");
+
+  // Check if the Styles funcs were executed as it may not happened at 'bodyloaded' event on very slow PCs + Chrome
+  if (GM_config.get('dark_reference_view')) {
+    if (!$('.IMDbScoutStyles').length) {
+      darkReferenceStyles();
+      compactReferenceStyles();
+    }
+  }
 
   $('.titlereference-section-credits').nextUntil('.titlereference-section-storyline').remove();
   $('.titlereference-section-credits').remove();
@@ -11988,6 +12007,26 @@ function startRedesign() {
 }
 
 //==============================================================================
+//    Warning for Chrome/Chromium users shown 3 times per version
+//==============================================================================
+
+// Note: Chrome bug with requests + Violenmonkey may be banned soon
+async function scoutWarning() {
+if (navigator.userAgent.toLowerCase().indexOf('chrome') > -1 || navigator.userAgent.toLowerCase().indexOf('chromium') > -1) {
+    const warn_count = await GM.getValue("Scout_warning_count", 0);
+    const warn_ver   = await GM.getValue("Scout_warning_ver", "none");
+    if (warn_count < 3 && warn_ver !== GM.info.script.version) {
+      console.log("IMDb Scout Mod (Warning): Bug detected: Chrome/Chromium! The script works slower and may soon stop working at all. Install Firefox to fix!");
+      GM.notification("Bug detected: Chrome/Chromium! \nThe script works slower and may soon \nstop working at all. \nInstall Firefox to fix!", "IMDb Scout Mod (Warning)");
+      GM.setValue("Scout_warning_count", warn_count +1);
+    } else if (warn_ver !== GM.info.script.version) {
+        GM.setValue("Scout_warning_ver", GM.info.script.version);
+        GM.setValue("Scout_warning_count", 0);
+    }
+  }
+}
+
+//==============================================================================
 //    Start: Display 'Load' button or add links to sites
 //==============================================================================
 
@@ -12026,11 +12065,11 @@ if ($('html[xmlns\\:og="http://ogp.me/ns#"]').length) {
     darkReferenceStyles();
     compactReferenceStyles();
   });
-  document.addEventListener('DOMContentLoaded', compactReferenceElemRemoval);
-  document.addEventListener('DOMContentLoaded', adsRemovalReference);
-  document.addEventListener('DOMContentLoaded', startIMDbScout);
+  window.addEventListener('DOMContentLoaded', compactReferenceElemRemoval);
+  window.addEventListener('DOMContentLoaded', adsRemovalReference);
+  window.addEventListener('DOMContentLoaded', startIMDbScout);
 } else {
-  // Redesigned pages stopped using jQuery(?). It's needed for POST links.
+  // Redesigned pages stopped using jQuery(?). It's needed for POST links.  // This should be replaced by pure js for POST, like in Discogs_Scout as document.events may not work on very slow PCs +Chrome
   document.events.on('headloaded', () => {
     const addJquery = document.createElement("script");
     addJquery.setAttribute("type","text/javascript");
@@ -12039,9 +12078,11 @@ if ($('html[xmlns\\:og="http://ogp.me/ns#"]').length) {
   });
   // Start for redesigned page
   if (navigator.userAgent.toLowerCase().indexOf('firefox') > -1) {
-    document.addEventListener('DOMContentLoaded', startRedesign);
+    window.addEventListener('DOMContentLoaded', startRedesign);
   } else {
-    document.addEventListener('DOMContentLoaded', startObserver);  // counter reflow on Chrome
+    window.addEventListener('DOMContentLoaded', startObserver);  // counter reflow on Chrome
   }
 }
+
+scoutWarning();
 
