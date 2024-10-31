@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      23.2
+// @version      23.2.1
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from hundreds various sites. Adds movies/series to Radarr/Sonarr. Adds external ratings from Metacritic, Rotten Tomatoes, Letterboxd, Douban, Allocine, MyAnimeList, AniList. Media Server indicators for Plex, Jellyfin, Emby. Dark theme/style for Reference View. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAMFBMVEUAAAD/AAAcAAA1AABEAABVAAC3AADnAAD2AACFAAClAABlAAB3AADHAACVAADYAABCnXhrAAAD10lEQVRIx73TV4xMURgH8H/OnRmZWe3T7h2sOWaNXu7oJRg9UccuHgTRBatMtAgSg+gJu9q+kFmihcQoD8qLTkK0CIkoy0YJITsRD0rCKTHFrnkSv5e5c88/53znO+fiPwvsvrN038cPNqrG9pJmHkRVnPcpaTlHJY60cfPSpsrzl1LKihrmLvxhCM2i3OHvDx0d+H7e3F6JBv5iZMiJfhFTfPYDMHrMImpwimWWUdSgDQkbno7fFpUPVgh+pHFbZR4SovSctDCM9Hac9IKd9rO8EevtBCkXgY5IMmgquwypP7qqfcp/Tp4KLONDVsWh3RSBB2rnZfit69ocUdqLn2prrRZYM0Jg4JibamKsqe7gfEh5GOAfeYJjVHIPZvil97rcXkMog30byWRwXYRWoxHbzNFHJJpAarO8NdEBBsdCaP3WMJltTmQd4zlnekTq9Z5dgACwAlrpK4BxdV5mvLuspRgMSHbCIFF0iS8MZ5S8oYBYKY7rByC4dDM9uSIUmPOIwxgQBoYeF93auP4qFyPbIVXziWeGTH1EFM57kJo2hqQju6BwIyRf6RmCjdT4JOdiwNgiH/PPD3qoqlsNaXRd+fKtFfECxlZVNVF9SOsgTZEr2TUjJJbyeNX1IZrKIbyGlBABfpQPv2UDrly13LkJXDVhpQ5MhtGwcyF4HKjlU4E8xwB0AvDjd6AGmevZ87EcQRHgcO52e9uNsYELOrAa/Yh81YlmYLQJ5HWyq0+kzQ/DQKEusg6CRI27ryy8nReRS0wsoetkmRwogHSprliCckfEjXG9yAQc74J0WB99vu6DF3i3pMucsXM6tpBbxd2mVJAwXwGogNRBvGRA4jtHKTXkAIwLGCR/mT4Lh75oneQXXP9sAYfGRDCsnw7pX/jRZkU3M44kjw2l5zRIzb4CbZ8dULdL6wbNPZOpK0B6gN1UR1mdoxAaL/GrWiLPL3SEwW9YMTU/d64BtLahAVyucWhj9Mm8ign9IfQaBtd2/GbvCAEBpG5eMcrj2I0ktpKLeaqXQ3Pst42KGIshpdTmQLAeTgFGJ2wvh+tayMOR0n1RZ8B9z13vnOPBnsBq4E1ffgZpPFZHWVpO2cvhjYpOcbBd5TlhpDu5zq9mHGZcVi0y+VFkcFkDdyKJfTt99wEyHSEzDM90KH0nexpwZHJHKYYhjzlwGe0pP/IKfxociaEb7YDbi6KGJY1R2cR76E6NAtXqY4pPH3plLcl8LD7V+cOLUbUWRFZRPTAbVZO3mxK18Xc1ZaAiS8ARJXpZliXAomR94siiiMx8ZBOkXGTlnH0F/9ov1xPtWwEqP9wAAAAASUVORK5CYII=
@@ -1363,7 +1363,7 @@
             Notification for Chrome/Cromium users as Chrome bug with requests + Violenmonkey may be banned soon. It's shown 3 times.
             Added: UHD100
 
-23.2.1  -  Added:  DDLValley, Derinport, Zamunda-stolen, Energy Torrent (BG)
+23.2.1  -  Added:  DDLValley, Derinport, Zamunda-stolen, Energy Torrent (BG), StreamCloud (DE), SerienStream (DE)
            Removed: Demonoid
 
 
@@ -5612,7 +5612,7 @@ var streaming_sites = [
       'both': true},
   {   'name': 'KissAnime',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgBAMAAACBVGfHAAAAMFBMVEUAAADkD4VUsAL30An41yzqRKDoVKZbtCptu1BftjhrlCepwQbONHeTajrEz1iwzTiPwbTpAAAAAXRSTlMAQObYZgAAANdJREFUKM+VkDEOgkAQRQcEChuZAioLMo1iYkKydDYkegAs7PUGhBNYUhovYW9r5TWsPIo7O7CAVr7uv/1/N1n4g6Y5j3JNlA7zlTRVn11ikl6QYflVoMVAVCwHopZZLy5j4e3eLOxkopTKWSQ2s3GtUCKI1rbAbIieaMRWp2L2uNMKMWwXGUyJKD0htqIA50UEDmIpEwCc34BF2AlZ7zGSV8CJypEonK4Ry61ZIAIxEpGDeTBgIRtdDnkhRU9fEqAABpUX+pSJu/8B8I04gsW3uTcHzr98AP7ZJ207pii8AAAAAElFTkSuQmCC',
-      'searchUrl': 'https://w3.kissanimes.cc/search?keyword=%search_string_orig%',
+      'searchUrl': 'https://w4.kissanimes.cc/search?keyword=%search_string_orig%',
       'loggedOutRegex': /Cloudflare|Ray ID/,
       'matchRegex': /sorry we can/,
       'inThirdSearchBar': true,
@@ -5632,6 +5632,24 @@ var streaming_sites = [
       'searchUrl': 'https://ok.ru/video/search?st.cmd=video&st.psft=search&st.m=SEARCH&st.ft=search&cmd=VideoContentBlock&st.v.srt=All&st.v.sfd=LONG&st.v.sfhd=off&st.v.sq=%search_string_orig%&gwt.requested=xxx',
       'loggedOutRegex': /Cloudflare|Ray ID/,
       'matchRegex': /No search results found/,
+      'inThirdSearchBar': true,
+      'both': true},
+  {   'name': 'SerienStream (DE)',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgBAMAAACBVGfHAAAAGFBMVEUAAABErfJCpej9/v8+oeOKxezJ5PZrtugHogkKAAAAAXRSTlMAQObYZgAAAJZJREFUKM+d0jEOwjAMBVDDCUhUMZOvSBzAanYsLkB7hoo9cH8RSEVid6s3P2X41g/RUfCfeCEip4booOFEQYOnm4Zh+6ICDAAIPfhrliIN8EpvQQdx5nEQKOAlChTw846wgi/wFTHADxhI3gBnAyM0pKwhTRJUjkkFq7nacXPd2/nnJQKuA6DsDX7iVthTg61yW7b9Dh/ESTkmBzorqQAAAABJRU5ErkJggg==',
+      'loggedOutRegex': /Cloudflare|Ray ID/,
+      'goToUrl': 'https://serienstream.to/search?q=%search_string_orig%',
+      'searchUrl': 'https://serienstream.to/ajax/search',
+      'mPOST': 'keyword=%search_string_orig%',
+      'matchRegex': /serie\/stream/,
+      'positiveMatch': true,
+      'inThirdSearchBar': true,
+      'TV': true},
+  {   'name': 'StreamCloud (DE)',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQBAMAAADt3eJSAAAAGFBMVEX9/vwiXbE1b75Gf8Zcj9GLrtnZ6fvE2O7Yo1L8AAAAUklEQVQI12PABthDQhPAjBAXlzAQzeoCBCAGizEQhDMwsAUbg4ADQ7GSkpKRkpIqg5MSGCgzKCkqKikKKQkzGAqCgQhDIIQhxsCqCKKFExhwAwDALgv/lINodwAAAABJRU5ErkJggg==',
+      'loggedOutRegex': /Cloudflare|Ray ID/,
+      'searchUrl': 'https://streamcloud.my/?do=search&subaction=search&story=%tt%',
+      'matchRegex': /item-video/,
+      'positiveMatch': true,
       'inThirdSearchBar': true,
       'both': true},
   {   'name': 'StreamKiste (DE)',
