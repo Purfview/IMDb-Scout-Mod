@@ -5505,21 +5505,21 @@ var other_sites = [
       'both': true},
   {   'name': 'Voidtools-ID',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAclBMVEUAAACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOAD/gAD7fQDZZgDXZACnQwDrcgD0eADvdQClQgCkQQD3ewC2TQD3egDcaADVYwCwSgA9Lo9lAAAAFnRSTlMA/j7oBfCzq6FQ+Ujt25Z8XjYz39db4uTxuwAAAJlJREFUGNNNj9kWgjAMREkpFGUT1Okitqz//4ualgfmJblz5mTJkoTKKVciOyU7v0+YrK9kMrpFg6WXKuX9jM2RM9C+ZkPt2J5CitbAlmzkExzPGwLWgg0CSMZGg66JMWCOCWVh2iEbX/8aZ/QHYAIFC+14y+3+iUekOxJ/D7tiNq6SJ1NfFlSUdVzB/OCHmKLBfNGtad5X/gFwbwt+xeZTxgAAAABJRU5ErkJggg==',
-      'searchUrl': 'http://localhost:8080/?search=%tt%',
+      'searchUrl': 'http://voidtools.replacement/?search=%tt%',
       'loggedOutRegex': /invalid request/,
       'matchRegex': />0 results</,
       'inSecondSearchBar': true,
       'both': true},
   {   'name': 'Voidtools-Title',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAclBMVEUAAACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOAD/gAD7fQDZZgDXZACnQwDrcgD0eADvdQClQgCkQQD3ewC2TQD3egDcaADVYwCwSgA9Lo9lAAAAFnRSTlMA/j7oBfCzq6FQ+Ujt25Z8XjYz39db4uTxuwAAAJlJREFUGNNNj9kWgjAMREkpFGUT1Okitqz//4ualgfmJblz5mTJkoTKKVciOyU7v0+YrK9kMrpFg6WXKuX9jM2RM9C+ZkPt2J5CitbAlmzkExzPGwLWgg0CSMZGg66JMWCOCWVh2iEbX/8aZ/QHYAIFC+14y+3+iUekOxJ/D7tiNq6SJ1NfFlSUdVzB/OCHmKLBfNGtad5X/gFwbwt+xeZTxgAAAABJRU5ErkJggg==',
-      'searchUrl': 'http://localhost:8080/?search=%search_string%',
+      'searchUrl': 'http://voidtools.replacement/?search=%search_string%',
       'loggedOutRegex': /invalid request/,
       'matchRegex': />0 results</,
       'inSecondSearchBar': true,
       'both': true},
   {   'name': 'Voidtools-ID-ES',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAclBMVEUAAACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOAD/gAD7fQDZZgDXZACnQwDrcgD0eADvdQClQgCkQQD3ewC2TQD3egDcaADVYwCwSgA9Lo9lAAAAFnRSTlMA/j7oBfCzq6FQ+Ujt25Z8XjYz39db4uTxuwAAAJlJREFUGNNNj9kWgjAMREkpFGUT1Okitqz//4ualgfmJblz5mTJkoTKKVciOyU7v0+YrK9kMrpFg6WXKuX9jM2RM9C+ZkPt2J5CitbAlmzkExzPGwLWgg0CSMZGg66JMWCOCWVh2iEbX/8aZ/QHYAIFC+14y+3+iUekOxJ/D7tiNq6SJ1NfFlSUdVzB/OCHmKLBfNGtad5X/gFwbwt+xeZTxgAAAABJRU5ErkJggg==',
-      'searchUrl': 'http://localhost:8080/?search=%tt%',
+      'searchUrl': 'http://voidtools.replacement/?search=%tt%',
       'goToUrl': 'es:%tt%',
       'loggedOutRegex': /invalid request/,
       'matchRegex': />0 results</,
@@ -5527,7 +5527,7 @@ var other_sites = [
       'both': true},
   {   'name': 'Voidtools-Title-ES',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAclBMVEUAAACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOAD/gAD7fQDZZgDXZACnQwDrcgD0eADvdQClQgCkQQD3ewC2TQD3egDcaADVYwCwSgA9Lo9lAAAAFnRSTlMA/j7oBfCzq6FQ+Ujt25Z8XjYz39db4uTxuwAAAJlJREFUGNNNj9kWgjAMREkpFGUT1Okitqz//4ualgfmJblz5mTJkoTKKVciOyU7v0+YrK9kMrpFg6WXKuX9jM2RM9C+ZkPt2J5CitbAlmzkExzPGwLWgg0CSMZGg66JMWCOCWVh2iEbX/8aZ/QHYAIFC+14y+3+iUekOxJ/D7tiNq6SJ1NfFlSUdVzB/OCHmKLBfNGtad5X/gFwbwt+xeZTxgAAAABJRU5ErkJggg==',
-      'searchUrl': 'http://localhost:8080/?search=%search_string%',
+      'searchUrl': 'http://voidtools.replacement/?search=%search_string%',
       'goToUrl': 'es:%search_string%',
       'loggedOutRegex': /invalid request/,
       'matchRegex': />0 results</,
@@ -6283,6 +6283,12 @@ var icon_sites = icon_sites_main.concat(special_buttons);
 
 async function replaceSearchUrlParams(site, movie_id, movie_title, movie_title_orig, movie_year, series_id, season_id, episode_id, mPOSTsearch) {
   var search_url = ('mPOST' in site && !mPOSTsearch) ? site['mPOST'] : site['searchUrl'];
+
+  if (search_url.includes("http://voidtools.replacement")) {
+    const voidURL = GM_config.get("void_url").replace(/\/+$/, "");
+    search_url = search_url.replace("http://voidtools.replacement", voidURL);
+  }
+
   // If an array, do a little bit of recursion
   if ($.isArray(search_url)) {
     var search_array = [];
@@ -7141,7 +7147,14 @@ async function maybeAddLink(elem, site_name, search_url, site, scout_tick, movie
       "Host": "dontorrent.equipment",
       "Referer": "https://dontorrent.equipment"
     };
+  } else if (site['name'].includes("Voidtools-")) {
+    if (GM_config.get("void_username") !== "") {
+      reqHeader = {
+        "Authorization": "Basic " + GM_config.get("void_username") + ":" + GM_config.get("void_password"),
+      };
+    }
   }
+
   // Check for results with GET method.
   GM.xmlHttpRequest({
     method: 'GET',
@@ -11042,7 +11055,10 @@ function countSites(task) {
       'emby_password': {'type': 'text'},
       'emby_debug': {'type': 'checkbox'},
       'milkie_authToken': {'type': 'text'},
-      'tnt_authToken': {'type': 'text'}
+      'tnt_authToken': {'type': 'text'},
+      'void_url': {'type': 'text'},
+      'void_username': {'type': 'text'},
+      'void_password': {'type': 'text'}
     };
     $.each(custom_sites, function(index, site) {config_fields[configName(site)] = {'type': 'checkbox'};});
     $.each(public_sites, function(index, site) {config_fields[configName(site)] = {'type': 'checkbox'};});
@@ -11647,6 +11663,21 @@ var config_fields = {
   },
   'tnt_authToken': {
     'label': 'TNT:&nbsp &nbsp',
+    'type': 'text',
+    'default': ''
+  },
+  'void_url': {
+    'label': 'Voidtools URL',
+    'type': 'text',
+    'default': 'http://localhost:8080'
+  },
+  'void_username': {
+    'label': 'Voidtools Username',
+    'type': 'text',
+    'default': ''
+  },
+  'void_password': {
+    'label': 'Voidtools Password',
     'type': 'text',
     'default': ''
   }
