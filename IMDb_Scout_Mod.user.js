@@ -7150,7 +7150,7 @@ async function maybeAddLink(elem, site_name, search_url, site, scout_tick, movie
   } else if (site['name'].includes("Voidtools-")) {
     if (GM_config.get("void_username") !== "") {
       reqHeader = {
-        "Authorization": "Basic " + GM_config.get("void_username") + ":" + GM_config.get("void_password"),
+        "Authorization": "Basic " + btoa(GM_config.get("void_username") + ":" + GM_config.get("void_password")),
       };
     }
   }
