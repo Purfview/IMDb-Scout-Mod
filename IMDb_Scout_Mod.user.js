@@ -11163,6 +11163,7 @@ var sonarr_usescenenumbering_spacing = "&nbsp &nbsp";
 var sonarr_monitored_spacing = " &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp";
 var sonarr_languageprofileid_spacing = " &nbsp &nbsp &nbsp &nbsp &nbsp";
 var sonarr_seriestype_spacing = "&nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp";
+var void_url_spacing = "&nbsp &nbsp &nbsp &nbsp &nbsp";
 if (navigator.userAgent.toLowerCase().indexOf('firefox') > -1) {
   set_cfg_iconsize_spacing = " &nbsp";
   radarr_url_spacing = " &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp";
@@ -11172,6 +11173,7 @@ if (navigator.userAgent.toLowerCase().indexOf('firefox') > -1) {
   sonarr_monitored_spacing = " &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp";
   sonarr_languageprofileid_spacing = "&nbsp &nbsp &nbsp &nbsp &nbsp";
   sonarr_seriestype_spacing = "&nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp";
+  void_url_spacing = "&nbsp &nbsp &nbsp &nbsp &nbsp &nbsp";
 }
 
 var config_fields = {
@@ -11667,17 +11669,18 @@ var config_fields = {
     'default': ''
   },
   'void_url': {
-    'label': 'Voidtools URL',
+    'label': 'Voidtools URL:' + void_url_spacing,
+    'section': 'Voidtools config:',
     'type': 'text',
     'default': 'http://localhost:8080'
   },
   'void_username': {
-    'label': 'Voidtools Username',
+    'label': 'Voidtools Username:',
     'type': 'text',
     'default': ''
   },
   'void_password': {
-    'label': 'Voidtools Password',
+    'label': 'Voidtools Password:&nbsp',
     'type': 'text',
     'default': ''
   }
@@ -11808,7 +11811,8 @@ GM_config.init({
           #imdb_scout_section_header_13, #imdb_scout_section_header_14, #imdb_scout_section_header_15, \
           #imdb_scout_section_header_16, #imdb_scout_section_header_17, #imdb_scout_section_header_18, \
           #imdb_scout_section_header_19, #imdb_scout_section_header_20, #imdb_scout_section_header_21, \
-          #imdb_scout_section_header_22, #imdb_scout_section_header_23, #imdb_scout_section_header_24 { \
+          #imdb_scout_section_header_22, #imdb_scout_section_header_23, #imdb_scout_section_header_24, \
+          #imdb_scout_section_header_25 { \
              background:   #00ab00 !important; \
              color:          black !important; \
              font-weight:     bold !important; \
@@ -11872,79 +11876,79 @@ GM_config.init({
        'color': '#cb0000'
       });
 
-      $('#imdb_scout').contents().find('#imdb_scout_section_12').find('.field_label').each(function(index, label) {
+      $('#imdb_scout').contents().find('#imdb_scout_section_13').find('.field_label').each(function(index, label) {
         var url = new URL(custom_sites[index].searchUrl);
         $(label).append(' ' + '<a class="grey_link" target="_blank" rel="noreferrer" style="color: gray; text-decoration : none" href="' + url.origin + '">'
                         + (/www./.test(url.hostname) ? url.hostname.match(/www.(.*)/)[1] : url.hostname) + '</a>');
         $(label).prepend(getFavicon(custom_sites[index], true));
       });
-      $('#imdb_scout').contents().find('#imdb_scout_section_13').find('.field_label').each(function(index, label) {
+      $('#imdb_scout').contents().find('#imdb_scout_section_14').find('.field_label').each(function(index, label) {
         var url = new URL(public_sites[index].searchUrl);
         $(label).append(' ' + '<a class="grey_link" target="_blank" rel="noreferrer" style="color: gray; text-decoration : none" href="' + url.origin + '">'
                         + (/www./.test(url.hostname) ? url.hostname.match(/www.(.*)/)[1] : url.hostname) + '</a>');
         $(label).prepend(getFavicon(public_sites[index], true));
       });
-      $('#imdb_scout').contents().find('#imdb_scout_section_14').find('.field_label').each(function(index, label) {
+      $('#imdb_scout').contents().find('#imdb_scout_section_15').find('.field_label').each(function(index, label) {
         var url = new URL(private_sites[index].searchUrl);
         $(label).append(' ' + '<a class="grey_link" target="_blank" rel="noreferrer" style="color: gray; text-decoration : none" href="' + url.origin + '">'
                         + (/www./.test(url.hostname) ? url.hostname.match(/www.(.*)/)[1] : url.hostname) + '</a>');
         $(label).prepend(getFavicon(private_sites[index], true));
       });
-      $('#imdb_scout').contents().find('#imdb_scout_section_15').find('.field_label').each(function(index, label) {
+      $('#imdb_scout').contents().find('#imdb_scout_section_16').find('.field_label').each(function(index, label) {
         var url = new URL(chinese_sites[index].searchUrl);
         $(label).append(' ' + '<a class="grey_link" target="_blank" rel="noreferrer" style="color: gray; text-decoration : none" href="' + url.origin + '">'
                         + (/www./.test(url.hostname) ? url.hostname.match(/www.(.*)/)[1] : url.hostname) + '</a>');
         $(label).prepend(getFavicon(chinese_sites[index], true));
       });
-      $('#imdb_scout').contents().find('#imdb_scout_section_16').find('.field_label').each(function(index, label) {
+      $('#imdb_scout').contents().find('#imdb_scout_section_17').find('.field_label').each(function(index, label) {
         var url = new URL(french_sites[index].searchUrl);
         $(label).append(' ' + '<a class="grey_link" target="_blank" rel="noreferrer" style="color: gray; text-decoration : none" href="' + url.origin + '">'
                         + (/www./.test(url.hostname) ? url.hostname.match(/www.(.*)/)[1] : url.hostname) + '</a>');
         $(label).prepend(getFavicon(french_sites[index], true));
       });
-      $('#imdb_scout').contents().find('#imdb_scout_section_17').find('.field_label').each(function(index, label) {
+      $('#imdb_scout').contents().find('#imdb_scout_section_18').find('.field_label').each(function(index, label) {
         var url = new URL(german_sites[index].searchUrl);
         $(label).append(' ' + '<a class="grey_link" target="_blank" rel="noreferrer" style="color: gray; text-decoration : none" href="' + url.origin + '">'
                         + (/www./.test(url.hostname) ? url.hostname.match(/www.(.*)/)[1] : url.hostname) + '</a>');
         $(label).prepend(getFavicon(german_sites[index], true));
       });
-      $('#imdb_scout').contents().find('#imdb_scout_section_18').find('.field_label').each(function(index, label) {
+      $('#imdb_scout').contents().find('#imdb_scout_section_19').find('.field_label').each(function(index, label) {
         var url = new URL(usenet_sites[index].searchUrl);
         $(label).append(' ' + '<a class="grey_link" target="_blank" rel="noreferrer" style="color: gray; text-decoration : none" href="' + url.origin + '">'
                         + (/www./.test(url.hostname) ? url.hostname.match(/www.(.*)/)[1] : url.hostname) + '</a>');
         $(label).prepend(getFavicon(usenet_sites[index], true));
       });
-      $('#imdb_scout').contents().find('#imdb_scout_section_19').find('.field_label').each(function(index, label) {
+      $('#imdb_scout').contents().find('#imdb_scout_section_20').find('.field_label').each(function(index, label) {
         var url = new URL(subs_sites[index].searchUrl);
         $(label).append(' ' + '<a class="grey_link" target="_blank" rel="noreferrer" style="color: gray; text-decoration : none" href="' + url.origin + '">'
                         + (/www./.test(url.hostname) ? url.hostname.match(/www.(.*)/)[1] : url.hostname) + '</a>');
         $(label).prepend(getFavicon(subs_sites[index], true));
       });
-      $('#imdb_scout').contents().find('#imdb_scout_section_20').find('.field_label').each(function(index, label) {
+      $('#imdb_scout').contents().find('#imdb_scout_section_21').find('.field_label').each(function(index, label) {
         var url = new URL(pre_databases[index].searchUrl);
         $(label).append(' ' + '<a class="grey_link" target="_blank" rel="noreferrer" style="color: gray; text-decoration : none" href="' + url.origin + '">'
                         + (/www./.test(url.hostname) ? url.hostname.match(/www.(.*)/)[1] : url.hostname) + '</a>');
         $(label).prepend(getFavicon(pre_databases[index], true));
       });
-      $('#imdb_scout').contents().find('#imdb_scout_section_21').find('.field_label').each(function(index, label) {
+      $('#imdb_scout').contents().find('#imdb_scout_section_22').find('.field_label').each(function(index, label) {
         var url = new URL(other_sites[index].searchUrl);
         $(label).append(' ' + '<a class="grey_link" target="_blank" rel="noreferrer" style="color: gray; text-decoration : none" href="' + url.origin + '">'
                         + (/www./.test(url.hostname) ? url.hostname.match(/www.(.*)/)[1] : url.hostname) + '</a>');
         $(label).prepend(getFavicon(other_sites[index], true));
       });
-      $('#imdb_scout').contents().find('#imdb_scout_section_22').find('.field_label').each(function(index, label) {
+      $('#imdb_scout').contents().find('#imdb_scout_section_23').find('.field_label').each(function(index, label) {
         var url = new URL(streaming_sites[index].searchUrl);
         $(label).append(' ' + '<a class="grey_link" target="_blank" rel="noreferrer" style="color: gray; text-decoration : none" href="' + url.origin + '">'
                         + (/www./.test(url.hostname) ? url.hostname.match(/www.(.*)/)[1] : url.hostname) + '</a>');
         $(label).prepend(getFavicon(streaming_sites[index], true));
       });
-      $('#imdb_scout').contents().find('#imdb_scout_section_23').find('.field_label').each(function(index, label) {
+      $('#imdb_scout').contents().find('#imdb_scout_section_24').find('.field_label').each(function(index, label) {
         var url = new URL(icon_sites_main[index].searchUrl);
         $(label).append(' ' + '<a class="grey_link" target="_blank" rel="noreferrer" style="color: gray; text-decoration : none" href="' + url.origin + '">'
                         + (/www./.test(url.hostname) ? url.hostname.match(/www.(.*)/)[1] : url.hostname) + '</a>');
         $(label).prepend(getFavicon(icon_sites_main[index], true));
       });
-      $('#imdb_scout').contents().find('#imdb_scout_section_24').find('.field_label').each(function(index, label) {
+      $('#imdb_scout').contents().find('#imdb_scout_section_25').find('.field_label').each(function(index, label) {
         var url = new URL(special_buttons[index].searchUrl);
         $(label).append(' ' + '<a class="grey_link" target="_blank" rel="noreferrer" style="color: gray; text-decoration : none" href="' + url.origin + '">'
                         + (/www./.test(url.hostname) ? url.hostname.match(/www.(.*)/)[1] : url.hostname) + '</a>');
