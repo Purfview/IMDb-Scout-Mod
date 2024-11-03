@@ -5505,21 +5505,21 @@ var other_sites = [
       'both': true},
   {   'name': 'Voidtools-ID',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAclBMVEUAAACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOAD/gAD7fQDZZgDXZACnQwDrcgD0eADvdQClQgCkQQD3ewC2TQD3egDcaADVYwCwSgA9Lo9lAAAAFnRSTlMA/j7oBfCzq6FQ+Ujt25Z8XjYz39db4uTxuwAAAJlJREFUGNNNj9kWgjAMREkpFGUT1Okitqz//4ualgfmJblz5mTJkoTKKVciOyU7v0+YrK9kMrpFg6WXKuX9jM2RM9C+ZkPt2J5CitbAlmzkExzPGwLWgg0CSMZGg66JMWCOCWVh2iEbX/8aZ/QHYAIFC+14y+3+iUekOxJ/D7tiNq6SJ1NfFlSUdVzB/OCHmKLBfNGtad5X/gFwbwt+xeZTxgAAAABJRU5ErkJggg==',
-      'searchUrl': 'http://localhost:8080/?search=%tt%',
+      'searchUrl': 'http://voidtools.replacement/?search=%tt%',
       'loggedOutRegex': /invalid request/,
       'matchRegex': />0 results</,
       'inSecondSearchBar': true,
       'both': true},
   {   'name': 'Voidtools-Title',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAclBMVEUAAACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOAD/gAD7fQDZZgDXZACnQwDrcgD0eADvdQClQgCkQQD3ewC2TQD3egDcaADVYwCwSgA9Lo9lAAAAFnRSTlMA/j7oBfCzq6FQ+Ujt25Z8XjYz39db4uTxuwAAAJlJREFUGNNNj9kWgjAMREkpFGUT1Okitqz//4ualgfmJblz5mTJkoTKKVciOyU7v0+YrK9kMrpFg6WXKuX9jM2RM9C+ZkPt2J5CitbAlmzkExzPGwLWgg0CSMZGg66JMWCOCWVh2iEbX/8aZ/QHYAIFC+14y+3+iUekOxJ/D7tiNq6SJ1NfFlSUdVzB/OCHmKLBfNGtad5X/gFwbwt+xeZTxgAAAABJRU5ErkJggg==',
-      'searchUrl': 'http://localhost:8080/?search=%search_string%',
+      'searchUrl': 'http://voidtools.replacement/?search=%search_string%',
       'loggedOutRegex': /invalid request/,
       'matchRegex': />0 results</,
       'inSecondSearchBar': true,
       'both': true},
   {   'name': 'Voidtools-ID-ES',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAclBMVEUAAACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOAD/gAD7fQDZZgDXZACnQwDrcgD0eADvdQClQgCkQQD3ewC2TQD3egDcaADVYwCwSgA9Lo9lAAAAFnRSTlMA/j7oBfCzq6FQ+Ujt25Z8XjYz39db4uTxuwAAAJlJREFUGNNNj9kWgjAMREkpFGUT1Okitqz//4ualgfmJblz5mTJkoTKKVciOyU7v0+YrK9kMrpFg6WXKuX9jM2RM9C+ZkPt2J5CitbAlmzkExzPGwLWgg0CSMZGg66JMWCOCWVh2iEbX/8aZ/QHYAIFC+14y+3+iUekOxJ/D7tiNq6SJ1NfFlSUdVzB/OCHmKLBfNGtad5X/gFwbwt+xeZTxgAAAABJRU5ErkJggg==',
-      'searchUrl': 'http://localhost:8080/?search=%tt%',
+      'searchUrl': 'http://voidtools.replacement/?search=%tt%',
       'goToUrl': 'es:%tt%',
       'loggedOutRegex': /invalid request/,
       'matchRegex': />0 results</,
@@ -5527,7 +5527,7 @@ var other_sites = [
       'both': true},
   {   'name': 'Voidtools-Title-ES',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAclBMVEUAAACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOACWOAD/gAD7fQDZZgDXZACnQwDrcgD0eADvdQClQgCkQQD3ewC2TQD3egDcaADVYwCwSgA9Lo9lAAAAFnRSTlMA/j7oBfCzq6FQ+Ujt25Z8XjYz39db4uTxuwAAAJlJREFUGNNNj9kWgjAMREkpFGUT1Okitqz//4ualgfmJblz5mTJkoTKKVciOyU7v0+YrK9kMrpFg6WXKuX9jM2RM9C+ZkPt2J5CitbAlmzkExzPGwLWgg0CSMZGg66JMWCOCWVh2iEbX/8aZ/QHYAIFC+14y+3+iUekOxJ/D7tiNq6SJ1NfFlSUdVzB/OCHmKLBfNGtad5X/gFwbwt+xeZTxgAAAABJRU5ErkJggg==',
-      'searchUrl': 'http://localhost:8080/?search=%search_string%',
+      'searchUrl': 'http://voidtools.replacement/?search=%search_string%',
       'goToUrl': 'es:%search_string%',
       'loggedOutRegex': /invalid request/,
       'matchRegex': />0 results</,
@@ -6147,7 +6147,7 @@ var icon_sites_main = [
   {   'name': 'ThePosterDB',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgBAMAAACBVGfHAAAAGFBMVEUAAAD7bEL8q5T/5+D/+Pb8i2r+1Mj+w7Lo3izNAAAAAXRSTlMAQObYZgAAAM1JREFUKM9VkcEKwjAMhlXwbga9a2G+wGR7AAde7Q56d9o+wLB7ffMvybD/IfT7aFJIN5rgNkVqouGf98S5F1yYHYMLXI4q+FzlFNiu7HI7rmYLbjgvNoflgjszwsgVIrAZCIdz36OGRdDUazoS4d7Ct6CCHiI+pKKaR3A7n1TkxIZ5TiZijJcrFxNVjg0nJmuhZ7PkSyZ8BidvYvAwnfe1Cs+ZOlQb6jUyNKAHQYfTDQ/CuucTjHBlS8VgkobVCFtEKNhX0bH8XDxQGOMftTs7PgAFfmYAAAAASUVORK5CYII=',
       'searchUrl': 'https://theposterdb.com/search?term=%search_string_orig%',
-      'showByDefault': false},   
+      'showByDefault': false},
   {   'name': 'TMDB',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAGFBMVEUAAAAEJkIADixfv7IdZ3sYtdYz5fSL6MRZBwKqAAAAAXRSTlMAQObYZgAAAg9JREFUSMfNls+OmzAQxrdv0BnYzXmm5AHAaTjbccg5K+AeKXBvicTrd2yInW4adqVKq/0gCsG/fJ4/FubJScM/lT5N+gYP9d0DsKBgsGQBi/IGyxb/D8A7+jIAMhOgfE9XACyiBYdpjAOA5VBeuDSgMFHbnHjfOB0pALty2DigFEAdYd17oDNhCl4VhCVyiS8FE1ZNEy08gB7YWJliYzW0M3C+AXIJZBwF2PYFNQ8ADcsOyzEIMGXxs6lpzqI3cA9IDOe5DkI+qiT+Vclwi+WMvRBBBNgNOoYD59BY6tQSSXpsNaUW0GLqLqwOwGGgbCwwGQeT9Ug9Zmd67iXcAIwmGXMslbpwa2TUAfWtQ1kcVJ4NSimsXtcTcGSKwO73YeeBrUlOL6/ggFhJAexFrQoPyASVuQf0cFnNU1DXINxNYcpfq5xckITtmTxQA0SgkMOlOeaE1YngbZo7k5hEA1nLAKkByGpKa1vHdpM7XHX9D/+JpV5W7OYs/zfk6WYEMnXVRnJsGk0oiwYDIM3wEqDPad21vcGqaeOazEYV1LkcqxNXZh1X9Y8hAq7YLGeln2OpkzcAZR3v25tVfQ+IQ72PhZI2RaGMPgtgqAsAlYHYOn8rWYhDDFLa5OQpA+u+rxmrvotpAqd2liYAqxEgtZpvesFXEVx7xvy1nrRL+owt6Z0gPrCxLlt8bHNffj34A6r1+YAJRp2JAAAAAElFTkSuQmCC',
       'searchUrl': 'https://www.themoviedb.org/search?query=%search_string%+y:%year%'},
@@ -6283,6 +6283,16 @@ var icon_sites = icon_sites_main.concat(special_buttons);
 
 async function replaceSearchUrlParams(site, movie_id, movie_title, movie_title_orig, movie_year, series_id, season_id, episode_id, mPOSTsearch) {
   var search_url = ('mPOST' in site && !mPOSTsearch) ? site['mPOST'] : site['searchUrl'];
+
+  voidURL = GM_config.get("void_url").replace(/\/+$/, "");
+
+  var search_url = ('mPOST' in site && !mPOSTsearch) ? site['mPOST'] : site['searchUrl'];
+  if (search_url.includes("http://voidtools.replacement")) {
+    console.log("search urls:", search_url);
+    search_url = search_url.replace("http://voidtools.replacement", voidURL);
+    console.log("search url after replacement:", search_url);
+  }
+
   // If an array, do a little bit of recursion
   if ($.isArray(search_url)) {
     var search_array = [];
@@ -7142,12 +7152,24 @@ async function maybeAddLink(elem, site_name, search_url, site, scout_tick, movie
       "Referer": "https://dontorrent.equipment"
     };
   }
+
+  //set voidtool credentials
+  voidUsername = GM_config.get("void_username");
+  voidPassword = GM_config.get("void_password");
+
   // Check for results with GET method.
   GM.xmlHttpRequest({
     method: 'GET',
-    headers: reqHeader,
-    timeout: parseInt(GM_config.get('timeout_ms')),
     url: search_url,
+    timeout: parseInt(GM_config.get('timeout_ms')),
+    headers: (function() {
+      const reqHeader = {}; // Initialize headers as an empty object
+      // Check if the search_url starts with the specified voidURL
+      if (search_url.startsWith(voidURL)) {
+        reqHeader["Authorization"] = "Basic " + btoa(voidUsername + ":" + voidPassword);
+      }
+      return reqHeader;
+    })(),
     onload: function(response) {
       if (GM_config.get('debug_sites')) {
         const name = (site['TV']) ? site['name'] + ' (TV)' : site['name'];
@@ -7161,16 +7183,16 @@ async function maybeAddLink(elem, site_name, search_url, site, scout_tick, movie
       } else if (site['positiveMatch'] && site['loggedOutRegex'] && String(response.responseText).match(site['loggedOutRegex'])) {
         addLink(elem, site_name, target, site, 'logged_out', scout_tick);
       } else if (String(response.responseText).match(site['matchRegex']) ? !(success_match) : success_match) {
-          if (getPageSetting('highlight_missing').split(',').includes(site['name'])) {
-            if (elem.style) {
-              elem.parentNode.style.background = 'rgba(255,104,104,0.7)';
-            } else {
-              document.querySelector('#imdbscout_missing').style.background = 'rgba(255,104,104,0.7)';
-            }
+        if (getPageSetting('highlight_missing').split(',').includes(site['name'])) {
+          if (elem.style) {
+            elem.parentNode.style.background = 'rgba(255,104,104,0.7)';
+          } else {
+            document.querySelector('#imdbscout_missing').style.background = 'rgba(255,104,104,0.7)';
           }
-          if (!getPageSetting('hide_missing')) {
-            addLink(elem, site_name, target, site, 'missing', scout_tick);
-          }
+        }
+        if (!getPageSetting('hide_missing')) {
+          addLink(elem, site_name, target, site, 'missing', scout_tick);
+        }
       } else if (site['loggedOutRegex'] && String(response.responseText).match(site['loggedOutRegex'])) {
         addLink(elem, site_name, target, site, 'logged_out', scout_tick);
       } else {
@@ -7179,15 +7201,15 @@ async function maybeAddLink(elem, site_name, search_url, site, scout_tick, movie
     },
     onerror: function() {
       addLink(elem, site_name, target, site, 'error', scout_tick);
-      console.log("IMDb Scout Mod (GET-Request Error. Site): " +site_name);
+      console.log("IMDb Scout Mod (GET-Request Error. Site): " + site_name);
     },
     onabort: function() {
       addLink(elem, site_name, target, site, 'error', scout_tick);
-      console.log("IMDb Scout Mod (GET-Request aborted. Site): " +site_name);
+      console.log("IMDb Scout Mod (GET-Request aborted. Site): " + site_name);
     },
     ontimeout: function() {
       addLink(elem, site_name, target, site, 'error', scout_tick);
-      console.log("IMDb Scout Mod (GET-Request timed out. Site): " +site_name);
+      console.log("IMDb Scout Mod (GET-Request timed out. Site): " + site_name);
     }
   });
 }
@@ -11042,7 +11064,10 @@ function countSites(task) {
       'emby_password': {'type': 'text'},
       'emby_debug': {'type': 'checkbox'},
       'milkie_authToken': {'type': 'text'},
-      'tnt_authToken': {'type': 'text'}
+      'tnt_authToken': {'type': 'text'},
+      'void_url': {'type': 'text'},
+      'void_username': {'type': 'text'},
+      'void_password': {'type': 'text'}
     };
     $.each(custom_sites, function(index, site) {config_fields[configName(site)] = {'type': 'checkbox'};});
     $.each(public_sites, function(index, site) {config_fields[configName(site)] = {'type': 'checkbox'};});
@@ -11649,6 +11674,21 @@ var config_fields = {
     'label': 'TNT:&nbsp &nbsp',
     'type': 'text',
     'default': ''
+  },
+  'void_url': {
+    'label': 'Voidtools URL',
+    'type': 'text',
+    'default': 'http//localhost:8080'
+  },
+  'void_username': {
+    'label': 'Voidtools Username',
+    'type': 'text',
+    'default': ''
+  },
+  'void_password': {
+    'label': 'Voidtools Password',
+    'type': 'text',
+    'default': ''
   }
 };
 
@@ -12131,4 +12171,3 @@ if ($('html[xmlns\\:og="http://ogp.me/ns#"]').length) {
 }
 
 scoutWarning();
-
