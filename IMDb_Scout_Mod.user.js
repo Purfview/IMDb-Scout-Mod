@@ -6288,9 +6288,7 @@ async function replaceSearchUrlParams(site, movie_id, movie_title, movie_title_o
 
   var search_url = ('mPOST' in site && !mPOSTsearch) ? site['mPOST'] : site['searchUrl'];
   if (search_url.includes("http://voidtools.replacement")) {
-    console.log("search urls:", search_url);
     search_url = search_url.replace("http://voidtools.replacement", voidURL);
-    console.log("search url after replacement:", search_url);
   }
 
   // If an array, do a little bit of recursion
