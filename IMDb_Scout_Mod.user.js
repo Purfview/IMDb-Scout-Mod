@@ -2358,6 +2358,7 @@ var private_sites = [
       'searchUrl': 'https://blutopia.cc/torrents?imdbId=%nott%',
       'loggedOutRegex': /Cloudflare|Ray ID|Forgot Your Password|Service Unavailable/,
       'matchRegex': /torrent-search--list__overview/,
+      'matchRegex2': /fa-arrow-circle-up text-success/,
       'positiveMatch': true,
       'both': true},
   {   'name': 'Blu-TMDb',
@@ -6163,7 +6164,7 @@ var icon_sites_main = [
   {   'name': 'ThePosterDB',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgBAMAAACBVGfHAAAAGFBMVEUAAAD7bEL8q5T/5+D/+Pb8i2r+1Mj+w7Lo3izNAAAAAXRSTlMAQObYZgAAAM1JREFUKM9VkcEKwjAMhlXwbga9a2G+wGR7AAde7Q56d9o+wLB7ffMvybD/IfT7aFJIN5rgNkVqouGf98S5F1yYHYMLXI4q+FzlFNiu7HI7rmYLbjgvNoflgjszwsgVIrAZCIdz36OGRdDUazoS4d7Ct6CCHiI+pKKaR3A7n1TkxIZ5TiZijJcrFxNVjg0nJmuhZ7PkSyZ8BidvYvAwnfe1Cs+ZOlQb6jUyNKAHQYfTDQ/CuucTjHBlS8VgkobVCFtEKNhX0bH8XDxQGOMftTs7PgAFfmYAAAAASUVORK5CYII=',
       'searchUrl': 'https://theposterdb.com/search?term=%search_string_orig%',
-      'showByDefault': false},   
+      'showByDefault': false},
   {   'name': 'TMDB',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAGFBMVEUAAAAEJkIADixfv7IdZ3sYtdYz5fSL6MRZBwKqAAAAAXRSTlMAQObYZgAAAg9JREFUSMfNls+OmzAQxrdv0BnYzXmm5AHAaTjbccg5K+AeKXBvicTrd2yInW4adqVKq/0gCsG/fJ4/FubJScM/lT5N+gYP9d0DsKBgsGQBi/IGyxb/D8A7+jIAMhOgfE9XACyiBYdpjAOA5VBeuDSgMFHbnHjfOB0pALty2DigFEAdYd17oDNhCl4VhCVyiS8FE1ZNEy08gB7YWJliYzW0M3C+AXIJZBwF2PYFNQ8ADcsOyzEIMGXxs6lpzqI3cA9IDOe5DkI+qiT+Vclwi+WMvRBBBNgNOoYD59BY6tQSSXpsNaUW0GLqLqwOwGGgbCwwGQeT9Ug9Zmd67iXcAIwmGXMslbpwa2TUAfWtQ1kcVJ4NSimsXtcTcGSKwO73YeeBrUlOL6/ggFhJAexFrQoPyASVuQf0cFnNU1DXINxNYcpfq5xckITtmTxQA0SgkMOlOeaE1YngbZo7k5hEA1nLAKkByGpKa1vHdpM7XHX9D/+JpV5W7OYs/zfk6WYEMnXVRnJsGk0oiwYDIM3wEqDPad21vcGqaeOazEYV1LkcqxNXZh1X9Y8hAq7YLGeln2OpkzcAZR3v25tVfQ+IQ72PhZI2RaGMPgtgqAsAlYHYOn8rWYhDDFLa5OQpA+u+rxmrvotpAqd2liYAqxEgtZpvesFXEVx7xvy1nrRL+owt6Z0gPrCxLlt8bHNffj34A6r1+YAJRp2JAAAAAElFTkSuQmCC',
       'searchUrl': 'https://www.themoviedb.org/search?query=%search_string%+y:%year%'},
@@ -6887,6 +6888,9 @@ function addLink(elem, site_name, target, site, state, scout_tick, post_data) {
     } else if (state == 'missing') {
       (getPageSetting('highlight_sites').split(',').includes(site['name'])) ? icon.css('border-color', 'rgb(255,255,0)')
                                                                             : icon.css('border-color', 'rgb(230,200,100)');
+    } else if (state == 'seeding') {
+      (getPageSetting('highlight_sites').split(',').includes(site['name'])) ? icon.css('border-color', 'rgb(255,0,255)')
+                                                                            : icon.css('border-color', 'rgb(100,200,230)');
     } else if (state == 'found') {
       (getPageSetting('highlight_sites').split(',').includes(site['name'])) ? icon.css('border-color', 'rgb(0,220,0)')
                                                                             : icon.css('border-color', 'rgb(0,130,0)');
@@ -7127,6 +7131,8 @@ async function maybeAddLink(elem, site_name, search_url, site, scout_tick, movie
             }
         } else if (site['loggedOutRegex'] && String(response.responseText).match(site['loggedOutRegex'])) {
           addLink(elem, site_name, target, site, 'logged_out', scout_tick, post_data);
+        } else if (site['matchRegex2'] && String(response.responseText).match(site['matchRegex2'])) {
+          addLink(elem, site_name, target, site, 'seeding', scout_tick, post_data);
         } else {
           addLink(elem, site_name, target, site, 'found', scout_tick, post_data);
         }
@@ -7202,6 +7208,8 @@ async function maybeAddLink(elem, site_name, search_url, site, scout_tick, movie
           }
       } else if (site['loggedOutRegex'] && String(response.responseText).match(site['loggedOutRegex'])) {
         addLink(elem, site_name, target, site, 'logged_out', scout_tick);
+      } else if (site['matchRegex2'] && String(response.responseText).match(site['matchRegex2'])) {
+        addLink(elem, site_name, target, site, 'seeding', scout_tick);
       } else {
         addLink(elem, site_name, target, site, 'found', scout_tick);
       }
@@ -12019,6 +12027,7 @@ $.each(icon_sites, function(index, icon_site) {
 
 // For internal use (order matters).
 const valid_states = [
+  'seeding',
   'found',
   'missing',
   'logged_out',
