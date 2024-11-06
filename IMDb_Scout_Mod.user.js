@@ -2358,7 +2358,7 @@ var private_sites = [
       'searchUrl': 'https://blutopia.cc/torrents?imdbId=%nott%',
       'loggedOutRegex': /Cloudflare|Ray ID|Forgot Your Password|Service Unavailable/,
       'matchRegex': /torrent-search--list__overview/,
-      'matchRegex2': /fa-arrow-circle-up text-success/,
+      'seedingRegex': /fa-arrow-circle-up text-success/,
       'positiveMatch': true,
       'both': true},
   {   'name': 'Blu-TMDb',
@@ -7131,7 +7131,7 @@ async function maybeAddLink(elem, site_name, search_url, site, scout_tick, movie
             }
         } else if (site['loggedOutRegex'] && String(response.responseText).match(site['loggedOutRegex'])) {
           addLink(elem, site_name, target, site, 'logged_out', scout_tick, post_data);
-        } else if (site['matchRegex2'] && String(response.responseText).match(site['matchRegex2'])) {
+        } else if (site['seedingRegex'] && String(response.responseText).match(site['seedingRegex'])) {
           addLink(elem, site_name, target, site, 'seeding', scout_tick, post_data);
         } else {
           addLink(elem, site_name, target, site, 'found', scout_tick, post_data);
@@ -7208,7 +7208,7 @@ async function maybeAddLink(elem, site_name, search_url, site, scout_tick, movie
           }
       } else if (site['loggedOutRegex'] && String(response.responseText).match(site['loggedOutRegex'])) {
         addLink(elem, site_name, target, site, 'logged_out', scout_tick);
-      } else if (site['matchRegex2'] && String(response.responseText).match(site['matchRegex2'])) {
+      } else if (site['seedingRegex'] && String(response.responseText).match(site['seedingRegex'])) {
         addLink(elem, site_name, target, site, 'seeding', scout_tick);
       } else {
         addLink(elem, site_name, target, site, 'found', scout_tick);
