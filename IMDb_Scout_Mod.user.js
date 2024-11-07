@@ -6926,7 +6926,7 @@ function addLink(elem, site_name, target, site, state, scout_tick, post_data) {
                                                                             : icon.css('border-color', 'rgb(230,200,100)');
     } else if (state == 'seeding') {
       (getPageSetting('highlight_sites').split(',').includes(site['name'])) ? icon.css('border-color', 'rgb(255,0,255)')
-                                                                            : icon.css('border-color', 'rgb(100,200,230)');
+                                                                            : icon.css('border-color', 'rgb(130,0,130)');
     } else if (state == 'found') {
       (getPageSetting('highlight_sites').split(',').includes(site['name'])) ? icon.css('border-color', 'rgb(0,220,0)')
                                                                             : icon.css('border-color', 'rgb(0,130,0)');
