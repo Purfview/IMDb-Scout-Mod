@@ -2312,7 +2312,7 @@ var private_sites = [
       'searchUrl': 'https://beyond-hd.me/torrents/all?search=&doSearch=Search&imdb=%nott%',
       'loggedOutRegex': /FORGET PASSWORD/,
       'matchRegex': />N\/A</,
-      'seedingRegex': /fal fa-seedling/,
+      'seedingRegex': /<i class="fal fa-seedling" title="Seeding"/,
       'rateLimit': 625,
       'both': true},
   {   'name': 'BHD-Req',
