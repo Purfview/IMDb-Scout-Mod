@@ -1382,10 +1382,16 @@ UNIT3D:
       'matchRegex': /torrent-search--list__overview/,
       'positiveMatch': true,
 
+      'seedingRegex': /fa-arrow-circle-up/,
+
        v6.5.0:
       'matchRegex': /torrent-listings-name/,
       'positiveMatch': true,
+
+      'seedingRegex': /fal fa-leaf/,
+
       or
+      
       'matchRegex': /torrent-search--list__overview/,
       'positiveMatch': true,
 
