@@ -1446,6 +1446,9 @@ The string which appears if the searchUrl *doesn't* return a result.
 #  'positiveMatch' (optional):
 Changes the test to return true if the searchUrl *does* return a result that matches matchRegex.
 
+#  'seedingRegex' (optional):
+The string which appears if the searchUrl does return a result with seeding indicator.
+
 #  'TV' (optional):
 If true, it means that this site will only show up on TV pages.
 By default, sites only show up on movie pages.
