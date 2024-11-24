@@ -1382,10 +1382,16 @@ UNIT3D:
       'matchRegex': /torrent-search--list__overview/,
       'positiveMatch': true,
 
+      'seedingRegex': /fa-arrow-circle-up/,
+
        v6.5.0:
       'matchRegex': /torrent-listings-name/,
       'positiveMatch': true,
+
+      'seedingRegex': /fal fa-leaf/,
+
       or
+      
       'matchRegex': /torrent-search--list__overview/,
       'positiveMatch': true,
 
@@ -1445,6 +1451,9 @@ The string which appears if the searchUrl *doesn't* return a result.
 
 #  'positiveMatch' (optional):
 Changes the test to return true if the searchUrl *does* return a result that matches matchRegex.
+
+#  'seedingRegex' (optional):
+The string which appears if the searchUrl does return a result with seeding indicator.
 
 #  'TV' (optional):
 If true, it means that this site will only show up on TV pages.
@@ -2187,6 +2196,7 @@ var private_sites = [
       'searchUrl': 'https://aither.cc/torrents?imdbId=%nott%',
       'loggedOutRegex': /Cloudflare|Ray ID|Forgot Your Password/,
       'matchRegex': /torrent-search--list__overview/,
+      'seedingRegex': /fa-arrow-circle-up/,
       'positiveMatch': true,
       'both': true},
   {   'name': 'Aither-Req',
@@ -2200,7 +2210,8 @@ var private_sites = [
       'icon': 'data:image/png;base64,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',
       'searchUrl': 'https://anthelion.me/torrents.php?searchstr=%tt%',
       'loggedOutRegex': /You appear to have cookies disabled./,
-      'matchRegex': /Your search did not match anything/},
+      'matchRegex': /Your search did not match anything/,
+      'seedingRegex': /tl_seeding/},
   {   'name': 'ANT-Req',
       'icon': 'data:image/png;base64,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',
       'searchUrl': 'https://anthelion.me/requests.php?submit=true&search=%search_string%&showall=on',
@@ -2310,6 +2321,7 @@ var private_sites = [
       'searchUrl': 'https://beyond-hd.me/torrents/all?search=&doSearch=Search&imdb=%nott%',
       'loggedOutRegex': /FORGET PASSWORD/,
       'matchRegex': />N\/A</,
+      'seedingRegex': /<i class="fal fa-seedling" title="Seeding"/,
       'rateLimit': 625,
       'both': true},
   {   'name': 'BHD-Req',
@@ -2358,6 +2370,7 @@ var private_sites = [
       'searchUrl': 'https://blutopia.cc/torrents?imdbId=%nott%',
       'loggedOutRegex': /Cloudflare|Ray ID|Forgot Your Password|Service Unavailable/,
       'matchRegex': /torrent-search--list__overview/,
+      'seedingRegex': /fa-arrow-circle-up/,
       'positiveMatch': true,
       'both': true},
   {   'name': 'Blu-TMDb',
@@ -2365,6 +2378,7 @@ var private_sites = [
       'searchUrl': 'https://blutopia.cc/torrents?tmdbId=%tmdbid%',
       'loggedOutRegex': /Cloudflare|Ray ID|Forgot Your Password|Service Unavailable/,
       'matchRegex': /torrent-search--list__overview/,
+      'seedingRegex': /fa-arrow-circle-up/,
       'positiveMatch': true,
       'both': true},
   {   'name': 'Blu-Req',
@@ -2398,6 +2412,7 @@ var private_sites = [
       'searchUrl': 'https://broadcasthe.net/torrents.php?imdb=%tt%',
       'loggedOutRegex': /Lost your password\?/,
       'matchRegex': /action=download/,
+      'seedingRegex': /tor_highlight_seed/,
       'positiveMatch': true,
       'TV': true},
   {   'name': 'BTN-Title',
@@ -2443,6 +2458,7 @@ var private_sites = [
       'searchUrl': 'https://capybarabr.com/torrents?imdbId=%nott%',
       'loggedOutRegex': /Cloudflare|Ray ID|Esqueceu sua senha|Service Unavailable/,
       'matchRegex': /torrent-search--list__overview/,
+      'seedingRegex': /fa-arrow-circle-up/,
       'positiveMatch': true,
       'both': true},
   {   'name': 'CapybaraBR-Req',
@@ -2464,6 +2480,7 @@ var private_sites = [
       'searchUrl': 'https://chilebt.com/torrents?imdbId=%nott%',
       'loggedOutRegex': /Cloudflare|Ray ID|Olvidaste tu contraseña/,
       'matchRegex': /torrent-search--list__overview/,
+      'seedingRegex': /fa-arrow-circle-up/,
       'positiveMatch': true,
       'both': true},
   {   'name': 'CBT-Req',
@@ -2590,6 +2607,7 @@ var private_sites = [
       'searchUrl': 'https://datascene.xyz/torrents?imdbId=%nott%',
       'loggedOutRegex': /Cloudflare|Ray ID|Remember Me/,
       'matchRegex': /torrent-search--list__overview/,
+      'seedingRegex': /fa-arrow-circle-up/,
       'positiveMatch': true,
       'both': true},
   {   'name': 'DataScene-Req',
@@ -2711,6 +2729,7 @@ var private_sites = [
       'searchUrl': 'https://fearnopeer.com/torrents?imdbId=%nott%',
       'loggedOutRegex': /Cloudflare|Ray ID|Forgot Your Password/,
       'matchRegex': /torrent-search--list__overview/,
+      'seedingRegex': /fa-arrow-circle-up/,
       'positiveMatch': true,
       'both': true},
   {   'name': 'FearNoPeer-Req',
@@ -2814,6 +2833,7 @@ var private_sites = [
       'searchUrl': 'https://hd-olimpo.club/torrents?imdbId=%tt%',
       'loggedOutRegex': /Cloudflare|Ray ID|Olvidaste tu contraseña/,
       'matchRegex': /torrent-search--list__overview/,
+      'seedingRegex': /fa-arrow-circle-up/,
       'positiveMatch': true,
       'both': true},
   {   'name': 'HD-Olimpo-Req',
@@ -2828,6 +2848,7 @@ var private_sites = [
       'searchUrl': 'https://hd-united.vn/torrents?imdbId=%nott%',
       'loggedOutRegex': /Cloudflare|Ray ID|Forgot Your Password/,
       'matchRegex': /torrent-search--list__overview/,
+      'seedingRegex': /fa-arrow-circle-up/,
       'positiveMatch': true,
       'both': true},
   {   'name': 'HD-U-Req',
@@ -2842,6 +2863,7 @@ var private_sites = [
       'searchUrl': 'https://hdbits.org/browse.php?c1=1&c2=1&c3=1&c4=1&c5=1&c7=1&c8=1&imdb=%tt%',
       'loggedOutRegex': /Make sure your passcode generating|nginx/,
       'matchRegex': /Nothing here!/,
+      'seedingRegex': /tag tag_seeding/, // Needs to be enabled in profile
       'rateLimit': 250,
       'both': true},
   {   'name': 'HDb-Req',
@@ -2882,6 +2904,7 @@ var private_sites = [
       'searchUrl': 'https://hdzero.org/torrents?imdbId=%nott%',
       'loggedOutRegex': /Cloudflare|Ray ID|Olvidaste tu contraseña/,
       'matchRegex': /torrent-search--list__overview/,
+      'seedingRegex': /fa-arrow-circle-up/,
       'positiveMatch': true,
       'both': true},
   {   'name': 'HDZero-Req',
@@ -2902,6 +2925,7 @@ var private_sites = [
       'searchUrl': 'https://www.hawke.uno/torrents?imdbId=%tt%',
       'loggedOutRegex': /Cloudflare|Forgot Your Password|Service Unavailable/,
       'matchRegex': /torrent-listings-name/,
+      'seedingRegex': /fal fa-leaf/,
       'positiveMatch': true,
       'both': true},
   {   'name': 'HUNO-Req',
@@ -3045,6 +3069,7 @@ var private_sites = [
       'searchUrl': 'https://lat-team.com/torrents?tmdbId=%tmdbid%',
       'loggedOutRegex': /Cloudflare|Ray ID|Forgot Your Password/,
       'matchRegex': /torrent-search--list__overview/,
+      'seedingRegex': /fa-arrow-circle-up/,
       'positiveMatch': true,
       'both': true},
   {   'name': 'Lat-Team-Req',
@@ -3072,6 +3097,7 @@ var private_sites = [
       'searchUrl': 'https://theldu.to/torrents?imdbId=%nott%',
       'loggedOutRegex': /Cloudflare|Ray ID|Forgot Your Password/,
       'matchRegex': /torrent-search--list__overview/,
+      'seedingRegex': /fa-arrow-circle-up/,
       'positiveMatch': true,
       'both': true},
   {   'name': 'LDU-Req',
@@ -3103,6 +3129,7 @@ var private_sites = [
       'searchUrl': 'https://locadora.cc/torrents?imdbId=%nott%',
       'loggedOutRegex': /Cloudflare|Ray ID|Forgot Your Password|Esqueceu Sua Senha|Service Unavailable/,
       'matchRegex': /torrent-search--list__overview/,
+      'seedingRegex': /fa-arrow-circle-up/,
       'positiveMatch': true,
       'both': true},
   {   'name': 'Locadora-Req',
@@ -3117,6 +3144,7 @@ var private_sites = [
       'searchUrl': 'https://lst.gg/torrents?imdbId=%tt%',
       'loggedOutRegex': /Cloudflare|Ray ID|Forgot Your Password|Service Unavailable/,
       'matchRegex': /torrent-search--list__overview/,
+      'seedingRegex': /fa-arrow-circle-up/,
       'positiveMatch': true,
       'both': true},
   {   'name': 'LST-Req',
@@ -3189,6 +3217,7 @@ var private_sites = [
       'loggedOutRegex': /Cloudflare|Ray ID|forgotten password/,
       'spaceEncode': '+%2B',
       'matchRegex': /action=download/,
+      'seedingRegex': /Currently Seeding Torrent/, // Not reliable
       'positiveMatch': true},
   {   'name': 'MTV',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAMFBMVEUAAACLAAB/AACXAgK2Hh7sfn68KSnUcnKlERHMVVXJBgbHNzfbYGCpAgLFRUXsbm7V8QghAAAAAXRSTlMAQObYZgAAAdRJREFUSMfV1L9LAmEYB/B3sTKNejJSCYK3SBrveoemoOEdghYXERpqSK4hBLejiAaFcHTMRQj/gSaXEhpaDB3MOZBWSfoDgnpePeX1uvfewaW+w9293Oee9wfcQ/5dSs79WgUCzr2rLJEbXIO6mWZ1r3ApvnMENdWxgCZJzdsw8c1x6jE1jnxEdqNfsw6KhQIwGGWZ3o9B+qrcq2UQMGaCJJ4mAS8WO4yBJLZGwEZg8WJBfL4xCj5vE1dSqZNvJ1+3FIASv7zrQIjCpi8ILP8CZ5PDHTeoG/7gw1zyBS0T/EGV6gBMB4K8AxDjnIuf4pnzQzeYacMwhlPMDUKvDoji4A6dEqwSEsZqJTeYH0zBACL4bOLVDQINnHjtxQRAALCu2ibO3iUtfFKBqljeKcC+CrScMsqTxPVFcRMRJQi2YRXPLK4EovylCYYa4HUPd6IAeMwLIEIUIEaSuEq8e4KsOOrdkDjyJU/QAkxcrBIMT4DFBahTgJInCFQRrJAjk0UU/0U4+3ZTwmZj5yTgl+nBItWAOQ1YzANQuVM2G+V+76FmWVaGi+SpBNIXFdEmmdzkKA4SXn2SSX3SGAG7MaxgYgUpCblD2s1ypS+WwMc5/yR/Ij/XK54cbp5ZdAAAAABJRU5ErkJggg==',
@@ -3209,6 +3238,7 @@ var private_sites = [
       'searchUrl': 'https://nebulance.io/torrents.php?order_by=time&order_way=desc&searchtext=%search_string%&search_type=0&taglist=&tags_type=0',
       'loggedOutRegex': /Cloudflare|Ray ID|have cookies disabled|BpdhTfy/,
       'matchRegex': /search did not match|are Cylons aboard/,
+      'seedingRegex': /icon_disk_seed/,
       'TV': true},
   {   'name': 'NBL-Req',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgBAMAAACBVGfHAAAAHlBMVEUAAABGbbFQeMAuUXw1XKJagcogP1lljddtl994oOzaQiabAAAAAXRSTlMAQObYZgAAATxJREFUKM9VjLFuwjAYhM9uLeiGkyhzE6J0NTJipoqVGQqB9Z+6h0oNXemQ8AAMftvagQh6g8/3nX24iskQjxJn+/svW2snj+DH2stjHlnbrvDWrPUNvNja29ie1BWcffbk/HUlFwjFgkSj62Z9seKdOnZdTePuG4Crx23wiuMxR3siPBFDc/BFW6NtCCMFNBOWZsQVRk2B/Q6ixr5pdoiBfYyqJrERVVUdiBGcqrUSSw+qcqR7sAVU5ZWLHASkGwc+UqdcbDBzYAp9A3zrd3mmEuIexDxD7gGlmkspA8WnHiChJEYiZYYgdsgDFpJ7smSqYCEAVkIuwCaIlGIxnGJi0Sfw7FrZA0ZgoZ6/F2CyxKDIRModasjM+Lsx1KenBfUGU3j3RelGtYJRw39j9Ny1xX3A9Bv3ybkphvAHv4hEh6PLfC4AAAAASUVORK5CYII=',
@@ -3251,6 +3281,7 @@ var private_sites = [
       'searchUrl': 'https://ntelogo.org/torrents?imdbId=%nott%',
       'loggedOutRegex': /Cloudflare|Ray ID|Forgot Your Password/,
       'matchRegex': /torrent-search--list__overview/,
+      'seedingRegex': /fa-arrow-circle-up/,
       'positiveMatch': true,
       'both': true},
   {   'name': 'NTELogo-Req',
@@ -3265,6 +3296,7 @@ var private_sites = [
       'searchUrl': 'https://onlyencodes.cc/torrents?imdbId=%nott%',
       'loggedOutRegex': /Cloudflare|Ray ID|Forgot Your Password|Service Unavailable/,
       'matchRegex': /torrent-search--list__overview/,
+      'seedingRegex': /fa-arrow-circle-up/,
       'positiveMatch': true,
       'both': true},
   {   'name': 'OnlyEncodes-Req',
@@ -3323,6 +3355,7 @@ var private_sites = [
       'searchUrl': 'https://polishtorrent.top/torrents?imdbId=%nott%',
       'loggedOutRegex': /Cloudflare|Ray ID|Zapamiętaj mnie|Service Unavailable/,
       'matchRegex': /torrent-search--list__overview/,
+      'seedingRegex': /fa-arrow-circle-up/,
       'positiveMatch': true,
       'both': true},
   {   'name': 'PolishTorrent-Req',
@@ -3395,6 +3428,7 @@ var private_sites = [
       'searchUrl': 'https://passthepopcorn.me/torrents.php?imdb=%tt%',
       'loggedOutRegex': /Cloudflare|Ray ID|Keep me logged in|Your popcorn quota/,
       'matchRegex': /Your search did not match anything/,
+      'seedingRegex': /title="Seeding"/,
       'rateLimit': 250,
       'both': true},
   {   'name': 'PTP-Req',
@@ -3440,6 +3474,7 @@ var private_sites = [
       'searchUrl': 'https://reelflix.xyz/torrents?imdbId=%tt%',
       'loggedOutRegex': /Cloudflare|Forgot Your Password|Service Unavailable/,
       'matchRegex': /torrent-search--list__overview/,
+      'seedingRegex': /fa-arrow-circle-up/,
       'positiveMatch': true,
       'both': true},
   {   'name': 'ReelFliX-Req',
@@ -3522,6 +3557,7 @@ var private_sites = [
       'searchUrl': 'https://seedpool.org/torrents?imdbId=%nott%',
       'loggedOutRegex': /Cloudflare|Ray ID|Forgot Your Password/,
       'matchRegex': /torrent-search--list__overview/,
+      'seedingRegex': /fa-arrow-circle-up/,
       'positiveMatch': true,
       'both': true},
   {   'name': 'Seedpool-Req',
@@ -3542,6 +3578,7 @@ var private_sites = [
       'searchUrl': 'https://shareisland.org/torrents?imdbId=%nott%',
       'loggedOutRegex': /Cloudflare|Ray ID|Accedi con le|Sign In With|Dimenticata la Password/,
       'matchRegex': /torrent-search--list__overview/,
+      'seedingRegex': /fa-arrow-circle-up/,
       'positiveMatch': true,
       'both': true},
   {   'name': 'SI-Req',
@@ -3670,6 +3707,7 @@ var private_sites = [
       'searchUrl': 'https://cinematik.net/torrents?imdbId=%tt%',
       'loggedOutRegex': /Cloudflare|Ray ID|Forgot Your Password/,
       'matchRegex': /torrent-search--list__overview/,
+      'seedingRegex': /fa-arrow-circle-up/,
       'positiveMatch': true,
       'both': true},
   {   'name': 'Tik-Req',
@@ -3722,6 +3760,7 @@ var private_sites = [
       'searchUrl': 'https://tlzdigital.com/torrents?imdbId=%nott%',
       'loggedOutRegex': /Cloudflare|Ray ID|Forgot Your Password/,
       'matchRegex': /torrent-search--list__overview/,
+      'seedingRegex': /fa-arrow-circle-up/,
       'positiveMatch': true,
       'both': true},
   {   'name': 'TLZ-Req',
@@ -3747,6 +3786,7 @@ var private_sites = [
       'searchUrl': 'https://tocashare.com/torrents?imdbId=%nott%',
       'loggedOutRegex': /Cloudflare|Ray ID|Forgot Your Password/,
       'matchRegex': /torrent-search--list__overview/,
+      'seedingRegex': /fa-arrow-circle-up/,
       'positiveMatch': true,
       'both': true},
   {   'name': 'Toca Share-Req',
@@ -3898,6 +3938,7 @@ var private_sites = [
       'searchUrl': 'https://utp.to/torrents?imdbId=%nott%',
       'loggedOutRegex': /Cloudflare|Ray ID|Забули Пароль/,
       'matchRegex': /torrent-search--list__overview/,
+      'seedingRegex': /fa-arrow-circle-up/,
       'positiveMatch': true,
       'both': true},
   {   'name': 'Utopia-Req',
@@ -3917,6 +3958,7 @@ var private_sites = [
       'searchUrl': 'https://yoinked.org/torrents?imdbId=%nott%',
       'loggedOutRegex': /Cloudflare|Ray ID|Forgot Your Password/,
       'matchRegex': /torrent-search--list__overview/,
+      'seedingRegex': /fa-arrow-circle-up/,
       'positiveMatch': true,
       'both': true},
   {   'name': 'Yoinked-Req',
@@ -4134,6 +4176,7 @@ var chinese_sites = [
       'searchUrl': 'https://oldtoons.world/torrents?imdbId=%nott%',
       'loggedOutRegex': /Cloudflare|Ray ID|Forgot Your Password/,
       'matchRegex': /torrent-search--list__overview/,
+      'seedingRegex': /fa-arrow-circle-up/,
       'positiveMatch': true,
       'both': true},
   {   'name': 'OldToonsWorld-Req',
@@ -4233,6 +4276,7 @@ var french_sites = [
       'searchUrl': 'https://generation-free.org/torrents?imdbId=%nott%',
       'loggedOutRegex': /Cloudflare|Ray ID|Mot de passe oublié/,
       'matchRegex': /torrent-search--list__overview/,
+      'seedingRegex': /fa-arrow-circle-up/,
       'positiveMatch': true,
       'both': true},
   {   'name': 'G-Free-Req',
@@ -4332,6 +4376,7 @@ var french_sites = [
       'searchUrl': 'https://theoldschool.cc/torrents?imdbId=%tt%',
       'loggedOutRegex': /Cloudflare|Ray ID|title>Login|Mot de passe oubli/,
       'matchRegex': /torrent-search--list__overview/,
+      'seedingRegex': /fa-arrow-circle-up/,
       'positiveMatch': true,
       'both': true},
   {   'name': 'TOS-Req',
@@ -4515,6 +4560,7 @@ var german_sites = [
       'searchUrl': 'https://r0k3t.li/torrents?imdbId=%nott%',
       'loggedOutRegex': /Cloudflare|Ray ID|Passwort vergessen|Service Unavailable/,
       'matchRegex': /torrent-search--list__overview/,
+      'seedingRegex': /fa-arrow-circle-up/,
       'positiveMatch': true,
       'both': true},
   {   'name': 'RocketHD-Req',
@@ -6163,7 +6209,7 @@ var icon_sites_main = [
   {   'name': 'ThePosterDB',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgBAMAAACBVGfHAAAAGFBMVEUAAAD7bEL8q5T/5+D/+Pb8i2r+1Mj+w7Lo3izNAAAAAXRSTlMAQObYZgAAAM1JREFUKM9VkcEKwjAMhlXwbga9a2G+wGR7AAde7Q56d9o+wLB7ffMvybD/IfT7aFJIN5rgNkVqouGf98S5F1yYHYMLXI4q+FzlFNiu7HI7rmYLbjgvNoflgjszwsgVIrAZCIdz36OGRdDUazoS4d7Ct6CCHiI+pKKaR3A7n1TkxIZ5TiZijJcrFxNVjg0nJmuhZ7PkSyZ8BidvYvAwnfe1Cs+ZOlQb6jUyNKAHQYfTDQ/CuucTjHBlS8VgkobVCFtEKNhX0bH8XDxQGOMftTs7PgAFfmYAAAAASUVORK5CYII=',
       'searchUrl': 'https://theposterdb.com/search?term=%search_string_orig%',
-      'showByDefault': false},   
+      'showByDefault': false},
   {   'name': 'TMDB',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAGFBMVEUAAAAEJkIADixfv7IdZ3sYtdYz5fSL6MRZBwKqAAAAAXRSTlMAQObYZgAAAg9JREFUSMfNls+OmzAQxrdv0BnYzXmm5AHAaTjbccg5K+AeKXBvicTrd2yInW4adqVKq/0gCsG/fJ4/FubJScM/lT5N+gYP9d0DsKBgsGQBi/IGyxb/D8A7+jIAMhOgfE9XACyiBYdpjAOA5VBeuDSgMFHbnHjfOB0pALty2DigFEAdYd17oDNhCl4VhCVyiS8FE1ZNEy08gB7YWJliYzW0M3C+AXIJZBwF2PYFNQ8ADcsOyzEIMGXxs6lpzqI3cA9IDOe5DkI+qiT+Vclwi+WMvRBBBNgNOoYD59BY6tQSSXpsNaUW0GLqLqwOwGGgbCwwGQeT9Ug9Zmd67iXcAIwmGXMslbpwa2TUAfWtQ1kcVJ4NSimsXtcTcGSKwO73YeeBrUlOL6/ggFhJAexFrQoPyASVuQf0cFnNU1DXINxNYcpfq5xckITtmTxQA0SgkMOlOeaE1YngbZo7k5hEA1nLAKkByGpKa1vHdpM7XHX9D/+JpV5W7OYs/zfk6WYEMnXVRnJsGk0oiwYDIM3wEqDPad21vcGqaeOazEYV1LkcqxNXZh1X9Y8hAq7YLGeln2OpkzcAZR3v25tVfQ+IQ72PhZI2RaGMPgtgqAsAlYHYOn8rWYhDDFLa5OQpA+u+rxmrvotpAqd2liYAqxEgtZpvesFXEVx7xvy1nrRL+owt6Z0gPrCxLlt8bHNffj34A6r1+YAJRp2JAAAAAElFTkSuQmCC',
       'searchUrl': 'https://www.themoviedb.org/search?query=%search_string%+y:%year%'},
@@ -6887,6 +6933,9 @@ function addLink(elem, site_name, target, site, state, scout_tick, post_data) {
     } else if (state == 'missing') {
       (getPageSetting('highlight_sites').split(',').includes(site['name'])) ? icon.css('border-color', 'rgb(255,255,0)')
                                                                             : icon.css('border-color', 'rgb(230,200,100)');
+    } else if (state == 'seeding') {
+      (getPageSetting('highlight_sites').split(',').includes(site['name'])) ? icon.css('border-color', 'rgb(0,220,220)')
+                                                                            : icon.css('border-color', 'rgb(0,220,220)');
     } else if (state == 'found') {
       (getPageSetting('highlight_sites').split(',').includes(site['name'])) ? icon.css('border-color', 'rgb(0,220,0)')
                                                                             : icon.css('border-color', 'rgb(0,130,0)');
@@ -7127,6 +7176,8 @@ async function maybeAddLink(elem, site_name, search_url, site, scout_tick, movie
             }
         } else if (site['loggedOutRegex'] && String(response.responseText).match(site['loggedOutRegex'])) {
           addLink(elem, site_name, target, site, 'logged_out', scout_tick, post_data);
+        } else if (site['seedingRegex'] && String(response.responseText).match(site['seedingRegex'])) {
+          addLink(elem, site_name, target, site, 'seeding', scout_tick, post_data);
         } else {
           addLink(elem, site_name, target, site, 'found', scout_tick, post_data);
         }
@@ -7202,6 +7253,8 @@ async function maybeAddLink(elem, site_name, search_url, site, scout_tick, movie
           }
       } else if (site['loggedOutRegex'] && String(response.responseText).match(site['loggedOutRegex'])) {
         addLink(elem, site_name, target, site, 'logged_out', scout_tick);
+      } else if (site['seedingRegex'] && String(response.responseText).match(site['seedingRegex'])) {
+        addLink(elem, site_name, target, site, 'seeding', scout_tick);
       } else {
         addLink(elem, site_name, target, site, 'found', scout_tick);
       }
@@ -12019,6 +12072,7 @@ $.each(icon_sites, function(index, icon_site) {
 
 // For internal use (order matters).
 const valid_states = [
+  'seeding',
   'found',
   'missing',
   'logged_out',
