@@ -9008,7 +9008,7 @@ function get_radarr_movies(movie_id, second_instance = false) {
     url: radarr_url + "/api/v3/movie",
     headers: {
       "X-Api-Key": radarr_apikey,
-      "Accept": "text/json"
+      "Accept": "application/json"
     },
     onload: function(response) {
       if (response.status == 200) {
@@ -9088,7 +9088,7 @@ function new_movie_lookup(imdbid, radarr_url, radarr_apikey, exists_icon, second
     url: radarr_url + "/api/v3/movie/lookup/imdb?imdbId=" + imdbid,
     headers: {
       "X-Api-Key": radarr_apikey,
-      "Accept": "text/json"
+      "Accept": "application/json"
     },
     onload: function(response) {
       let responseJSON = null;
