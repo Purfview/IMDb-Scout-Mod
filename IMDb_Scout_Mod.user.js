@@ -1374,6 +1374,9 @@
 23.5   -   New feature: Seeding status/highlight - light blue icon border.
            Added: YouTube Filtered, ULCX
 
+23.6   -   Fixed Radarr issues caused by API changes in 5.16.3.9541
+           Added: xBytesV2
+
 
 //==============================================================================
 //    Notes.
@@ -5384,6 +5387,21 @@ var subs_sites = [
       'matchRegex': /release_group/,
       'positiveMatch': true,
       'inSecondSearchBar': true,
+      'both': true},
+  {   'name': 'xBytesV2',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADYAAAA2BAMAAAB+a3fuAAAAGFBMVEUAAAAHCxKHttIwRlrd9fg2gMBuip9m2/b5hBCNAAAAAXRSTlMAQObYZgAAAb9JREFUOMvV0k1zmzAQBuCNcdIrG3V8DgsDV8kq3Es19OwySs/ILj3Hrcvf74JkY8+UHnJK3hl7JD187O4A7zhrYwyEEBXk+L+fyTz5dTFwLAxD6/dmTOPXLHzuhpM6G1GW+vUz33hU/bDD8Mi9I0rltFGltRZ7i8LbF9wQdd46LEdr0W9X3ZWtvCUCpkQoKyLlDTphra5eNsEEbGeL2MrvXQznHI4pQgibHZS8su5imu0PXughI3V5SMTWivM0V2RyvLHdwY+Rp+nM/Dq4Z9NmjARj6q3p4tlO1m5HajZs6af6yj6wVY4tiSFrMKt5Kk/Bira0LXLHfL1LhOFJr/tggxJsm2karvtoKCejPa2OyN0rMVmmDjXR71oE+xUjFyrcaEaYvO+LJg6lvMR33Dwbv888NlrrKg1WJBCxaUd7CfWjQo462w7uveUVNOjjbT2oqXtdUd4fPvvD8BF8ZXNsbUWUmSRY6O6I8POkOaNxqXMehhblD42IXGhWI1wbH0uF3ii9MeBT8PaNqLu1CAX/OFE1Tfvf4SbUkpWU45Jpl6NcNC5zIdHzftkqtWxaCVgKYvwqu0P5H4PlSHij+QvgpHDquTYd9AAAAABJRU5ErkJggg==',
+      'searchUrl': 'https://xbytesv2.li/torrents?imdbId=%nott%',
+      'loggedOutRegex': /Cloudflare|Ray ID|Olvidaste tu contraseña/,
+      'matchRegex': /torrent-search--list__overview/,
+      'seedingRegex': /fa-arrow-circle-up/,
+      'positiveMatch': true,
+      'both': true},
+  {   'name': 'xBytesV2-Req',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADYAAAA2BAMAAAB+a3fuAAAAGFBMVEUAAAAHCxKHttIwRlrd9fg2gMBuip9m2/b5hBCNAAAAAXRSTlMAQObYZgAAAb9JREFUOMvV0k1zmzAQBuCNcdIrG3V8DgsDV8kq3Es19OwySs/ILj3Hrcvf74JkY8+UHnJK3hl7JD187O4A7zhrYwyEEBXk+L+fyTz5dTFwLAxD6/dmTOPXLHzuhpM6G1GW+vUz33hU/bDD8Mi9I0rltFGltRZ7i8LbF9wQdd46LEdr0W9X3ZWtvCUCpkQoKyLlDTphra5eNsEEbGeL2MrvXQznHI4pQgibHZS8su5imu0PXughI3V5SMTWivM0V2RyvLHdwY+Rp+nM/Dq4Z9NmjARj6q3p4tlO1m5HajZs6af6yj6wVY4tiSFrMKt5Kk/Bira0LXLHfL1LhOFJr/tggxJsm2karvtoKCejPa2OyN0rMVmmDjXR71oE+xUjFyrcaEaYvO+LJg6lvMR33Dwbv888NlrrKg1WJBCxaUd7CfWjQo462w7uveUVNOjjbT2oqXtdUd4fPvvD8BF8ZXNsbUWUmSRY6O6I8POkOaNxqXMehhblD42IXGhWI1wbH0uF3ii9MeBT8PaNqLu1CAX/OFE1Tfvf4SbUkpWU45Jpl6NcNC5zIdHzftkqtWxaCVgKYvwqu0P5H4PlSHij+QvgpHDquTYd9AAAAABJRU5ErkJggg==',
+      'searchUrl': 'https://xbytesv2.li/requests?unfilled=1&tmdbId=%tmdbid%',
+      'loggedOutRegex': /Cloudflare|Ray ID|Olvidaste tu contraseña/,
+      'matchRegex': /fa-circle text-red/,
+      'positiveMatch': true,
       'both': true},
   {   'name': 'Yavka (BG)',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAw1BMVEUAAAADAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMHuwL5+fta0FjT79SoRAoHBAT39/m9074vMi9aWls8PDxpHB4UsBD8BQvfGwrv7/Hu7u/W1ti/18C/v8C4uLmpqaqQkJCEhIVlZWVHR0hBcEA+aT0qKislJSV8KiJvJyHOHCAjhx8ijx7XGR4bGxsXPhYUMxO1/aYgAAAAGnRSTlMAZ/zUliWejW9cTQXu7erhxsS4p4V4YD42NNCOKJoAAACVSURBVBjTVchVEoNAEEXRHlzinnTI4BB31/2vKqQhFJyPV/UuJCT/JQPovicBGZxxrQI05njqU1BWaLuysUNctinUZohbpm0Qp1UKgo3osd4e0RYoiI5lOa6b7EKkwI7jzIEBEcMRCeuQ0j5peHchI91//6HAn1yZJPgQcp1rHF9UKBCiiENR6/ZsloIRBHopmJybQL4WSg62O5inqgAAAABJRU5ErkJggg==',
