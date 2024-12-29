@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      23.5.2
+// @version      23.6
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from hundreds various sites. Adds movies/series to Radarr/Sonarr. Adds external ratings from Metacritic, Rotten Tomatoes, Letterboxd, Douban, Allocine, MyAnimeList, AniList. Media Server indicators for Plex, Jellyfin, Emby. Dark theme/style for Reference View. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAMFBMVEUAAAD/AAAcAAA1AABEAABVAAC3AADnAAD2AACFAAClAABlAAB3AADHAACVAADYAABCnXhrAAAD10lEQVRIx73TV4xMURgH8H/OnRmZWe3T7h2sOWaNXu7oJRg9UccuHgTRBatMtAgSg+gJu9q+kFmihcQoD8qLTkK0CIkoy0YJITsRD0rCKTHFrnkSv5e5c88/53znO+fiPwvsvrN038cPNqrG9pJmHkRVnPcpaTlHJY60cfPSpsrzl1LKihrmLvxhCM2i3OHvDx0d+H7e3F6JBv5iZMiJfhFTfPYDMHrMImpwimWWUdSgDQkbno7fFpUPVgh+pHFbZR4SovSctDCM9Hac9IKd9rO8EevtBCkXgY5IMmgquwypP7qqfcp/Tp4KLONDVsWh3RSBB2rnZfit69ocUdqLn2prrRZYM0Jg4JibamKsqe7gfEh5GOAfeYJjVHIPZvil97rcXkMog30byWRwXYRWoxHbzNFHJJpAarO8NdEBBsdCaP3WMJltTmQd4zlnekTq9Z5dgACwAlrpK4BxdV5mvLuspRgMSHbCIFF0iS8MZ5S8oYBYKY7rByC4dDM9uSIUmPOIwxgQBoYeF93auP4qFyPbIVXziWeGTH1EFM57kJo2hqQju6BwIyRf6RmCjdT4JOdiwNgiH/PPD3qoqlsNaXRd+fKtFfECxlZVNVF9SOsgTZEr2TUjJJbyeNX1IZrKIbyGlBABfpQPv2UDrly13LkJXDVhpQ5MhtGwcyF4HKjlU4E8xwB0AvDjd6AGmevZ87EcQRHgcO52e9uNsYELOrAa/Yh81YlmYLQJ5HWyq0+kzQ/DQKEusg6CRI27ryy8nReRS0wsoetkmRwogHSprliCckfEjXG9yAQc74J0WB99vu6DF3i3pMucsXM6tpBbxd2mVJAwXwGogNRBvGRA4jtHKTXkAIwLGCR/mT4Lh75oneQXXP9sAYfGRDCsnw7pX/jRZkU3M44kjw2l5zRIzb4CbZ8dULdL6wbNPZOpK0B6gN1UR1mdoxAaL/GrWiLPL3SEwW9YMTU/d64BtLahAVyucWhj9Mm8ign9IfQaBtd2/GbvCAEBpG5eMcrj2I0ktpKLeaqXQ3Pst42KGIshpdTmQLAeTgFGJ2wvh+tayMOR0n1RZ8B9z13vnOPBnsBq4E1ffgZpPFZHWVpO2cvhjYpOcbBd5TlhpDu5zq9mHGZcVi0y+VFkcFkDdyKJfTt99wEyHSEzDM90KH0nexpwZHJHKYYhjzlwGe0pP/IKfxociaEb7YDbi6KGJY1R2cR76E6NAtXqY4pPH3plLcl8LD7V+cOLUbUWRFZRPTAbVZO3mxK18Xc1ZaAiS8ARJXpZliXAomR94siiiMx8ZBOkXGTlnH0F/9ov1xPtWwEqP9wAAAAASUVORK5CYII=
@@ -28,6 +28,8 @@
 // @include      https://*.imdb.tld/user/ur*/watchlist*
 // @include      https://*.imdb.tld/user/ur*/ratings*
 // @include      https://*.imdb.tld/list/ls*
+//
+// @include      https://*.imdb.tld/*/title/tt*
 //
 // @exclude      /title\/tt\d+\/\w(?!(eference))/
 // @exclude      /anon/
@@ -1375,7 +1377,10 @@
            Added: YouTube Filtered, ULCX
 
 23.6   -   Fixed Radarr issues caused by API changes in 5.16.3.9541
+           Allowed running on non-English IMDb (IMDb "moved" the non-English site versions to the different URLs)
+                [Reminder: Anyway, various sites and features work properly only in English and(!) when IMDb is set to English titles & any English region at www.imdb.com/preferences/general]
            Added: xBytesV2
+           Removed: Plusteca, NordicHD
 
 
 //==============================================================================
@@ -3271,17 +3276,6 @@ var private_sites = [
       'loggedOutRegex': /Cloudflare|Ray ID|Không đăng nhập/,
       'matchRegex': /Nothing found/,
       'both': true},
-  {   'name': 'NordicHD',
-      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyAgMAAABjUWAiAAAADFBMVEUAAAD3Qjz98vH5l5OLNH03AAAAAXRSTlMAQObYZgAAANRJREFUKM+l0jEKwjAUBuA49Agexd0jOBgKRdrZuri4FDxG6tatQyPPrQ4O4iXSgkM2B9O5i1CwiZUkBTvYf/t4efACP0IT3GWF2jD8zVaP2iwRcrAOQjNDNzQ1NO8JG1mMFjyU9i5TAqWNT5R2SiFnDW4CqAMmlZS0yARASKSuPIkJAGRq73Qvzoe0pdRadEqVQksRj2P90ospJxWAIJ9bKpdFeROxP35Uaz0jj1p6EVNF/kOCeqVWJaQG97QuxJB/tO8cpcFO2O1xDNmt6zVSDvXoDTxXA2HcAh+IAAAAAElFTkSuQmCC',
-      'searchUrl': 'https://nordichd.org/?p=torrents&pid=10&keywords=%tt%&search_type=description',
-      'loggedOutRegex': /Cloudflare|Ray ID|An error has occured|loginbox_remember/,
-      'matchRegex': /no results found/},
-  {   'name': 'NordicHD',
-      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyAgMAAABjUWAiAAAADFBMVEUAAAD3Qjz98vH5l5OLNH03AAAAAXRSTlMAQObYZgAAANRJREFUKM+l0jEKwjAUBuA49Agexd0jOBgKRdrZuri4FDxG6tatQyPPrQ4O4iXSgkM2B9O5i1CwiZUkBTvYf/t4efACP0IT3GWF2jD8zVaP2iwRcrAOQjNDNzQ1NO8JG1mMFjyU9i5TAqWNT5R2SiFnDW4CqAMmlZS0yARASKSuPIkJAGRq73Qvzoe0pdRadEqVQksRj2P90ospJxWAIJ9bKpdFeROxP35Uaz0jj1p6EVNF/kOCeqVWJaQG97QuxJB/tO8cpcFO2O1xDNmt6zVSDvXoDTxXA2HcAh+IAAAAAElFTkSuQmCC',
-      'searchUrl': 'https://nordichd.org/?p=torrents&pid=32&cid=2&keywords=%search_string_orig%&search_type=name',
-      'loggedOutRegex': /Cloudflare|Ray ID|An error has occured|loginbox_remember/,
-      'matchRegex': /no results found/,
-      'TV': true},
   {   'name': 'NTELogo',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwAgMAAAAqbBEUAAAACVBMVEUAAAD///8AAABzxoNxAAAAAXRSTlMAQObYZgAAALpJREFUKM990rENxSAMBNCIMqNkH6dgBKZgifRpkOCm/IdtPogiViTy4Nxgju86gTr+A1iv4+qAA1p5dMzchSaSAE89ImK5wANW1NzJg9jkVlwQ6UnUjsYIiiQQKB3ccaQSwaZ8BMYTO0QUXAzvcXKxLxHtA6ybiH80Q+mIK1JZgMfh/RPNoWv5RNqBBYGwQsczkIlisZs4BiL03gxJAQOq3fXEnMI2H59cBNaZVkUw5P0d7C+ER+zY6wdFUso28xDDuwAAAABJRU5ErkJggg==',
       'searchUrl': 'https://ntelogo.org/torrents?imdbId=%nott%',
@@ -3342,20 +3336,6 @@ var private_sites = [
       'loggedOutRegex': /Forgot Your Password/,
       'matchRegex': /Vote this Request/,
       'positiveMatch': true},
-  {   'name': 'Plusteca',
-      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABAAgMAAADXB5lNAAAADFBMVEUICQpAQD94d3TQzsWNjoYCAAACr0lEQVQ4y42S3UsUURjG3zPN2V13b6aYkVZwmUD7sNq/QOGMqUhRzcicRTeyWZiJzZu88EJIZZQUrBsTt5IgVlhlVwkMDCoivIm98Gajf2CGLS/rZvuEspkzsK5e+VzM8P543ue85wOOLuMw2DpYYtUQD4ARPUOXGuq4BTq21HqNUn+wxb0390E6LWkDN3KkHjnekqMt07t1oDkds6WrC2f5oIz2zZDixtdCIRoPMU94+SSUWtKLRTR3K4gsjMGakmnKwkoWmGgGdj/SZBa1B5NwvfNk/UN/YgsN9TIQwv32Pbvn2qY438dAUzOyz5OeK06kd4atIo4gkhDg0naE00gQighWIUV4tOQDpOigIdXDorLkzxqzqMgAL2v0GfEcdLDNIDIYvLySG/RbeFOWweQNMIyC3xKSDFmVCkKJ6IblD4KbVcG+TV8PGaJwWmEH+gjZy8LWiUEJtds+aJ7FiginBB2juL87XbrPBzeHUL/mEUn3ah7yQAARSgCe7Hmf6MiPNe9HJBGOOXdredjY2/vHrmUSOKfjrwMRMDkSACDFLgfAywAbkC0CHC92uQ/Cbi3J1RLhmuCDyerO8Mvv325ObJAJH5TMankY3E/PMy50ggfW7Wr5esX9kkBO9B1zoGpZ+eV+bkXOxU6W4QEy7jqe4wIDWfi5c3nMrcUqv5N+qJCFqfLDSn6KqyRjL3xQBKFbIXl/i4j3wJlaw8OVVIBUpQFgg2FFEIjMEw0TRhGmpqC84kmKKgxwaFUXuksieXynKXBIlIKSERGlOjDp7YsEQMCWKgctepxugwqtdDrOQHgupC/AKLSlozEGeLSwanJvIGeeQwSYTImG34ZSilp//AolRtxkcwXSeXlUIxTqoiSi2pK+DySKEbYINFgGMDPsS3uK4aA24ZBkOKr+A2/lxH+ODtMSAAAAAElFTkSuQmCC',
-      'searchUrl': 'https://plusteca.com/torrents?imdbId=%nott%',
-      'loggedOutRegex': /Cloudflare|Ray ID|Forgot Your Password/,
-      'matchRegex': /torrent-listings-name/,
-      'positiveMatch': true,
-      'both': true},
-  {   'name': 'Plusteca-Req',
-      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABAAgMAAADXB5lNAAAADFBMVEUICQpAQD94d3TQzsWNjoYCAAACr0lEQVQ4y42S3UsUURjG3zPN2V13b6aYkVZwmUD7sNq/QOGMqUhRzcicRTeyWZiJzZu88EJIZZQUrBsTt5IgVlhlVwkMDCoivIm98Gajf2CGLS/rZvuEspkzsK5e+VzM8P543ue85wOOLuMw2DpYYtUQD4ARPUOXGuq4BTq21HqNUn+wxb0390E6LWkDN3KkHjnekqMt07t1oDkds6WrC2f5oIz2zZDixtdCIRoPMU94+SSUWtKLRTR3K4gsjMGakmnKwkoWmGgGdj/SZBa1B5NwvfNk/UN/YgsN9TIQwv32Pbvn2qY438dAUzOyz5OeK06kd4atIo4gkhDg0naE00gQighWIUV4tOQDpOigIdXDorLkzxqzqMgAL2v0GfEcdLDNIDIYvLySG/RbeFOWweQNMIyC3xKSDFmVCkKJ6IblD4KbVcG+TV8PGaJwWmEH+gjZy8LWiUEJtds+aJ7FiginBB2juL87XbrPBzeHUL/mEUn3ah7yQAARSgCe7Hmf6MiPNe9HJBGOOXdredjY2/vHrmUSOKfjrwMRMDkSACDFLgfAywAbkC0CHC92uQ/Cbi3J1RLhmuCDyerO8Mvv325ObJAJH5TMankY3E/PMy50ggfW7Wr5esX9kkBO9B1zoGpZ+eV+bkXOxU6W4QEy7jqe4wIDWfi5c3nMrcUqv5N+qJCFqfLDSn6KqyRjL3xQBKFbIXl/i4j3wJlaw8OVVIBUpQFgg2FFEIjMEw0TRhGmpqC84kmKKgxwaFUXuksieXynKXBIlIKSERGlOjDp7YsEQMCWKgctepxugwqtdDrOQHgupC/AKLSlozEGeLSwanJvIGeeQwSYTImG34ZSilp//AolRtxkcwXSeXlUIxTqoiSi2pK+DySKEbYINFgGMDPsS3uK4aA24ZBkOKr+A2/lxH+ODtMSAAAAAElFTkSuQmCC',
-      'searchUrl': 'https://plusteca.com/requests?unfilled=1&tmdbId=%tmdbid%',
-      'loggedOutRegex': /Cloudflare|Ray ID|Forgot Your Password/,
-      'matchRegex': /fa-circle text-red/,
-      'positiveMatch': true,
-      'both': true},
   {   'name': 'PolishTorrent',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAElBMVEUAAAAfICT8/f3Oz8+goaJcXWDV7hPsAAAAAXRSTlMAQObYZgAAAfRJREFUSMfNVUtygzAMzZReQA3ZF3/2wZB97NAD2JPc/ypFEgI7mG2nbyZksJ4+T4qV039Dowj3A/OnUuP0ek6D0gfuJgLh6fS9Zr+B4BKQUbULwi5LsFDAXUv7YKBEqwtG4yK8IRVJnIUdVBbikwOUOGchHhYqyKRKgBJf45rBQA0XvWroAOA1A58MYjwkR4izbjXDgFML9DD9JNGhMSEdW/oSiNAGNSQ+irldxv7R43T4qEsF4b6WAIphzi5nMGFASfPbiLaYsMBhcFkRBlgEPfycqwd2EYLFxs9+gCI9foTw1NTHjkVYqtRjGuCYBoZcREcRXhSKY1oIQkBTz1HREZHQhQmeVXpAAV/oiAh0Qm3wVBHDJhLBMSOk60JohdCFTARAkhTrjGImQsOWIkmn0VFEmCxCkABtJsLOz/tCcDw8T+qF0EsEbkDc1COo49yHpudREYKoZBdHs7Bc0aaeVWp8XcZN7RNHkFGtP3zNmTNHWFzabyI4kPa9izgjAXWuIlqpMdHJcjGaG2UuEdEjyPZgEceX002TrxHORghVM5cgd68KvW0gIBzvINfXCGHbYo2uacjXcfBHJUoV+xBtuc8/umoF9V0sm7jEQxeMdv+/FJgh9vG0g9sYT2VOFTg1RjI73Cw1PJSi7VS3Sx5nTn+NX3JPmvju/lFAAAAAAElFTkSuQmCC',
       'searchUrl': 'https://polishtorrent.top/torrents?imdbId=%nott%',
@@ -8183,11 +8163,12 @@ async function activate_CheckURLs(button, completed_icon) {
   // Deduplicate array:
   let deduped_hosts = all_hosts.filter((value, index) => all_hosts.indexOf(value) ==index);
   console.log("IMDb Scout Mod (CheckURLs): Unique hosts: " + deduped_hosts.length);
-      // Exclude some hosts:
+      // Exclude/ignore some hosts:
       deduped_hosts = deduped_hosts.filter(function (e) {return e !== 'http://localhost';});
       deduped_hosts = deduped_hosts.filter(function (e) {return e !== 'https://dognzb.cr';});
       deduped_hosts = deduped_hosts.filter(function (e) {return e !== 'https://hd-only.org';});
       deduped_hosts = deduped_hosts.filter(function (e) {return e !== 'https://json.wizdom.xyz';});
+      deduped_hosts = deduped_hosts.filter(function (e) {return e !== 'http://voidtools.replacement';});
 
   const interval = 100;
   const timeout = 45000;
@@ -12217,6 +12198,26 @@ if (navigator.userAgent.toLowerCase().indexOf('chrome') > -1 || navigator.userAg
 }
 
 //==============================================================================
+//    Warning for non-English IMDb shown 3 times per version
+//==============================================================================
+
+async function scoutWarning2() {
+if (/com\/[^/]*\/title\/tt/.test(window.location.href)) {
+    const warn_count = await GM.getValue("Scout_warning2_count", 0);
+    const warn_ver   = await GM.getValue("Scout_warning2_ver", "none");
+    if (warn_count < 3 && warn_ver !== GM.info.script.version) {
+      console.log("IMDb Scout Mod (Warning): Non-English IMDb detected! The script doesn't work properly here. Set language to English!");
+      GM.notification("Non-English IMDb detected! \nThe script doesn't work \nproperly here. \nSet language to English!", "IMDb Scout Mod (Warning)");
+      GM.setValue("Scout_warning2_count", warn_count +1);
+    } else if (warn_ver !== GM.info.script.version) {
+        GM.setValue("Scout_warning2_ver", GM.info.script.version);
+        GM.setValue("Scout_warning2_count", 0);
+    }
+  }
+}
+
+
+//==============================================================================
 //    Start: Display 'Load' button or add links to sites
 //==============================================================================
 
@@ -12276,4 +12277,4 @@ if ($('html[xmlns\\:og="http://ogp.me/ns#"]').length) {
 }
 
 scoutWarning();
-
+scoutWarning2();
