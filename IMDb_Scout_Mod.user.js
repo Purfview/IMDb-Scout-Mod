@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      23.7.2
+// @version      23.7.3
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from hundreds various sites. Adds movies/series to Radarr/Sonarr. Adds external ratings from Metacritic, Rotten Tomatoes, Letterboxd, Douban, Allocine, MyAnimeList, AniList. Media Server indicators for Plex, Jellyfin, Emby. Dark theme/style for Reference View. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAMFBMVEUAAAD/AAAcAAA1AABEAABVAAC3AADnAAD2AACFAAClAABlAAB3AADHAACVAADYAABCnXhrAAAD10lEQVRIx73TV4xMURgH8H/OnRmZWe3T7h2sOWaNXu7oJRg9UccuHgTRBatMtAgSg+gJu9q+kFmihcQoD8qLTkK0CIkoy0YJITsRD0rCKTHFrnkSv5e5c88/53znO+fiPwvsvrN038cPNqrG9pJmHkRVnPcpaTlHJY60cfPSpsrzl1LKihrmLvxhCM2i3OHvDx0d+H7e3F6JBv5iZMiJfhFTfPYDMHrMImpwimWWUdSgDQkbno7fFpUPVgh+pHFbZR4SovSctDCM9Hac9IKd9rO8EevtBCkXgY5IMmgquwypP7qqfcp/Tp4KLONDVsWh3RSBB2rnZfit69ocUdqLn2prrRZYM0Jg4JibamKsqe7gfEh5GOAfeYJjVHIPZvil97rcXkMog30byWRwXYRWoxHbzNFHJJpAarO8NdEBBsdCaP3WMJltTmQd4zlnekTq9Z5dgACwAlrpK4BxdV5mvLuspRgMSHbCIFF0iS8MZ5S8oYBYKY7rByC4dDM9uSIUmPOIwxgQBoYeF93auP4qFyPbIVXziWeGTH1EFM57kJo2hqQju6BwIyRf6RmCjdT4JOdiwNgiH/PPD3qoqlsNaXRd+fKtFfECxlZVNVF9SOsgTZEr2TUjJJbyeNX1IZrKIbyGlBABfpQPv2UDrly13LkJXDVhpQ5MhtGwcyF4HKjlU4E8xwB0AvDjd6AGmevZ87EcQRHgcO52e9uNsYELOrAa/Yh81YlmYLQJ5HWyq0+kzQ/DQKEusg6CRI27ryy8nReRS0wsoetkmRwogHSprliCckfEjXG9yAQc74J0WB99vu6DF3i3pMucsXM6tpBbxd2mVJAwXwGogNRBvGRA4jtHKTXkAIwLGCR/mT4Lh75oneQXXP9sAYfGRDCsnw7pX/jRZkU3M44kjw2l5zRIzb4CbZ8dULdL6wbNPZOpK0B6gN1UR1mdoxAaL/GrWiLPL3SEwW9YMTU/d64BtLahAVyucWhj9Mm8ign9IfQaBtd2/GbvCAEBpG5eMcrj2I0ktpKLeaqXQ3Pst42KGIshpdTmQLAeTgFGJ2wvh+tayMOR0n1RZ8B9z13vnOPBnsBq4E1ffgZpPFZHWVpO2cvhjYpOcbBd5TlhpDu5zq9mHGZcVi0y+VFkcFkDdyKJfTt99wEyHSEzDM90KH0nexpwZHJHKYYhjzlwGe0pP/IKfxociaEb7YDbi6KGJY1R2cR76E6NAtXqY4pPH3plLcl8LD7V+cOLUbUWRFZRPTAbVZO3mxK18Xc1ZaAiS8ARJXpZliXAomR94siiiMx8ZBOkXGTlnH0F/9ov1xPtWwEqP9wAAAAASUVORK5CYII=
@@ -1390,6 +1390,8 @@
            Removed: RedBits, Brothers of Usenet (DE), Bukvi (BG)
 
 23.7.1  -  Added: SubSource
+
+23.7.3  -  Added: Usenet-Crawler, AZnude, Stremio
 
 
 //==============================================================================
@@ -2919,7 +2921,7 @@ var private_sites = [
   {   'name': 'HDSpace',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgBAMAAACBVGfHAAAAMFBMVEVsbHAAAABgYmROUFJISko8PD5UVFhaWlwmJiZ8fICMjI7k5OSYnJzGxsawsLSgpKQGvV+EAAAB10lEQVQozzXMTWsTQQDG8ccNNuzJDhJIoYfpICYpgtoZNh6F3RXqyaQd6H3CbI5tIrvoydQUepIIKjXmIAHBBGk/wJKeRDDG3jUkOfuCgujB4sHZiM9p5sd/BsLlXHGnLrjnSSk3IbhwlaM5r3ueLysSiovA0SqnhTCFL6G5KAYXNUwwf2IKrlUQ0QVlnvhSguui0gGj1oL4BzrUurofbadD7QlpwAkDXt0L15642q0koIPwbrUZbe1e2zczEAbh5ep9unVlDnubyEWM+mVI+DLZBhijzL/ekkMrVNyXbgLw7nTdWS/lsYrnJWB5q2/WJ6cpd3Q7AQrLa7++Gc8e3eglhQX7gBw9XI6Pz2SKedIEPUv+b+npAXEBc8ruJPfGElayGnmye3XxG3kWDxr3WON8iFIGpQcfybv4mJTzpBzBhOTSDxIPPpCNRjZnYPkF6b3Mjqc/zTe30gnsLLZWModfH5NsmaZrKBGybnd6nbcwG9I2fpEma/dhPwfFudnJd5y2rc6wRWkLdv/LdPwbFoL3XVgU9quTePgHYBfWhrkCYIL+qIU2rFSgom1GMbejKeo8ckJVqzFWwOFg8gnK4Q7nQVCzC6Nx/JlBFIXwuKI5ujqJB132FwxFqUBGZawMAAAAAElFTkSuQmCC',
       'searchUrl': 'https://hd-space.org/index.php?page=torrents&active=0&options=2&search=%nott%',
-      'loggedOutRegex': /not authorized to view the Torrents!/,
+      'loggedOutRegex': /not authorized to view the Torrents!|ERR_SQL_ERR/,
       'matchRegex': /<td colspan="2" align="center"> <\/td>/,
       'both': true},
   {   'name': 'HDT',
@@ -3386,14 +3388,16 @@ var private_sites = [
   {   'name': 'Portugas',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAMAAABg3Am1AAAAYFBMVEUAAAAV5QPmAQH7+fXu7tvUzBXu2tbiOzvhgXbYJiXmnp3COi/AmR8tbzNC4DLgXl7oxL2pb1TAWEGvEB29t3viFBTi35yx4ahz4Gjl312zdRCfqxZukyGTkFR9ykFSj27URFVgAAAAAXRSTlMAQObYZgAAAlpJREFUSMftlcl24jAURI01D9ZkyeCR///LLrsDGEMf0pusUhvn5NTl1RNlUf3q50ToKvJdN6HnZWGM9bT7DMF8ubjTaWHW2q4H9MkNM+QmNiils2WsIx/d0NSsgNTKDO+HEPJwQ65pmDVGBmNMekc82aE5pZhSktTjGW1PyTEXx6oP/2LUMCCS4BLPyJj1+mUKfQAuKjWM1qyAHW3EeZni+THUfoAwA0xCcG3tENNgh1LL51Q7v8uBbwqBEB607hnoWuinQLudL1hxm5kzrba/gMkiPN0Fui3g3MnBuFaCdHhwKXXAQEKlKOE1kJun04XPuetugFAqYhkhg6jlC+DGOLlMAaylC7PUPA0mYnGTfF17ck/kvvwAlsxnEPivNsJzmKNFc2Wpa3EA0IcmzmPHDUpxA3BAEfWQot4D1G0FXYGUAk9tAUCiUZInn/D08B8BN2LwGNFp4ttWY4W2VZp7oaKV8ENyH8ktUzONKyBXQBLMaQXnvigJ/ya9/xouXb5eEUkA0G1rklErRkUtfKk3Cbo7Vnc5U4ijCaHipt0keKVLXb78RT9V1S1svp67v60IG4F+Ul/ftTZjP8KxcV07S151WfvkNeqHATeJcHwbFhzShC1ClRMKpCVqJO5+FY6v3MUxNgFocqWVkOg2mPuAosnxLaXnzDb1RCslvPDePwYUgYjVQaRbZ4yMdBGHqpTHxg/CIOs7Apk4Xzti42NAUUmHt/cZ7dnYnGkDMSt2bvrPy3K7Tq8bUFY3inp0vyKkH6eJJXx0tJmS71z3PZQz/6/fCKj61Y/pD5UjKlcH0Yd4AAAAAElFTkSuQmCC',
       'searchUrl': 'https://portugas.org/torrents?imdbId=%tt%',
-      'loggedOutRegex': /Cloudflare|Ray ID|content="Login/,
-      'matchRegex': /torrent-listings-no-result/,
+      'loggedOutRegex': /Cloudflare|Ray ID|content="Login|Esqueci-me da password|Forgot Your Password/,
+      'matchRegex': /torrent-search--list__overview/,
+      'positiveMatch': true,
+      'seedingRegex': /fa-arrow-circle-up/,
       'both': true},
   {   'name': 'Portugas-Req',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAMAAABg3Am1AAAAYFBMVEUAAAAV5QPmAQH7+fXu7tvUzBXu2tbiOzvhgXbYJiXmnp3COi/AmR8tbzNC4DLgXl7oxL2pb1TAWEGvEB29t3viFBTi35yx4ahz4Gjl312zdRCfqxZukyGTkFR9ykFSj27URFVgAAAAAXRSTlMAQObYZgAAAlpJREFUSMftlcl24jAURI01D9ZkyeCR///LLrsDGEMf0pusUhvn5NTl1RNlUf3q50ToKvJdN6HnZWGM9bT7DMF8ubjTaWHW2q4H9MkNM+QmNiils2WsIx/d0NSsgNTKDO+HEPJwQ65pmDVGBmNMekc82aE5pZhSktTjGW1PyTEXx6oP/2LUMCCS4BLPyJj1+mUKfQAuKjWM1qyAHW3EeZni+THUfoAwA0xCcG3tENNgh1LL51Q7v8uBbwqBEB607hnoWuinQLudL1hxm5kzrba/gMkiPN0Fui3g3MnBuFaCdHhwKXXAQEKlKOE1kJun04XPuetugFAqYhkhg6jlC+DGOLlMAaylC7PUPA0mYnGTfF17ck/kvvwAlsxnEPivNsJzmKNFc2Wpa3EA0IcmzmPHDUpxA3BAEfWQot4D1G0FXYGUAk9tAUCiUZInn/D08B8BN2LwGNFp4ttWY4W2VZp7oaKV8ENyH8ktUzONKyBXQBLMaQXnvigJ/ya9/xouXb5eEUkA0G1rklErRkUtfKk3Cbo7Vnc5U4ijCaHipt0keKVLXb78RT9V1S1svp67v60IG4F+Ul/ftTZjP8KxcV07S151WfvkNeqHATeJcHwbFhzShC1ClRMKpCVqJO5+FY6v3MUxNgFocqWVkOg2mPuAosnxLaXnzDb1RCslvPDePwYUgYjVQaRbZ4yMdBGHqpTHxg/CIOs7Apk4Xzti42NAUUmHt/cZ7dnYnGkDMSt2bvrPy3K7Tq8bUFY3inp0vyKkH6eJJXx0tJmS71z3PZQz/6/fCKj61Y/pD5UjKlcH0Yd4AAAAAElFTkSuQmCC',
-      'searchUrl': 'https://portugas.org/requests?unfilled=1&imdbId=%tt%',
-      'loggedOutRegex': /Cloudflare|Ray ID|content="Login/,
-      'matchRegex': /fa-circle/,
+      'searchUrl': 'https://portugas.org/requests?unfilled=1&tmdbId=%tmdbid%',
+      'loggedOutRegex': /Cloudflare|Ray ID|content="Login|Esqueci-me da password|Forgot Your Password/,
+      'matchRegex': /fa-circle text-red/,
       'positiveMatch': true,
       'both': true},
   {   'name': 'PTE',
@@ -5843,6 +5847,10 @@ var icon_sites_main = [
       'searchUrl': 'https://www.arrowfilms.com/elysium.search?search=%search_string%',
       'spaceEncode': ' ',
       'showByDefault': false},
+  {   'name': 'AZnude',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgBAMAAACBVGfHAAAAGFBMVEUAAAACAgL8/PzpnwQ5LBLLy8twWSmLi4o/tfsaAAAAAXRSTlMAQObYZgAAANBJREFUKM9tkU0KgzAQhSP0AA0ddf/w5wCWrqu2B1CQriPFvdLi9ZuZaCFp3ybkI9/LhKg/qfU3xHujtUcO2stVRT44coPv6CACaF013TgbiAHTVpwNjEDngQXIWKkuG+hzFHZJqrMDCTLkdm0r40CMboGdhysENDAjZjEcGMGH2GAgnTpFJoYAQmF7S2JDQApOTmwIiCExbAhoMAxDj/m5A5nhjo7ca+USLspO9nG1BYRSxi+THQwvdt8PmqaJlSCqDoHx9/T7LyowlIqCA2E+XmE3zPkE0S8AAAAASUVORK5CYII=',
+      'searchUrl': 'https://www.aznude.com/search.html?q=%search_string%',
+      'showByDefault': false},
   {   'name': 'BAMPFA - CineFiles',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgBAMAAAAQtmoLAAAAMFBMVEUXbr4neMJWyPHpqRVNw5T1aBXbT6/yJTRaZpg5n9osjrWidlJFr+NGt5qMR3XENFJdayYeAAACPUlEQVRYw+3UPWjbQBQA4KcWN/IPsRwItG6H5jYXDy5ZApkMNxUKyXBg8NKpZMx2nmx1CBYEiuvNm226RHQoFEHBi/HWrUOmgsGbOwVvHtN3kk6qfPLgLYF7SA/pcR/o9J4EpR0DLNgpDA000EADDTTYAsqu6/rsemJjvhl8wfpg0ANzMvmJFdPBAIC7OzsAXyml7wXw2DnmPqkCZAmZwtNjDBuefcRAx/kiBvS3DxoqeJsG5nNaBwAWAgJQiMCpBPucryQAg77zQTMAlgQ1wwcfABIAN3CLwIzAEA5CAD+OJShyfrkN9LaAVhLkGWMSjFXQ5WsFeMzywRSTCjrr9ia4ZjaCKnmNSQHL9nIDZEJQmR3B7FcK6HZCQK2c6MMhe8m+B8AgKlj/B+a3otNXLB+AfsUggxiIxl0gaO3x5CxdNU12JsC4kpPAiDvNEdgRoEMAD8G5AAfVLLmRo3ESApNfFiMwKtO6AAZrBKBAXkhQQ3DhfEKwKvJF4i15DQjAE/IqAqdWuOl9vsIjAXC11xSgQL5Vsz44cSyIwGID4AZCkCX9ENQAJMDnMTdBw5FgVkkBfz/zVhKIECBHyBsF7HGMBMj7wALRNnKkgK4A7SRoTjxmI4A0sOT39xLQUhk/0QwuzgRgRqYq6Igz7nQdDnExDpMAfRXg7CXBEGfPikEvFXR5BP4AAkBwJsCYDBXAWwLYAuRcd4SV5w6A4dhQHmEFDNcCE+9AFC3MeI2Fh/q710ADDTTQ4PGB0o7xD+J9O9xnt0dGAAAAAElFTkSuQmCC',
       'searchUrl': 'https://cinefiles.bampfa.berkeley.edu/?q="%search_string%"',
@@ -6241,6 +6249,14 @@ var icon_sites_main = [
   {   'name': 'Sky of Usenet (DE)',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABAAQMAAACQp+OdAAAABlBMVEUAAAAHvtUs1wonAAAAAXRSTlMAQObYZgAAAQFJREFUKM+VkrGtBCEMRI0ICCmBTpbGVkBplEIJhATW+s9Y96Xb8BywT8j2zNoIomzxCGbDIZtth26mDobgNxKYlAiLxU/Vzuy6Ly2HRfO6k7JotBYe9pXWxAAqT5M+JB7RKnVK2kHrKFPyiqeMvADplJm2lJk3bgEDdxslTEwnAFAa1aEPKKh4ewec0uWWBjFUNLmR56ARUBzgN8/rGxahiiZA+g28/NUQooQCaB/Rfz805g5VKj2bQ5/xCfzBfooCyqhmJwImdxE3x2K2EiGYcVDgqkjgMOPkMKkgHG8wAg/uinpQEPGlVBo7gEIb21c5o63v5Qrh/QBo4/VIPl3+ANZUzCSFnBiSAAAAAElFTkSuQmCC',
       'searchUrl': 'https://sky-of-use.net/index.php?search/=&q=%tt%',
+      'showByDefault': false},
+  {   'name': 'Stremio (Movies)',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAGFBMVEUAAAByW/NQWOspV+D+/v9MZed4ePC7uvgUSxSbAAAAAXRSTlMAQObYZgAAAY5JREFUSMeVz0FOwzAQheFQxL7jDdt6LPbIUW9QJVsEvQCFC7QSPT9vZqpMUkeD+EGVaj99Sbv/RhTfPxBtYwD9AcQEaSEQE3QrAGKCpgIgImhWBBgRA2gViAm6awWICWpqgJiglULAiBZ4HlYJB74P51WCfDB+NgSAhCgnGRyG3BKJkCwSBodzQ2xoJqBTnjIiJf2CCetgTJOQ9Q3k0oIgDZwz24EQDpqAzjmTmRkAY83Jug3GE85I5W23ybpASQRrSKQPyXnXbTiZgHsRjGB7CRXYm4QLODPxliuDqzzTTPyK92Yw6hvpwQ6Dp2Zw8gPcL4ij3P/4dwBCLIWB7wAQtdbChblCGGfgCy6VqCz3WEG4FMbaeuucKAUbDK49pvqtCjARVjmOeqWP46qA9VG0uv/SYc9CAnCi9KX2mOBDDHxWBZzQhf8jBZyQ4366lz8DnOh7nFq62ONwSVhyp58AlvXLBGgJzwEvBtDjfPCKg5DQg4aIARQBRsQAigAjYgA5EBAAggwICQDx4v7+F/vvmuxaMJbqAAAAAElFTkSuQmCC',
+      'searchUrl': 'https://web.stremio.com/#/detail/movie/%tt%/%tt%',
+      'showByDefault': false},
+  {   'name': 'Stremio (TV)',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAGFBMVEUAAAByW/NQWOspV+D+/v9MZed4ePC7uvgUSxSbAAAAAXRSTlMAQObYZgAAAY5JREFUSMeVz0FOwzAQheFQxL7jDdt6LPbIUW9QJVsEvQCFC7QSPT9vZqpMUkeD+EGVaj99Sbv/RhTfPxBtYwD9AcQEaSEQE3QrAGKCpgIgImhWBBgRA2gViAm6awWICWpqgJiglULAiBZ4HlYJB74P51WCfDB+NgSAhCgnGRyG3BKJkCwSBodzQ2xoJqBTnjIiJf2CCetgTJOQ9Q3k0oIgDZwz24EQDpqAzjmTmRkAY83Jug3GE85I5W23ybpASQRrSKQPyXnXbTiZgHsRjGB7CRXYm4QLODPxliuDqzzTTPyK92Yw6hvpwQ6Dp2Zw8gPcL4ij3P/4dwBCLIWB7wAQtdbChblCGGfgCy6VqCz3WEG4FMbaeuucKAUbDK49pvqtCjARVjmOeqWP46qA9VG0uv/SYc9CAnCi9KX2mOBDDHxWBZzQhf8jBZyQ4366lz8DnOh7nFq62ONwSVhyp58AlvXLBGgJzwEvBtDjfPCKg5DQg4aIARQBRsQAigAjYgA5EBAAggwICQDx4v7+F/vvmuxaMJbqAAAAAElFTkSuQmCC',
+      'searchUrl': 'https://web.stremio.com/#/detail/series/%tt%',
       'showByDefault': false},
   {   'name': 'SubSource',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAC0AgMAAABAo+6hAAAACVBMVEUAAAABgIACAgLLPOsMAAAAAXRSTlMAQObYZgAAAJRJREFUaN7tzjEORVAQRuH7ircECquxBIUpWIId6UXCKhU0d9zMEAkS55STL38mbBVzoimo0Gh0UovO0lOpr+b2TrPNNtuPb4tTHWmvAY3+gs5Hp0hn4hRprx8ajb5P/yVVKTpTN73K1N2sMnV7Snev0fzN30e0pKpXXYVjodHot2o3NBp9o/ZDo9GP60xUaDT6ul4AENu/fpt6VhIAAAAASUVORK5CYII=',
