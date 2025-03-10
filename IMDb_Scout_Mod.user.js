@@ -2061,7 +2061,7 @@ var public_sites = [
       'both': true},
   {   'name': 'TheRARBG',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABAAQMAAACQp+OdAAAABlBMVEUAAAA3YLu9DUt5AAAAAXRSTlMAQObYZgAAAHRJREFUKM+t0DEOgCAQBMAzFJY+wafwNHgaT+EJlFcQVpNjTQQrdaupbjcn/8cDiEQhlKhEIzAj3qCyIhkcsbyCuw4S3vA4o02blciEdDSDBnRsSIYV2eBQDAshUKJ2BMI3Ah07sSES83/ygLPMINABVvYpB5v7oLp5P2HDAAAAAElFTkSuQmCC',
-      'searchUrl': 'https://therarbg.com/get-posts/keywords:%tt%/',
+      'searchUrl': 'https://therarbg.com/get-posts/keywords:%search_string%/',
       'loggedOutRegex': /Cloudflare|Ray ID/,
       'matchRegex': /imdb_icon|imdb-detail/,
       'positiveMatch': true,
