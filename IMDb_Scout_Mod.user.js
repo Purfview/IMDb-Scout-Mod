@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      23.8
+// @version      24.0
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from hundreds various sites. Adds movies/series to Radarr/Sonarr. Adds external ratings from Metacritic, Rotten Tomatoes, Letterboxd, Douban, Allocine, MyAnimeList, AniList. Media Server indicators for Plex, Jellyfin, Emby. Dark theme/style for Reference View. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAMFBMVEUAAAD/AAAcAAA1AABEAABVAAC3AADnAAD2AACFAAClAABlAAB3AADHAACVAADYAABCnXhrAAAD10lEQVRIx73TV4xMURgH8H/OnRmZWe3T7h2sOWaNXu7oJRg9UccuHgTRBatMtAgSg+gJu9q+kFmihcQoD8qLTkK0CIkoy0YJITsRD0rCKTHFrnkSv5e5c88/53znO+fiPwvsvrN038cPNqrG9pJmHkRVnPcpaTlHJY60cfPSpsrzl1LKihrmLvxhCM2i3OHvDx0d+H7e3F6JBv5iZMiJfhFTfPYDMHrMImpwimWWUdSgDQkbno7fFpUPVgh+pHFbZR4SovSctDCM9Hac9IKd9rO8EevtBCkXgY5IMmgquwypP7qqfcp/Tp4KLONDVsWh3RSBB2rnZfit69ocUdqLn2prrRZYM0Jg4JibamKsqe7gfEh5GOAfeYJjVHIPZvil97rcXkMog30byWRwXYRWoxHbzNFHJJpAarO8NdEBBsdCaP3WMJltTmQd4zlnekTq9Z5dgACwAlrpK4BxdV5mvLuspRgMSHbCIFF0iS8MZ5S8oYBYKY7rByC4dDM9uSIUmPOIwxgQBoYeF93auP4qFyPbIVXziWeGTH1EFM57kJo2hqQju6BwIyRf6RmCjdT4JOdiwNgiH/PPD3qoqlsNaXRd+fKtFfECxlZVNVF9SOsgTZEr2TUjJJbyeNX1IZrKIbyGlBABfpQPv2UDrly13LkJXDVhpQ5MhtGwcyF4HKjlU4E8xwB0AvDjd6AGmevZ87EcQRHgcO52e9uNsYELOrAa/Yh81YlmYLQJ5HWyq0+kzQ/DQKEusg6CRI27ryy8nReRS0wsoetkmRwogHSprliCckfEjXG9yAQc74J0WB99vu6DF3i3pMucsXM6tpBbxd2mVJAwXwGogNRBvGRA4jtHKTXkAIwLGCR/mT4Lh75oneQXXP9sAYfGRDCsnw7pX/jRZkU3M44kjw2l5zRIzb4CbZ8dULdL6wbNPZOpK0B6gN1UR1mdoxAaL/GrWiLPL3SEwW9YMTU/d64BtLahAVyucWhj9Mm8ign9IfQaBtd2/GbvCAEBpG5eMcrj2I0ktpKLeaqXQ3Pst42KGIshpdTmQLAeTgFGJ2wvh+tayMOR0n1RZ8B9z13vnOPBnsBq4E1ffgZpPFZHWVpO2cvhjYpOcbBd5TlhpDu5zq9mHGZcVi0y+VFkcFkDdyKJfTt99wEyHSEzDM90KH0nexpwZHJHKYYhjzlwGe0pP/IKfxociaEb7YDbi6KGJY1R2cR76E6NAtXqY4pPH3plLcl8LD7V+cOLUbUWRFZRPTAbVZO3mxK18Xc1ZaAiS8ARJXpZliXAomR94siiiMx8ZBOkXGTlnH0F/9ov1xPtWwEqP9wAAAAASUVORK5CYII=
@@ -1396,6 +1396,13 @@
 23.7.5  -  Removed: TSH, TSC, Classix, StreamKiste (DE), JPTV
 
 23.8    -  Fixed: Script breaks in some cases because IMDb stopped adding the slash to the end of the URL.
+
+24.0    -  Fixed: Bug when "Reference View: Force it" is on and a link is without the slash at the end.
+           Fixed: In some conditions "Helpful review" was truncated on the re-designed pages.
+           Fixed: In some conditions "Helpful review" was repeated multiple times on the re-designed pages.
+           Fixed: Wrong title of "Helpful review" on the re-designed pages.
+           Removed obsolete workaround for: "Sometimes randomly imdb loads pre-redesigned reviews page".
+           Added: OldGreekTracker
 
 
 //==============================================================================
@@ -3291,6 +3298,13 @@ var private_sites = [
       'searchUrl': 'https://ntelogo.org/requests?unfilled=1&tmdbId=%tmdbid%',
       'loggedOutRegex': /Cloudflare|Ray ID|Forgot Your Password/,
       'matchRegex': /fa-circle text-red/,
+      'positiveMatch': true,
+      'both': true},
+  {   'name': 'OldGreekTracker',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACMAAAAjBAMAAADs965qAAAAGFBMVEX8/PvrEhIEjwQsdiwUFNDQsriW2KudnLIBkD6uAAAAlklEQVQoz7XRvQoDIQwH8Cyt693QF0hfQAzYtYMPYIfQtZOzpRRfvwle8UC4j+H+S/BHDGLg8JzKN2rl+BczSiKcEdFP9FYa4CN0nfpGzQUQCdHWSXIWk3t+RkMl6zYRbqJniczcqLaEEPIy3UrJJtyhkcauE/Xke7JuN/WzNO0R7aPdjB5KGQyRJ6ubq8ZSUoL0guPzA8YDL3ybFjVOAAAAAElFTkSuQmCC',
+      'searchUrl': 'https://oldgreektracker.xyz/browse.php?do=search&keywords=%search_string_orig%&search_type=t_name&category=0&include_dead_torrents=yes',
+      'loggedOutRegex': /Cloudflare|Ray ID|Forget your password|Ξεχάσατε τον κωδικό πρόσβασής|Θα ανακατευθυνθείτε τώρα|You will now be redirected/,
+      'matchRegex': /dl.png/,
       'positiveMatch': true,
       'both': true},
   {   'name': 'OnlyEncodes',
@@ -10658,7 +10672,7 @@ function compactReferenceStyles() {
   addGlobalStyles('.aux-content-widget-2 {margin-top:0px; padding-top:0px !important}');
 
   addGlobalStyles('#imdbHeader {width:960px; display:flex; justify-content:center; align-items:center; margin:auto !important}');
-  document.getElementById('styleguide-v2').id = 'styleguide-v2x';
+  document.getElementById('styleguide-v2').id = 'styleguide-v2x'; // this loops document.events.on('bodyloaded' event till this element is found
   addGlobalStyles('body#styleguide-v2x {background-color: #000000 !important; margin-top:0px}');
 }
 
@@ -10676,6 +10690,7 @@ function compactReferenceElemRemoval() {
   // Check if the Styles funcs were executed as it may not happened at 'bodyloaded' event on very slow PCs + Chrome
   if (GM_config.get('dark_reference_view')) {
     if (!$('.IMDbScoutStyles').length) {
+      console.log("IMDb Scout Mod (Warning): Slow device!");
       darkReferenceStyles();
       compactReferenceStyles();
     }
@@ -10696,7 +10711,7 @@ function compactReferenceElemRemoval() {
   if ($('.titlereference-overview-review-list').length) {
     if ($('.titlereference-overview-review-list').text().match('User')) {
       if (GM_config.get("helpful_reviews_spoilers")) {
-        getIMDbBestReview(old_page=false, use_spoilers=true);
+        getIMDbBestReview(use_spoilers=true);
       } else {
         getIMDbBestReview();
       }
@@ -10708,25 +10723,18 @@ function compactReferenceElemRemoval() {
 //    Helpful reviews
 //==============================================================================
 
-function getIMDbBestReview(old_page=false, use_spoilers=false) {
+function getIMDbBestReview(use_spoilers=false) {
   const imdbid = document.URL.match(/\/tt([0-9]+)/)[1].trim('tt');
   // Note: Redesigned reviews pages + show spoilers = shows wrong numbers of votes [numbers are OK in JSON]
+  // Note v24.0: Looks like the above issue is fixed by IMDb.
   const new_url1 = "https://www.imdb.com/title/tt" +imdbid+ "/reviews/?sort=num_votes,desc&spoilers=EXCLUDE";
   const new_url2 = "https://www.imdb.com/title/tt" +imdbid+ "/reviews/?sort=num_votes,desc";
-  const old_url1 = "https://www.imdb.com/title/tt" +imdbid+ "/reviews?sort=totalVotes&dir=desc&ratingFilter=0&spoiler=hide";
-  const old_url2 = "https://www.imdb.com/title/tt" +imdbid+ "/reviews?sort=totalVotes&dir=desc&ratingFilter=0";
 
   let url;
-  if (old_page && use_spoilers) {
-    url = old_url2
-    console.log("IMDb Scout Mod (getIMDbBestReview): Started. Using old reviews URL with spoilers.");
-  } else if (old_page) {
-    url = old_url1
-    console.log("IMDb Scout Mod (getIMDbBestReview): Started. Using old reviews URL without spoilers.");
-  } else if (!old_page && use_spoilers) {
+  if (use_spoilers) {
     url = new_url2
     console.log("IMDb Scout Mod (getIMDbBestReview): Started. Using new reviews URL with spoilers.");
-  } else if (!old_page) {
+  } else {
     url = new_url1
     console.log("IMDb Scout Mod (getIMDbBestReview): Started. Using new reviews URL without spoilers.");
   }
@@ -10743,9 +10751,10 @@ function getIMDbBestReview(old_page=false, use_spoilers=false) {
       var xTitle, xRevLink, xReview, xUser, xUsrLink, xDate, xRating, xSpoiler;
 
       // Sometimes randomly imdb loads pre-redesigned reviews page, https://www.imdb.com/title/tt1828194/reviews/?ref_=tt_urv_sm  (in private window):
-      if (!old_page && $(result).find('.imdb-user-review').length) {
-        console.log("IMDb Scout Mod (getIMDbBestReview): Pre-redesigned reviews page detected. Restarting!");
-        getIMDbBestReview(old_page=true, use_spoilers);
+      // Note v24.0: Looks like the above issue is fixed by IMDb, still the code below is left to detect it, workaround code is deleted.
+      if ($(result).find('.imdb-user-review').length) {
+        console.log("IMDb Scout Mod (getIMDbBestReview): Error: Pre-redesigned reviews page detected!");
+        GM.notification("Error: Pre-redesigned reviews page detected! Please report it.", "IMDb Scout Mod (getIMDbBestReview)");
         return;
       }
 
@@ -10755,9 +10764,9 @@ function getIMDbBestReview(old_page=false, use_spoilers=false) {
         const parseJsn = JSON.parse(rawJsn);
         const reviews  = parseJsn.props.pageProps.contentData.reviews;
 
-        if (!old_page && !use_spoilers && !reviews.length) {
+        if (!use_spoilers && !reviews.length) {
           console.log("IMDb Scout Mod (getIMDbBestReview): Reviews not found! Restarting with spoilers enabled!.");
-          getIMDbBestReview(old_page=false, use_spoilers=true);
+          getIMDbBestReview(use_spoilers=true);
           return;
         }
 
@@ -10800,47 +10809,6 @@ function getIMDbBestReview(old_page=false, use_spoilers=false) {
         if(xRating === undefined) {xRating = "x"}
         if(hasspoilers) {xSpoiler = "Warning: Spoilers"}
 
-      } else if ($(result).find('.imdb-user-review').length) {
-          console.log("IMDb Scout Mod (getIMDbBestReview): Pre-redesigned reviews page detected.");
-
-          $(result).find('.imdb-user-review').each(function(index, value) {
-            const spoiler   = Boolean($(this).find('.spoiler-warning').length);
-            const str       = $(this).find('.text-muted').text().trim();
-            const match     = str.match(/(\d+)\D+(\d+)/);
-            const upvotes   = parseInt(match[1], 10);
-            const itemtotal = parseInt(match[2], 10);
-            let   downvotes = itemtotal - upvotes;
-            if (downvotes == 0) {downvotes = 1;}
-            const itemratio = upvotes / downvotes;
-
-            if(mostvotes === undefined) {
-                mostvotes        = itemtotal;
-                helpfulnessratio = itemratio;
-                topreview        = this;
-                hasspoilers      = spoiler;
-            } else if(mostvotes / itemtotal < 4 && itemratio > helpfulnessratio) {
-                helpfulnessratio = itemratio;
-                topreview        = this;
-                hasspoilers      = spoiler;
-                // console.log("!!!!!!!!!!: " + $(this).find('.title').text().trim());
-            }
-          });
-
-          xTitle   = $(topreview).find('.title').text().trim();
-          xRevLink = $(topreview).find('.title').attr('href');
-          xReview  = $(topreview).find('.text').html();
-          xUser    = $(topreview).find('.display-name-link').text().trim();
-          xUsrLink = $(topreview).find('.display-name-link a').attr('href');
-          xDate    = $(topreview).find('.review-date').text().trim();
-          xRating  = $(topreview).find('.ipl-star-icon').next().text().trim();
-          xSpoiler = "";
-          if(xRating === undefined || xRating == "") {xRating = "x"}
-          if(hasspoilers) {xSpoiler = "Warning: Spoilers"}
-
-      } else if (old_page && !use_spoilers) {
-          console.log("IMDb Scout Mod (getIMDbBestReview): Element/Reviews not found! Restarting with spoilers enabled!.");
-          getIMDbBestReview(old_page=true, use_spoilers=true);
-          return;
       } else {
           console.log("IMDb Scout Mod (getIMDbBestReview): Element not found! Please report it.");
           GM.notification("Element not found! Please report it.", "IMDb Scout Mod (getIMDbBestReview)");
@@ -10884,28 +10852,34 @@ function getIMDbBestReview(old_page=false, use_spoilers=false) {
         $('.titlereference-section-media').after(y);
       // if on redesigned:
       } else {
-//         console.log("!!!!!!!_1: " + $('.review-top-review').find('.ipc-signpost__text').length);
-//         console.log("!!!!!!!_2: " + $('[data-testid=review-summary]').length);
-//         console.log("!!!!!!!_3: " + $('[data-testid=permalink-link]').length);
-//         console.log("!!!!!!!_4: " + $('[data-testid=review-overflow]').find('.ipc-html-content-inner-div').length);
-//         console.log("!!!!!!!_5: " + $('[data-testid=author-link]').length);
-//         console.log("!!!!!!!_6: " + $('.review-date').length);
-//         console.log("!!!!!!!_7: " + $('.review-rating').find('.ipc-rating-star--rating').length);
-//         console.log("!!!!!!!_8: " + $('[data-testid=review-card-parent]').find('.ipc-list-card__actions').length);
+//         console.log("!!!!!!!_01: " + $('.review-top-review').find('.ipc-signpost__text').length);
+//         console.log("!!!!!!!_02: " + $('[data-testid=review-summary]').find('.ipc-title__text').length);
+//         console.log("!!!!!!!_03: " + $('[data-testid=review-summary]').find('.ipc-title-link-wrapper').length);
+//         console.log("!!!!!!!_04: " + $('[data-testid=permalink-link]').length);
+//         console.log("!!!!!!!_05: " + $('[data-testid=review-overflow]').find('.ipc-html-content-inner-div').length);
+//         console.log("!!!!!!!_06: " + $('[data-testid=author-link]').length);
+//         console.log("!!!!!!!_07: " + $('.review-date').length);
+//         console.log("!!!!!!!_08: " + $('.review-rating').find('.ipc-rating-star--rating').length);
+//         console.log("!!!!!!!_09: " + $('[data-testid=review-card-parent]').find('.ipc-list-card__actions').length);
 
         $('.review-top-review').find('.ipc-signpost__text').contents().filter(function() {
           return this.nodeType === Node.TEXT_NODE;
         }).replaceWith('Helpful Review');
 
-        $('[data-testid=review-summary]').contents().filter(function() {
+        $('[data-testid=review-summary]').find('.ipc-title__text').contents().filter(function() {
           return this.nodeType === Node.TEXT_NODE;
         }).replaceWith(xTitle);
 
+        $('[data-testid=review-summary]').find('.ipc-title-link-wrapper').attr('href', xRevLink);
+
         $('[data-testid=permalink-link]').attr('href', xRevLink);
 
-        $('[data-testid=review-overflow]').find('.ipc-html-content-inner-div').contents().filter(function() {
-          return this.nodeType === Node.TEXT_NODE;
-        }).replaceWith(xReview);
+        $('[data-testid=review-overflow]').find('.ipc-html-content-inner-div').each(function() {
+            $(this).html(xReview);
+        });
+
+        $('[data-testid=review-overflow]').css('max-height', '5000px');
+        $('[data-testid=review-overflow]').find('button.ipc-overflowText-overlay').remove();
 
         $('[data-testid=author-link]').contents().filter(function() {
           return this.nodeType === Node.TEXT_NODE;
@@ -12041,14 +12015,25 @@ if (Boolean(location.href.match('\\?ref_=')) || Boolean(location.href.match('\\?
   let stripped_href = location.href.split('?ref_=')[0];
       stripped_href = stripped_href.split('?pf_')[0];
   if (GM_config.get('force_reference_view') && Boolean(location.href.match('/title/tt')) && !Boolean(location.href.match('reference'))) {
-    stripped_href = stripped_href + "reference";
+    console.log("IMDb Scout Mod (Redirect): Redirect to Reference Page (tracking stripped).");
+    if (stripped_href.endsWith('/')) {
+      stripped_href = stripped_href + "reference";
+    } else {
+        stripped_href = stripped_href + "/reference";
+    }
   }
   window.location.replace(stripped_href);
   return;
 } else if (GM_config.get('force_reference_view') && Boolean(location.href.match('/title/tt')) && !Boolean(location.href.match('reference'))) {
-  const reference_href = location.href + "reference";
-  window.location.replace(reference_href);
-  return;
+    console.log("IMDb Scout Mod (Redirect): Redirect to Reference Page.");
+    let reference_href = location.href;
+    if (reference_href.endsWith('/')) {
+      reference_href = reference_href + "reference";
+    } else {
+        reference_href = reference_href + "/reference";
+    }
+    window.location.replace(reference_href);
+    return;
 }
 
 //==============================================================================
@@ -12113,8 +12098,8 @@ function startObserver() {
     const obs = new MutationObserver(checkDummyElem);
     obs.observe($('.ipc-page-section')[0], obscfg);
   } else {
-    console.log("IMDb Scout Mod (Start Error): Element not found! Please report it.");
-    GM.notification("Element not found! Please report it.", "IMDb Scout Mod (Start Error)");
+    console.log("IMDb Scout Mod (Start Observer Error): Element not found! Please report it.");
+    GM.notification("Element not found! Please report it.", "IMDb Scout Mod (Start Observer Error)");
   }
 }
 
@@ -12148,8 +12133,8 @@ function startRedesign() {
     adsRemoval();
     startIMDbScout();
   } else {
-    console.log("IMDb Scout Mod (Start Error): Element not found! Please report it.");
-    GM.notification("Element not found! Please report it.", "IMDb Scout Mod (Start Error)");
+    console.log("IMDb Scout Mod (Start Redesign Error): Element not found! Please report it.");
+    GM.notification("Element not found! Please report it.", "IMDb Scout Mod (Start Redesign Error)");
   }
 }
 
@@ -12208,7 +12193,7 @@ function startIMDbScout() {
   if (!onSearchPage && !onReferencePage && GM_config.get("helpful_reviews")) {
     if ($('[data-testid=review-overflow]').length) {
       if (GM_config.get("helpful_reviews_spoilers")) {
-        getIMDbBestReview(old_page=false, use_spoilers=true);
+        getIMDbBestReview(use_spoilers=true);
       } else {
         getIMDbBestReview();
       }
@@ -12229,7 +12214,8 @@ function startIMDbScout() {
 }
 
 if ($('html[xmlns\\:og="http://ogp.me/ns#"]').length) {
-  document.events.on('bodyloaded', () => {
+  console.log("IMDb Scout Mod (Start): Reference page detected.");
+  document.events.on('bodyloaded', () => { // This instead of DOMContentLoaded is just to prevent white->black flick when darkstyle is enabled
     darkReferenceStyles();
     compactReferenceStyles();
   });
