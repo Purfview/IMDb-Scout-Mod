@@ -1404,6 +1404,8 @@
            Removed obsolete workaround for: "Sometimes randomly imdb loads pre-redesigned reviews page".
            Added: OldGreekTracker
 
+24.1    -  New feature: Adds modern "Worldwide Gross (graphQl API)" to Box Office section. [compact reference]
+
 
 //==============================================================================
 //    Notes.
@@ -10678,6 +10680,7 @@ function compactReferenceStyles() {
   addGlobalStyles('.aux-content-widget-2 {margin-top:0px; padding-top:0px !important}');
 
   addGlobalStyles('#imdbHeader {width:960px; display:flex; justify-content:center; align-items:center; margin:auto !important}');
+
   document.getElementById('styleguide-v2').id = 'styleguide-v2x'; // this loops document.events.on('bodyloaded' event till this element is found
   addGlobalStyles('body#styleguide-v2x {background-color: #000000 !important; margin-top:0px}');
 }
@@ -10723,6 +10726,73 @@ function compactReferenceElemRemoval() {
       }
     }
   }
+
+  // Inject Worldwide Gross
+  if ($('section.titlereference-section-box-office').length) {
+    insertGross();
+  }
+}
+
+function insertGross() {
+  const total_gross_elem = `<tr class="ipl-zebra-list__item">
+                                <td class="ipl-zebra-list__label">Worldwide Gross (graphQl API)</td>
+                                <td class="scout_total_gross">
+                                    total_gross_placeholder
+                                </td>
+                            </tr>`
+
+  const y = jQuery.parseHTML(total_gross_elem);
+  $('section.titlereference-section-box-office').find('.ipl-zebra-list tbody').append(y);
+
+  let imdbid = document.URL.match(/\/tt([0-9]+)/)[1];
+      imdbid = "tt" + imdbid;
+
+  const graphQlReq = {
+    query: `
+      query {
+        title(id: "${imdbid}") {
+          worldwideGross: rankedLifetimeGross(boxOfficeArea: WORLDWIDE) {
+            total {
+              amount
+            }
+          }
+        }
+      }`
+  };
+
+  GM.xmlHttpRequest({
+    method:  "POST",
+    timeout: 10000,
+    url:     "https://api.graphql.imdb.com",
+    data:    JSON.stringify(graphQlReq),
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    onload: function(response) {
+      if (response.status >= 200 && response.status < 300) {
+        const body = JSON.parse(response.responseText);
+        let amount = body.data.title.worldwideGross.total.amount;
+        if (Number.isInteger(amount)) {
+          amount = `$${amount.toLocaleString()}`; // To get "$40,000,000" from 40000000
+        } else {
+            amount = String(amount)
+        }
+        $('.scout_total_gross').html(amount);
+      } else {
+          console.log("IMDb Scout Mod (insertGross): Error status: " +response.status);
+          console.log("IMDb Scout Mod (insertGross): Error response: " +response.responseText);
+      }
+    },
+    onerror: function() {
+      console.log("IMDb Scout Mod (insertGross): Request Error.");
+    },
+    onabort: function() {
+      console.log("IMDb Scout Mod (insertGross): Request is aborted.");
+    },
+    ontimeout: function() {
+      console.log("IMDb Scout Mod (insertGross): Request timed out.");
+    }
+  });
 }
 
 //==============================================================================
