@@ -1404,7 +1404,7 @@
            Removed obsolete workaround for: "Sometimes randomly imdb loads pre-redesigned reviews page".
            Added: OldGreekTracker
 
-24.1    -  New feature: Adds modern "Worldwide Gross (graphQl API)" to Box Office section. [compact reference]
+24.1    -  New feature: Adds "Box Office (graphQL API)" section. [compact reference only]
 
 
 //==============================================================================
@@ -10680,7 +10680,6 @@ function compactReferenceStyles() {
   addGlobalStyles('.aux-content-widget-2 {margin-top:0px; padding-top:0px !important}');
 
   addGlobalStyles('#imdbHeader {width:960px; display:flex; justify-content:center; align-items:center; margin:auto !important}');
-
   document.getElementById('styleguide-v2').id = 'styleguide-v2x'; // this loops document.events.on('bodyloaded' event till this element is found
   addGlobalStyles('body#styleguide-v2x {background-color: #000000 !important; margin-top:0px}');
 }
@@ -10727,27 +10726,28 @@ function compactReferenceElemRemoval() {
     }
   }
 
-  // Inject Worldwide Gross
-  if ($('section.titlereference-section-box-office').length) {
-    insertGross();
-  }
+  // Inject Box Office (graphQL API)
+  insertNewBoxOffice();
 }
 
-function insertGross() {
-  const total_gross_elem = `<tr class="ipl-zebra-list__item">
-                                <td class="ipl-zebra-list__label">Worldwide Gross (graphQl API)</td>
-                                <td class="scout_total_gross">
-                                    total_gross_placeholder
-                                </td>
-                            </tr>`
+function insertNewBoxOffice() {
+  const x = `<section class="titlereference-section-box-office_scout">
+              <h4 class="ipl-header__content ipl-list-title">Box Office (graphQL API)</h4>
+              <table class="titlereference-list ipl-zebra-list">
+                <tbody>
+                  <tr class="ipl-zebra-list__item">
+                    <td class="ipl-zebra-list__label">Worldwide Gross</td>
+                    <td class="scout_box_office_worldwide_gross">
+                        scout_placeholder
+                    </td></tr></tbody></table></section>`
 
-  const y = jQuery.parseHTML(total_gross_elem);
-  $('section.titlereference-section-box-office').find('.ipl-zebra-list tbody').append(y);
+  const y = jQuery.parseHTML(x);
+  $('section.article').find('section').last().after(y);
 
   let imdbid = document.URL.match(/\/tt([0-9]+)/)[1];
       imdbid = "tt" + imdbid;
 
-  const graphQlReq = {
+  const GraphQLReq = {
     query: `
       query {
         title(id: "${imdbid}") {
@@ -10764,20 +10764,25 @@ function insertGross() {
     method:  "POST",
     timeout: 10000,
     url:     "https://api.graphql.imdb.com",
-    data:    JSON.stringify(graphQlReq),
+    data:    JSON.stringify(GraphQLReq),
     headers: {
       'Content-Type': 'application/json'
     },
     onload: function(response) {
       if (response.status >= 200 && response.status < 300) {
         const body = JSON.parse(response.responseText);
-        let amount = body.data.title.worldwideGross.total.amount;
-        if (Number.isInteger(amount)) {
-          amount = `$${amount.toLocaleString()}`; // To get "$40,000,000" from 40000000
+        let worldwidegross_amount;
+        if(body.data.title.worldwideGross !== null) {
+          worldwidegross_amount = body.data.title.worldwideGross.total.amount;
+          if (Number.isInteger(worldwidegross_amount)) {
+            worldwidegross_amount = `$${worldwidegross_amount.toLocaleString()}`; // To get "$40,000,000" from 40000000
+          } else {
+              worldwidegross_amount = String(worldwidegross_amount);
+          }
         } else {
-            amount = String(amount)
+            worldwidegross_amount = "null";
         }
-        $('.scout_total_gross').html(amount);
+        $('.scout_box_office_worldwide_gross').html(worldwidegross_amount);
       } else {
           console.log("IMDb Scout Mod (insertGross): Error status: " +response.status);
           console.log("IMDb Scout Mod (insertGross): Error response: " +response.responseText);
