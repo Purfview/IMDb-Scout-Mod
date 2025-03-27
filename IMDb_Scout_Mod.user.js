@@ -1405,6 +1405,7 @@
            Added: OldGreekTracker
 
 24.1    -  New feature: Adds "Box Office (graphQL API)" section. [compact reference only]
+           Fixed: Bug in getDoubanID0 and added one more fallback.
 
 
 //==============================================================================
@@ -6387,7 +6388,10 @@ async function replaceSearchUrlParams(site, movie_id, movie_title, movie_title_o
     const xxx = await getTMDb_original_title(movie_id);
     movie_id = xxx[1];
   } else if (search_url.match("%doubanid%")) {
-    movie_id = await getDoubanID0(movie_id);
+    movie_id = await getDoubanID0_1(movie_id);
+  }
+  if (search_url.match("%doubanid%") && movie_id == "00000000") {
+    movie_id = await getDoubanID0_2(movie_id);
   }
   if (search_url.match("%doubanid%") && movie_id == "00000000") {
     movie_id = await getDoubanID1(movie_id);
@@ -6530,35 +6534,73 @@ function getTMDb_original_title(movie_id) {
   });
 }
 
-function getDoubanID0(movie_id) {
-  console.log("IMDb Scout Mod (getDoubanID0): Started.");
+function getDoubanID0_1(movie_id) {
+  console.log("IMDb Scout Mod (getDoubanID0_1): Started.");
   return new Promise(resolve => {
     GM.xmlHttpRequest({
       method: "GET",
-      timeout: 6000,
-      url:    "https://movie.douban.com/j/subject_suggest?q=tt" + movie_id,        //  https://movie.douban.com/subject_search?search_text=tt2306299
+      timeout: 4000,
+      url:    "https://movie.douban.com/j/subject_suggest?q=tt" + movie_id,
       headers: { "User-Agent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:108.0) Gecko/20100101 Firefox/108.0" },
       onload: function(response) {
-        const result = JSON.parse(response.responseText);
-        if (String(response.responseText).match(movie_id)) {
-          const douban_id = result[0].id;
-          resolve(douban_id);
-        } else {
-          const douban_id = "00000000";
-          resolve(douban_id);
+        try {
+          const result = JSON.parse(response.responseText);
+          if (String(response.responseText).match(movie_id)) {
+            const douban_id = result[0].id;
+            resolve(douban_id);
+          } else {
+            resolve("00000000");
+          }
+        } catch (e) {
+            console.log("IMDb Scout Mod (getDoubanID0_1): Error: Response is not JSON.");
+            resolve("00000000");
         }
       },
       onerror: function() {
-        GM.notification("Request Error.", "IMDb Scout Mod (getDoubanID0)");
-        console.log("IMDb Scout Mod (getDoubanID0): Request Error.");
+        GM.notification("Request Error.", "IMDb Scout Mod (getDoubanID0_1)");
+        console.log("IMDb Scout Mod (getDoubanID0_1): Request Error.");
         resolve("00000000");
       },
       onabort: function() {
-        console.log("IMDb Scout Mod (getDoubanID0): Request Aborted.");
+        console.log("IMDb Scout Mod (getDoubanID0_1): Request Aborted.");
         resolve("00000000");
       },
       ontimeout: function() {
-        console.log("IMDb Scout Mod (getDoubanID0): Request Timeout.");
+        console.log("IMDb Scout Mod (getDoubanID0_1): Request Timeout.");
+        resolve("00000000");
+      }
+    });
+  });
+}
+
+function getDoubanID0_2(movie_id) {
+  console.log("IMDb Scout Mod (getDoubanID0_2): Started.");
+  return new Promise(resolve => {
+    GM.xmlHttpRequest({
+      method: "GET",
+      timeout: 4000,
+      url:    "https://movie.douban.com/subject_search?search_text=tt" + movie_id,
+      headers: { "User-Agent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:108.0) Gecko/20100101 Firefox/108.0" },
+      onload: function(response) {
+        const result = String(response.responseText);
+        if (result.match(/subject\/(\d+)/)) {
+          const y = result.match(/subject\/(\d+)/)[1];
+          resolve(y);
+        } else {
+            resolve("00000000");
+        }
+      },
+      onerror: function() {
+        GM.notification("Request Error.", "IMDb Scout Mod (getDoubanID0_2)");
+        console.log("IMDb Scout Mod (getDoubanID0_2): Request Error.");
+        resolve("00000000");
+      },
+      onabort: function() {
+        console.log("IMDb Scout Mod (getDoubanID0_2): Request Aborted.");
+        resolve("00000000");
+      },
+      ontimeout: function() {
+        console.log("IMDb Scout Mod (getDoubanID0_2): Request Timeout.");
         resolve("00000000");
       }
     });
@@ -10317,7 +10359,10 @@ async function getRotten(rott_url, rott_rotten, rott_certified, rott_fresh, rott
 }
 
 async function getDoubanRatings(imdbid, douban_icon) {
-  let id = await getDoubanID0(imdbid);
+  let id = await getDoubanID0_1(imdbid);
+  if (id == "00000000") {
+    id = await getDoubanID0_2(imdbid);
+  }
   if (id == "00000000") {
     id = await getDoubanID1(imdbid);
   }
