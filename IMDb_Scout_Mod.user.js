@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      24.0
+// @version      24.1
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from hundreds various sites. Adds movies/series to Radarr/Sonarr. Adds external ratings from Metacritic, Rotten Tomatoes, Letterboxd, Douban, Allocine, MyAnimeList, AniList. Media Server indicators for Plex, Jellyfin, Emby. Dark theme/style for Reference View. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAMFBMVEUAAAD/AAAcAAA1AABEAABVAAC3AADnAAD2AACFAAClAABlAAB3AADHAACVAADYAABCnXhrAAAD10lEQVRIx73TV4xMURgH8H/OnRmZWe3T7h2sOWaNXu7oJRg9UccuHgTRBatMtAgSg+gJu9q+kFmihcQoD8qLTkK0CIkoy0YJITsRD0rCKTHFrnkSv5e5c88/53znO+fiPwvsvrN038cPNqrG9pJmHkRVnPcpaTlHJY60cfPSpsrzl1LKihrmLvxhCM2i3OHvDx0d+H7e3F6JBv5iZMiJfhFTfPYDMHrMImpwimWWUdSgDQkbno7fFpUPVgh+pHFbZR4SovSctDCM9Hac9IKd9rO8EevtBCkXgY5IMmgquwypP7qqfcp/Tp4KLONDVsWh3RSBB2rnZfit69ocUdqLn2prrRZYM0Jg4JibamKsqe7gfEh5GOAfeYJjVHIPZvil97rcXkMog30byWRwXYRWoxHbzNFHJJpAarO8NdEBBsdCaP3WMJltTmQd4zlnekTq9Z5dgACwAlrpK4BxdV5mvLuspRgMSHbCIFF0iS8MZ5S8oYBYKY7rByC4dDM9uSIUmPOIwxgQBoYeF93auP4qFyPbIVXziWeGTH1EFM57kJo2hqQju6BwIyRf6RmCjdT4JOdiwNgiH/PPD3qoqlsNaXRd+fKtFfECxlZVNVF9SOsgTZEr2TUjJJbyeNX1IZrKIbyGlBABfpQPv2UDrly13LkJXDVhpQ5MhtGwcyF4HKjlU4E8xwB0AvDjd6AGmevZ87EcQRHgcO52e9uNsYELOrAa/Yh81YlmYLQJ5HWyq0+kzQ/DQKEusg6CRI27ryy8nReRS0wsoetkmRwogHSprliCckfEjXG9yAQc74J0WB99vu6DF3i3pMucsXM6tpBbxd2mVJAwXwGogNRBvGRA4jtHKTXkAIwLGCR/mT4Lh75oneQXXP9sAYfGRDCsnw7pX/jRZkU3M44kjw2l5zRIzb4CbZ8dULdL6wbNPZOpK0B6gN1UR1mdoxAaL/GrWiLPL3SEwW9YMTU/d64BtLahAVyucWhj9Mm8ign9IfQaBtd2/GbvCAEBpG5eMcrj2I0ktpKLeaqXQ3Pst42KGIshpdTmQLAeTgFGJ2wvh+tayMOR0n1RZ8B9z13vnOPBnsBq4E1ffgZpPFZHWVpO2cvhjYpOcbBd5TlhpDu5zq9mHGZcVi0y+VFkcFkDdyKJfTt99wEyHSEzDM90KH0nexpwZHJHKYYhjzlwGe0pP/IKfxociaEb7YDbi6KGJY1R2cR76E6NAtXqY4pPH3plLcl8LD7V+cOLUbUWRFZRPTAbVZO3mxK18Xc1ZaAiS8ARJXpZliXAomR94siiiMx8ZBOkXGTlnH0F/9ov1xPtWwEqP9wAAAAASUVORK5CYII=
@@ -1405,6 +1405,7 @@
            Added: OldGreekTracker
 
 24.1    -  New feature: Adds "Box Office (graphQL API)" section. [compact reference only]
+           New feature: Implemented original IMDb's "Helpful review" selection algo.
            Fixed: Bug in getDoubanID0 and added one more fallback.
 
 
@@ -10873,7 +10874,7 @@ function getIMDbBestReview(use_spoilers=false) {
     onload: function(response) {
       const parser = new DOMParser();
       const result = parser.parseFromString(response.responseText, "text/html");
-      var mostvotes, helpfulnessratio, topreview, hasspoilers;
+      var bestScore, topreview, hasspoilers;
       var xTitle, xRevLink, xReview, xUser, xUsrLink, xDate, xRating, xSpoiler;
 
       // Sometimes randomly imdb loads pre-redesigned reviews page, https://www.imdb.com/title/tt1828194/reviews/?ref_=tt_urv_sm  (in private window):
@@ -10906,20 +10907,16 @@ function getIMDbBestReview(use_spoilers=false) {
             upvotes   = item.review.helpfulnessVotes.upVotes;
             downvotes = item.review.helpfulnessVotes.downVotes;
           }
-          const itemtotal = upvotes + downvotes;
-          if (downvotes == 0) {downvotes = 1;}
-          const itemratio = upvotes / downvotes;
+          const score = wilsonScore(upvotes, downvotes);
 
-          if(mostvotes === undefined) {
-              mostvotes        = itemtotal;
-              helpfulnessratio = itemratio;
+          if(bestScore === undefined) {
+              bestScore        = score;
               topreview        = item;
               hasspoilers      = spoiler;
-          } else if(mostvotes / itemtotal < 4 && itemratio > helpfulnessratio) {
-              helpfulnessratio = itemratio;
+          } else if (score > bestScore) {
+              bestScore        = score;
               topreview        = item;
               hasspoilers      = spoiler;
-              // console.log("!!!!!!!!!!: " + topreview.review.reviewSummary);
           }
         });
 
@@ -11039,6 +11036,15 @@ function getIMDbBestReview(use_spoilers=false) {
       console.log("IMDb Scout Mod (Review): Request timed out.");
     }
   });
+}
+
+function wilsonScore(upVotes, downVotes, z = 1.95996) {
+  const n = upVotes + downVotes;
+  if (n === 0) return 0;
+  const phat = upVotes / n;
+  const numerator = phat + (z * z) / (2 * n) - z * Math.sqrt((phat * (1 - phat) + (z * z) / (4 * n)) / n);
+  const denominator = 1 + (z * z) / n;
+  return numerator / denominator;
 }
 
 //==============================================================================
