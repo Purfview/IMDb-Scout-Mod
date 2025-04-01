@@ -1408,7 +1408,7 @@
            New feature: Implemented original IMDb's "Helpful review" selection algo.
            Fixed: Bug in getDoubanID0 and added one more fallback.
 
-24.1.1  -  Added: PrivateSilverScreen
+24.1.1  -  Added: PrivateSilverScreen, Yu-Scene
 
 
 //==============================================================================
