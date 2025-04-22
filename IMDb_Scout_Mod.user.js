@@ -3736,7 +3736,7 @@ var private_sites = [
       'both': true},
   {   'name': 'THR',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAe1BMVEUAAADqeoT2w8jqeYTrhY/hR1XcMEHbJzfkXGrdKTrjVWPfPU3hSFbbJTbPWVjZHi/odoDrg47fOknil5bocHziS1n3x8vglZTodID63N/419raITLaHzHYFSfbGSvgQlHcLD3aHS7ZDyLMTEvLSUneN0fKQkLcKTrWCBxPpaowAAAAG3RSTlMAl29OFJTr5rPrtPby7uvpvKSZjYqGa05JQhW6bKXzAAAAZUlEQVQY05XPRw6EMBBE0Rlyzrm7jTHx/iekVwYJCYm/fIuS6ves3JZ5XpJWw18JzjcvIASYnE+gSAi6beQgpdzDTkNvcI1RFTZXax4CBYgYa7A8Qs69AwC8QnAQl16QrSMXPc+fFX0Je26WJaQAAAAASUVORK5CYII=',
-      'searchUrl': 'https://www.torrenthr.org/browse.php?search=%search_string%&blah=0&incldead=1',
+      'searchUrl': 'https://www.torrenthr.org/browse.php?search=%tt%&blah=2&incldead=1',
       'loggedOutRegex': /registraciju morate imati omogućene cookiese/,
       'matchRegex': /Ništa nije pronađeno!/,
       'seedingRegex': /title="Seeding"/,
