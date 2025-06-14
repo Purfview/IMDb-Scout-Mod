@@ -7468,8 +7468,11 @@ function addIconBar(movie_id, movie_title, movie_title_orig) {
   // reference + remove "Reference View" txt and a link to settings
   if ($('.titlereference-header div script').length) {
     // wrap text node for removal
-    $($('.titlereference-header div script')[0].nextSibling).wrap('<span class="removethis"/>');
-    $('.removethis').remove();
+    var scriptElem = $('.titlereference-header div script')[0];
+    if (scriptElem && scriptElem.nextSibling) {
+      $(scriptElem.nextSibling).wrap('<span class="removethis"/>');
+      $('.removethis').remove();
+    }
     $('.titlereference-change-view-link').remove();
     iconbar = getIconsLinkArea();
   // in case if code above breaks
@@ -7815,7 +7818,12 @@ function performPage() {
     // reference
     const m = $('h3[itemprop="name"]').text().trim();
     movie_title = m.split('\n')[0].trim();
-    movie_title_orig = $.trim($($('h3[itemprop="name"]')[0].nextSibling).text());
+    var h3Elem = $('h3[itemprop="name"]')[0];
+    if (h3Elem && h3Elem.nextSibling) {
+      movie_title_orig = $.trim($(h3Elem.nextSibling).text());
+    } else {
+      movie_title_orig = movie_title;
+    }
     // movie_title_orig not found
     if (movie_title_orig === "" || movie_title_orig === undefined) {
       movie_title_orig = movie_title;
