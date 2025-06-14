@@ -7840,7 +7840,10 @@ function performPage() {
     is_tv    = false;
     is_movie = false;
   }
-  if (!onReferencePage && !$('[property="og:title"]').length || onReferencePage && !$('li.ipl-inline-list__item').length) {
+  if (
+    (!onReferencePage && !$('[property="og:title"]').length) ||
+    (onReferencePage && !$('li.ipc-inline-list__item').length)
+  ) {
     console.log("IMDb Scout Mod (Get a genre Error): Element not found! Please report it.");
     GM.notification("Element not found! Please report it.", "IMDb Scout Mod (Get a genre Error)");
   }
