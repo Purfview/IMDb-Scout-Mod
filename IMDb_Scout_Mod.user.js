@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      24.1.4
+// @version      25.0
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from hundreds various sites. Adds movies/series to Radarr/Sonarr. Adds external ratings from Metacritic, Rotten Tomatoes, Letterboxd, Douban, Allocine, MyAnimeList, AniList. Media Server indicators for Plex, Jellyfin, Emby. Dark theme/style for Reference View. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAMFBMVEUAAAD/AAAcAAA1AABEAABVAAC3AADnAAD2AACFAAClAABlAAB3AADHAACVAADYAABCnXhrAAAD10lEQVRIx73TV4xMURgH8H/OnRmZWe3T7h2sOWaNXu7oJRg9UccuHgTRBatMtAgSg+gJu9q+kFmihcQoD8qLTkK0CIkoy0YJITsRD0rCKTHFrnkSv5e5c88/53znO+fiPwvsvrN038cPNqrG9pJmHkRVnPcpaTlHJY60cfPSpsrzl1LKihrmLvxhCM2i3OHvDx0d+H7e3F6JBv5iZMiJfhFTfPYDMHrMImpwimWWUdSgDQkbno7fFpUPVgh+pHFbZR4SovSctDCM9Hac9IKd9rO8EevtBCkXgY5IMmgquwypP7qqfcp/Tp4KLONDVsWh3RSBB2rnZfit69ocUdqLn2prrRZYM0Jg4JibamKsqe7gfEh5GOAfeYJjVHIPZvil97rcXkMog30byWRwXYRWoxHbzNFHJJpAarO8NdEBBsdCaP3WMJltTmQd4zlnekTq9Z5dgACwAlrpK4BxdV5mvLuspRgMSHbCIFF0iS8MZ5S8oYBYKY7rByC4dDM9uSIUmPOIwxgQBoYeF93auP4qFyPbIVXziWeGTH1EFM57kJo2hqQju6BwIyRf6RmCjdT4JOdiwNgiH/PPD3qoqlsNaXRd+fKtFfECxlZVNVF9SOsgTZEr2TUjJJbyeNX1IZrKIbyGlBABfpQPv2UDrly13LkJXDVhpQ5MhtGwcyF4HKjlU4E8xwB0AvDjd6AGmevZ87EcQRHgcO52e9uNsYELOrAa/Yh81YlmYLQJ5HWyq0+kzQ/DQKEusg6CRI27ryy8nReRS0wsoetkmRwogHSprliCckfEjXG9yAQc74J0WB99vu6DF3i3pMucsXM6tpBbxd2mVJAwXwGogNRBvGRA4jtHKTXkAIwLGCR/mT4Lh75oneQXXP9sAYfGRDCsnw7pX/jRZkU3M44kjw2l5zRIzb4CbZ8dULdL6wbNPZOpK0B6gN1UR1mdoxAaL/GrWiLPL3SEwW9YMTU/d64BtLahAVyucWhj9Mm8ign9IfQaBtd2/GbvCAEBpG5eMcrj2I0ktpKLeaqXQ3Pst42KGIshpdTmQLAeTgFGJ2wvh+tayMOR0n1RZ8B9z13vnOPBnsBq4E1ffgZpPFZHWVpO2cvhjYpOcbBd5TlhpDu5zq9mHGZcVi0y+VFkcFkDdyKJfTt99wEyHSEzDM90KH0nexpwZHJHKYYhjzlwGe0pP/IKfxociaEb7YDbi6KGJY1R2cR76E6NAtXqY4pPH3plLcl8LD7V+cOLUbUWRFZRPTAbVZO3mxK18Xc1ZaAiS8ARJXpZliXAomR94siiiMx8ZBOkXGTlnH0F/9ov1xPtWwEqP9wAAAAASUVORK5CYII=
@@ -1417,6 +1417,11 @@
 
 24.1.4  -  Added: Nyaa (Mirror), Anime Tosho, Zooqle (Fake), TGx (Fake)
            Removed: TGx, RareShare2, FinVip, StarK ClouD, GPW, HDAtmos, Le-Cinephile, M4uFree, Movie-Web, WizdomSubs (IL)
+
+25.0    -  Revived support for the reference pages. [IMDb redesigned reference view]
+           Revived the dark compact mode for Reference View.
+           Now "Helpful review" feature is only for the Compact mode.
+           Added: EZTV (Fake)
 
 
 //==============================================================================
@@ -6914,8 +6919,15 @@ function getFavicon(site, hide_on_err) {
     var url = new URL(site['searchUrl']);
     favicon = url.origin + '/favicon.ico';
   }
-  const size = GM_config.get('mod_icons_size');
-  const border = parseInt(GM_config.get('iconsborder_size')) *2;
+  var size = GM_config.get('mod_icons_size');
+  var border = parseInt(GM_config.get('iconsborder_size')) *2;
+
+  // compensate sizes for compact mode (zoom 80%)
+  if (onReferencePage && GM_config.get('dark_compact_reference_view')) {
+    size = Math.round(size *1.2);
+    border = Math.round(border *1.2);
+  }
+
   var iconsize = ('matchRegex' in site) ? size : GM_config.get('call_http_mod_movie') ? size - border : size;
   var title = (site['TV']) ? site['name'] + ' (TV)' : site['name'];
   var img = $('<img />').attr({'style': '-moz-opacity: 0.4; border: 0',
@@ -6979,7 +6991,13 @@ function addLink(elem, site_name, target, site, state, scout_tick, post_data) {
   }
   // Icon/Text appearance.
   let icon;
-  const border_width = GM_config.get('iconsborder_size');
+  let border_width = GM_config.get('iconsborder_size');
+
+  // compensate sizes for compact mode (zoom 80%)
+  if (onReferencePage && GM_config.get('dark_compact_reference_view')) {
+    border_width = Math.round(parseInt(border_width) *1.2);
+  }
+
   if (getPageSetting('use_mod_icons') && getPageSetting('call_http_mod')) {
     icon = getFavicon(site);
     (!GM_config.get('one_line') && !onSearchPage) ? icon.css({'border-width': '0px',        'border-style': 'solid', 'border-radius': '2px', 'margin': '1px 0px 2px'})
@@ -7414,20 +7432,11 @@ function displayButton() {
 function addIconBar(movie_id, movie_title, movie_title_orig) {
   var iconbar;
   // reference + remove "Reference View" txt and a link to settings
-  if ($('.titlereference-header div script').length) {
-    // wrap text node for removal
-    $($('.titlereference-header div script')[0].nextSibling).wrap('<span class="removethis"/>');
-    $('.removethis').remove();
-    $('.titlereference-change-view-link').remove();
+  if (onReferencePage) {
+    $('[data-testid=hero__pageTitle]').parent().next().children().eq(0).remove();
     iconbar = getIconsLinkArea();
-  // in case if code above breaks
-  } else if ($('.titlereference-header').length) {
-    console.log("IMDb Scout Mod (addIconBar Error): Some Reference code failed! Please report it.");
-    if ($('h3[itemprop="name"]').length) {
-      iconbar = $('h3[itemprop="name"]').append($('<br/>'));
-    }
   // redesign
-  } else if ($('.ipc-page-section').length) {
+  } else {
     iconbar = getIconsLinkArea();
   }
 
@@ -7554,14 +7563,14 @@ function getIconsLinkArea() {
     'padding': pad,
     'margin-left': '0px',
     'margin-right': '0px',
-    'margin-top': '0px',
+    'margin-top': '8px',
     'margin-bottom': '0px',
     'overflow': 'hidden',
   });
   const hr = $('<hr />').css({'margin-top':'7px', 'margin-bottom':'7px', 'color':'#0d0d0d' }).prop('color','#0d0d0d');
   // reference
-  if ($('.titlereference-header div hr').first().length) {
-    $('.titlereference-header div hr').first().after(p);
+  if (onReferencePage) {
+    $('[data-testid=hero__pageTitle]').parent().after(p);
   // redesign
   } else if ($('.ipc-page-section').length) {
     $('#scout_rating_table').after(hr);
@@ -7761,9 +7770,10 @@ function performPage() {
     }
   } else {
     // reference
-    const m = $('h3[itemprop="name"]').text().trim();
-    movie_title = m.split('\n')[0].trim();
-    movie_title_orig = $.trim($($('h3[itemprop="name"]')[0].nextSibling).text());
+    const rawJsn   = $('[id=__NEXT_DATA__]:eq(0)').text();
+    const parseJsn = JSON.parse(rawJsn);
+    movie_title = htmlDecode(parseJsn.props.pageProps.aboveTheFoldData.titleText.text);
+    movie_title_orig = htmlDecode(parseJsn.props.pageProps.aboveTheFoldData.originalTitleText.text);
     // movie_title_orig not found
     if (movie_title_orig === "" || movie_title_orig === undefined) {
       movie_title_orig = movie_title;
@@ -7774,13 +7784,13 @@ function performPage() {
   // Note: Podcast Series|TV Mini Series - added only English.
   var is_tv    = Boolean($('title').text().match(/Podcast Series|TV Mini Series|TV Series|Série télévisée|Fernsehserie|टीवी सीरीज़|Serie TV|Série de TV|Serie de TV/));
   // newLayout || reference : check if 'title' has just a year in brackets, eg. "(2009)" // Note: 'title' is fail-safe measure if other checks fail. // v18.1 Note: Probably "fail-safe" makes this work properly on non english languages
-  var is_movie = (Boolean($('[data-testid=hero-title-block__metadata]').text().match('TV')) || Boolean($('li.ipl-inline-list__item').text().match('TV'))) ? false : Boolean($('title').text().match(/.*? \(([0-9]*)\)/));
+  var is_movie = (Boolean($('[data-testid=hero-title-block__metadata]').text().match('TV')) || Boolean($('.ipc-metadata-list:eq(0)').text().match('TV'))) ? false : Boolean($('title').text().match(/.*? \(([0-9]*)\)/));
   // newLayout || reference  // Documentaries should be searched in both (tv and movie)
-  if (Boolean($('[property="og:title"]').attr('content').match(/Document|डॉक्यूमेंटरी|Dokument/)) || Boolean($('li.ipl-inline-list__item').text().match(/Document|डॉक्यूमेंटरी|Dokument/))) {
+  if (Boolean($('[property="og:title"]').attr('content').match(/Document|डॉक्यूमेंटरी|Dokument/)) || Boolean($('[data-testid=genres]').text().match(/Document|डॉक्यूमेंटरी|Dokument/))) {
     is_tv    = false;
     is_movie = false;
   }
-  if (!onReferencePage && !$('[property="og:title"]').length || onReferencePage && !$('li.ipl-inline-list__item').length) {
+  if (!onReferencePage && !$('[property="og:title"]').length || onReferencePage && !$('[data-testid=genres]').length) {
     console.log("IMDb Scout Mod (Get a genre Error): Element not found! Please report it.");
     GM.notification("Element not found! Please report it.", "IMDb Scout Mod (Get a genre Error)");
   }
@@ -7790,12 +7800,7 @@ function performPage() {
   var season_id  = "1";
   var episode_id = "1";
   if (Boolean($('title').text().match(/TV Episode|Épisode télévisé|Fernsehepisode|टीवी एपिसोड|Episodio TV|Episódio de TV|Episodio de TV/))) {
-    if (onReferencePage && $('.titlereference-overview-season-episode-numbers li').length) {
-      series_id  = $('h4[itemprop="name"] a').prop('href').match(/\/tt([0-9]+)\//)[0].replace(/\//g, "");
-      season_id  = $('.titlereference-overview-season-episode-numbers li').first().text().trim().match(/(\d+)/)[0];
-      episode_id = $('.titlereference-overview-season-episode-numbers li').last().text().trim().match(/(\d+)/)[0];
-
-    } else if ($('[data-testid=hero-subnav-bar-season-episode-numbers-section]').length) {
+    if ($('[data-testid=hero-subnav-bar-season-episode-numbers-section]').length) {
       series_id  = $('[data-testid=hero-title-block__series-link]').prop('href').match(/\/tt([0-9]+)\//)[0].replace(/\//g, "");
       const SE_numbers = $('[data-testid=hero-subnav-bar-season-episode-numbers-section]').text().trim().split('.');
       season_id  = SE_numbers[0].match(/(\d+)/)[0];
@@ -7875,11 +7880,13 @@ function getLinkArea() {
 
   const hr = $('<hr />').css({'margin-top':'7px', 'margin-bottom':'7px', 'color':'#0d0d0d' }).prop('color','#0d0d0d');
   // reference
-  if ($('.titlereference-header').length) {
-    $('.titlereference-header').append(p);
-    if (GM_config.get('dark_reference_view')) {
+  if (onReferencePage && $('.ipc-page-section--sp-pageMargin').length) {
+    $('.ipc-page-section--sp-pageMargin:eq(0)').children().last().before(p);
+    if (GM_config.get('dark_compact_reference_view')) {
       const hr = $('<hr>').css({'margin': '0px'});
       $('#imdbscout_header').after(hr);
+      const hr2 = $('<hr>').css({'margin': '0px'});
+      $('#imdbscout_header').before(hr2);
     }
   // redesign
   } else if ($('.ipc-page-section').length) {
@@ -7929,9 +7936,9 @@ function getLinkAreaSecond() {
   });
 
   // reference
-  if ($('.titlereference-header').length) {
-    $('.titlereference-header').append(p);
-    if (GM_config.get('dark_reference_view')) {
+  if (onReferencePage && $('.ipc-page-section--sp-pageMargin').length) {
+    $('.ipc-page-section--sp-pageMargin:eq(0)').children().last().before(p);
+    if (GM_config.get('dark_compact_reference_view')) {
       const hr = $('<hr>').css({'margin': '0px'});
       $('#imdbscoutsecondbar_header').after(hr);
     }
@@ -7982,9 +7989,9 @@ function getLinkAreaThird() {
   });
 
   // reference
-  if ($('.titlereference-header').length) {
-    $('.titlereference-header').append(p);
-    if (GM_config.get('dark_reference_view')) {
+  if (onReferencePage && $('.ipc-page-section--sp-pageMargin').length) {
+    $('.ipc-page-section--sp-pageMargin:eq(0)').children().last().before(p);
+    if (GM_config.get('dark_compact_reference_view')) {
       const hr = $('<hr>').css({'margin': '0px'});
       $('#imdbscoutthirdbar_header').after(hr);
     }
@@ -9803,17 +9810,22 @@ function externalRatings(imdbid, title, title_orig) {
 }
 
 function addRatingsElements(imdbid, title, title_orig) {
-  const img_px = GM_config.get("ratings_img_px");
+  var img_px = GM_config.get("ratings_img_px");
+  // compensate sizes for compact mode (zoom 80%)
+  if (onReferencePage && GM_config.get('dark_compact_reference_view')) {
+    img_px = Math.round(parseInt(img_px) *1.2);
+  }
+
   // Main ratings table element
   const table = $('<table>').attr('id', 'scout_rating_table').attr('style', 'display: flex; justify-content:center; align-items:center; text-align:center;').append(
                   $('<tbody>').append(
                     $('<tr>')
   ));
-  const hr = $('<hr />').css({'margin-top':'3px', 'margin-bottom':'3px'});
+  const hr = $('<hr />').css({'margin-top':'12px', 'margin-bottom':'6px'});
   // reference
-  if ($('.titlereference-header').length) {
-    $('#main').children().first().prepend(table);
-    $('#scout_rating_table').after(hr);
+  if (onReferencePage) {
+    $('.ipc-page-section--sp-pageMargin:eq(0)').before(table);
+    $('#scout_rating_table').next().prepend(hr);
   // redesign
   } else if ($('.ipc-page-section').length) {
     $('.ipc-page-section:eq(0)').parent().parent().prepend(table);
@@ -10672,28 +10684,47 @@ function ratingsColor() {
 //==============================================================================
 
 function darkReferenceStyles() {
-  if (!GM_config.get('dark_reference_view') || !onReferencePage) {
+  if (!GM_config.get('dark_compact_reference_view') || !onReferencePage) {
     return;
   }
   console.log("IMDb Scout Mod (darkReferenceStyles): Started.");
   // www.w3schools.com/colors/colors_picker.asp
+
   // background color
-  addGlobalStyles('#nav-search-form {background: #d9d9d9}');
-  addGlobalStyles('#wrapper, #pagecontent, .recently-viewed {background-color: #000000}');
-  addGlobalStyles('.aux-content-widget-2 {background: #191919}');
-  addGlobalStyles('#imdbscout_header, #imdbscoutsecondbar_header, #imdbscoutthirdbar_header, .article, .cast_list tr, .titlereference-list tr {background-color: #191919 !important}');
-  addGlobalStyles('.add-image-container {background-color: #262626}');
-  // border color
-  addGlobalStyles('.article, .aux-content-widget-2, .cast_list tr, .titlereference-list tr, .recently-viewed .item {border-color: #323232 !important}');
-  addGlobalStyles('hr, .answers-widget__question, .answers-widget__see-more {border-color: #666666}');
-  addGlobalStyles('.recently-viewed {border-color: #000000}');
+  addGlobalStyles('.ipc-page-background--base {background: #000000 !important}');
+  // round corners
+  addGlobalStyles('.ipc-page-section {background: #191919; border-radius: 10px; overflow: hidden;}');
+  // override icons' background
+  addGlobalStyles('#imdbscout_header, #imdbscoutsecondbar_header, #imdbscoutthirdbar_header {background-color: #191919 !important}');
+  // add some borders
+  addGlobalStyles('.ipc-page-content-container--full {margin-top: 6px !important}');
+
   // font color
-  addGlobalStyles('h3[itemprop="name"], .titlereference-title-year a {color: #f5c20a}');
-  addGlobalStyles('.titlereference-original-title-label {color: #cc0000}');
-  addGlobalStyles('.ipl-rating-star__rating {font-weight: bold; color: #00b300;}');
-  addGlobalStyles('.article, .aux-content-widget-2, .cast_list tr td {color: #cccccc !important}');
-  addGlobalStyles('.ipl-list-title, #sidebar h4, .ipl-list-title::after {color: #c49b08}');
-  addGlobalStyles('.ipl-list-title::after {border-color: #7a6105}');
+  addGlobalStyles('.hero__primary-text, .hero__primary-text-suffix, .ipc-title__text {color: #f5c20a !important}');     // dark yellow // #c49b08 - brown light // #7a6105 - brown dark
+  addGlobalStyles('[data-testid=plot] {color: #d9d9d9 !important}');                                                    // light grey
+  addGlobalStyles(`
+                   .ipc-metadata-list-item__list-content-item.ipc-btn--not-interactable,
+                   .ipc-metadata-list-item__list-content-item--subText,
+                   .scoutRatings,
+                   .ipc-chip__text,
+                   .ipc-rating-star--voteCount,
+                   .ipc-metadata-list-item__label,
+                   [data-testid=hero-title-block__series-link],
+                   [data-testid=hero-subnav-bar-season-episode-numbers-section],
+                   [data-testid=hero-subnav-bar-previous-episode-button],
+                   [data-testid=hero-subnav-bar-all-episodes-button],
+                   [data-testid=hero-subnav-bar-next-episode-button],
+                   .ipc-inline-list__item::before
+                   {color: #d9d9d9 !important;}
+                  `);
+
+  addGlobalStyles('.sc-9c834405-4 {color: #808080 !important}');                                                        // dark grey // for the empty links on the right sidebar
+  addGlobalStyles('.sc-cb6a22b2-1 {font-weight: bold; font-size: 20px; color: #cc0000 !important}');                    // red // original title
+  addGlobalStyles('.ipc-rating-star--rating, .ipc-rating-star--rate {font-weight: bold; color: #00b300 !important}');   // green
+
+  // Resize stuff
+  addGlobalStyles('main {zoom: 80% !important}');
+  addGlobalStyles('#imdbHeader {width:1020px; display:flex; justify-content:center; align-items:center; margin:auto !important}');
 }
 
 function addGlobalStyles(css) {
@@ -10710,67 +10741,139 @@ function addGlobalStyles(css) {
 //    Compact mode for Reference View
 //==============================================================================
 
-function compactReferenceStyles() {
-  if (!GM_config.get('compact_reference_view') || !onReferencePage) {
-    return;
-  }
-  console.log("IMDb Scout Mod (compactReferenceStyles): Started.");
-
-  addGlobalStyles('#main {margin-left:25px !important}');
-  addGlobalStyles('#sidebar {margin-right:25px !important}');
-  addGlobalStyles('#content-2-wide {margin-top:5px !important}');
-  addGlobalStyles('.aux-content-widget-2 {margin-top:0px; padding-top:0px !important}');
-
-  addGlobalStyles('#imdbHeader {width:960px; display:flex; justify-content:center; align-items:center; margin:auto !important}');
-  document.getElementById('styleguide-v2').id = 'styleguide-v2x'; // this loops document.events.on('bodyloaded' event till this element is found
-  addGlobalStyles('body#styleguide-v2x {background-color: #000000 !important; margin-top:0px}');
-}
-
-function compactReferenceElemRemoval() {
+async function compactReferenceElemRemoval() {
   // Replace urls to fullcredits  // Removed in v22.0 as imdb removed these pages
 //   if (GM_config.get('fullcredits_reference_view')) {
 //     $('a[href^="/name/nm"]').attr('href', (n, old) => old.split('/?ref_=')[0] + '/fullcredits');
 //   }
 
-  if (!GM_config.get('compact_reference_view') || !onReferencePage) {
+  if (!GM_config.get('dark_compact_reference_view') || !onReferencePage) {
     return;
   }
   console.log("IMDb Scout Mod (compactReferenceElemRemoval): Started.");
 
   // Check if the Styles funcs were executed as it may not happened at 'bodyloaded' event on very slow PCs + Chrome
-  if (GM_config.get('dark_reference_view')) {
-    if (!$('.IMDbScoutStyles').length) {
-      console.log("IMDb Scout Mod (Warning): Slow device!");
-      darkReferenceStyles();
-      compactReferenceStyles();
-    }
+  if (!$('.IMDbScoutStyles').length) {
+    console.log("IMDb Scout Mod (Warning): Slow device!");
+    darkReferenceStyles();
   }
 
-  $('.titlereference-section-credits').nextUntil('.titlereference-section-storyline').remove();
-  $('.titlereference-section-credits').remove();
-  if (Boolean($('.titlereference-section-storyline .ipl-zebra-list__item').first().text().match("Plot Summary"))) {
-    $('.titlereference-section-storyline .ipl-zebra-list__item').first().nextUntil('section').remove();
-  } else {
-    $('.titlereference-section-storyline').remove();
+  $('.ipc-chip-list__scroller').removeClass('ipc-chip-list__scroller').addClass('zxzvbzfzffe'); // rename this because last genre is cutoff when zoom is 80%
+
+  $('[data-testid=sub-section-cast]').parent().nextUntil('[data-testid=Details]').remove();
+  $('[data-testid=sub-section-cast]').parent().remove();
+  $('[data-testid=sub-section-director]').parent().remove();
+  $('[data-testid=sub-section-writer]').parent().remove();
+  $('#director').closest('section').remove();
+  $('#writer').closest('section').remove();
+  $('[data-testid=title-techspecs-header]').parent().remove();
+  $('[data-testid=title-details-companycredits]').remove();
+  $('#ProUpsellLink').remove();
+  $('[data-testid=contribution]').remove();
+  $('.ipc-title__actions').remove();
+  $('[data-testid=title-boxoffice-grossdomestic]').remove();
+  $('[data-testid=title-boxoffice-openingweekenddomestic]').remove();
+  $('[data-testid=title-details-releasedate]').remove();
+  $('[data-testid=title-details-akas]').remove();
+  $('.ipc-icon--chevron-right-inline').remove();
+  $('[data-testid=hero-subnav-bar-right-block]:eq(0)').remove();
+
+  // Leave that elem on Episode pages, to get season_id and episode_id
+  if($('[data-testid=hero-subnav-bar-season-episode-numbers-section]').length == 0) {
+    $('.ipc-page-section--sp-pageMargin:eq(0)').prev().remove(); // remove elem above the titles
   }
-  $('.titlereference-section-did-you-know').remove();
-  $('#contribute-main-section').remove();
-  $('.recently-viewed').remove();
+
+  // Get principal credits from redesigned page
+  getStuffFomIMDb();
 
   // Inject Top Review
-  if ($('.titlereference-overview-review-list').length) {
-    if ($('.titlereference-overview-review-list').text().match('User')) {
-      if (GM_config.get("helpful_reviews_spoilers")) {
-        getIMDbBestReview(use_spoilers=true);
-      } else {
-        getIMDbBestReview();
-      }
+  if ($('.ipc-metadata-list-item__label:contains("Reviews")').length) {
+    if (GM_config.get("helpful_reviews_spoilers")) {
+      getIMDbBestReview(use_spoilers=true);
+    } else {
+      getIMDbBestReview();
     }
+  } else {
+      console.log("IMDb Scout Mod (BestReview): User reviews not detected.");
   }
+  $('.ipc-metadata-list-item__label:contains("Reviews")').parent().remove();
 
-  // Inject Box Office (graphQL API)
-  insertNewBoxOffice();
+  // Inject Box Office (graphQL API) // not actual anymore, left for example
+  // insertNewBoxOffice();
+
+  // Delayed removal
+  await sleep(500);
+  delayedReferenceElemRemoval();
+  await sleep(1000);
+  delayedReferenceElemRemoval();
+  await sleep(2000);
+  delayedReferenceElemRemoval();
 }
+
+function delayedReferenceElemRemoval() {
+  $('[data-testid=shoveler]').parent().parent().parent().parent().parent().remove();
+  $('.ipc-metadata-list--dividers-between:eq(0)').children().last().find('button').remove(); // remove "Add photo"
+  $('.ipc-title__text:contains("All topics")').parent().remove();
+  $('.ipc-link:contains("IMDbPro")').parent().remove();
+  $('.ipc-rating-star--maxRating').remove();
+  $('.top-rated-link').parent().remove();
+  $('[data-testid=title_hero_plot_cta_button]').remove();
+}
+
+//==============================================================================
+//    Get some elems from Redesigned page for the compact mode
+//==============================================================================
+
+function getStuffFomIMDb() {
+  const imdbid = document.URL.match(/\/tt([0-9]+)/)[1].trim('tt');
+  const url = "https://www.imdb.com/title/tt" +imdbid+ "/";
+
+  GM.xmlHttpRequest({
+    method: "GET",
+    timeout: 20000,
+    anonymous: true, // prevent sending cookies, so imdb wouldn't switch to reference because of the user settings
+    url:    url,
+    headers: { "User-Agent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:108.0) Gecko/20100101 Firefox/108.0" },
+    onload: function(response) {
+      if (response.status >= 200 && response.status < 300) {
+        const parser = new DOMParser();
+        const result = parser.parseFromString(response.responseText, "text/html");
+        // inject principal credits
+        const credits = $(result).find('[data-testid=title-pc-list]:eq(0)');
+        const target = $('.ipc-metadata-list--dividers-between:eq(0)');
+        if (credits.length && target.length) {
+          if ($('[data-testid=plot]').length) {
+            $('[data-testid=title-pc-principal-credit]').remove();
+            $('[data-testid=plot]:eq(0)').parent().parent().after(credits);
+            $('.ipc-icon--chevron-right').remove();
+          } else {
+              $('[data-testid=title-pc-principal-credit]').remove();
+              target.children().last().before(credits);
+              $('.ipc-icon--chevron-right').remove();
+          }
+        } else {
+            console.log("IMDb Scout Mod (getStuffFomIMDb): Element not found! Please report it.");
+            GM.notification("Element not found! Please report it.", "IMDb Scout Mod (getStuffFomIMDb)");
+        }
+      } else {
+          console.log("IMDb Scout Mod (getStuffFomIMDb): HTTP status: " + response.status);
+      }
+    },
+    onerror: function() {
+      console.log("IMDb Scout Mod (getStuffFomIMDb): Request Error.");
+    },
+    onabort: function() {
+      console.log("IMDb Scout Mod (getStuffFomIMDb): Request is aborted.");
+    },
+    ontimeout: function() {
+      console.log("IMDb Scout Mod (getStuffFomIMDb): Request timed out.");
+    }
+  });
+}
+
+//==============================================================================
+//    Inject Box Office (graphQL API) // Deprecated, left for example
+//==============================================================================
 
 function insertNewBoxOffice() {
   const x = `<section class="titlereference-section-box-office_scout">
@@ -10848,8 +10951,6 @@ function insertNewBoxOffice() {
 
 function getIMDbBestReview(use_spoilers=false) {
   const imdbid = document.URL.match(/\/tt([0-9]+)/)[1].trim('tt');
-  // Note: Redesigned reviews pages + show spoilers = shows wrong numbers of votes [numbers are OK in JSON]
-  // Note v24.0: Looks like the above issue is fixed by IMDb.
   const new_url1 = "https://www.imdb.com/title/tt" +imdbid+ "/reviews/?sort=num_votes,desc&spoilers=EXCLUDE";
   const new_url2 = "https://www.imdb.com/title/tt" +imdbid+ "/reviews/?sort=num_votes,desc";
 
@@ -10872,14 +10973,6 @@ function getIMDbBestReview(use_spoilers=false) {
       const result = parser.parseFromString(response.responseText, "text/html");
       var bestScore, topreview, hasspoilers;
       var xTitle, xRevLink, xReview, xUser, xUsrLink, xDate, xRating, xSpoiler;
-
-      // Sometimes randomly imdb loads pre-redesigned reviews page, https://www.imdb.com/title/tt1828194/reviews/?ref_=tt_urv_sm  (in private window):
-      // Note v24.0: Looks like the above issue is fixed by IMDb, still the code below is left to detect it, workaround code is deleted.
-      if ($(result).find('.imdb-user-review').length) {
-        console.log("IMDb Scout Mod (getIMDbBestReview): Error: Pre-redesigned reviews page detected!");
-        GM.notification("Error: Pre-redesigned reviews page detected! Please report it.", "IMDb Scout Mod (getIMDbBestReview)");
-        return;
-      }
 
       if ($(result).find('[id=__NEXT_DATA__]:eq(0)').length) {
         console.log("IMDb Scout Mod (getIMDbBestReview): Redesigned reviews page detected.");
@@ -10934,93 +11027,56 @@ function getIMDbBestReview(use_spoilers=false) {
           return;
       }
 
-      if (onReferencePage) {
-        let x = '' +
-                '<section class="scout_review">' +
-                '  <div><h4 class="ipl-list-title">Helpful Review</h4></div>' +
-                '  <table class="titlereference-list ipl-zebra-list">' +
-                '    <tbody>' +
-                '      <tr class="ipl-zebra-list__item">' +
-                '        <td>' +
-                '          <a class="scout_review_rating">' +
-                '            <span class="ipl-rating-star__star">' +
-                '              <svg class="ipl-icon ipl-star-icon" xmlns="http://www.w3.org/2000/svg" fill="#000000" height="24" viewBox="0 0 24 24" width="24">' +
-                '                <path d="M0 0h24v24H0z" fill="none"></path>' +
-                '                <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>' +
-                '                <path d="M0 0h24v24H0z" fill="none"></path>' +
-                '              </svg></span>' +
-                '            <span class="point-scale"> xRating</span><span> |</span></a>' +
-                '          <a class="scout_review_title" href="xRevLink"> xTitle</a>' +
-                '          <div class="display-name-date" style="font-size:11px">' +
-                '            <span class="display-name-link">' +
-                '              <a href="xUsrLink">xUser</a></span>' +
-                '            <span class="review-date"> xDate</span></div>' +
-                '          <p class="spoiler-warning" style="font-weight:bold; color:red;">xSpoiler</p>' +
-                '          <p>xReview</p></td></tr></tbody></table></section>' +
-                '';
-        x = x.replace('xTitle', xTitle);
-        x = x.replace('xRevLink', xRevLink);
-        x = x.replace('xReview', xReview);
-        x = x.replace('xUser', xUser);
-        x = x.replace('xUsrLink', xUsrLink);
-        x = x.replace('xDate', xDate);
-        x = x.replace('xRating', xRating);
-        x = x.replace('xSpoiler', xSpoiler);
+      let x = '' +
+        '<section class="ipc-page-section ipc-page-section--base celwidget">' +
+        '  <div class="ipc-title ipc-title--base ipc-title--section-title ipc-title--on-textPrimary">' +
+        '    <div class="ipc-title__wrapper">' +
+        '      <hgroup>' +
+        '        <h3 class="ipc-title__text ipc-title__text--reduced">' +
+        '          <span>Most helpful review</span>' +
+        '        </h3>' +
+        '      </hgroup>' +
+        '    </div>' +
+        '  </div>' +
+        '  <div data-testid="title-boxoffice-section" class="sc-314065ad-0 hZXevt">' +
+        '    <div>' +
+        '      <p class="spoiler-warning" style="font-weight:bold; color:red;">xSpoiler</p>' +
+        '      <div class="ipc-metadata-list__item ipc-metadata-list__item--align-end">' +
+        '        <span class="scout_review_rating">' +
+        '          <span class="ipc-rating-star ipc-rating-star--base ipc-rating-star--imdb ratingGroup--imdb-rating">' +
+        '            <svg width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="ipc-icon ipc-icon--star-inline" viewBox="0 0 24 24" fill="currentColor" role="presentation">' +
+        '              <path d="M12 20.1l5.82 3.682c1.066.675 2.37-.322 2.09-1.584l-1.543-6.926 5.146-4.667c.94-.85.435-2.465-.799-2.567l-6.773-.602L13.29.89a1.38 1.38 0 0 0-2.581 0l-2.65 6.53-6.774.602C.052 8.126-.453 9.74.486 10.59l5.147 4.666-1.542 6.926c-.28 1.262 1.023 2.26 2.09 1.585L12 20.099z"></path>' +
+        '            </svg>' +
+        '          </span><span class="ipc-metadata-list-item__label ipc-btn--not-interactable">xRating</span>' +
+        '          <span class="ipc-metadata-list-item__label ipc-btn--not-interactable">|</span>' +
+        '          <span>' +
+        '            <a class="ipc-metadata-list-item__list-content-item ipc-metadata-list-item__list-content-item--link" style="font-size:20px; color:#3399ff;" href="xRevLink">xTitle</a>' +
+        '          </span>' +
+        '        </span>' +
+        '      </div>' +
+        '      <div class="ipc-chip__text">xReview</div>' +
+        '      <div class="display-name-date">' +
+        '        <span class="ipc-metadata-list-item__label ipc-btn--not-interactable">Review by:</span>' +
+        '        <span class="display-name-link">' +
+        '          <a style="font-size:16px; color:#3399ff;" href="xUsrLink">xUser</a>' +
+        '        </span>' +
+        '        <span class="ipc-chip__text">(xDate)</span>' +
+        '      </div>' +
+        '    </div>' +
+        '  </div>' +
+        '</section>';
 
-        let y = jQuery.parseHTML(x);
-        $('.titlereference-section-media').after(y);
-      // if on redesigned:
-      } else {
-//         console.log("!!!!!!!_01: " + $('.review-top-review').find('.ipc-signpost__text').length);
-//         console.log("!!!!!!!_02: " + $('[data-testid=review-summary]').find('.ipc-title__text').length);
-//         console.log("!!!!!!!_03: " + $('[data-testid=review-summary]').find('.ipc-title-link-wrapper').length);
-//         console.log("!!!!!!!_04: " + $('[data-testid=permalink-link]').length);
-//         console.log("!!!!!!!_05: " + $('[data-testid=review-overflow]').find('.ipc-html-content-inner-div').length);
-//         console.log("!!!!!!!_06: " + $('[data-testid=author-link]').length);
-//         console.log("!!!!!!!_07: " + $('.review-date').length);
-//         console.log("!!!!!!!_08: " + $('.review-rating').find('.ipc-rating-star--rating').length);
-//         console.log("!!!!!!!_09: " + $('[data-testid=review-card-parent]').find('.ipc-list-card__actions').length);
+      x = x.replace('xTitle', xTitle);
+      x = x.replace('xRevLink', xRevLink);
+      x = x.replace('xReview', xReview);
+      x = x.replace('xUser', xUser);
+      x = x.replace('xUsrLink', xUsrLink);
+      x = x.replace('xDate', xDate);
+      x = x.replace('xRating', xRating);
+      x = x.replace('xSpoiler', xSpoiler);
 
-        $('.review-top-review').find('.ipc-signpost__text').contents().filter(function() {
-          return this.nodeType === Node.TEXT_NODE;
-        }).replaceWith('Helpful Review');
-
-        $('[data-testid=review-summary]').find('.ipc-title__text').contents().filter(function() {
-          return this.nodeType === Node.TEXT_NODE;
-        }).replaceWith(xTitle);
-
-        $('[data-testid=review-summary]').find('.ipc-title-link-wrapper').attr('href', xRevLink);
-
-        $('[data-testid=permalink-link]').attr('href', xRevLink);
-
-        $('[data-testid=review-overflow]').find('.ipc-html-content-inner-div').each(function() {
-            $(this).html(xReview);
-        });
-
-        $('[data-testid=review-overflow]').css('max-height', '5000px');
-        $('[data-testid=review-overflow]').find('button.ipc-overflowText-overlay').remove();
-
-        $('[data-testid=author-link]').contents().filter(function() {
-          return this.nodeType === Node.TEXT_NODE;
-        }).replaceWith(xUser);
-
-        $('[data-testid=author-link]').attr('href', xUsrLink);
-
-        $('.review-date').contents().filter(function() {
-          return this.nodeType === Node.TEXT_NODE;
-        }).replaceWith(xDate);
-
-        $('.review-rating').find('.ipc-rating-star--rating').contents().filter(function() {
-          return this.nodeType === Node.TEXT_NODE;
-        }).replaceWith(xRating);
-
-        if (hasspoilers) {
-          const yy = jQuery.parseHTML('<div class="spoiler-warning" style="font-weight:bold; color:red;">Warning: Spoilers</div>');
-          $('[data-testid=review-overflow]').find('.ipc-html-content-inner-div').before(yy);
-        }
-
-        $('[data-testid=review-card-parent]').find('.ipc-list-card__actions').remove();
-      }
+      let y = jQuery.parseHTML(x);
+      $('.ipc-page-section--sp-pageMargin:eq(0)').parent().after(y);
     },
     onerror: function() {
       console.log("IMDb Scout Mod (Review): Request Error.");
@@ -11154,12 +11210,10 @@ function countSites(task) {
       'ignore_type_movie': {'type': 'checkbox'},
       'remove_openall': {'type': 'checkbox'},
       'force_reference_view': {'type': 'checkbox'},
-      'dark_reference_view': {'type': 'checkbox'},
-      'compact_reference_view': {'type': 'checkbox'},
+      'dark_compact_reference_view': {'type': 'checkbox'},
+      'helpful_reviews_spoilers': {'type': 'checkbox'},
       'greybackground_reference_view': {'type': 'checkbox'},
       'app_notification': {'type': 'checkbox'},
-      'helpful_reviews': {'type': 'checkbox'},
-      'helpful_reviews_spoilers': {'type': 'checkbox'},
       'disable_iconsites': {'type': 'checkbox'},
       'disable_sites': {'type': 'checkbox'},
       'highlight_sites_movie': {'type': 'text'},
@@ -11466,15 +11520,15 @@ var config_fields = {
     'label': 'Reference View: Force it (without login)?',
     'default': false
   },
-  'dark_reference_view': {
+  'dark_compact_reference_view': {
     'type': 'checkbox',
-    'label': 'Reference View: Enable the dark style?',
+    'label': 'Reference View: Enable the dark compact mode?',
     'default': true
   },
-  'compact_reference_view': {
+  'helpful_reviews_spoilers': {
     'type': 'checkbox',
-    'label': 'Reference View: Enable the compact mode?',
-    'default': true
+    'label': "Reference View: Allow Helpful reviews with spoilers? (compact mode)",
+    'default': false
   },
   'greybackground_reference_view': {
     'type': 'checkbox',
@@ -11485,16 +11539,6 @@ var config_fields = {
     'type': 'checkbox',
     'label': "Notify when Radarr/Sonarr doesn't respond?",
     'default': true
-  },
-  'helpful_reviews': {
-    'type': 'checkbox',
-    'label': "Replace Featured reviews with Helpful reviews?",
-    'default': true
-  },
-  'helpful_reviews_spoilers': {
-    'type': 'checkbox',
-    'label': "Allow Helpful reviews with spoilers?",
-    'default': false
   },
   'disable_iconsites': {
     'type': 'checkbox',
@@ -12318,18 +12362,6 @@ function startIMDbScout() {
   }
   console.log("IMDb Scout Mod (Start): Starting main functions.");
 
-  if (!onSearchPage && !onReferencePage && GM_config.get("helpful_reviews")) {
-    if ($('[data-testid=review-overflow]').length) {
-      if (GM_config.get("helpful_reviews_spoilers")) {
-        getIMDbBestReview(use_spoilers=true);
-      } else {
-        getIMDbBestReview();
-      }
-    } else {
-      console.log("IMDb Scout Mod (getIMDbBestReview): Not starting as element not found.");
-    }
-  }
-
   if (!onSearchPage && GM_config.get('loadmod_on_start_movie')) {
     $('#ipc-wrap-background-id').remove(); // This div steals focus from the scout links. v19.1 fix
     performPage();
@@ -12341,11 +12373,10 @@ function startIMDbScout() {
   }
 }
 
-if ($('html[xmlns\\:og="http://ogp.me/ns#"]').length) {
+if (onReferencePage) {
   console.log("IMDb Scout Mod (Start): Reference page detected.");
   document.events.on('bodyloaded', () => { // This instead of DOMContentLoaded is just to prevent white->black flick when darkstyle is enabled
     darkReferenceStyles();
-    compactReferenceStyles();
   });
   window.addEventListener('DOMContentLoaded', compactReferenceElemRemoval);
   window.addEventListener('DOMContentLoaded', adsRemovalReference);
