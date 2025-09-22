@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      25.0.4
+// @version      25.1
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from hundreds various sites. Adds movies/series to Radarr/Sonarr. Adds external ratings from Metacritic, Rotten Tomatoes, Letterboxd, Douban, Allocine, MyAnimeList, AniList. Media Server indicators for Plex, Jellyfin, Emby. Dark theme/style for Reference View. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAMFBMVEUAAAD/AAAcAAA1AABEAABVAAC3AADnAAD2AACFAAClAABlAAB3AADHAACVAADYAABCnXhrAAAD10lEQVRIx73TV4xMURgH8H/OnRmZWe3T7h2sOWaNXu7oJRg9UccuHgTRBatMtAgSg+gJu9q+kFmihcQoD8qLTkK0CIkoy0YJITsRD0rCKTHFrnkSv5e5c88/53znO+fiPwvsvrN038cPNqrG9pJmHkRVnPcpaTlHJY60cfPSpsrzl1LKihrmLvxhCM2i3OHvDx0d+H7e3F6JBv5iZMiJfhFTfPYDMHrMImpwimWWUdSgDQkbno7fFpUPVgh+pHFbZR4SovSctDCM9Hac9IKd9rO8EevtBCkXgY5IMmgquwypP7qqfcp/Tp4KLONDVsWh3RSBB2rnZfit69ocUdqLn2prrRZYM0Jg4JibamKsqe7gfEh5GOAfeYJjVHIPZvil97rcXkMog30byWRwXYRWoxHbzNFHJJpAarO8NdEBBsdCaP3WMJltTmQd4zlnekTq9Z5dgACwAlrpK4BxdV5mvLuspRgMSHbCIFF0iS8MZ5S8oYBYKY7rByC4dDM9uSIUmPOIwxgQBoYeF93auP4qFyPbIVXziWeGTH1EFM57kJo2hqQju6BwIyRf6RmCjdT4JOdiwNgiH/PPD3qoqlsNaXRd+fKtFfECxlZVNVF9SOsgTZEr2TUjJJbyeNX1IZrKIbyGlBABfpQPv2UDrly13LkJXDVhpQ5MhtGwcyF4HKjlU4E8xwB0AvDjd6AGmevZ87EcQRHgcO52e9uNsYELOrAa/Yh81YlmYLQJ5HWyq0+kzQ/DQKEusg6CRI27ryy8nReRS0wsoetkmRwogHSprliCckfEjXG9yAQc74J0WB99vu6DF3i3pMucsXM6tpBbxd2mVJAwXwGogNRBvGRA4jtHKTXkAIwLGCR/mT4Lh75oneQXXP9sAYfGRDCsnw7pX/jRZkU3M44kjw2l5zRIzb4CbZ8dULdL6wbNPZOpK0B6gN1UR1mdoxAaL/GrWiLPL3SEwW9YMTU/d64BtLahAVyucWhj9Mm8ign9IfQaBtd2/GbvCAEBpG5eMcrj2I0ktpKLeaqXQ3Pst42KGIshpdTmQLAeTgFGJ2wvh+tayMOR0n1RZ8B9z13vnOPBnsBq4E1ffgZpPFZHWVpO2cvhjYpOcbBd5TlhpDu5zq9mHGZcVi0y+VFkcFkDdyKJfTt99wEyHSEzDM90KH0nexpwZHJHKYYhjzlwGe0pP/IKfxociaEb7YDbi6KGJY1R2cR76E6NAtXqY4pPH3plLcl8LD7V+cOLUbUWRFZRPTAbVZO3mxK18Xc1ZaAiS8ARJXpZliXAomR94siiiMx8ZBOkXGTlnH0F/9ov1xPtWwEqP9wAAAAASUVORK5CYII=
@@ -1434,6 +1434,9 @@
 25.0.4  -  Added: Cinemagia (RO)
            Removed: nzbCore (DE), NZBcat, Tigers, SoR, HosszuPuska (HU)
 
+25.1    - Fixed: Some elements not removed in compact mode if cast is empty. [www.imdb.com/title/tt0171296/reference/]
+        - Added: Malayalam Subtitles
+
 
 //==============================================================================
 //    Notes.
@@ -1926,17 +1929,11 @@ var public_sites = [
       'both': true},
   {   'name': 'Partis',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEYAAABGAgMAAAAMQAoXAAAACVBMVEUAAAB1dnbkmQdwRkMRAAAAAXRSTlMAQObYZgAAANZJREFUOMvN0sENhCAQBdAPWS/cbYIqLIFNoB9K4Wimyl1AYXDUeNv9xxfnO07Er/KSNJ3QIkg5SV5SkF3hWDaH4I7PfDNSlnFSFfJD0xUtosrLKnekd57TkW3l6zcmRku9xMoIqrzPdvLbVW1s5DYyidGr0sqoRlM/3zWB4iWpTjbdkGu0b3FLhvZDn5AXNHXqi7X6G0JYBM2FNECNJle6OalCFroTyhYEy2iuJyWi4bc3RJzgAJtl7ZTnchInI4lKoiSIwQRRjzG2CzuyyDMyj0jjj/IBZ05ftNQK2woAAAAASUVORK5CYII=',
-      'searchUrl': 'https://www.partis.si/torrent/search?q=%search_string_orig%+%year%&cat=7,20,55,32,40,41,42,43,44,45,4,2,30,24',
-      'goToUrl': 'https://www.partis.si/portal#torrent/search?q=%search_string_orig%+%year%&cat=7,20,55,32,40,41,42,43,44,45,4,2,30,24',
+      'searchUrl': 'https://partis.pro/browse.php?do=search&keywords=www.imdb.com%2Ftitle%2F%tt%&search_type=t_genre&category=0&include_dead_torrents=yes',
       'loggedOutRegex': /Cloudflare|Ray ID|Pozabljeno geslo/,
-      'matchRegex': /cols":\["id/},
-  {   'name': 'Partis',
-      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEYAAABGAgMAAAAMQAoXAAAACVBMVEUAAAB1dnbkmQdwRkMRAAAAAXRSTlMAQObYZgAAANZJREFUOMvN0sENhCAQBdAPWS/cbYIqLIFNoB9K4Wimyl1AYXDUeNv9xxfnO07Er/KSNJ3QIkg5SV5SkF3hWDaH4I7PfDNSlnFSFfJD0xUtosrLKnekd57TkW3l6zcmRku9xMoIqrzPdvLbVW1s5DYyidGr0sqoRlM/3zWB4iWpTjbdkGu0b3FLhvZDn5AXNHXqi7X6G0JYBM2FNECNJle6OalCFroTyhYEy2iuJyWi4bc3RJzgAJtl7ZTnchInI4lKoiSIwQRRjzG2CzuyyDMyj0jjj/IBZ05ftNQK2woAAAAASUVORK5CYII=',
-      'searchUrl': 'https://www.partis.si/torrent/search?q=%search_string_orig%&cat=17,31,38,51,52,53,30,2',
-      'goToUrl': 'https://www.partis.si/portal#torrent/search?q=%search_string_orig%&cat=17,31,38,51,52,53,30,2',
-      'loggedOutRegex': /Cloudflare|Ray ID|Pozabljeno geslo/,
-      'matchRegex': /cols":\["id/,
-      'TV': true},
+      'matchRegex': /dl.png/,
+      'positiveMatch': true,
+      'both': true},
   {   'name': 'PB',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAM1BMVEXN/wAAAAA5RwBuiQCcwwANEQBUaQApNACx3QCn0AC97ACRtQCGpwBiegBFVwAcIwB6mADOJ1nPAAAAmUlEQVQ4y9WQSxKEIAxEiXT4qKNz/9NOQg2oKWStvekAj0rS7jGaSMUbpIYXBYphtoBqdc7XmlMHoHQAFC5ABPTJFwBYmIgvwCQWibYCSP1Rs4BaBRaxPAIglkbAOmhRZ9jvAeCrG1kAdc0aQy+o3AD2PSC0qG2L9uk/5BzlaKMuuZxzgN3iUQCAKJZuAZVejQHOQ2APyb1GPxX4A4UYVbGOAAAAAElFTkSuQmCC',
       'searchUrl': 'https://pb.wtf/tracker/?ss=%search_string_orig%+%year%',
@@ -5089,6 +5086,11 @@ var subs_sites = [
       'positiveMatch': true,
       'inSecondSearchBar': true,
       'both': true},
+  {   'name': 'Malayalam Subtitles',
+      'icon': 'data:image/png;base64,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',
+      'searchUrl': 'https://malayalamsubtitles.org/?s=%search_string_orig%',
+      'matchRegex': /nothing matched/,
+      'inSecondSearchBar': true},
   {   'name': 'Moviesubtitles',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAACFlBMVEUAAAABAQECAgIDAwMEBAQFBQUGBgYICAgJCQkKCgoLCwsNDQ0ODg4UFBQYGBgcHBweHh4fHx8gICAhISEjIyMkJCQnJycpKSkqKiowMDAxMTEyMjIzMzM0NDQ1NTU2NjY3Nzc4ODg5OTk6Ojo7Ozs8PDw9PT0+Pj4/Pz9AQEBBQUFCQkJDQ0NERERFRUVGRkZHR0dISEhJSUlJSUpKSkpMTExMTE1NTU1OTk5PT09RUVFSUlJUVFRVVVVWVlZZWVlaWlpcXFxeXl5gYGBiYmJjY2NkZGRpaWlqampra2tsbGxubm5zc3N0dHR1dXV2dnZ4eHh8fHx9fX2AgICBgYGCgoKDg4OFhYWGhoaIiIiLi4uNjY2Pj4+Tk5OUlJSVlZWWlpaYmJicnJydnZ2goKCkpKSlpaWmpqanp6eoqKipqamqqqqurq6vr6+wsLCzs7O0tLS2tra4uLi5ubm7u7u9vb2+vr7AwMDBwcHCwsLDw8PExMTFxcXGxsbJycnKysrLy8vMzMzNzc3Pz8/Q0NDR0dHS0tLT09PU1NTV1dXW1tbX19fY2NjZ2dnb29vc3Nzd3d3e3t7f39/g4ODh4eHi4uLj4+Pk5OTl5eXm5ubn5+fo6Ojp6enq6urr6+vs7Ozt7e3u7u7v7+/w8PDx8fHy8vLz8/P09PT19fX29vb39/f4+Pj5+fn6+vr7+/v8/Pz9/f3+/v7v4od+AAAAAXRSTlMAQObYZgAAAldJREFUGBm9wfk/k3EcAPDPrFNRrmLZ9/P5bmOWUpRKkZgKFTrQIYm0pFwhOUpakxKl3RN79sz2WIz+w7Y5kld+rPcb/oGYpP07YCtxlw1GQZqztFccgL9Iqnf/XA5bMn901cfDZnrb8lKEseSoMqXj2zn40w3RcK1mIBgMjh9BJI3G5CuDjcq+6NIY8qZg8GoqISKrCUqF8JtytiidMUTt1EIuxxAqXVywJsO655MpSobEsHXxAmEI3VoI/HgMa9TSiI4QkZgh0MYIkbSmwPy8n8Oq25JwEgkJ1R8kqTEDsWAwIIXchVU9fqlTg8hUD+fHL404ht7PCV2NHYJ/WAYRe2w+n3+4qrhqSPKNl4/6fP43eYhYaPbEQUSi6A3x+f1zAw1ur6d1zJLFUcmpPEAQkewVRa+7v93kq8u1iRO6uiY6pEKm0jp1ABADkOD2eHvylFxVKziFd7OfZqoZ8lTOcQIBgAPsGheM6YwYUovYTc8EoRkRibFMZxwA8H0ALWIFhlGR1/bU6vE48jGEml/JAGCvAuCKeB7D2HFx1vzo+r2xqcrDGRd7hWoIUwMkmvVpGEIlnr4shqjr87js7u9OgjBFNkBNFzEk0nRbcogj4tnpsAZYceoEjx98ks2p4MWMQckZItJrl8tlOggronPSqeCr/a3R5Zy+TwolIeJLp9OSD2t2HiOu/2wPcXRylYohZkzap/SwQWxmTn633Waz2UuJMW3WA8fQadgstnLEZrVO1Z5RF7eNVSfAOllUlFy+LSxacbPXODbaf4d2y2Ar8u1y+L9+AZl9xrRD45UJAAAAAElFTkSuQmCC',
       'searchUrl': 'http://www.moviesubtitles.org/search.php?q=%search_string_orig%',
@@ -8257,6 +8259,7 @@ async function activate_CheckURLs(button, completed_icon) {
       deduped_hosts = deduped_hosts.filter(function (e) {return e !== 'http://zmk.pw';});
       deduped_hosts = deduped_hosts.filter(function (e) {return e !== 'stremio://search';});
       deduped_hosts = deduped_hosts.filter(function (e) {return e !== 'https://ntelogo.org';});
+      deduped_hosts = deduped_hosts.filter(function (e) {return e !== 'https://search.rlsbb.cc';});
 
   const interval = 100;
   const timeout = 45000;
@@ -10803,8 +10806,8 @@ async function compactReferenceElemRemoval() {
 
   $('.ipc-chip-list__scroller').removeClass('ipc-chip-list__scroller').addClass('zxzvbzfzffe'); // rename this because last genre is cutoff when zoom is 80%
 
-  $('[data-testid=sub-section-cast]').parent().nextUntil('[data-testid=Details]').remove();
-  $('[data-testid=sub-section-cast]').parent().remove();
+  $('#cast').closest('section').nextUntil('[data-testid=Details]').remove();
+  $('#cast').closest('section').remove();
   $('[data-testid=sub-section-director]').parent().remove();
   $('[data-testid=sub-section-writer]').parent().remove();
   $('#director').closest('section').remove();
