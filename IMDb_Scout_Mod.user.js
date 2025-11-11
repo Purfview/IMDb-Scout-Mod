@@ -9752,15 +9752,17 @@ function traktCatchToken() {
     headers: {
       "Content-Type": "application/json"
     },
-    onload: function(response) {
+    onload: async function(response) { // <- async, workaround for VM bug - https://github.com/Purfview/IMDb-Scout-Mod/issues/288
       if (response.status == 200) {
         let responseJSON = JSON.parse(response.responseText);
         const access_token  = responseJSON.access_token;
         const refresh_token = responseJSON.refresh_token;
         const created_at    = responseJSON.created_at;
-        GM.setValue("IMDb_Scout_Mod_Trakt_access_token", access_token);
-        GM.setValue("IMDb_Scout_Mod_Trakt_refresh_token", refresh_token);
-        GM.setValue("IMDb_Scout_Mod_Trakt_created_at", created_at);
+        await Promise.all([            // <- await, workaround for VM bug - https://github.com/Purfview/IMDb-Scout-Mod/issues/288
+          GM.setValue("IMDb_Scout_Mod_Trakt_access_token", access_token),
+          GM.setValue("IMDb_Scout_Mod_Trakt_refresh_token", refresh_token),
+          GM.setValue("IMDb_Scout_Mod_Trakt_created_at", created_at)
+        ]);
         window.close();
       } else {
         console.log("IMDb Scout Mod (Trakt Get Token status): " + response.status);
