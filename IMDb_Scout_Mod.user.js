@@ -4285,7 +4285,7 @@ var chinese_sites = [
       'matchRegex': /Nothing found! Try again with a refined search string/},
   {   'name': 'PTer',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAACRlBMVEUAAAD/5M0AAxcBAAsABA4GCREBAAkAAQIAAAwAAgf79/WYXCmYVR8WIS9aPCaHUyQIGCtKNSYAAA8ABBcAAAn/5tAAAAL/5cv/59FmZm8AAAD99OlGW3L///8AAAD////EZhs7MS7mklD2ji4wLC7lgiz/q2P/oUnsk0eeYC8oJyxlSCmxZBw5IAj/oVf/mUFyQSAHDhcdIixONiP/t3PNhEe2eUwzNUA7MDD/p1kWHC7/s2F4UixAKh4WJDjTm2UGFSkUGisqKCkZFybYiU9LQjYADSH/o17jrojSjkwkMj9dTzgDIkEAGjwADiMADCH5y6aBWjiAXkj6q3oqPUoNMEoAAAA3LSf/uYAABRsAAAAAAxj5tnz/2bi2k2sAAhX/47wAABr/5bMdISf/3L3/z6P/zaL/4sr/9d8GEh0AAAAAAAgAEy//7NPQyL///fn/8+gAAAAEAAD/+fP/69f///8AAAD/9eokNkLw7OozPk4AAAD/eQD/bwD/fgz/fQH/fgD/gQD/ewD/dwD/ggD/cgD/hAD/dQD/aAD/YAD/ZACGVSydXimqZSj/lRvgdxnxfBP/gw7/hQj/igP/bACbYTKTWy7/iibAbSbYdyHQciFwQR7/iRz/jgb/hwD/hQD/agCFWTr/lDVZQTX/nzJgRTJ2TjBQPTDWeiz/mitqRytFNSudXymYXCm3aCMhHiCUVR/zfx3mfR3/hBj/eBjZcBT7cxL/hQ75fQ7kYg3/kwz3eQjxdAP3cwD/awD/WwD/VgD5VgCM/EvEAAAAfHRSTlMAWmhYPR2DXlIkI/Lw6OPj4tbWvnt5cGlaVjY1LRQUDP37+ff39/X19fXz8/Pz8fHx8e3t6+vp5+Xj4+Hh4dvZ2dfV1dPTz83Ly8vLycnHx8XBv729vbe1s6+vqaejn52Zj4uHhYN8dm5oaGRaVExKSkhGQkIuLCoiIBYI3zbhUQAAAeFJREFUOMvFkFVz21AQhW9lrJOGG27KzMzMzMzMzO2qumDLkiExhbHMzNz+s65GM1bciV6T7233nJndc0j34Csp7ZVBSQW53t/Se29S4ncySO6rHDG7b9pQ2BwMyJ3RqlcXfNU6plw1ddf6qB8yCDzYMpdS+c8wHzEon9WYZIxREKgFqZ+1w9Ct2RR9+l5iUPy6Nhp5kZX1QwHgsdqXkTdTNy58pwrg+rjzBLnkliTJcXD6dwZA5585LRW5Tk4cqaC9o956lLifUQ5CPmDm2jXvowqQajmS1m/vrGN4NXDCHD15Dfj4r/rjVhfLXuEm9f6yOTr71OAYGn+BGJibRmMzvJ85SncZB9B3WHU6hsQYhlxZtsKwVE74zAUE5FKSpuixgkV8m1Mw6NCxo3sGG80pv5cTi/2PMESweukiSGmhkOCo6x8qLL2qMMIARMuqHEUIo1HO9U9XiMW1BQ1+rK5mTbaqIJSqP5fcJJ24OMmI1T5m7YBkIhGPv23KLSMZnBr4hYFozV38ZPTknPzth53kP9wPKXbfOnbGhhuuKtIFu8MUMES+k3SNa10UQ8hPzxEbyvOa8Eftns/O4B0VUznXZhI7iu8n2ljb3822hm3P68Lh5mlnbQ0Oj9fr8NwiPcQ/+8G7/8ts2csAAAAASUVORK5CYII=',
-      'searchUrl': 'https://pterclub.com/torrents.php?search=%tt%&search_area=4',
+      'searchUrl': 'https://pterclub.net/torrents.php?search=%tt%&search_area=4',
       'loggedOutRegex': /Cloudflare|Ray ID|SSL \(HTTPS\)|Err code/,
       'matchRegex': /Nothing found!|没有种子|沒有種子/,
       'both': true},
@@ -12482,4 +12482,5 @@ if (onReferencePage) {
 
 scoutWarning();
 scoutWarning2();
+
 
