@@ -1446,11 +1446,11 @@
 
 25.3    - Tweaked ads removal for the reference pages.
 
-23.4    - Fixed: Trakt-Watchlist authorization was broken.
+25.4    - Fixed: Trakt-Watchlist authorization was broken.
         - Fixed: "25.3" - that was debug/draft...
         - Removed: PrivateSilverScreen [now for real :]
 
-23.5    - Fixed: Trakt-Watchlist authorization wasn't working on Violentmonkey v2.19.1 - v2.31.0 [Note: VM's bug]
+25.5    - Fixed: Trakt-Watchlist authorization wasn't working on Violentmonkey v2.19.1 - v2.31.0 [Note: VM's bug]
         - Fixed: mPOST links stopped working on the reference pages. [Note: mPOST links code needs rework]
         - Updated: RuT, PTer
 
