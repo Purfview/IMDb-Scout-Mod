@@ -6249,6 +6249,11 @@ var icon_sites_main = [
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAGFBMVEX9/f4HIS4bNUI0T1xDXmrL1NlrfoecqrHL5BjxAAADK0lEQVRIx22STVfiMBSG3/kI3U7qObq1qeJWaIEtQ4tuy4e4rYjjNqAz/v15c5OMU+XJaQhp8tx7k2JXH2P3KzbUN1VZlvUnbgI0VEVR1NXHVlHjwE1dl0cV5J+BVEehBlxYkLL+0PxMOUZNwxFFeetnguGz4o998SNUXPBJMZu/Iik6BireKa5wDaxkDNY8K4Zs3FDE1vSselNuRgzVB0XR4hXPb1NRoCJDoQjMJsDt9wZrxanSGzqKfoOkfUv6ql13DFExtMwPb8uhbdXMGUj+n6KYgxHwe2Vsi/VFxyCKPt8nU2yS554FFajdrlyaE+UMgG8uC/zhqNc18DieQH7xed25YRINAR4hUdcgjRvVBaTGaMgb+Age9fiai2F08ALTIkYQXtpt7gwz20uHZmgGV37fCJ7vk8QMIV8Ntjk59WqWJyRXWOViGDEsBZkN4pBA1WBrDCo5W5jcRHP4fbRIcjGMQRamHyP7TFc8hqWhoSjGjQt4YuFZ+UQu2c2cITMXotghMJEEx64zBCY93VxGs78oUlnnYmI0ZBqHOZOeQFiCHGT1LBi0xbblG38Kt3zWc3HlFNCgsynvnRd8KbPXTLDvXSYY0nPOc+4lXJTiRxkjSA7mzOV4hd5UilFb6ws10WBO5YDnYGnqXBKMEcTAHo7t01eLr3YdqlHDaDDxlip7iR2v0NNLvUEWeGlycVCTooFnkUUDOQ+bypvcIjA0wTBwZSgBK/2kAj2TCTQ4eGvykxZGkL8xhyys1YRdgJlJoyGSdjDyyDlEdLdFeJKxddCB9N1wXEDDUYU+agjEQTSEDdK7R/qPhpPf9w9Z9rzW+vn+/qD15G7TMegpoFLdQGt3b4MzdquOoTmMe/oE+KnbVdks2mQwV50c8MDAZ4nd63avp8tmz9UPwSD1N2qdZeffrr9ou9B2iYHWdv9/DpfARreLHz3m0OARmea/aJC6x3cYNPtTpVulNmnHkLmyDWNW4OZBu+QhMAeXVjSQu+0FxiB75kB9LxvFKmTBSQOoH0lq7BcJ3T0HTfp36mG05Aku5xL6Vm2yd4MsDJ0Qh9FwlM/fwztph7/J5ST4nkWzEAAAAABJRU5ErkJggg==',
       'searchUrl': 'https://mag.sapo.pt/pesquisar?q=%search_string_orig%',
       'showByDefault': false},
+  {   'name': 'SCLOUD',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABAAgMAAADXB5lNAAAADFBMVEUJBAfwRERXGhywMzRAtQvFAAABIElEQVQ4y+1RMU7DQBA8iCiM5DJPcAFSRJUankDBYBcR+AmUiIb7hHuXyA0VvT/hnifQUJIwM9lIhi/AFp713M3uzl76czG8/MQL4F24CjyegFoI4FZECfhoJRxJrJVcp9QJGxKTko0V1hySQqBiC36VlHDkdMSKBZMKeHpTVf5IlteodbslQR2JDhs1eCBB3TDkya1F6BpDh+ly96GitSwE77bso7pXYd5ziRiDsId2RlQ2NSMW1gQRG2O46CFeZWpGeFmj5zgf+nSCRmVGT7rk/JXWxvsdUV5448ZjLjWddCVqS7jr/owHcvusTXG++4lIt45c7DEG3cvi6SYngY1ezklgO3vbQsqsV/8E7mSAvR7t5HS37Y1f25z+41d8A9SHi1Kvc3AvAAAAAElFTkSuQmCC',
+      'searchUrl': 'https://scloudx.lol/get-search-token',
+      'mPOST': 'search_query=%search_string_orig%',
+      'showByDefault': false},
   {   'name': 'ScreenAnarchy',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACAAQMAAAD58POIAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAAAGUExURXoVA////7XVBmYAAAI8SURBVEjH3dW9jtQwEABgW4POqdg2RQ6/wpZXnAiPwiNsuRUOT0B73b0CJaURxZXX0mFAokSRrjhLrDJ4frybNaJFwBWr5Mt5xh5PHGP+j7+phdhCamFu7u0vkFs4NAC/hY2mc4sORdQHChtE+RevEBAl37h0OgLlUVh6jl0AJ34i4AgiP1muNSZHtR8UPEFZFtzhwrFGgpLG3WvwQFAmvfnUgK9A93TlsYFRwTLgGSRHEE4wQYWDVoMrgiswtLoKQAMr5Ao1mwCeg13DLBexhaUFHsSlfZh0cVnhsQIy/JD4QYpc4EFglGhlxV9XkAneC3hZVYHXAk5KWPZLVwGSZoPf67IYJo/fKowKsQKPiStgieMKSBTqC1LmHjDa2yMEgfEIIyYq3EjFA9oMhukMPq9gWUFSCFILBd5GBs/diDyjuyPQvgQCbrN8bKn7Ft4IHGp98JZ7l4H3Bb3AUmEZabgAV/DAwO0p+5LDCfgFmoNOctIaJzwBT2SSt0zaq6RZ7BpKkKyX8ss3sgNBOhLSX3mIlmk9Nz6WYy6Y/or6dDZofGIYGLb20fiZ4RnDZKMZduVnZzxDJEjl7Hxl/DsKOhfwCnzCMUQecsmwt1/MpcCwr2mHddqZrhTo7LPJXJvuJUPX/8ESPenNi1KmHXTAaeNFb2JZYoYBaLU2uhuT4AoK8AfFJvfREpRvAwMkl+0M2dHHgvoAdm4Pb2E+gpsdjd/BDQwC2fUuw5ayMDztXXfRw9bM0Jn0L3+3fwKL326n9SzYSwAAAABJRU5ErkJggg==',
       'searchUrl': 'https://screenanarchy.com/search.html?term=%search_string%',
@@ -7307,6 +7312,13 @@ async function maybeAddLink(elem, site_name, search_url, site, scout_tick, movie
     addLink(elem, site_name, target, site, 'error', scout_tick);
     return;
   }
+
+  // Request POST header
+  let reqPOSTHeader = {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'};
+  if (site['name'] == "TEST") {
+    reqPOSTHeader['Host'] = 'TEST.TEST';
+  }
+
   // Check for results with POST method.
   if ('mPOST' in site) {
     const post_data = await replaceSearchUrlParams(site, movie_id, movie_title, movie_title_orig, movie_year, series_id, season_id, episode_id);
@@ -7315,7 +7327,7 @@ async function maybeAddLink(elem, site_name, search_url, site, scout_tick, movie
       timeout: parseInt(GM_config.get('timeout_ms')),
       url: search_url,
       data: post_data,
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
+      headers: reqPOSTHeader,
       onload: function(response) {
         if (GM_config.get('debug_sites')) {
           const name = (site['TV']) ? site['name'] + ' (TV)' : site['name'];
