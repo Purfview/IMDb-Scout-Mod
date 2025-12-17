@@ -6331,7 +6331,7 @@ var icon_sites_main = [
       'showByDefault': false},
   {   'name': 'SubSource',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAC0AgMAAABAo+6hAAAACVBMVEUAAAABgIACAgLLPOsMAAAAAXRSTlMAQObYZgAAAJRJREFUaN7tzjEORVAQRuH7ircECquxBIUpWIId6UXCKhU0d9zMEAkS55STL38mbBVzoimo0Gh0UovO0lOpr+b2TrPNNtuPb4tTHWmvAY3+gs5Hp0hn4hRprx8ajb5P/yVVKTpTN73K1N2sMnV7Snev0fzN30e0pKpXXYVjodHot2o3NBp9o/ZDo9GP60xUaDT6ul4AENu/fpt6VhIAAAAASUVORK5CYII=',
-      'searchUrl': 'https://subsource.net/search/%tt%',
+      'searchUrl': 'https://subsource.net/search?q=%tt%',
       'showByDefault': false},
   {   'name': 'The Numbers',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwAgMAAAAqbBEUAAAADFBMVEWzGR7//v7lsLHMZ2qhRA34AAAAZUlEQVQoz63RsQ2AIBQAUQIVFm7DKB8TtWACZ3AJlkAL4wTGXdzDTq4zIf+6V59pz5VyVIikD/YfXdkrgkxEvABZiUTMxEDITZzEQoyEaCIDMRCe6AmXAfMQgfCEVYWrfzYM1usFNk9VQcgIcoYAAAAASUVORK5CYII=',
