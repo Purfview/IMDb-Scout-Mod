@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      25.5.4
+// @version      25.5.5
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from hundreds various sites. Adds movies/series to Radarr/Sonarr. Adds external ratings from Metacritic, Rotten Tomatoes, Letterboxd, Douban, Allocine, MyAnimeList, AniList. Media Server indicators for Plex, Jellyfin, Emby. Dark theme/style for Reference View. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAMFBMVEUAAAD/AAAcAAA1AABEAABVAAC3AADnAAD2AACFAAClAABlAAB3AADHAACVAADYAABCnXhrAAAD10lEQVRIx73TV4xMURgH8H/OnRmZWe3T7h2sOWaNXu7oJRg9UccuHgTRBatMtAgSg+gJu9q+kFmihcQoD8qLTkK0CIkoy0YJITsRD0rCKTHFrnkSv5e5c88/53znO+fiPwvsvrN038cPNqrG9pJmHkRVnPcpaTlHJY60cfPSpsrzl1LKihrmLvxhCM2i3OHvDx0d+H7e3F6JBv5iZMiJfhFTfPYDMHrMImpwimWWUdSgDQkbno7fFpUPVgh+pHFbZR4SovSctDCM9Hac9IKd9rO8EevtBCkXgY5IMmgquwypP7qqfcp/Tp4KLONDVsWh3RSBB2rnZfit69ocUdqLn2prrRZYM0Jg4JibamKsqe7gfEh5GOAfeYJjVHIPZvil97rcXkMog30byWRwXYRWoxHbzNFHJJpAarO8NdEBBsdCaP3WMJltTmQd4zlnekTq9Z5dgACwAlrpK4BxdV5mvLuspRgMSHbCIFF0iS8MZ5S8oYBYKY7rByC4dDM9uSIUmPOIwxgQBoYeF93auP4qFyPbIVXziWeGTH1EFM57kJo2hqQju6BwIyRf6RmCjdT4JOdiwNgiH/PPD3qoqlsNaXRd+fKtFfECxlZVNVF9SOsgTZEr2TUjJJbyeNX1IZrKIbyGlBABfpQPv2UDrly13LkJXDVhpQ5MhtGwcyF4HKjlU4E8xwB0AvDjd6AGmevZ87EcQRHgcO52e9uNsYELOrAa/Yh81YlmYLQJ5HWyq0+kzQ/DQKEusg6CRI27ryy8nReRS0wsoetkmRwogHSprliCckfEjXG9yAQc74J0WB99vu6DF3i3pMucsXM6tpBbxd2mVJAwXwGogNRBvGRA4jtHKTXkAIwLGCR/mT4Lh75oneQXXP9sAYfGRDCsnw7pX/jRZkU3M44kjw2l5zRIzb4CbZ8dULdL6wbNPZOpK0B6gN1UR1mdoxAaL/GrWiLPL3SEwW9YMTU/d64BtLahAVyucWhj9Mm8ign9IfQaBtd2/GbvCAEBpG5eMcrj2I0ktpKLeaqXQ3Pst42KGIshpdTmQLAeTgFGJ2wvh+tayMOR0n1RZ8B9z13vnOPBnsBq4E1ffgZpPFZHWVpO2cvhjYpOcbBd5TlhpDu5zq9mHGZcVi0y+VFkcFkDdyKJfTt99wEyHSEzDM90KH0nexpwZHJHKYYhjzlwGe0pP/IKfxociaEb7YDbi6KGJY1R2cR76E6NAtXqY4pPH3plLcl8LD7V+cOLUbUWRFZRPTAbVZO3mxK18Xc1ZaAiS8ARJXpZliXAomR94siiiMx8ZBOkXGTlnH0F/9ov1xPtWwEqP9wAAAAASUVORK5CYII=
@@ -2503,7 +2503,7 @@ var private_sites = [
   {   'name': 'BTN',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwBAMAAAClLOS0AAAAJFBMVEUAAAAKfKcLodkJcJcKnNEKlMoKd6AKirsKc5wKhbQJkMQKga5GWjbDAAAAAXRSTlMAQObYZgAAAWJJREFUOMul0D1PwzAQBmCn0JSPJadKUImlsmCnyh9AkbsjlAjBVBbPZcrAAgvK2DVi6YIQmdj957DfxrGtBJbekNzdYzsXs72C8+H+iPP5X3AzCIdCDMP4H7jtH68fJ0VhIJhAzwPYYoRgHq6haTRwf2gOmJQlwG0ZdbBm7LLbYvIs0589LsuNXpXpsCDEcq6hrje7SnTzC7PmVCkDI13OLSCLiH4A9gZyfRIzoFTSnpy1kN+Zd0wEuBL5ElDgKgArHI2Ge7MjKUNomk8LrzjisWla+EJ9UFUdbBnu7tvCtQNc0QvqOE1XSO5xaQ6YlGwYEA6iuv4I4cHcJqBeh4BGH8a2oZQKYGIbF0qVPkQadgkR+fBMdI4k1pB40JURBVsigF1y5sCrYindlkhK+eTlMgnyNmZmFaH/3m1AWZlYEE2ReCPOKsQb4en/bOpFwoYFfRdT21+g7O9JWD8oTYntEb/z/32K0Kt3+AAAAABJRU5ErkJggg==',
       'searchUrl': 'https://broadcasthe.net/torrents.php?imdb=%tt%',
-      'loggedOutRegex': /Lost your password\?/,
+      'loggedOutRegex': /Lost your password\?|Service Temporarily Unavailable/,
       'matchRegex': /action=download/,
       'seedingRegex': /tor_highlight_seed/,
       'positiveMatch': true,
@@ -2511,26 +2511,26 @@ var private_sites = [
   {   'name': 'BTN-Title',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAMAAABg3Am1AAAAPFBMVEUAAAALodkKfKYJcJcKlMoKc5wKirsKms8Kd58KndMKhbQKga4KfakKkcX//wAKeKIJj8EJl8sJo9wJbpOiaagyAAAAAXRSTlMAQObYZgAAAT9JREFUSMfFkVuWgyAQBbFRJD4Gjfvf6zQ0Q+t10PiV8otLVXJizLdo3u/mkZ94GvQPgv7FPAnWp0HbM+utpr9zXplW59qrLO9yaZkZZ/QFCWZmgRn9/Y37YRbc0cfAycULizK/+MlvZojBUK7kgSCxNhjoXX9477KVTxk10KKBP4op0xSDsQS9cPLbMtDITAaKBoJVhzAxpEEWNBCMBsQEg0KLx0IXGF8P5sgh8EyXD6ocA2cU2zEYMPm0JAajbNG3+0CcfHKJ0Sh+s9b6fSAOBopnzIMAwICGyHUwJDSIuNvAfRy0YIyJi8CBQXKsF5MEuyFB1S+Qe6dLuC7odEsZKOD2n81f+OG4hggxZz8IBLPP1HeAur8bIhjVh6JgKWF1UR8LhQv0EbIV1EfoXsdiQ30D/6YBu9rEaCMyX+EXkcgUNWOYO7EAAAAASUVORK5CYII=',
       'searchUrl': 'https://broadcasthe.net/torrents.php?action=basic&searchstr=%search_string_orig%',
-      'loggedOutRegex': /Lost your password\?/,
+      'loggedOutRegex': /Lost your password\?|Service Temporarily Unavailable/,
       'matchRegex': /No search results/,
       'TV': true},
   {   'name': 'BTN-TVDb',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAMAAABg3Am1AAAAOVBMVEUAAAAJcJcKfKYKotsKd6AKm88Kc5wJlcoKirsKkMQKhbQLn9cKga4KfakA/zIKntQKk8gKeqUJbpOFSaBYAAAAAXRSTlMAQObYZgAAAT5JREFUSMfFkUl2wyAQBaEFAk2xrPsfNg0t5zMIEa1cO35Xxc+x+hbLMCyPfA4eFUvAPgjsi3kSOMs8DlxX4y+qhMkxO+aWz5zBzkzFXPs4+Skg89Iohiz4YXy2V/4i1MELh9S3Mjt5ziGYVVq8UMgacUMZ4Gbz/7vw+SsrglDgiCCfthCsCITKx09LK7Op+iMQOOscBrMxbwSngEBQCIgxeLvccHskCUbDZEFmuClQBeP5gJIHXgE9MmXAnC95zAocwdfNwEdWBcyhtTZpIE4ZAHznbgDaAc2B+2COIAj4buD/HbjCWCM3gS8Mkme72CRIhgg1P0DuHou5L6i60sl1cXWkd8Rg6d1MgJjaNwJdzv0dl/FzIUpH+HXxh6aIxgK/LAAXDR+FbgC/k0BvF0epH6nfb2DfNyE6iNRX+AXJHhS442mIQgAAAABJRU5ErkJggg==',
       'searchUrl': 'https://broadcasthe.net/torrents.php?tvdb=%tvdbid%',
-      'loggedOutRegex': /Lost your password\?/,
+      'loggedOutRegex': /Lost your password\?|Service Temporarily Unavailable/,
       'matchRegex': /action=download/,
       'positiveMatch': true,
       'TV': true},
   {   'name': 'BTN-Req',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwBAMAAAClLOS0AAAAJFBMVEUAAAAKfKcLodkJcJcKnNEKlMoKd6AKirsKc5wKhbQJkMQKga5GWjbDAAAAAXRSTlMAQObYZgAAAWJJREFUOMul0D1PwzAQBmCn0JSPJadKUImlsmCnyh9AkbsjlAjBVBbPZcrAAgvK2DVi6YIQmdj957DfxrGtBJbekNzdYzsXs72C8+H+iPP5X3AzCIdCDMP4H7jtH68fJ0VhIJhAzwPYYoRgHq6haTRwf2gOmJQlwG0ZdbBm7LLbYvIs0589LsuNXpXpsCDEcq6hrje7SnTzC7PmVCkDI13OLSCLiH4A9gZyfRIzoFTSnpy1kN+Zd0wEuBL5ElDgKgArHI2Ge7MjKUNomk8LrzjisWla+EJ9UFUdbBnu7tvCtQNc0QvqOE1XSO5xaQ6YlGwYEA6iuv4I4cHcJqBeh4BGH8a2oZQKYGIbF0qVPkQadgkR+fBMdI4k1pB40JURBVsigF1y5sCrYindlkhK+eTlMgnyNmZmFaH/3m1AWZlYEE2ReCPOKsQb4en/bOpFwoYFfRdT21+g7O9JWD8oTYntEb/z/32K0Kt3+AAAAABJRU5ErkJggg==',
       'searchUrl':  'https://broadcasthe.net/requests.php?search=%search_string%',
-      'loggedOutRegex': /Lost your password\?/,
+      'loggedOutRegex': /Lost your password\?|Service Temporarily Unavailable/,
       'matchRegex': /Nothing found/,
       'TV': true},
   {   'name': 'BTN-IMDb-Req',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwBAMAAAClLOS0AAAAJFBMVEUAAAAKfKcLodkJcJcKnNEKlMoKd6AKirsKc5wKhbQJkMQKga5GWjbDAAAAAXRSTlMAQObYZgAAAWJJREFUOMul0D1PwzAQBmCn0JSPJadKUImlsmCnyh9AkbsjlAjBVBbPZcrAAgvK2DVi6YIQmdj957DfxrGtBJbekNzdYzsXs72C8+H+iPP5X3AzCIdCDMP4H7jtH68fJ0VhIJhAzwPYYoRgHq6haTRwf2gOmJQlwG0ZdbBm7LLbYvIs0589LsuNXpXpsCDEcq6hrje7SnTzC7PmVCkDI13OLSCLiH4A9gZyfRIzoFTSnpy1kN+Zd0wEuBL5ElDgKgArHI2Ge7MjKUNomk8LrzjisWla+EJ9UFUdbBnu7tvCtQNc0QvqOE1XSO5xaQ6YlGwYEA6iuv4I4cHcJqBeh4BGH8a2oZQKYGIbF0qVPkQadgkR+fBMdI4k1pB40JURBVsigF1y5sCrYindlkhK+eTlMgnyNmZmFaH/3m1AWZlYEE2ReCPOKsQb4en/bOpFwoYFfRdT21+g7O9JWD8oTYntEb/z/32K0Kt3+AAAAABJRU5ErkJggg==',
       'searchUrl': 'https://broadcasthe.net/torrents.php?imdb=%tt%',
-      'loggedOutRegex': /Lost your password\?/,
+      'loggedOutRegex': /Lost your password\?|Service Temporarily Unavailable/,
       'matchRegex': /Error 404|Nothing found/,
       'TV': true},
   {   'name': 'BWT',
