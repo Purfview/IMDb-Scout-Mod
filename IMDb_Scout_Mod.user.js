@@ -5000,7 +5000,7 @@ var usenet_sites = [
       'searchUrl': 'https://scenenzbs.com/search?search_type=adv&t=2000&search=%search_string_orig%&subtab=movie',
       'loggedOutRegex': /Cloudflare|Ray ID|You are not allowed/,
       'positiveMatch': true,
-      'matchRegex': /bi-downloads/},
+      'matchRegex': /bi-download/},
   {   'name': 'SceneNZBs-Title',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwAQMAAABtzGvEAAAABlBMVEUAAADQERP/ie4xAAAAAXRSTlMAQObYZgAAALRJREFUGNNN0D0OwjAMBeD+oHZkZajIFRgZqoarcAaWIlUkEuysbFzFE1yhYyUO0LLAgmrsvCUe8inyU2I5iWoFanACH3AOZ5oHclBkMVURaItBE0OpLGmhGEpIsMBR6gWmHJSaZzJCydRo3vpZ6Jyv5M+JfSeJJzB8qxXb/6RHrm8l+Wa5yMs8K4bZgwFMggUOfNEbx1FIr3enmIZlvmx9nMIaDqRsX4nW5hHYXwCWsotB/QHAKUvx8mgJlAAAAABJRU5ErkJggg==',
       'searchUrl': 'https://scenenzbs.com/search?search_type=adv&t=5000&search=%search_string_orig%&subtab=tv',
