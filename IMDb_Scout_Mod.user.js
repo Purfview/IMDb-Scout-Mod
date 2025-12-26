@@ -4216,7 +4216,7 @@ var chinese_sites = [
       'both': true},
   {   'name': 'HDH',
       'configName': 'HDHome',
-      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAARVBMVEUAAABIlur///9Soe1dqvBSktFkrvFqs/LY6vvP4veexvPA2PSBvPP1+f6mz/aXuep5se/n8vxro+xhm+rg7vxwqu6CipWZqx/9AAAAAXRSTlMAQObYZgAAAPdJREFUOMu1zlt2wyAMRdGAEAXjZ+J2/kPtlYyo7dL+5Xwka+Xu2Hq8J+YYw59biB9a6GwUMVrxvC05J1SOaU5aaTOFsnttjNK8eTRl20NEo4IUj8bJTyvZq4OGFWIIR8mnIECjCsYNz40G5hPQAOQ1hTQAIq7AGaAsd/4G3ECcvN9/gLuBlWiQO28AOQkAnzvuJHxnPzvXA6vc2QDfASoQq4DhBPgAnwpx52bA9cAodzZQO8DTaVnurIB74CV33gAb0AaICUC6gJerbR4tBrQreP4PUO6AVX+yDLCBpXiUi4EFgLG2sGt1Z07+63HJtfDHXmzbG/oG5TwKiItqzbUAAAAASUVORK5CYII=',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwBAMAAAClLOS0AAAAGFBMVEUAAAD9/f0RPZhDY6KPpMW3xdbd5etvibUeEghUAAAAAXRSTlMAQObYZgAAAU1JREFUOMud1MtuwjAQBVD6Bx0pgf01iDUmlDWPwDrQwNqKCmtCU36/4wR7kshIVe8CEY6vPbwy4LxRL++DOhSIrA90KBgp9Ct/g0sbSBIvjVy04YhbEIYaY7vf53156kABYEXDPN9gahikwDCun5W8QOAKm4w4B8wEeJnNQkAKaq654kEKH9WaH/hijZuHCECSsCqulMg8lBaWGlzh+WRcLjRbccWMMCEHR7gG+4FbDr7yEk0m+Ukj88CTPGFGI37/QeCdghBrlQXhwDMJGA+Vxkog9jDd8NECud9qC6wEhjsHyRoJCUTZE9TZFgQK04BKtf2mBB7UQFVCmRbESQOLI/BDLYjGNXyfwSe3YWT7m5Rfn2YdKOwklzsffqIeqO1ewx0gcHUfE/Uggo3aUQfcr3aeUg848f6RGurmf3/OMAzC8PqWwQkXXt6WfgENgHsw8DElCgAAAABJRU5ErkJggg==',
       'searchUrl': 'https://hdhome.org/torrents.php?search_area=4&search=%tt%',
       'loggedOutRegex': /Cloudflare|Ray ID|SSL \(HTTPS\)/,
       'matchRegex': /Nothing found! Try again with a refined search string/},
