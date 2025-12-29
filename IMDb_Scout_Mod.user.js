@@ -6357,6 +6357,10 @@ var icon_sites_main = [
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAGFBMVEUAAAByW/NQWOspV+D+/v9MZed4ePC7uvgUSxSbAAAAAXRSTlMAQObYZgAAAY5JREFUSMeVz0FOwzAQheFQxL7jDdt6LPbIUW9QJVsEvQCFC7QSPT9vZqpMUkeD+EGVaj99Sbv/RhTfPxBtYwD9AcQEaSEQE3QrAGKCpgIgImhWBBgRA2gViAm6awWICWpqgJiglULAiBZ4HlYJB74P51WCfDB+NgSAhCgnGRyG3BKJkCwSBodzQ2xoJqBTnjIiJf2CCetgTJOQ9Q3k0oIgDZwz24EQDpqAzjmTmRkAY83Jug3GE85I5W23ybpASQRrSKQPyXnXbTiZgHsRjGB7CRXYm4QLODPxliuDqzzTTPyK92Yw6hvpwQ6Dp2Zw8gPcL4ij3P/4dwBCLIWB7wAQtdbChblCGGfgCy6VqCz3WEG4FMbaeuucKAUbDK49pvqtCjARVjmOeqWP46qA9VG0uv/SYc9CAnCi9KX2mOBDDHxWBZzQhf8jBZyQ4366lz8DnOh7nFq62ONwSVhyp58AlvXLBGgJzwEvBtDjfPCKg5DQg4aIARQBRsQAigAjYgA5EBAAggwICQDx4v7+F/vvmuxaMJbqAAAAAElFTkSuQmCC',
       'searchUrl': 'https://web.stremio.com/#/search?search=%tt%',
       'showByDefault': false},
+  {   'name': 'History vs Hollywood',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAA+0lEQVQ4T52Tuw6DMAxFCSzt3HYEZigLMPD/GwMPIcEMjG3nPjYaW3IwUSooSFFikxw7vo7I83yy2CeEQItm27ZxzcfCJ/cqgIThxizLFLIoCkuHkI2B1gBlWf6ODpmtAaqq2g7gtaB1Xde4hLRN9VhkYAIUzHloW7Q+UaS8fwMgi1cY7gMcuw6v8QwCMwAkAxnTNJ1lNN2L9w1XgSRLkmQfgCSL43g7QEadqE2phcEmyXjFTbcRMioCTIfB/75e1blT3yP44ftzEWWj4FugLHif65KdhwEBd89bAvSXRkBdsss4IuDmujOgaRqVAfzUs3Ecx4JBrUwZ0vwFgk9XL081ETwAAAAASUVORK5CYII=',
+      'searchUrl': 'https://www.historyvshollywood.com/search/?q=%search_string_orig%',
+      'showByDefault': false},
   {   'name': 'SubSource',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAC0AgMAAABAo+6hAAAACVBMVEUAAAABgIACAgLLPOsMAAAAAXRSTlMAQObYZgAAAJRJREFUaN7tzjEORVAQRuH7ircECquxBIUpWIId6UXCKhU0d9zMEAkS55STL38mbBVzoimo0Gh0UovO0lOpr+b2TrPNNtuPb4tTHWmvAY3+gs5Hp0hn4hRprx8ajb5P/yVVKTpTN73K1N2sMnV7Snev0fzN30e0pKpXXYVjodHot2o3NBp9o/ZDo9GP60xUaDT6ul4AENu/fpt6VhIAAAAASUVORK5CYII=',
       'searchUrl': 'https://subsource.net/search?q=%tt%',
@@ -12588,5 +12592,6 @@ if (onReferencePage) {
 
 scoutWarning();
 scoutWarning2();
+
 
 
