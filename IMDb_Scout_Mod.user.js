@@ -3030,8 +3030,8 @@ var private_sites = [
       'loggedOutRegex':/Cloudflare|Ray ID|Ξέχασες τον κωδικό σου/,
       'matchRegex':/torrent-search--list__overview/,
       'seedingRegex':/fa-arrow-circle-up/,
-      'both':true,
-      'positiveMatch' : true},
+      'positiveMatch' : true,
+      'both':true},
   {   'name': 'HHD',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAALVBMVEUAAACBIbd6fGrtFIPRH4iuHKHu8+5eYIkaPx1uOKuhXGvDPHOPPpHI1MmhoaHlI8cQAAAAAXRSTlMAQObYZgAAAvhJREFUSMfNkb9P20AUxx9X6qgBKpwl8naYRPxou3CZyBJhT7BUqFaXDBVDygJKMhSxWR0qj2FC2SKgCywVYSJLKsHWAXVAWSpVHSqW9m/gvfP5zk7+AZ4c5967z33f953hiUSuewyTsaSrzLbtzsT+C6wW4uWU024VJ4Ajp31oc7lsdSBnT7S1mwjNxywu7W53rEORtIsxwPGXtXFw0CqQjBMDHfTZbjkZg868ARaKsOJQUw20nO6RBoh3bExJ1Bg0HuiA7UguARYcgriagsKVb5JhaoGbRffQdFUXdmijuyZKqZs018easqSiIAsrtK+7FuT+MfZdOiJgygydtGe2wxPPHTW06W5TmSfpd9sMTUEZHhkaR9hkFiFTQL3Z92OKqQMwWweY8FTe1plem3hez5y6HcKPLMACjo9OcRnoRJ/BR0UOxdh4j20ov1Xr7ABwp3wjo2mFWr/p/VGZAKY9oNatBJbpvat96fg6pPQDWBz2ELhvNBrSpXHcYwGdtJqwH8KIfXpo30M5DXBWl0AIOwiAFaEdMwO1yyMwioG5B/xXwKo7CYAVA00cLR8EPQm8hhi4vyNgj4C9EIFyPUiugtWtBsZ/ev0MrdDaDctBEAz1B8Mp3oyif5//7ERfllGhEQEBPK8BH9DcrxB2Q5zV+jsK4ezSvdkub4KKdxzN7SMgHe5HVIFp368lwM0wBcxFpMmBXW1BEqUaAjkCXoYA+OTlnonpTYjo/0EXNrJA3odsnNXGCv63TMr83hhQ2sy29HUL3YOn0ytf5SYyR2Y8V+e6qddLJWtQSkuwc77o96u6cupxYGmJvqj4tbxIiJLYoHeFa8tiy/OpXj3BzL0S61JWrGnFNZipyJOo5ItEabFyca069BCn4qonkLnE1YAkMIvv0+Pxj/Rdl5OmkMrrp7IZ0ICosGWmoPakPFPVHgR2qZzEKn2hDibAM3HtYekV9r8+v+gLtQ+n1X68YmitpzxSXOrxhfrG+YGqrQ4GgxNzxTjm04hH8MDJxzSNwlIAAAAASUVORK5CYII=',
       'searchUrl': 'https://homiehelpdesk.net/torrents?imdbId=%nott%',
@@ -12602,5 +12602,6 @@ if (onReferencePage) {
 
 scoutWarning();
 scoutWarning2();
+
 
 
