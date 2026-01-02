@@ -3066,7 +3066,7 @@ var private_sites = [
       'loggedOutRegex': /Cloudflare|Ray ID|not authorized to/,
       'matchRegex': /View Details for/,
       'positiveMatch': true},
-  {   'name': 'infinityhd',
+  {   'name': 'InfinityHD',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAMAAABg3Am1AAAAV1BMVEVHcEzeqUvksE3lsU3epD3fp0Pxw1r1yF3gpTz0xlzZmzPfpDrKhyPWmDLZnDf1yV/RkS3xwVfbnjfvv1bjrELqt03KhyTanDT0x1zKhyTsuE7nsUfIhCM1Zd6oAAAAHXRSTlMAAwoRSRo9zoibvcvNWSlcOIdqK6p4raG7kbbpbUYMe4cAAAFlSURBVEjH7VTbUsUgDDxAoNyhXHr//+801FP12Krjo+PJTB+a7m6WJOV2e8Yz/mgQQn5IPAZlnNEPCEL5Y+JRjIvQ930Q/I4gGWqVMgG/pNAc1NR13aRCZi3BMLEYY/ToPLnC1wnBSiGnFxTxol8WhSW00emiBgtTp4IQoaqdQRGvqsg5OmlGx06ErDrVhFF5Z4i69MCaMI2jnv3JkZimwPejohf0VooUOx6bkbSO9BOBh3uBndxP64r6hxgM9uSpEfKhwmBZV+mPVxqRwL8jUCjrWt5ELwkMpgUOS1mWYkyBO4i5wQI7HXpZ6j4fQnMq0lWNzeRtLYif7RBPg+DVmOQpbg/IIoH51AbmGaF+s3bj50kLaYpMKcmx4VE3aavnbdvmwc6nrjYnIHFvNOrK3TDhbrTWDvjMcLWxhHknx3GUzr9+JiymeRiGeYuMfLHfEQD8+6JRTDiInPz6P3xeRc/4H/ECsf4SVnns/LMAAAAASUVORK5CYII=',
       'searchUrl': 'https://infinityhd.net/torrents?imdbId=%nott%',
       'loggedOutRegex': /Cloudflare|Ray ID|Forgot Your Password/,
