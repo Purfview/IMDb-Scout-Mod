@@ -4002,7 +4002,7 @@ var private_sites = [
       'positiveMatch': true,
       'both': true},
   {   'name':'TurkSeed',
-      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAVFBMVEUAAAAzT102UV5BWmdGXmozT10sRFA4Ul4wTVsoPkng3t4hND3s7OzWUEJFW2SMlZfTzMtynrR3Tk+lpKPDgnzab2RjdHnfm5RfSE24t7ekS0WWSEMDyEZAAAAACHRSTlMA2KJAJ/TldjaraAQAAAGFSURBVDjLfZPZdoYgDIQFN4ISrOD+/u/ZMVCp/c/pHK+cL5mwVUVNr1VrTKt031SfqrUyj5Su/9iNRi37grS6eZVLNbMx+/5DqPrlZ83OzTcqOfVvn9fsC8Evornr/cTiJyJLpTn0k++yZI4Vf7QEtCbrdC56H507Cb49MGktDcqA8QsCsZPhcC9a5wkkJGzR34CPWyB6puizj56jDQJM1vKQib4k+HEcDw8/WGvXIRHIULIt0AHAHt6HCUAYMqGqVhYETQCAwIaOASK/mrYyWQxAiATQTdyF/wGSgggcw2cEwR2IqMWQ3q7Y6DkBW0zAfNdDXaXRgcO6u00aLIsAm9tTB502is35AFMCLiLDRH3eagCL/dVhwYGBoA4HrjPgZIgETE4AJDzHfbmUEWNKQATUyZ3S+awlfYtY6LTgWkmDcuUAXOxDiDEEz+i3w1dNubS7O4fBMM8zM4Y/AUhAIa4hifBBV/YLQQ9AIrn0r6dHL7/Tzcfj7cTPdikvanrVift6/t9n4yQPvLCrYQAAAABJRU5ErkJggg==',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAGFBMVEXl5eXtHiYCAgLsOUDqZms/Pz/cp6mHh4dS1HxgAAABw0lEQVRIx7XUwYqDMBAG4MC2em1I2QcQQq8NkZ4tBh9ASL0G2nWvUrB9/XXjJBM3WmGX/Q9tDx//TDVK3ugQRpYjLCiWAbVZBcfVhr8CdvzPBrHWIG0A/Co3VambGlOkutF900UjIOyYZjXP+BTQILtt9p0XIAWw0nBZa2jWADcxyG0KC3AGAtbamGQEvPsJ9gRSj6JZBH0WCTo59lsAvFloSGsUs4DcMyeesyPIR+bFI26AGZBDFwOogDTRCKjw6YIGzBMBN3Mg6RFccEQotBcaG8KkKLopiBc9eJCUUuZVJLgBkJSCKlVhx93NgCVLyqrWbmiI/f6EjgsAQXMzPmhVewqvaDOAkRj4j4wW4RragRMBIABABXegAHAVVJqxAkE4QZVMmXAGgD0A0l7zBH7PA7Kp8ISHAG9Vi8czasBEgM2AevI3YXJ0S7UDOWxgEMCVFDBj3O1WeNDDvZA0WDMJdrkDOFOIrColTzjBnYeSeiFFbnBF9yp5o5h98XTR/kxuQkA0r2vNhw98+jYCwTvJMDCBJGcEOwTB43t9AYYCNyMG+Corl8Chg+sv54F+EMhNzgAevm4TJdkQD2rOtXvJfQGxDp98uYX4AAAAAABJRU5ErkJggg==',
       'searchUrl': 'https://turkseed.com/torrents?imdbId=%nott%',
       'loggedOutRegex': /Cloudflare|Ray ID|Service Unavailable|Forgot Your Password|Forgot your password|Şifreni mi Unuttun|forgot-password/,
       'matchRegex': /torrent-listings-name|torrent-search--list__overview/,
@@ -4010,7 +4010,7 @@ var private_sites = [
       'positiveMatch': true,
       'both': true},
  {    'name':'TurkSeed-Req',
-      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAVFBMVEUAAAAzT102UV5BWmdGXmozT10sRFA4Ul4wTVsoPkng3t4hND3s7OzWUEJFW2SMlZfTzMtynrR3Tk+lpKPDgnzab2RjdHnfm5RfSE24t7ekS0WWSEMDyEZAAAAACHRSTlMA2KJAJ/TldjaraAQAAAGFSURBVDjLfZPZdoYgDIQFN4ISrOD+/u/ZMVCp/c/pHK+cL5mwVUVNr1VrTKt031SfqrUyj5Su/9iNRi37grS6eZVLNbMx+/5DqPrlZ83OzTcqOfVvn9fsC8Evornr/cTiJyJLpTn0k++yZI4Vf7QEtCbrdC56H507Cb49MGktDcqA8QsCsZPhcC9a5wkkJGzR34CPWyB6puizj56jDQJM1vKQib4k+HEcDw8/WGvXIRHIULIt0AHAHt6HCUAYMqGqVhYETQCAwIaOASK/mrYyWQxAiATQTdyF/wGSgggcw2cEwR2IqMWQ3q7Y6DkBW0zAfNdDXaXRgcO6u00aLIsAm9tTB502is35AFMCLiLDRH3eagCL/dVhwYGBoA4HrjPgZIgETE4AJDzHfbmUEWNKQATUyZ3S+awlfYtY6LTgWkmDcuUAXOxDiDEEz+i3w1dNubS7O4fBMM8zM4Y/AUhAIa4hifBBV/YLQQ9AIrn0r6dHL7/Tzcfj7cTPdikvanrVift6/t9n4yQPvLCrYQAAAABJRU5ErkJggg==',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAGFBMVEXl5eXtHiYCAgLsOUDqZms/Pz/cp6mHh4dS1HxgAAABw0lEQVRIx7XUwYqDMBAG4MC2em1I2QcQQq8NkZ4tBh9ASL0G2nWvUrB9/XXjJBM3WmGX/Q9tDx//TDVK3ugQRpYjLCiWAbVZBcfVhr8CdvzPBrHWIG0A/Co3VambGlOkutF900UjIOyYZjXP+BTQILtt9p0XIAWw0nBZa2jWADcxyG0KC3AGAtbamGQEvPsJ9gRSj6JZBH0WCTo59lsAvFloSGsUs4DcMyeesyPIR+bFI26AGZBDFwOogDTRCKjw6YIGzBMBN3Mg6RFccEQotBcaG8KkKLopiBc9eJCUUuZVJLgBkJSCKlVhx93NgCVLyqrWbmiI/f6EjgsAQXMzPmhVewqvaDOAkRj4j4wW4RragRMBIABABXegAHAVVJqxAkE4QZVMmXAGgD0A0l7zBH7PA7Kp8ISHAG9Vi8czasBEgM2AevI3YXJ0S7UDOWxgEMCVFDBj3O1WeNDDvZA0WDMJdrkDOFOIrColTzjBnYeSeiFFbnBF9yp5o5h98XTR/kxuQkA0r2vNhw98+jYCwTvJMDCBJGcEOwTB43t9AYYCNyMG+Corl8Chg+sv54F+EMhNzgAevm4TJdkQD2rOtXvJfQGxDp98uYX4AAAAAABJRU5ErkJggg==',
       'searchUrl': 'https://turkseed.com/requests?unfilled=1&imdbId=%nott%',
       'loggedOutRegex': /Cloudflare|Ray ID|Service Unavailable|Forgot Your Password|Forgot your password|Şifreni mi Unuttun|forgot-password/,
       'matchRegex': /fa-circle text-red/,
@@ -12677,6 +12677,7 @@ if (onReferencePage) {
 
 scoutWarning();
 scoutWarning2();
+
 
 
 
