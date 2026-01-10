@@ -2971,7 +2971,7 @@ var private_sites = [
   {   'name': 'HDb',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgBAMAAACBVGfHAAAAGFBMVEVPZHWjt8exxNNfdIV1ipuNorP+/v7Y3+RqcToTAAAA4ElEQVQoz6XITW6DMBCG4ZF8AkjcrkEh2RpNLgA22RvhsEZqZy6QmOt3DKpUWVlUyuufT3qgzvoHVFlQVOmU6W4fFFmvoJYpZep6Az+z9z5WMxFx4T3okrXW8VnS5UKLQJg5BB+fMvqTdIAwsg4hNmNyajYIvxDO3xncBaaR1nWl08jTNN2XAYaeUk3PgxtuAq5n51w8yQzutrg/IPPxlcH5IdDtsA0dHdiOr2jjoWNrZ3mAHaO9xmNLa6QHCrRsEeOhJeIGEQGzXoAyZn8qLYJSYIxRW2AUSOkzkNrl/X4ALOVfoodI6RkAAAAASUVORK5CYII=',
       'searchUrl': 'https://hdbits.org/browse.php?c1=1&c2=1&c3=1&c4=1&c5=1&c7=1&c8=1&imdb=%tt%',
-      'loggedOutRegex': /Make sure your passcode generating|nginx/,
+      'loggedOutRegex': /Make sure your passcode generating|nginx|Scheduled Maintenance in progress/,
       'matchRegex': /Nothing here!/,
       'seedingRegex': /tag tag_seeding/, // Needs to be enabled in profile
       'rateLimit': 250,
@@ -2979,7 +2979,7 @@ var private_sites = [
   {   'name': 'HDb-Req',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgBAMAAACBVGfHAAAAGFBMVEVPZHWjt8exxNNfdIV1ipuNorP+/v7Y3+RqcToTAAAA4ElEQVQoz6XITW6DMBCG4ZF8AkjcrkEh2RpNLgA22RvhsEZqZy6QmOt3DKpUWVlUyuufT3qgzvoHVFlQVOmU6W4fFFmvoJYpZep6Az+z9z5WMxFx4T3okrXW8VnS5UKLQJg5BB+fMvqTdIAwsg4hNmNyajYIvxDO3xncBaaR1nWl08jTNN2XAYaeUk3PgxtuAq5n51w8yQzutrg/IPPxlcH5IdDtsA0dHdiOr2jjoWNrZ3mAHaO9xmNLa6QHCrRsEeOhJeIGEQGzXoAyZn8qLYJSYIxRW2AUSOkzkNrl/X4ALOVfoodI6RkAAAAASUVORK5CYII=',
       'searchUrl': 'https://hdbits.org/requests?open=&category=0&medium=0&resolution=&origin=0&is_subtitle_reseed=0&search=%tt%&filter=Filter',
-      'loggedOutRegex': /Make sure your passcode generating|nginx/,
+      'loggedOutRegex': /Make sure your passcode generating|nginx|Scheduled Maintenance in progress/,
       'matchRegex': /There are no open bounty/,
       'rateLimit': 250,
       'both': true},
@@ -12730,3 +12730,4 @@ if (onReferencePage) {
 
 scoutWarning();
 scoutWarning2();
+
