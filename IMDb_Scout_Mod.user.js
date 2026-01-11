@@ -7468,6 +7468,15 @@ function iconToButtonHack() {
       GM.openInTab(link);
     });
   }
+  if ($('img[title="TurkSeed"]').length) {
+    const button = $('img[title="TurkSeed"]').parent();
+    const link = button.attr('href');
+          button.prop("href", "javascript: void(0)");
+          button.removeAttr("target");
+    button.click(function() {
+      GM.openInTab(link);
+    });
+  }
 }
 
 //==============================================================================
