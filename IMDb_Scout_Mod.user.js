@@ -7477,6 +7477,15 @@ function iconToButtonHack() {
       GM.openInTab(link);
     });
   }
+  if ($('img[title="WoT"]').length) {
+    const button = $('img[title="WoT"]').parent();
+    const link = button.attr('href');
+          button.prop("href", "javascript: void(0)");
+          button.removeAttr("target");
+    button.click(function() {
+      GM.openInTab(link);
+    });
+  }
 }
 
 //==============================================================================
