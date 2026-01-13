@@ -2788,7 +2788,7 @@ var private_sites = [
       'TV': true},
   {   'name': 'EMP',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQBAMAAADt3eJSAAAAGFBMVEUWQGocbKX///8WVokOIS/JycmQkZFYWlo0dr6WAAAAfElEQVQI1yWNQQvCMAxGU4f3hYreP+h2bYl6VizrVYrzPAT3A7b9f5ZuOSSPB+ERUcXsScd42un0dwtbFWf83FOVuaHDh2sKdyS0wRJfMKIxQlwDcFWB3Mb4UrBTk/pZKPDBJQz6zkdEvL2WrrnHoAmRLn8fJS4+lrs5XSviRRJdDAPXXAAAAABJRU5ErkJggg==',
-      'searchUrl': 'https://www.empornium.is/torrents.php?title=%search_string%+%year%',
+      'searchUrl': 'https://www.empornium.sx/torrents.php?title=%search_string%+%year%',
       'loggedOutRegex': /Cloudflare|Ray ID|Authorization error|forgotten password|>Login</,
       'matchRegex': /did not match anything/},
   {   'name': 'eMuwarez',
