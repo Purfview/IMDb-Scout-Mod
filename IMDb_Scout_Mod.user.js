@@ -7419,6 +7419,33 @@ function addLink(elem, site_name, target, site, state, scout_tick, post_data) {
         GM.openInTab(link);
       });
     }
+    if (site['name'] == "TurkSeed") {
+      const button = $('span[id*='+ scout_tick +']').find('img[title="TurkSeed"]').parent();
+      const link = button.attr('href');
+            button.prop("href", "javascript: void(0)");
+            button.removeAttr("target");
+      button.click(function() {
+        GM.openInTab(link);
+      });
+    }
+    if (site['name'] == "WoT") {
+      const button = $('span[id*='+ scout_tick +']').find('img[title="WoT"]').parent();
+      const link = button.attr('href');
+            button.prop("href", "javascript: void(0)");
+            button.removeAttr("target");
+      button.click(function() {
+        GM.openInTab(link);
+      });
+    }
+    if (site['name'] == "WoT") {
+      const button = $('span[id*='+ scout_tick +']').find('img[title="WoT (TV)"]').parent();
+      const link = button.attr('href');
+            button.prop("href", "javascript: void(0)");
+            button.removeAttr("target");
+      button.click(function() {
+        GM.openInTab(link);
+      });
+    }
   }
   // Hack: Same-origin problem with POST, so remove 'onclick' form (icons mode only).
   if (site['name'] == "SFP-Req") {
