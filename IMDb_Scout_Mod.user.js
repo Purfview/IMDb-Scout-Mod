@@ -1,4 +1,4 @@
-﻿// ==UserScript==
+// ==UserScript==
 //
 // @name         IMDb Scout Mod
 // @version      25.6.2
@@ -5263,11 +5263,12 @@ var usenet_sites = [
       'loggedOutRegex': /Cloudflare|Ray ID|You must be logged/,
       'matchRegex': /No results found/,
       'both': true},
-  {   'name': 'Videotek',
+  {   'name': 'Videothek',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAiBAMAAADMnMbMAAAAFVBMVEUGBQYjRHCEm7mEmrmDm7mEm7jf391rZRWZAAAABnRSTlMF7/n5+fnUi8cSAAAA5ElEQVQoz23RTW4DIQyGYU97AUyVA/DCdN2iXCBE6j5RlX3Tau5/hJqhzE/UT2x4wAbJ0qIWJ5voXxYYHgBxOmyqnmjHg+v7oOqXvraPBh9T0NQkR1VyBPzc1XM5UFMgVDhafbmqKmPmZD/IYwQ0G+UjziryVPMzP2XwAlPLnZMfnUTi1FMvCbDAnWCQrgt8VXg+sIfBb4Gwg/uZYh/bALzJQHntANGJBG4rqIGm8baCGHhKb/FeYVASqcI3QdtM+IQzYyG4PpNIykR0BrVVG5FQaVCl2qWBW4a5zruT7MHJQ/6HXz0NTYRYk/fzAAAAAElFTkSuQmCC',
-      'searchUrl': 'https://videothek.io/search?imdbId=%tt%',
-      'loggedOutRegex': /Cloudflare|Ray ID|Melde Dich bei Deinem Konto an/,
-      'matchRegex': /Geben Sie einen Suchbegriff ein, um Releases zu finden/,
+      'searchUrl': 'https://videothek.io/api/v1/search?imdbId=%tt%&page=1&limit=50',
+      'goToUrl': 'https://videothek.io/search?imdbId=%tt%',
+      'loggedOutRegex': /Does not work here/,
+      'matchRegex': /total":0/,
       'both': true},
   {   'name': 'WtFnZb',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQAgMAAABinRfyAAAACVBMVEVjhwD///86aRovd/sBAAAAMUlEQVQI12OAgNBQIJGZCSOywMRKGJG5EirBmpkZwMAYGuoA1SEaAiRYA4AEowPEIADbhQrnKgUJ3AAAAABJRU5ErkJggg==',
@@ -7665,6 +7666,12 @@ async function maybeAddLink(elem, site_name, search_url, site, scout_tick, movie
         "Authorization": "Basic " + btoa(GM_config.get("void_username") + ":" + GM_config.get("void_password")),
       };
     }
+  } else if (site['name'] == "Videothek") {
+    reqHeader = {
+      "Host": "videothek.io",
+      "Referer": "https://videothek.io",
+      "Authorization": GM_config.get("videothek_authToken")
+    };
   }
 
   // Check for results with GET method.
@@ -11675,6 +11682,7 @@ function countSites(task) {
       'emby_debug': {'type': 'checkbox'},
       'milkie_authToken': {'type': 'text'},
       'tnt_authToken': {'type': 'text'},
+      'videothek_authToken': {'type': 'text'},
       'void_url': {'type': 'text'},
       'void_username': {'type': 'text'},
       'void_password': {'type': 'text'}
@@ -12277,6 +12285,11 @@ var config_fields = {
     'type': 'text',
     'default': ''
   },
+  'videothek_authToken': {
+    'label': 'Videothek:',
+    'type': 'text',
+    'default': ''
+  },
   'void_url': {
     'label': 'Voidtools URL:' + void_url_spacing,
     'section': 'Voidtools config:',
@@ -12797,5 +12810,4 @@ if (onReferencePage) {
 
 scoutWarning();
 scoutWarning2();
-
 
