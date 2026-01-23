@@ -1,4 +1,4 @@
-// ==UserScript==
+﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
 // @version      25.6.2
@@ -2392,7 +2392,7 @@ var private_sites = [
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQAQMAAAAlPW0iAAAABlBMVEX///8AAABVwtN+AAAAH0lEQVQI12NABowHQIg5AYTYEhjYHzDwJTDwJCArAQBsJARwFQ3b2QAAAABJRU5ErkJggg==',
       'searchUrl': 'https://avetorrents.com/catalogue.php?cat=movies&tname=%search_string_orig%&year=%year%',
       'loggedOutRegex': /Cloudflare|Ray ID|Забравили сте си паролата/,
-      'matchRegex': /Няма нищо намерено/,
+      'matchRegex': /Няма нищо намерено|Няма намерени резултати/,
       'both': true},
   {   'name': 'Back-Ups',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgBAMAAACBVGfHAAAALVBMVEUAAAAQEiDj5urd4OXV2uB7jKJsdYa2v8ukscKNnbTGzNTM0tksLki/xtFQWGjahR97AAAAAXRSTlMAQObYZgAAAStJREFUKM9jwAFCZ04NTUDmz+jonIkkEtl+/dbais5QGJ91RtUWl13XO6YGwATal7i4eK+tmApTMh3IdzZ22VsxFcJnm77F2EjZ2GRXBVQPZ5cLWMD7xtQEiEC1s7GSkpKx9/W+NLBA5m1nI6CAsklZjhhYIK0EpEDJ482xN6JggUTBM+/enREEgaNQATBACASCmAfBAk8RKiBawiACCBUQa/PgAjLPIE4HcXKA+HlbGkSgT1DwbZ2gzKzlYccgvkuvDHdScdnlfT3vKTTAnI2NgE7fdSP0GTSAmkECKrtuzYQGEMcskIDLqpJWqADbDaB3jV12uU+AhfKNLUABk93b4dEQshoooHL5AlyA3dlZSUNFCynmXEyUnI0KkASYgSGmjhLZTkoquNIBAK6/YgCXuVAPAAAAAElFTkSuQmCC',
@@ -5265,9 +5265,9 @@ var usenet_sites = [
       'both': true},
   {   'name': 'Videothek',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAiBAMAAADMnMbMAAAAFVBMVEUGBQYjRHCEm7mEmrmDm7mEm7jf391rZRWZAAAABnRSTlMF7/n5+fnUi8cSAAAA5ElEQVQoz23RTW4DIQyGYU97AUyVA/DCdN2iXCBE6j5RlX3Tau5/hJqhzE/UT2x4wAbJ0qIWJ5voXxYYHgBxOmyqnmjHg+v7oOqXvraPBh9T0NQkR1VyBPzc1XM5UFMgVDhafbmqKmPmZD/IYwQ0G+UjziryVPMzP2XwAlPLnZMfnUTi1FMvCbDAnWCQrgt8VXg+sIfBb4Gwg/uZYh/bALzJQHntANGJBG4rqIGm8baCGHhKb/FeYVASqcI3QdtM+IQzYyG4PpNIykR0BrVVG5FQaVCl2qWBW4a5zruT7MHJQ/6HXz0NTYRYk/fzAAAAAElFTkSuQmCC',
+      'loggedOutRegex': /Does not work here/,
       'searchUrl': 'https://videothek.io/api/v1/search?imdbId=%tt%&page=1&limit=50',
       'goToUrl': 'https://videothek.io/search?imdbId=%tt%',
-      'loggedOutRegex': /Does not work here/,
       'matchRegex': /total":0/,
       'both': true},
   {   'name': 'WtFnZb',
