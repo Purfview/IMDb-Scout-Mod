@@ -5265,9 +5265,9 @@ var usenet_sites = [
       'both': true},
   {   'name': 'Videothek',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAiBAMAAADMnMbMAAAAFVBMVEUGBQYjRHCEm7mEmrmDm7mEm7jf391rZRWZAAAABnRSTlMF7/n5+fnUi8cSAAAA5ElEQVQoz23RTW4DIQyGYU97AUyVA/DCdN2iXCBE6j5RlX3Tau5/hJqhzE/UT2x4wAbJ0qIWJ5voXxYYHgBxOmyqnmjHg+v7oOqXvraPBh9T0NQkR1VyBPzc1XM5UFMgVDhafbmqKmPmZD/IYwQ0G+UjziryVPMzP2XwAlPLnZMfnUTi1FMvCbDAnWCQrgt8VXg+sIfBb4Gwg/uZYh/bALzJQHntANGJBG4rqIGm8baCGHhKb/FeYVASqcI3QdtM+IQzYyG4PpNIykR0BrVVG5FQaVCl2qWBW4a5zruT7MHJQ/6HXz0NTYRYk/fzAAAAAElFTkSuQmCC',
-      'loggedOutRegex': /Does not work here/,
       'searchUrl': 'https://videothek.io/api/v1/search?imdbId=%tt%&page=1&limit=50',
       'goToUrl': 'https://videothek.io/search?imdbId=%tt%',
+      'loggedOutRegex': /Does not work here/,
       'matchRegex': /total":0/,
       'both': true},
   {   'name': 'WtFnZb',
@@ -11101,7 +11101,7 @@ function darkReferenceStyles() {
                   `);
 
   addGlobalStyles('.sc-9c834405-4 {color: #808080 !important}');                                                        // dark grey // for the empty links on the right sidebar
-  addGlobalStyles('.sc-cb6a22b2-1 {font-weight: bold; font-size: 20px; color: #cc0000 !important}');                    // red // original title
+  addGlobalStyles('.sc-b41e510f-2 {font-weight: bold; font-size: 20px; color: #cc0000 !important}');                    // red // original title
   addGlobalStyles('.ipc-rating-star--rating, .ipc-rating-star--rate {font-weight: bold; color: #00b300 !important}');   // green
 
   // Resize stuff
