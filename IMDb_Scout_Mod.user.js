@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      25.7.0
+// @version      25.7.1
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from hundreds various sites. Adds movies/series to Radarr/Sonarr. Adds external ratings from Metacritic, Rotten Tomatoes, Letterboxd, Douban, Allocine, MyAnimeList, AniList. Media Server indicators for Plex, Jellyfin, Emby. Dark theme/style for Reference View. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAMFBMVEUAAAD/AAAcAAA1AABEAABVAAC3AADnAAD2AACFAAClAABlAAB3AADHAACVAADYAABCnXhrAAAD10lEQVRIx73TV4xMURgH8H/OnRmZWe3T7h2sOWaNXu7oJRg9UccuHgTRBatMtAgSg+gJu9q+kFmihcQoD8qLTkK0CIkoy0YJITsRD0rCKTHFrnkSv5e5c88/53znO+fiPwvsvrN038cPNqrG9pJmHkRVnPcpaTlHJY60cfPSpsrzl1LKihrmLvxhCM2i3OHvDx0d+H7e3F6JBv5iZMiJfhFTfPYDMHrMImpwimWWUdSgDQkbno7fFpUPVgh+pHFbZR4SovSctDCM9Hac9IKd9rO8EevtBCkXgY5IMmgquwypP7qqfcp/Tp4KLONDVsWh3RSBB2rnZfit69ocUdqLn2prrRZYM0Jg4JibamKsqe7gfEh5GOAfeYJjVHIPZvil97rcXkMog30byWRwXYRWoxHbzNFHJJpAarO8NdEBBsdCaP3WMJltTmQd4zlnekTq9Z5dgACwAlrpK4BxdV5mvLuspRgMSHbCIFF0iS8MZ5S8oYBYKY7rByC4dDM9uSIUmPOIwxgQBoYeF93auP4qFyPbIVXziWeGTH1EFM57kJo2hqQju6BwIyRf6RmCjdT4JOdiwNgiH/PPD3qoqlsNaXRd+fKtFfECxlZVNVF9SOsgTZEr2TUjJJbyeNX1IZrKIbyGlBABfpQPv2UDrly13LkJXDVhpQ5MhtGwcyF4HKjlU4E8xwB0AvDjd6AGmevZ87EcQRHgcO52e9uNsYELOrAa/Yh81YlmYLQJ5HWyq0+kzQ/DQKEusg6CRI27ryy8nReRS0wsoetkmRwogHSprliCckfEjXG9yAQc74J0WB99vu6DF3i3pMucsXM6tpBbxd2mVJAwXwGogNRBvGRA4jtHKTXkAIwLGCR/mT4Lh75oneQXXP9sAYfGRDCsnw7pX/jRZkU3M44kjw2l5zRIzb4CbZ8dULdL6wbNPZOpK0B6gN1UR1mdoxAaL/GrWiLPL3SEwW9YMTU/d64BtLahAVyucWhj9Mm8ign9IfQaBtd2/GbvCAEBpG5eMcrj2I0ktpKLeaqXQ3Pst42KGIshpdTmQLAeTgFGJ2wvh+tayMOR0n1RZ8B9z13vnOPBnsBq4E1ffgZpPFZHWVpO2cvhjYpOcbBd5TlhpDu5zq9mHGZcVi0y+VFkcFkDdyKJfTt99wEyHSEzDM90KH0nexpwZHJHKYYhjzlwGe0pP/IKfxociaEb7YDbi6KGJY1R2cR76E6NAtXqY4pPH3plLcl8LD7V+cOLUbUWRFZRPTAbVZO3mxK18Xc1ZaAiS8ARJXpZliXAomR94siiiMx8ZBOkXGTlnH0F/9ov1xPtWwEqP9wAAAAASUVORK5CYII=
@@ -1478,6 +1478,9 @@
 25.7.0  - Fixed: Style of "original title" elem in the compact reference mode.
           Added: Videothek
 
+25.7.1  - Added: LUME, ZamundaRIP
+          Removed: xThor, iDope, TeRaCoD, NTELogo, TamilBlasters, Yoinked, ArenaBG, Zamunda-stolen (zamunda.net), Zamunda (zelka.org)
+
 
 //==============================================================================
 //    Notes.
@@ -1624,7 +1627,7 @@ The IMDb id without the tt prefix (e.g. 0055630).
 #  %tvdbid%:
 The TVDb id.
 
-#  %tmdbid%:
+#  %ÿ db 皸翴 
 The TMDb id. [it's not unique]
 
 #  %tmdb_orig_title%:
@@ -1684,17 +1687,6 @@ var public_sites = [
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAaVBMVEUAAAAAAAD///9ycnJXV1f29vbt7e0JCQknJyeXl5fY2Ni9vb0+Pj7i4uK6urqjo6OCgoJ2dnZOTk6tra2fn582NjYfHx8XFxfn5+ff39/Pz8+2trYxMTEtLS3IyMilpaVGRkYNDQ0FBQWpvYrKAAAAAXRSTlMAQObYZgAAASJJREFUOMu9k9mSgyAURKERcMG4ZTQazfb/HzlwE0Atp+ZlavpBi9uH5oLC/l946yezzJJUcz2L4ohB98WD+m5PQD34Rq3E1k/5TkauARnioxqsAgSVXuJaSsjxntCwjP5EBaFwqReukxzT7MYIAC1whhScpBWk7WkIwMlVa0jjl78yZPblAbR2kEo03GtkrFgBF5qEnLzBwdgClTs6IKFGSvtIQEX9AchpQDkdbq6d98ZnDyy2VrAzTaW4jDH1jNuEW1ax2jlAQwCd3MlvgjuAEozqehekBLUaAKJzvtMpAJpWhzn6VvGg7xif0aUOA5BRpa2KZOC9uOWGa2Pzo+TCg9Lp4L9FriPxiFYUigi0AdhmtB6o2LE+d+JV47dbxf5a38yjCp8EAXGKAAAAAElFTkSuQmCC',
       'searchUrl': 'https://animetosho.org/search?q=%search_string%',
       'matchRegex': 'No items found',
-      'TV': true},
-  {   'name': 'ArenaBG',
-      'icon': 'data:image/png;base64,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',
-      'searchUrl': 'https://arenabg.com/en/torrents/?category=1&text=%search_string_orig%+%year%',
-      'loggedOutRegex': /Cloudflare|Ray ID|>Грешка<|Lost password/,
-      'matchRegex': /no results found|Не са намерени резултати/},
-  {   'name': 'ArenaBG',
-      'icon': 'data:image/png;base64,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',
-      'searchUrl': 'https://arenabg.com/en/torrents/?category=2&text=%search_string_orig%',
-      'loggedOutRegex': /Cloudflare|Ray ID|>Грешка<|Lost password/,
-      'matchRegex': /no results found|Не са намерени резултати/,
       'TV': true},
   {   'name': 'AXEL torrents (BG)',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAABTVBMVEUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAWUCAn4BADQCAXoAAACS1PY2NIsCAXcqQrEPFJ0DAomK0/l7yPYCAYO45PsAAADJ6foBAEsBAEoQF38CAXQDAZ/6/f/u+f/i9f/e9P/O7v+35/99yvptt/JTjN0mO7ofLLMuMLL1/P/w+v/r+P/W8P+u4/+d3f/U6PnF4fnD1/SYxvNhoemRsOdWj+BMgthEb9JBac89ZM01VcYqRL0UHq0LDqYTEaX+///l9v/R7//H7P/A6f+x5P+m4P+B1P+Y2v6T2f7D5v3R6vzp7fmFzfmUzPba4vPQ2vOIxvOdxvKCwvJrsO+Rwe2tx+yNu+xytOyEr+dwoeZcmOSur+Fvm+FShdyanttqjtpKedZ2fM9ZdM9OZss4WshCTb0sTL0nOLIbKLEXI68aHasICaPO1hYDAAAAH3RSTlMAHy6QDgeIbkcn4d3Du2BC6uq9vbq0tK6inpKIiFdXzL97VwAAAO5JREFUGNMlj8Vyw1AMRfXsF9tpqMytzBhmhjIzM3P7/8sqk7PTmZF0LxCJiU3brY8ucBgwa2Vz+06t9TPOQkBMGxlzbeO01vQxFiaTMDVNX7Guyjcn1/fzDGDSVNWUcW7fNv2gElE4nG0tHebz285Dq4PFgsyg6uyk1zMH1YbXxRddEqDhlku7lxdP7Q7iY0oUwHuvP1c0NVn8QrzbIzH27bXf0mrSyLrYG6aVRfzr/h4t66vHAWKUjvIpRAwKVu4TcUikt8BiiD279EHzTJyCQSg8F/FfEUeiYpyi9w1TZEkUJVmhcgM4EwjGgfgHbQ4jpxP2hocAAAAASUVORK5CYII=',
@@ -1846,17 +1838,6 @@ var public_sites = [
       'positiveMatch': true,
       'spaceEncode': ' ',
       'both': true},
-  {   'name': 'iDope',
-      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwAQMAAABtzGvEAAAABlBMVEUAAADpQjWXqLtEAAAAAXRSTlMAQObYZgAAAHlJREFUGNOd0MEJQyEQBNAJOfxjSrAUS/OXZilbgkcP4mT+DoGE3P6iPFhXBhZwld6mqEGeQBtkNwOgWGYb+k2jLURH7SJQ1BCqg+PiacCZKONq1PVN+eG17+Dv5j/BsWDy0NU5TGGAqg/dnAbJNstME0kuKydQc2VvvJ2u5Jy7+qoAAAAASUVORK5CYII=',
-      'searchUrl': 'https://idope.se/torrent-list/%search_string_orig%+%year%',
-      'loggedOutRegex': /Cloudflare|Ray ID/,
-      'matchRegex': /Oops!/},
-  {   'name': 'iDope',
-      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwAQMAAABtzGvEAAAABlBMVEUAAADpQjWXqLtEAAAAAXRSTlMAQObYZgAAAHlJREFUGNOd0MEJQyEQBNAJOfxjSrAUS/OXZilbgkcP4mT+DoGE3P6iPFhXBhZwld6mqEGeQBtkNwOgWGYb+k2jLURH7SJQ1BCqg+PiacCZKONq1PVN+eG17+Dv5j/BsWDy0NU5TGGAqg/dnAbJNstME0kuKydQc2VvvJ2u5Jy7+qoAAAAASUVORK5CYII=',
-      'searchUrl': 'https://idope.se/torrent-list/%search_string_orig%',
-      'loggedOutRegex': /Cloudflare|Ray ID/,
-      'matchRegex': /Oops!/,
-      'TV': true},
   {   'name': 'ilCorSaRoNeRo',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwAgMAAAAqbBEUAAAADFBMVEUAAAD9/f0ICAiNjY3eyTnSAAAAAXRSTlMAQObYZgAAAOFJREFUKM9tksENgzAMRdMDI7API3AARYrUDNB7L+zRETjUEeopo2SJsEEv1D9OiIAagngx3/4oVkrdxhSdQow58N4U6BnaAgO+2kPkOrqAEkkyES0QJYhEDgC9Jo7AFQAW4DMYwAwQvVS4wie67zvDw5vFFpi8me3yFxZcGWzuU8ELFG+A6hog/7ODgV5gFVgBmrwlrJDA6W0LkV4A3kYvZFDYyQMABRYg7fJ99na1Y2Dnkqmac7W29hkYigNA9TaoRksldt0zIIFU6PmAkUAqdHz0T4H7eB6KOi7HQTqM2A8RQfXApJc3dAAAAABJRU5ErkJggg==',
       'searchUrl': 'https://ilcorsaronero.link/search?q=%search_string%',
@@ -2123,19 +2104,6 @@ var public_sites = [
       'matchRegex': /botrec":\[]/,
       'spaceEncode': ' ',
       'TV': true},
-  {   'name': 'TamilBlasters',
-      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAMFBMVEUAAAD+/v43msJKqs4hjbhgudqY1ep4yONpqcHv8/R/tsm23eiYwM7k8PPl6OrV5OhWXu2yAAAAAXRSTlMAQObYZgAAA2xJREFUSMetlTFoE1EYx+Om4OA3iF6TUEgyFOyU52HUiBBuEHQ7Hg214mbACiJ4zaCD9AxWVPAEhQ4KomlirIiW1moXsVC0DWgER6GLTh3aOigFwf/33r1rm7bi4C8EAvf/fvl/73Ik9l9YmJ1trFJv1DVD9Y/6+s7+/ql+5gwzwJRBD7iuAjMTE+pSiSkznudJT0rpFudZMMXDGh4OpyVjX0HguxGwoswKDyiB6/YhMLdeMMACoAT2IQRGNmsAWCDE7Vjs6dYNwCKW+JtAzMMQCUCbQLBhZK3ACwUuI8AiDFs3QCA0YP+SOUAP40aQRQc2nJubGxhtzqhXTR5oNptVLTCGsy36+YE01kqlRZQQTDab1R1KLXp1gQyTt4iSLIgMJRhWnlgBxi2yKJFHQAnAPALoAMNo+TlZjdroElHlGQxakOZAqeS1aNwr91ESK9wgms5TnAWR4fJcQAvN2ZOUxBn0Eo0d1l+RBgjUypeI6YChijNs0VgeAS1IcaDnNDF7lEHKljYw2nDNOzmM/sNfuAMgepSnTsHjgAM9vb0BvWnUYKhI+yg2gCHN4zpQrXrFgMak7LOs2UZtie4KdGBBZOiBYVzKw6RIumIfDCAMVDzJBreYJ8ZKDIpu6kyxIDJIY1DcS2uDCVSlMhTdvJWsV6vnLXrXTUktyGiDNAYLu3ct0W4YUhCYDtrguujOd+C6lUAHNQ/YIJWhYrMBHKTO4zAoCgXuEBksdQeOUPwEBzLrDWP2qiFuDAVlqBRdlw3h+e1/aCVOUBzjwFljyNn7yML22KIDBkw7TiHs4KLDSwEDTTYar4mWu/GpDq46zm21ps0dcAc01uBx0lzUHfAQGYPiRwoGJp5xnE9ssHMBTQpjWEmlugJiOtCDO+ApDOgOFsS3Fut+BkfgDzGooDrYdq5Fcf4JpUIKjqbg6A5+9gXRr6FBfzDiKr+dyIDTIwrWQ8FyQQceCV8cok14HBlyOXGKNpB0woAvQHb099f13P/sAHUOgkl3KdJdKYOjmOcO5jkE4U3UmA7CPIfmFJg1AT8reHxzgTGkGT3OAocFUQd/ywbGsEEAheHYrlhsWo1vISjgD+XbhgZr6EZgu2mQaReAKwhs840AhjbBsbcxsBcCNb+xwc2Y4n3OzLetgOuaHQ/aGX4wDGL/wh9MyU9TkMmPTwAAAABJRU5ErkJggg==',
-      'searchUrl': 'https://www.1tamilblasters.pm/index.php?/search/&q=%search_string_orig% %year%&type=forums_topic&search_and_or=and&search_in=titles',
-      'loggedOutRegex': /Cloudflare|Ray ID/,
-      'spaceEncode': ' ',
-      'matchRegex': /Found 0 results/},
-  {   'name': 'TamilBlasters',
-      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAMFBMVEUAAAD+/v43msJKqs4hjbhgudqY1ep4yONpqcHv8/R/tsm23eiYwM7k8PPl6OrV5OhWXu2yAAAAAXRSTlMAQObYZgAAA2xJREFUSMetlTFoE1EYx+Om4OA3iF6TUEgyFOyU52HUiBBuEHQ7Hg214mbACiJ4zaCD9AxWVPAEhQ4KomlirIiW1moXsVC0DWgER6GLTh3aOigFwf/33r1rm7bi4C8EAvf/fvl/73Ik9l9YmJ1trFJv1DVD9Y/6+s7+/ql+5gwzwJRBD7iuAjMTE+pSiSkznudJT0rpFudZMMXDGh4OpyVjX0HguxGwoswKDyiB6/YhMLdeMMACoAT2IQRGNmsAWCDE7Vjs6dYNwCKW+JtAzMMQCUCbQLBhZK3ACwUuI8AiDFs3QCA0YP+SOUAP40aQRQc2nJubGxhtzqhXTR5oNptVLTCGsy36+YE01kqlRZQQTDab1R1KLXp1gQyTt4iSLIgMJRhWnlgBxi2yKJFHQAnAPALoAMNo+TlZjdroElHlGQxakOZAqeS1aNwr91ESK9wgms5TnAWR4fJcQAvN2ZOUxBn0Eo0d1l+RBgjUypeI6YChijNs0VgeAS1IcaDnNDF7lEHKljYw2nDNOzmM/sNfuAMgepSnTsHjgAM9vb0BvWnUYKhI+yg2gCHN4zpQrXrFgMak7LOs2UZtie4KdGBBZOiBYVzKw6RIumIfDCAMVDzJBreYJ8ZKDIpu6kyxIDJIY1DcS2uDCVSlMhTdvJWsV6vnLXrXTUktyGiDNAYLu3ct0W4YUhCYDtrguujOd+C6lUAHNQ/YIJWhYrMBHKTO4zAoCgXuEBksdQeOUPwEBzLrDWP2qiFuDAVlqBRdlw3h+e1/aCVOUBzjwFljyNn7yML22KIDBkw7TiHs4KLDSwEDTTYar4mWu/GpDq46zm21ps0dcAc01uBx0lzUHfAQGYPiRwoGJp5xnE9ssHMBTQpjWEmlugJiOtCDO+ApDOgOFsS3Fut+BkfgDzGooDrYdq5Fcf4JpUIKjqbg6A5+9gXRr6FBfzDiKr+dyIDTIwrWQ8FyQQceCV8cok14HBlyOXGKNpB0woAvQHb099f13P/sAHUOgkl3KdJdKYOjmOcO5jkE4U3UmA7CPIfmFJg1AT8reHxzgTGkGT3OAocFUQd/ywbGsEEAheHYrlhsWo1vISjgD+XbhgZr6EZgu2mQaReAKwhs840AhjbBsbcxsBcCNb+xwc2Y4n3OzLetgOuaHQ/aGX4wDGL/wh9MyU9TkMmPTwAAAABJRU5ErkJggg==',
-      'searchUrl': 'https://www.1tamilblasters.pm/index.php?/search/&q=%search_string_orig%&type=forums_topic&search_and_or=and&search_in=titles',
-      'loggedOutRegex': /Cloudflare|Ray ID/,
-      'spaceEncode': ' ',
-      'matchRegex': /Found 0 results/,
-      'TV': true},
   {   'name': 'TFPDL',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADQAAAA0BAMAAAA3VgbYAAAAD1BMVEX7/fs+iD0UFBTN2M2JnonIfb6nAAABMUlEQVQ4y93T4ZWDIBAEYDwoIBgbYGMBJlhAkO2/ptu4A/vUlwLu5k8SviAjivs7ycwlxolrPo+P1BPrYrLSMal2GuXXxFnCHHecMdHTVM8XT2ohubwyf0owZxlbBZVec4g94tJxa/R4xkN4eYG2W4nHLG0WveMpbZan/I0C+QttoBS02vM7+XKmYQa5ZpMD/cwDBpw/0Qt0/zwD0Ah6PEFqSu5Cfv/mKV3IF9AMGkCQeA8gqwGJ70APUFASAQ2dfMFG2e7enO5Gv5Ld8VuJZBU2sTt2gcTcaiTdCe/auFsujWqg5DRBbFqcX0svOLtu+jL7zEULavdmxPvSOdde0CwxDhBJQYvf9ABxzQtaWNaRkBFLWXKhlpsNIv1w1na8Gqgyx0k+bZJl2f+LaWd1/yC/Hh5VaR+WTLEAAAAASUVORK5CYII=',
       'searchUrl': 'https://tfpdl.mobi/?s=%tt%',
@@ -2255,7 +2223,23 @@ var public_sites = [
       'searchUrl': 'https://yts.lt/browse-movies/%tt%',
       'loggedOutRegex': /Cloudflare|Ray ID/,
       'positiveMatch': true,
-      'matchRegex': /img-responsive/}
+      'matchRegex': /img-responsive/},
+  {   'name': 'ZamundaRIP',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAcCAMAAAA3HE0QAAACrFBMVEUAAAAFBAAAAAA/OAAAAAACAgAAAAAAAAByZxQtKAAvKQAlIQAZFQAIBwAFBAAEAwAKCQAAAAAAAACnlACikACdiwCRfgROPgGEdAB+bABgVw1QRANUTAw6MwBNRAMeFwEWEgEDAgAFBAAEAwAEAwAAAAD551Gomi3l0z5VRAKhjgCXhgC7rDCSggCckDAxIgCfkSSIeANcUgCNgCGRghBBMgIdEQB8bQBmWgByZQATCQBjVgBPRgAfFgATCgApHgI8LgFnXRQ6LgJfVABTSgBGPQBHPwA1LwA3MQUeFgA3MQMwKgESDgAkHwIkIAAeGwANDAAiHgAEAgAVEgAAAAD/4gD/5AD/9In/5BD/8of/84X/8Xn+73X/5Aj/5gD53QD87GX/60Dx1wDhyAD/84H/7k/HuUv/6TvlzhT73wX84ALv0QHw1ADkywDFrwD/9Ib57Iby5X7/8X3h1Xb253X/83D/8Wv05Wb/8WPi02L/7VzczVrBtlrv31n/7FXi0VG/slDEtk7/603TxEzw3kSzpkL/7DnCsjj95ze+rjX/5y//6CeekCa8qiX/5R394xC6pxDs0wr43Qnw1gnbwwmtmAPp0AHiwwHWvQHTuwDPuADLtQD/9YP/8oH67YDz5n/87n777Xf/8nbj1nPv4G/15m7Sxm7/72z36Gvu32TRxGPazGDk1F/Pwl/Vx13Lvlr451j76VXz4lTWxlP/61Ll1VLNv1LBtE/q2k7k0k7/6krcy0q1qEa+sEXUwz/24De0ojPeyzLjzzHbyDGuoC/Ity7v2i3ItyzPvSjt1yfZxSXgyyT54iLJtiL/6SDs1R/BqR2yoRzt1BZgURBwYAzz2Qjt0gXTugPEqQP84QD12QDz2ADiyQDewgDZwADWuQDCpQCxnQBSNwBLLQDZWQXDAAAAVXRSTlMADxW+JRkJBuappKCIcWdcRT0q/fz7+ff18t7Y087JrIRjWFNKNv7+/f39/fr6+fn4+Pf29vX19PPv7+nn5+fm4+Hb1c/PysW0sa+vqJqOjIyEg2BP8LOOTQAAAhBJREFUKM9iwAoYg+ys+BjwAGX9x4/k8SlQtb5/11kVjwI25mlJs92Z8KjgmjkzVyRAkAm3ghmzZiUJSzCz4JBncsnJTb4dF5fHyYhdQYhYWFZ8fGhoqCQ/djd6Tcm6lpUZGhr2wBOrAn6TiKuTMycBFUx3wCYvKHUyNmNSfz/QimxxLPIqMgfPTTydeT4CqCBHE0NaiIdDo23yiTNTDsVimsAoxM8tpaOWeulsS0ZvRyjIDU4AQWTYmYQEFBW45DgM9m2o2Hjq6KZjF3d0gxTckAdKsijxeMhwGKu3765NKC1NqO9sTmjp3ZoaAVIgxsegwumol7ZmaXTKnPyolOjy5tbGlWX17bUVXaEgJ0izMNgeiMkPD4+MjIyaW1K9d8/6JYtWbEsrX74rFmTAVAUGBrMLbemJQLD/cGdrzeJ5KQurG1bHxNRFgAyYBjSAwUcrLDTs1owJRxqKC8LDF1RuX1tSFL0FLH/TEJTsWLlF4vN6aoCyUdEJO9NWFUZFxaTHhoIt8GUDex4wf4vLlWVVTendGcfXzQ+PLKrrCwWDh95M0EBQNJ0YGxqWNKGxMDwypgkiHRYvyskKj10e89y45J5lkdFVHREQ6bB7loFIaYVd2U37yubULqAsWDo0WZdZADWKWHntr8eBJeNCc/IkmIMxk5qSq2hyfNKd2cKScn4CUGl0Q2SNbGS5edHSOgDnpLln6ef87gAAAABJRU5ErkJggg==',
+      'searchUrl': 'https://zamunda.rip/api/torrents?q=%search_string_orig%+%year%',
+      'loggedOutRegex': /Cloudflare|Ray ID/,
+      'matchRegex': /\[\]/},
+  {   'name': 'ZamundaRIP',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAcCAMAAAA3HE0QAAACrFBMVEUAAAAFBAAAAAA/OAAAAAACAgAAAAAAAAByZxQtKAAvKQAlIQAZFQAIBwAFBAAEAwAKCQAAAAAAAACnlACikACdiwCRfgROPgGEdAB+bABgVw1QRANUTAw6MwBNRAMeFwEWEgEDAgAFBAAEAwAEAwAAAAD551Gomi3l0z5VRAKhjgCXhgC7rDCSggCckDAxIgCfkSSIeANcUgCNgCGRghBBMgIdEQB8bQBmWgByZQATCQBjVgBPRgAfFgATCgApHgI8LgFnXRQ6LgJfVABTSgBGPQBHPwA1LwA3MQUeFgA3MQMwKgESDgAkHwIkIAAeGwANDAAiHgAEAgAVEgAAAAD/4gD/5AD/9In/5BD/8of/84X/8Xn+73X/5Aj/5gD53QD87GX/60Dx1wDhyAD/84H/7k/HuUv/6TvlzhT73wX84ALv0QHw1ADkywDFrwD/9Ib57Iby5X7/8X3h1Xb253X/83D/8Wv05Wb/8WPi02L/7VzczVrBtlrv31n/7FXi0VG/slDEtk7/603TxEzw3kSzpkL/7DnCsjj95ze+rjX/5y//6CeekCa8qiX/5R394xC6pxDs0wr43Qnw1gnbwwmtmAPp0AHiwwHWvQHTuwDPuADLtQD/9YP/8oH67YDz5n/87n777Xf/8nbj1nPv4G/15m7Sxm7/72z36Gvu32TRxGPazGDk1F/Pwl/Vx13Lvlr451j76VXz4lTWxlP/61Ll1VLNv1LBtE/q2k7k0k7/6krcy0q1qEa+sEXUwz/24De0ojPeyzLjzzHbyDGuoC/Ity7v2i3ItyzPvSjt1yfZxSXgyyT54iLJtiL/6SDs1R/BqR2yoRzt1BZgURBwYAzz2Qjt0gXTugPEqQP84QD12QDz2ADiyQDewgDZwADWuQDCpQCxnQBSNwBLLQDZWQXDAAAAVXRSTlMADxW+JRkJBuappKCIcWdcRT0q/fz7+ff18t7Y087JrIRjWFNKNv7+/f39/fr6+fn4+Pf29vX19PPv7+nn5+fm4+Hb1c/PysW0sa+vqJqOjIyEg2BP8LOOTQAAAhBJREFUKM9iwAoYg+ys+BjwAGX9x4/k8SlQtb5/11kVjwI25mlJs92Z8KjgmjkzVyRAkAm3ghmzZiUJSzCz4JBncsnJTb4dF5fHyYhdQYhYWFZ8fGhoqCQ/djd6Tcm6lpUZGhr2wBOrAn6TiKuTMycBFUx3wCYvKHUyNmNSfz/QimxxLPIqMgfPTTydeT4CqCBHE0NaiIdDo23yiTNTDsVimsAoxM8tpaOWeulsS0ZvRyjIDU4AQWTYmYQEFBW45DgM9m2o2Hjq6KZjF3d0gxTckAdKsijxeMhwGKu3765NKC1NqO9sTmjp3ZoaAVIgxsegwumol7ZmaXTKnPyolOjy5tbGlWX17bUVXaEgJ0izMNgeiMkPD4+MjIyaW1K9d8/6JYtWbEsrX74rFmTAVAUGBrMLbemJQLD/cGdrzeJ5KQurG1bHxNRFgAyYBjSAwUcrLDTs1owJRxqKC8LDF1RuX1tSFL0FLH/TEJTsWLlF4vN6aoCyUdEJO9NWFUZFxaTHhoIt8GUDex4wf4vLlWVVTendGcfXzQ+PLKrrCwWDh95M0EBQNJ0YGxqWNKGxMDwypgkiHRYvyskKj10e89y45J5lkdFVHREQ6bB7loFIaYVd2U37yubULqAsWDo0WZdZADWKWHntr8eBJeNCc/IkmIMxk5qSq2hyfNKd2cKScn4CUGl0Q2SNbGS5edHSOgDnpLln6ef87gAAAABJRU5ErkJggg==',
+      'searchUrl': 'https://zamunda.rip/api/torrents?q=%search_string_orig%',
+      'loggedOutRegex': /Cloudflare|Ray ID/,
+      'matchRegex': /\[\]/,
+      'TV': true},
+  {   'name': 'Zooqle (Fake)',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAAAAABWESUoAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAALfSURBVDjLNdDPb1VVFMXx8w+Zd+869xZq3ogB5tXaQPVVH5o0dqCdFqtoTKiJE2eKDVVImqAGfzRhZhBNiUaRRIyCBrRo6D57r73P/TccFNfsM1mDb/KiNeiuWilh1YMsJoOLubp7UqqJVFcrEaJR6BxEvJBuZprEJNxscCVDKBQjXV3Ui5p4KhZW3bWUaladrFKrFXWNEq6avLjS1A9/fxTFy0DTMHdVYXX1SKU6Qz+eziNPNv4YqFIOd1bmkRfOXlMPJtL17gxHG18V8u6Zx8JaEU1eyHWg3/3z+ylw7JfKV4F+9/7+FGhvl5Lcyh6AnXD5ax542b8EsOOUB/PAKplIewPoH5gwNoH88E2gf1hL2OtAliEZOQMWxEx8B8BPZ4AFqjsvAvhBk3E4AcyU4nIFwN4JYBYlVD4BsFeSk1NgUbxK/QjA/hRYHApdLh09qMkGcPxQjfoOgH82gOP/kowtAI8smcVnAK64mJ0EVvgpgF2a6klgrDVVVZsB4+t6sAnkfbMZMP5G/z4L4GmriWr11gTAGEC/7eE//y9g0T2RpB6cHwPoX/qxiKkePhYw0ZqieEhouff1balqqjJY3LlpXraBpzgkMyvUKi431ifPnL9X728tTdavi+hlYCkixRAuFPPtLo9G+cXvVvPoiTZ/ILqLuefMUnUtF8Tsw4y+n2vaJ9tRh9zk9/VqHq+4JxfK2uqNrdz2bQPkUW6bpukavH2hn3vBmUoor3UZTYcW6Nrcom2aJjdANzcVS0aWeBejLnd932L582fbJnc5dyMcw7IykVrN38tt07a5W7tTf30lt82oafO5Dqc9kliUErz51nRxZfMrWrHyxWvPLy6f+/YW2lPFEz1EizPoQYq4Ueji4b8Bp6snqypiQVczFlY7CkPzgzGWjMmCpKl7DNVJpbs7WQt5Ckseyb2WwiI0CdLoGj6Iq1dd6JelpKqVDGdVJ6OGSARJc2oJd/0PjOCOB72CPu4AAAAASUVORK5CYII=',
+      'searchUrl': 'https://zooqle.io/?keyword=%tt%',
+      'loggedOutRegex': /Cloudflare|Ray ID/,
+      'matchRegex': /did not match any/}
 ];
 
 var private_sites = [
@@ -3443,21 +3427,6 @@ var private_sites = [
       'matchRegex': /fa-circle text-red/,
       'positiveMatch': true,
       'both': true},
-  {   'name': 'NTELogo',
-      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwAgMAAAAqbBEUAAAACVBMVEUAAAD///8AAABzxoNxAAAAAXRSTlMAQObYZgAAALpJREFUKM990rENxSAMBNCIMqNkH6dgBKZgifRpkOCm/IdtPogiViTy4Nxgju86gTr+A1iv4+qAA1p5dMzchSaSAE89ImK5wANW1NzJg9jkVlwQ6UnUjsYIiiQQKB3ccaQSwaZ8BMYTO0QUXAzvcXKxLxHtA6ybiH80Q+mIK1JZgMfh/RPNoWv5RNqBBYGwQsczkIlisZs4BiL03gxJAQOq3fXEnMI2H59cBNaZVkUw5P0d7C+ER+zY6wdFUso28xDDuwAAAABJRU5ErkJggg==',
-      'searchUrl': 'https://ntelogo.org/torrents?imdbId=%nott%',
-      'loggedOutRegex': /Cloudflare|Ray ID|Forgot Your Password|Forgot your password/,
-      'matchRegex': /torrents\/download|torrent-search--poster__poster/,
-      'seedingRegex': /fa-arrow-circle-up|torrent-activity-indicator--seeding/,
-      'positiveMatch': true,
-      'both': true},
-  {   'name': 'NTELogo-Req',
-      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwAgMAAAAqbBEUAAAACVBMVEUAAAD///8AAABzxoNxAAAAAXRSTlMAQObYZgAAALpJREFUKM990rENxSAMBNCIMqNkH6dgBKZgifRpkOCm/IdtPogiViTy4Nxgju86gTr+A1iv4+qAA1p5dMzchSaSAE89ImK5wANW1NzJg9jkVlwQ6UnUjsYIiiQQKB3ccaQSwaZ8BMYTO0QUXAzvcXKxLxHtA6ybiH80Q+mIK1JZgMfh/RPNoWv5RNqBBYGwQsczkIlisZs4BiL03gxJAQOq3fXEnMI2H59cBNaZVkUw5P0d7C+ER+zY6wdFUso28xDDuwAAAABJRU5ErkJggg==',
-      'searchUrl': 'https://ntelogo.org/requests?unfilled=1&tmdbId=%tmdbid%',
-      'loggedOutRegex': /Cloudflare|Ray ID|Forgot Your Password|Forgot your password/,
-      'matchRegex': /fa-circle text-red/,
-      'positiveMatch': true,
-      'both': true},
   {   'name': 'OldGreekTracker',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACMAAAAjBAMAAADs965qAAAAGFBMVEX8/PvrEhIEjwQsdiwUFNDQsriW2KudnLIBkD6uAAAAlklEQVQoz7XRvQoDIQwH8Cyt693QF0hfQAzYtYMPYIfQtZOzpRRfvwle8UC4j+H+S/BHDGLg8JzKN2rl+BczSiKcEdFP9FYa4CN0nfpGzQUQCdHWSXIWk3t+RkMl6zYRbqJniczcqLaEEPIy3UrJJtyhkcauE/Xke7JuN/WzNO0R7aPdjB5KGQyRJ6ubq8ZSUoL0guPzA8YDL3ybFjVOAAAAAElFTkSuQmCC',
       'searchUrl': 'https://oldgreektracker.xyz/browse.php?do=search&keywords=%search_string_orig%&search_type=t_name&category=0&include_dead_torrents=yes',
@@ -3838,17 +3807,6 @@ var private_sites = [
       'loggedOutRegex': /404 - Not Found|You need cookies enabled/,
       'matchRegex': /Try again with a refined search string/,
       'TV': true},
-  {   'name': 'TeRaCoD',
-      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQAgMAAABinRfyAAAADFBMVEUAAAAAAAAeAP//AABsqGZhAAAAAXRSTlMAQObYZgAAAC5JREFUCNdjQAcBrAwMjEukHMAEmAsBjAwMQDEHRrDYAQYGEfEPDAysAR/QtAMA9NAG4eqQhoIAAAAASUVORK5CYII=',
-      'searchUrl': 'https://teracod.net/browse.php?search=%search_string_orig%+%year%&cat=0&genre=0&incldead=0&blah=0',
-      'loggedOutRegex': /Cloudflare|Ray ID|Nem vagy bejelentkezve/,
-      'matchRegex': /Nincs találat/},
-  {   'name': 'TeRaCoD',
-      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQAgMAAABinRfyAAAADFBMVEUAAAAAAAAeAP//AABsqGZhAAAAAXRSTlMAQObYZgAAAC5JREFUCNdjQAcBrAwMjEukHMAEmAsBjAwMQDEHRrDYAQYGEfEPDAysAR/QtAMA9NAG4eqQhoIAAAAASUVORK5CYII=',
-      'searchUrl': 'https://teracod.net/browse.php?search=%search_string_orig%&c12=1&c13=1&c37=1&c38=1&c39=1&c40=1&genre=0&incldead=0&blah=0',
-      'loggedOutRegex': /Cloudflare|Ray ID|Nem vagy bejelentkezve/,
-      'matchRegex': /Nincs találat/,
-      'TV': true},
   {   'name': 'TG',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAPFBMVEX/AAAAAAAmAAAWAAD4AADYAAC3AADvAAC7AACtAABJAADHAABxAAALAADxAAClAABfAABcAABWAAA9AADezyt1AAAAXUlEQVQY05WORxKAIBAEB5AlKMb//9WxllrxaB8IvRHOgOIJfzzxouG/QmpwLpyxC6NFEyGnzKTdROEt21CSgOlhGDMP+wZmfETVHjAhnCJrXEyAT+VCp3DT5o+MG7P/AcyxUSJwAAAAAElFTkSuQmCC',
       'searchUrl': 'https://thegeeks.click/browse.php?incldead=0&country=&nonboolean=1&search=%tt%',
@@ -4158,21 +4116,6 @@ var private_sites = [
       'searchUrl': 'https://www.xspeeds.eu/browse.php?do=search&keywords=%search_string%&search_type=t_name&category=0&include_dead_torrents=yes',
       'loggedOutRegex': /Forget your password/,
       'matchRegex': /<b>Nothing Found<\/b>/},
-  {   'name': 'Yoinked',
-      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwBAMAAAClLOS0AAAAGFBMVEUAAAD0q7rpWW1YMC3sl6f2uMXmh5jkcYOkLP+RAAAAAXRSTlMAQObYZgAAAUNJREFUOMutkzFvgzAQhc3AzlWEzL0iutdRd2gU1jLkB0AjMRMh+vdr+16xgaRDlTfAcR/PZ+6w+ofovM2dSamYiEwoAX260AURCWnIaYcwUVF2sY/IIzy1BjzxSCvV/JyopmIhYZ5zY+zMbQmqGZRLkDIXpKiDIbQ4cIUhtFjQdAVt1BU7FXXDFuwdKLcgzc0H1nRDY6LUNuu7t9XuL2BrLbN2Nw5k+hDmP3RrQWwjHQKtD5jg1xq8uwnCkfbfRlMpDgF780rP0GQWGAxwu+3LmmeN6SSjx2i8SnJAuhkC6baAKgR5ALoboAHQmlmuhdS4CyKp4YEsldwHMbbrwYDzYG8Z88sbs1xbwjysOBABRKsPKaSEQhEPUAJ/Q3pl6LXEvwBLPXf91+CrhBVE0pZe5oeFoNii4+lytGmsA/lz/nj9AO22bBNUoVzlAAAAAElFTkSuQmCC',
-      'searchUrl': 'https://yoinked.org/torrents?imdbId=%nott%',
-      'loggedOutRegex': /Cloudflare|Ray ID|Forgot Your Password|Forgot your password/,
-      'matchRegex': /torrents\/download|torrent-search--poster__poster/,
-      'seedingRegex': /fa-arrow-circle-up|torrent-activity-indicator--seeding/,
-      'positiveMatch': true,
-      'both': true},
-  {   'name': 'Yoinked-Req',
-      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwBAMAAAClLOS0AAAAGFBMVEUAAAD0q7rpWW1YMC3sl6f2uMXmh5jkcYOkLP+RAAAAAXRSTlMAQObYZgAAAUNJREFUOMutkzFvgzAQhc3AzlWEzL0iutdRd2gU1jLkB0AjMRMh+vdr+16xgaRDlTfAcR/PZ+6w+ofovM2dSamYiEwoAX260AURCWnIaYcwUVF2sY/IIzy1BjzxSCvV/JyopmIhYZ5zY+zMbQmqGZRLkDIXpKiDIbQ4cIUhtFjQdAVt1BU7FXXDFuwdKLcgzc0H1nRDY6LUNuu7t9XuL2BrLbN2Nw5k+hDmP3RrQWwjHQKtD5jg1xq8uwnCkfbfRlMpDgF780rP0GQWGAxwu+3LmmeN6SSjx2i8SnJAuhkC6baAKgR5ALoboAHQmlmuhdS4CyKp4YEsldwHMbbrwYDzYG8Z88sbs1xbwjysOBABRKsPKaSEQhEPUAJ/Q3pl6LXEvwBLPXf91+CrhBVE0pZe5oeFoNii4+lytGmsA/lz/nj9AO22bBNUoVzlAAAAAElFTkSuQmCC',
-      'searchUrl': 'https://yoinked.org/requests?unfilled=1&tmdbId=%tmdbid%',
-      'loggedOutRegex': /Cloudflare|Ray ID|Forgot Your Password|Forgot your password/,
-      'matchRegex': /fa-circle text-red/,
-      'positiveMatch': true,
-      'both': true},
   {   'name': 'Yu-Scene',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAMFBMVEUAAAAKCxnyBwhxBhSwBxJd+PsWLUo/zuYIiN46obvq9PQHU5g2XnLtLETle4iRnaRqUG26AAAAAXRSTlMAQObYZgAAA0RJREFUSMfd1M1r1EAYBvABLVX08polohas0z15ELIJIohgk7lWvIxxqyDxY61WlD3UtSCeFEfw4Iq1rngR/IAB9SK2ZU+rtkqpCm1PYgpST4VWvHgo0vWdJNvOLvkH9DkNmd/O+2wSQv6RbKyo3InWJS2rF3kcbcn9xAxGIF9QGVfL44W1AKZCoqsmLs2zhwlpKwImgNV8TkC9Xv/VoUBtZ72+YsGFSpTf0JOAOSmfwQAhPkxKOQ9feJTeeXATkPsqX8E4rmBZvrAuyRicyCbAN0/SBRlsPdxWNKWcMXtl/C/uNQCvnaa7JZbACnjAefn0gVB53QBtZaB7VAkfzssf5rK8IqJcb4D2I+BSVUJVmNkmn4sWQPKQi0oUQb7sPoMH3GYq4SrgQSYqUe7ACkNcCJdmXUqpAkkJA0s8Btgun2ATcZ1mPQePWANYgr38CTC5NGPyo+JtFpIgSEo4bGEpgJUlrwPBdHcrGIAMO7RU61gMY2AZLmOebVsN0FYzWM/i953hLIIrYhpyZL1LVRqgCIwtfrsYASHuImjJcSwRzn0KWZfpi9I1MGxGD+rAB5wRhiH+9QeixGsAYLidGsAS3oEwnKZd0CeGeH5qIkChgzLYjgK7YJ+4xTH+BBjaEe2XwbZ7QkotsEV1iKvUmqrmsdcBBDi7r1qtVEqc5yGjHVEKDNvBCgj2VlXGOC8C1WbUcIaqgDNiMcLz+oyNZQQuVvBw1t5+JQZ4sEWbcRUMBJDJAkpbnXKDlw0NVGKQ67RQOMzbXx3xL0NWKxHEgKxXAjM6hoCmAOJZgHE+Cv8quPrNbgDC7BiUUoFnk3WMeZD5IIbv6aA9BoZtq8e8rtsYHhxVoLUDgOGod8kyS4Oj71PAhQlQyIJt/Fh1NgWc6/0TKGIO8fv9aaDv4dP8o6mpqWHuFwpdKfdhx02e5FjhdBd0ak8rASLZx09fbpeRAkbx4zWM39A3hQK1MmkAd+KczDa9cxti0F+Ngvun8O1x00Dye4dSfK1TwCl80g5TN7Mbci2AISiobcZw3wODkiaQwesAdhILwO1sBgZeBi04QM+mAJpiuJSkAYdh8ChsQZqz+V20Rz0sSTEHSWsUcGmW/J/5C0x5gAjJEKFdAAAAAElFTkSuQmCC',
       'searchUrl': 'https://yu-scene.net/torrents?imdbId=%tt%',
@@ -4203,33 +4146,6 @@ var private_sites = [
       'matchRegex': /not_filled.gif/,
       'positiveMatch': true,
       'both': true},
-  {   'name': 'Zamunda',
-      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADwAAAA8BAMAAADI0sRBAAAALVBMVEUAAABXpv7+/v7S5/7o8/5NoP2JvPdrsP292/6jzft2o9cujPZOhMFvkLUsfdooLEduAAAAAXRSTlMAQObYZgAAAsRJREFUOMutkc1PE0EYxuekkSBxDstKjBdoTHqUaUzLsW1QvM2h1ITEUIFaIDFutF0avUihbPVCFWuLHkhMkA9jwoGQWGK4eJGPcBeIFy5K+Bt8Z3Ze9qM18cCTHrb9ze95386S88uFscXF9D/hcq1asEqV5gdWlro7ZWLzg43qp7lOTODlgh8vShVT9PljimIqHtoy7IHQn3fjpU5/bsy6ZKzuqtWm1OO8gz9iZTmRSEbt5+BCg9zLKdVy3b7tlnHgCBWZVNMH1Y08wMlURtmBx6o7qnCQI5bp8XXftu08/je53KWnaN+k3vYrsruAuGxT7bX7Zi8yxCkvjvbI0SwUj8fF4oYXx+8KfE9iOBCkCk/ao+PBfRj9hLG4TK8Xd4VisPplxNEX1FMeY6F2QlqHmGove3AAfh5z4xHEw4G4kBn7QMg4YNkey55h+BZgkFeErGaYrd+hiOdgESGzacBpZut9iJPiMENsFqQe6uMK9wOVcnh6lqwab6TObimsTSjKLGEbE2FmAY8orE8pymrCph2saI4WWB92I43U3hPAycLbBM+zCFV2btTGFYEfcS0zY1BeDWcpZkjK6fQ4IW1c67BKKTpRMpBqVwUu5tLP4VI3aLJqlWi/BRjHC9lMp6/DG1ujWt6yUrqVomeBq3hnmrmvhJBjKvQZXnWwbrGiYZqmwN8N0KE9U3bKrUiK6jS7BfgIZvJMeKTdjVPijp7tA/7Cqagvc+qUP9Qo5D6BtK7BU6K9QhuyKXDLsSG54afaLyKyTangDfK1fYnbNuzDvFk3XMwxVeHw4Wfdv4mdn7qj+Ltx9+Z7y923m8lbBPO5Uc9uLhBHT/rxwA9JcHndV31C3DlYN1xQz35Ta2P90ZrDTVqHai/fW9cNWzUGTncdgHynzgEaVKufHHoIzt/7U1+v1093ca6/4PBgZ/dwhfx//gIzPiD3ek/iZAAAAABJRU5ErkJggg==',
-      'searchUrl': 'https://zelka.org/browse.php?search=%search_string_orig%+%year%&c42=1&c25=1&c51=1&c53=1&c46=1&c5=1&c20=1&c54=1&c35=1&c19=1&c24=1&c31=1&c28=1&incldead=1',
-      'loggedOutRegex': /Cloudflare|Ray ID|cookies enabled|активирани Бисквитки/,
-      'matchRegex': /Нищо не е намерено|No Results/},
-  {   'name': 'Zamunda',
-      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADwAAAA8BAMAAADI0sRBAAAALVBMVEUAAABXpv7+/v7S5/7o8/5NoP2JvPdrsP292/6jzft2o9cujPZOhMFvkLUsfdooLEduAAAAAXRSTlMAQObYZgAAAsRJREFUOMutkc1PE0EYxuekkSBxDstKjBdoTHqUaUzLsW1QvM2h1ITEUIFaIDFutF0avUihbPVCFWuLHkhMkA9jwoGQWGK4eJGPcBeIFy5K+Bt8Z3Ze9qM18cCTHrb9ze95386S88uFscXF9D/hcq1asEqV5gdWlro7ZWLzg43qp7lOTODlgh8vShVT9PljimIqHtoy7IHQn3fjpU5/bsy6ZKzuqtWm1OO8gz9iZTmRSEbt5+BCg9zLKdVy3b7tlnHgCBWZVNMH1Y08wMlURtmBx6o7qnCQI5bp8XXftu08/je53KWnaN+k3vYrsruAuGxT7bX7Zi8yxCkvjvbI0SwUj8fF4oYXx+8KfE9iOBCkCk/ao+PBfRj9hLG4TK8Xd4VisPplxNEX1FMeY6F2QlqHmGove3AAfh5z4xHEw4G4kBn7QMg4YNkey55h+BZgkFeErGaYrd+hiOdgESGzacBpZut9iJPiMENsFqQe6uMK9wOVcnh6lqwab6TObimsTSjKLGEbE2FmAY8orE8pymrCph2saI4WWB92I43U3hPAycLbBM+zCFV2btTGFYEfcS0zY1BeDWcpZkjK6fQ4IW1c67BKKTpRMpBqVwUu5tLP4VI3aLJqlWi/BRjHC9lMp6/DG1ujWt6yUrqVomeBq3hnmrmvhJBjKvQZXnWwbrGiYZqmwN8N0KE9U3bKrUiK6jS7BfgIZvJMeKTdjVPijp7tA/7Cqagvc+qUP9Qo5D6BtK7BU6K9QhuyKXDLsSG54afaLyKyTangDfK1fYnbNuzDvFk3XMwxVeHw4Wfdv4mdn7qj+Ltx9+Z7y923m8lbBPO5Uc9uLhBHT/rxwA9JcHndV31C3DlYN1xQz35Ta2P90ZrDTVqHai/fW9cNWzUGTncdgHynzgEaVKufHHoIzt/7U1+v1093ca6/4PBgZ/dwhfx//gIzPiD3ek/iZAAAAABJRU5ErkJggg==',
-      'searchUrl': 'https://zelka.org/browse.php?search=%search_string_orig%&c42=1&c50=1&c25=1&c51=1&c7=1&c33=1&incldead=1',
-      'loggedOutRegex': /Cloudflare|Ray ID|cookies enabled|активирани Бисквитки/,
-      'matchRegex': /Нищо не е намерено|No Results/,
-      'TV': true},
-  {   'name': 'Zamunda-stolen',
-      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADwAAAA8BAMAAADI0sRBAAAAJFBMVEUAAAD+YFb+/f7+1NL+6ej8cGb7pqH8i4P+v7vFTUX3QjXrMyc5evqNAAAAAXRSTlMAQObYZgAAAndJREFUOMutkDFzEkEYhrcJDGO1xYEmHTKk1o0MNZximZ14gKnAhAvEJqeBJaHCC8eNlY06l1QU0UlsTOVg/pzf7t7ectw5Y+HT7T37vt93i/4fWTZi7G8y07T7ru/Z6Rd67adFAel1ktHhYVFRmic8g6hm3Q+F1RzFVz7VRvY3V3W7uM72Sv2Gqn5s2xfJ+j1V2cW4EF4tnyTCDQy0avJgKz1SAx3M+RCfnn2nJmNB2FXaDbtroS4rLXkmdVN1P5danbfFcplXKv0Ep7RvuEp3Q/0mPNtCE6WduK7NxG+RHVMuTuPabHD9EDRHLq5/vGSWYXh2jxCha424Ns066I1Ii8V1eZ3sNBHKvSdhezemS/CZrei6o/RpyeRhQgYIHYMmQtNImyaEgY+gx0TGX2LFISxS53qK0DkjPE7MF8oa/DIJ9aTlCq91AawIV6cdNLEO1nRbWMDnaTquEh/GV1T3BViBzdM4T+bWyCUqnVe2Yh8j9BYbLjxIk0Tp1khqT2o8nlFs9KsUKw5EmLFzhB5c47zvObjtad3mes7Ya3jUa0j6Hi74Whd42GLsEeg7GFz1HcN3cITrkp5lse8IoTvK4zPc19pwiWcB30BfUoj7FTzu6nK/6hgWpZ9AT/jMcdUprOohBvZ3QQ8MXtefYo3Rw5wtBOQWInCEE9xwnYHdgBZN6J+Ic6XE2oVNvpl4tzQM0c0fhqb6X0hyZaSFt2S3fNckSxSSuUwPKwbJOL3poCgeTdfhL0iT+x33dJ9P1pwt6GqWLk+0E/ULK7IWvY+qtTdoGN1cftVC+eAWLlhw5cdSZePzg1vgfhl0UCqZsyAIPo/Qv/MHahH8P2RkZ8MAAAAASUVORK5CYII=',
-      'searchUrl': 'https://zamunda.net/browse.php?search=%search_string_orig%+%year%&c5=1&c19=1&c20=1&c24=1&c25=1&c28=1&c31=1&c35=1&c42=1&c46=1&incldead=1',
-      'loggedOutRegex': /Cloudflare|Ray ID|cookies enabled|активирани Бисквитки|502: Bad gateway|restricted the access/,
-      'matchRegex': /Съжалявам нищо не е намерено|No Results/},
-  {   'name': 'Zamunda-stolen',
-      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADwAAAA8BAMAAADI0sRBAAAAJFBMVEUAAAD+YFb+/f7+1NL+6ej8cGb7pqH8i4P+v7vFTUX3QjXrMyc5evqNAAAAAXRSTlMAQObYZgAAAndJREFUOMutkDFzEkEYhrcJDGO1xYEmHTKk1o0MNZximZ14gKnAhAvEJqeBJaHCC8eNlY06l1QU0UlsTOVg/pzf7t7ectw5Y+HT7T37vt93i/4fWTZi7G8y07T7ru/Z6Rd67adFAel1ktHhYVFRmic8g6hm3Q+F1RzFVz7VRvY3V3W7uM72Sv2Gqn5s2xfJ+j1V2cW4EF4tnyTCDQy0avJgKz1SAx3M+RCfnn2nJmNB2FXaDbtroS4rLXkmdVN1P5danbfFcplXKv0Ep7RvuEp3Q/0mPNtCE6WduK7NxG+RHVMuTuPabHD9EDRHLq5/vGSWYXh2jxCha424Ns066I1Ii8V1eZ3sNBHKvSdhezemS/CZrei6o/RpyeRhQgYIHYMmQtNImyaEgY+gx0TGX2LFISxS53qK0DkjPE7MF8oa/DIJ9aTlCq91AawIV6cdNLEO1nRbWMDnaTquEh/GV1T3BViBzdM4T+bWyCUqnVe2Yh8j9BYbLjxIk0Tp1khqT2o8nlFs9KsUKw5EmLFzhB5c47zvObjtad3mes7Ya3jUa0j6Hi74Whd42GLsEeg7GFz1HcN3cITrkp5lse8IoTvK4zPc19pwiWcB30BfUoj7FTzu6nK/6hgWpZ9AT/jMcdUprOohBvZ3QQ8MXtefYo3Rw5wtBOQWInCEE9xwnYHdgBZN6J+Ic6XE2oVNvpl4tzQM0c0fhqb6X0hyZaSFt2S3fNckSxSSuUwPKwbJOL3poCgeTdfhL0iT+x33dJ9P1pwt6GqWLk+0E/ULK7IWvY+qtTdoGN1cftVC+eAWLlhw5cdSZePzg1vgfhl0UCqZsyAIPo/Qv/MHahH8P2RkZ8MAAAAASUVORK5CYII=',
-      'searchUrl': 'https://zamunda.net/browse.php?search=%search_string_orig%&c19=1&c20=1&c24=1&c25=1&c28=1&c31=1&c35=1&c42=1&c46=1&c7=1&c33=1&incldead=1',
-      'loggedOutRegex': /Cloudflare|Ray ID|cookies enabled|активирани Бисквитки|502: Bad gateway|restricted the access/,
-      'matchRegex': /Съжалявам нищо не е намерено|No Results/,
-      'TV': true},
-  {   'name': 'Zooqle (Fake)',
-      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAAAAABWESUoAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAALfSURBVDjLNdDPb1VVFMXx8w+Zd+869xZq3ogB5tXaQPVVH5o0dqCdFqtoTKiJE2eKDVVImqAGfzRhZhBNiUaRRIyCBrRo6D57r73P/TccFNfsM1mDb/KiNeiuWilh1YMsJoOLubp7UqqJVFcrEaJR6BxEvJBuZprEJNxscCVDKBQjXV3Ui5p4KhZW3bWUaladrFKrFXWNEq6avLjS1A9/fxTFy0DTMHdVYXX1SKU6Qz+eziNPNv4YqFIOd1bmkRfOXlMPJtL17gxHG18V8u6Zx8JaEU1eyHWg3/3z+ylw7JfKV4F+9/7+FGhvl5Lcyh6AnXD5ax542b8EsOOUB/PAKplIewPoH5gwNoH88E2gf1hL2OtAliEZOQMWxEx8B8BPZ4AFqjsvAvhBk3E4AcyU4nIFwN4JYBYlVD4BsFeSk1NgUbxK/QjA/hRYHApdLh09qMkGcPxQjfoOgH82gOP/kowtAI8smcVnAK64mJ0EVvgpgF2a6klgrDVVVZsB4+t6sAnkfbMZMP5G/z4L4GmriWr11gTAGEC/7eE//y9g0T2RpB6cHwPoX/qxiKkePhYw0ZqieEhouff1balqqjJY3LlpXraBpzgkMyvUKi431ifPnL9X728tTdavi+hlYCkixRAuFPPtLo9G+cXvVvPoiTZ/ILqLuefMUnUtF8Tsw4y+n2vaJ9tRh9zk9/VqHq+4JxfK2uqNrdz2bQPkUW6bpukavH2hn3vBmUoor3UZTYcW6Nrcom2aJjdANzcVS0aWeBejLnd932L582fbJnc5dyMcw7IykVrN38tt07a5W7tTf30lt82oafO5Dqc9kliUErz51nRxZfMrWrHyxWvPLy6f+/YW2lPFEz1EizPoQYq4Ueji4b8Bp6snqypiQVczFlY7CkPzgzGWjMmCpKl7DNVJpbs7WQt5Ckseyb2WwiI0CdLoGj6Iq1dd6JelpKqVDGdVJ6OGSARJc2oJd/0PjOCOB72CPu4AAAAASUVORK5CYII=',
-      'searchUrl': 'https://zooqle.io/?keyword=%tt%',
-      'loggedOutRegex': /Cloudflare|Ray ID/,
-      'matchRegex': /did not match any/},
   {   'name': 'Ztracker',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAACsklEQVQozwXBS29UZRgA4Pf9buecOXOhEwrFaWKKBLVyCQgYQliIGAEXLl2YmLiRtYkL97rwJ7hwZ1zhwjQkxhgbw50EKpXgUNoUCrQQOk5P51zmO9/t9Xnwx7zhPQ0zbKWoNcsyybj94xd36D2Fie/tFkCoNTLglWZbozFLJAqBnTaNdei0fdqsF/4Ks0fx95/18l0y1hOEOPKeguAYK8k//lpdnedKQrqDKCAgqkQioxfPqNyk5VvBMmh3GQElCQSn+MmL8tgh9eBhWLgOPCIhEDmsrUBtYDwIG/d8/0G4PVd3p9XkHsaZFE+WaOW+kwmuLUPawvtb9M8V/eW3yc4puPo05GM6/mF8+KxMW1FtvODEL/6gogSerqoLn/o3D0D/b0+MtyfYtUvGMizW6ck10191z/u2NxslERPOYKdLZ8+7ygbr8NEiB/I/fVOZcZA70P5HUIMd0EZtKbDBwIkiF82OMc4Lzn675IcvAzmgGCAHqgEIIAGf0dtnmjd+LWwWRFWppOXm52BzXS1cyRFBj3xnV7xtta+IdyFVYjwK2cCv3a5mjgkB4KtCLN5045GPGkLnjiGawqsOl118fb/cd0pd/n5Ubrh3PmjIBgkUtLoUFUWotnRzVxxcmN7Hh48JW/Ld08neA7x0vnc03n84evyvmX4rwu9W27pIPNVL98hYPnuEOl1fjVQ2tP07/NGt6pOvJu78WWSbdn05vP9ZylwdIYm0KQ6eiE+cjqNIeaOcUVM9mTTZ5CwK5HuPqCqjc59PvHpmxMtXNNnhrhYIvCyDEqIscH6uAMSVRf3RF2leWgo4c1LIBkUt4L0LcrKbVGNSSm1v+yjixoALgBimZlR7J9d1CIGYhACQthkbZtZ7rGtea1YbyHMqStIlvPaG9J5TYGXpnAdjaCszwfP/ATkkhPpxifIUAAAAAElFTkSuQmCC',
       'searchUrl': 'http://ztracker.cc/browse_old.php?keywords=%tt%&search_type=t_description&cat=0',
@@ -4391,7 +4307,7 @@ var chinese_sites = [
       'matchRegex': /Nothing found!/},
   {   'name': 'HHanClub',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwAQMAAABtzGvEAAAABlBMVEX/Wj3+8vAVLMrsAAAAZElEQVQY053QMQrAIAwF0C8ZHHsEj1qP5lFyBMdCwfSrlbYIHczw3xIS+LA2b/JWKfCwBJACjuBwQBSoRCGJkRbQHzKjExpmM1yY0Afloxu/yrjiKi6inu4VZOboJcBOsn8bvABlfn9fBntNQQAAAABJRU5ErkJggg==',
-      'searchUrl': 'https://hhanclub.top/torrents.php?incldead=0&spstate=0&inclbookmarked=0&search=%tt%&search_area=4&search_mode=0',
+      'searchUrl': 'https://hhanclub.net/torrents.php?incldead=0&spstate=0&inclbookmarked=0&search=%tt%&search_area=4&search_mode=0',
       'loggedOutRegex': /Cloudflare|Ray ID|type="password" name="password"/,
       'matchRegex': /Nothing found|没有种子|沒有種子/,
       'both': true},
@@ -4662,17 +4578,6 @@ var french_sites = [
       'matchRegex': /fa-circle text-red/,
       'positiveMatch': true,
       'both': true},
-  {   'name': 'xThor',
-      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwBAMAAAClLOS0AAAAMFBMVEUAAAAFBQUYHR8xMjMTTHRDRUUSOVRaX2J0d3gjYo4xdqZop9KSlZc+jsaMssxthpcVflnHAAAAAXRSTlMAQObYZgAAAm9JREFUOMuFkTFoE1EYx28oXTq9U7vnJZ442vOataaPg4wSHgluvRwHnaW+IEjGvmKhgrFycRVKHhQcXDTqXOhRupdD95bMNS7+v3fJkdrB/xL4//L7vvfeOWVWxhTnVsbf8zwH+fRPf2yOlNIHp+PJTfJ1tCOlbCudXYIs9B+lb3uts8nlwt606wdSqp7OMpBfJfiy6fsSQO9nIGflsJXDKgFSssnViT69nAtR1UcS0VS9s6tsd//HXOAE4tQYc41hundazFpqAARqaI7zi28gWh0UD/CZk9FHn1+MrzOAzh+rhBbUpwZv8lNnJ1rJ1wRWGgSgEDjSmQboj2nFFufc94P29Dg3Pdx9V8lODhBXALBd9o15T0DhcWhJyDj3OEBnOmr3qEdeATQAkoiufvCurZTaWQ9k6+W54zxhLhdhFaCzI9G3ml3ZenbuLG8x5jVFhFk2re3RpmzVL3AoAgNSbNaH5m3gByMLas2UlEIw5hCHN85SBUCkpARWsMAvQQrgkzADQwJuTTQHXZ/SxtuP8N14AR4LEeLySP330KSH1TWe2uXrQkScW6WfYqoFywQg8Jmyl6Z4bu8Dbg5Awgz10kEE8Ibeit1PKu6MrNX3CNQAQsbuPWUMtRcRUzT24YbjJIy5jxiDEidk1V9wXtl2HDpvEU+EVnnOORMAOJaNGwthFQjuwEEac4GuSWHs7gaBZC4gEbOJqcfdqYdAil3oYsV81h1VAMyxk2xi+tuD3QH6Li8n0bns+mpbyZbtVyGUCsXFz6IAJWQLqZUCDhaxMquhs5A4Knsc9QZJigVe2ZdEJJGXiNC5nUSg/n/+AlXbHvvxgWGxAAAAAElFTkSuQmCC',
-      'searchUrl': 'https://xthor.help/browse.php?c118=1&c119=1&c107=1&c1=1&c2=1&c100=1&c4=1&c5=1&c7=1&c3=1&c6=1&c8=1&c122=1&c94=1&c95=1&c12=1&c31=1&c33=1&c9=1&searchin=title&incldead=0&group=0&state=0&accent=0&price=0&gang=0&mqr=0&staff=0&sch=%search_string_orig% %year%',
-      'loggedOutRegex': /Cloudflare|Ray ID|autoriser les cookies|Cliquer sur le bouton marqué/,
-      'matchRegex': 'Aucun résultat'},
-  {   'name': 'xThor',
-      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwBAMAAAClLOS0AAAAMFBMVEUAAAAFBQUYHR8xMjMTTHRDRUUSOVRaX2J0d3gjYo4xdqZop9KSlZc+jsaMssxthpcVflnHAAAAAXRSTlMAQObYZgAAAm9JREFUOMuFkTFoE1EYx28oXTq9U7vnJZ442vOataaPg4wSHgluvRwHnaW+IEjGvmKhgrFycRVKHhQcXDTqXOhRupdD95bMNS7+v3fJkdrB/xL4//L7vvfeOWVWxhTnVsbf8zwH+fRPf2yOlNIHp+PJTfJ1tCOlbCudXYIs9B+lb3uts8nlwt606wdSqp7OMpBfJfiy6fsSQO9nIGflsJXDKgFSssnViT69nAtR1UcS0VS9s6tsd//HXOAE4tQYc41hundazFpqAARqaI7zi28gWh0UD/CZk9FHn1+MrzOAzh+rhBbUpwZv8lNnJ1rJ1wRWGgSgEDjSmQboj2nFFufc94P29Dg3Pdx9V8lODhBXALBd9o15T0DhcWhJyDj3OEBnOmr3qEdeATQAkoiufvCurZTaWQ9k6+W54zxhLhdhFaCzI9G3ml3ZenbuLG8x5jVFhFk2re3RpmzVL3AoAgNSbNaH5m3gByMLas2UlEIw5hCHN85SBUCkpARWsMAvQQrgkzADQwJuTTQHXZ/SxtuP8N14AR4LEeLySP330KSH1TWe2uXrQkScW6WfYqoFywQg8Jmyl6Z4bu8Dbg5Awgz10kEE8Ibeit1PKu6MrNX3CNQAQsbuPWUMtRcRUzT24YbjJIy5jxiDEidk1V9wXtl2HDpvEU+EVnnOORMAOJaNGwthFQjuwEEac4GuSWHs7gaBZC4gEbOJqcfdqYdAil3oYsV81h1VAMyxk2xi+tuD3QH6Li8n0bns+mpbyZbtVyGUCsXFz6IAJWQLqZUCDhaxMquhs5A4Knsc9QZJigVe2ZdEJJGXiNC5nUSg/n/+AlXbHvvxgWGxAAAAAElFTkSuQmCC',
-      'searchUrl': 'https://xthor.help/browse.php?c104=1&c13=1&c15=1&c14=1&c98=1&c17=1&c16=1&c101=1&c32=1&c110=1&c123=1&c109=1&c30=1&searchin=title&incldead=0&group=0&state=0&accent=0&price=0&gang=0&mqr=0&staff=0&sch=%search_string_orig%',
-      'loggedOutRegex': /Cloudflare|Ray ID|autoriser les cookies|Cliquer sur le bouton marqué/,
-      'matchRegex': 'Aucun résultat',
-      'TV': true},
   {   'name': 'YGG',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwBAMAAAClLOS0AAAAGFBMVEUAAAADBgZg17Je1tIoTkdMm5B+39+WyLoJ73F8AAAAAXRSTlMAQObYZgAAAPVJREFUOMvtj7FOwzAYhCMGmK9ydjg3sKIaZ3ebPECSeq9AYo5g6OtzietCOtOt32DL9+n/Lylu/BefC37zD7egzvm9u+CQB3x0zkcfhzj4aKOt88Abdq5DgEGpQ4/DqcGjdAEZiTpXB+MVtPvp6M7iaLVnyqysmfe6VPKtBxCM20A7fZrIJTAdhumya4nX9FWkDVg9wQQATcDOjrN4l1Bjhcz2JW3akAwg9+k/mrNQXqHkfK3INbbkLL7So2p6zZi+Q8/nWdyRekiKAEE+zuJBFUZ7FJrJtuRYnHbFSJmm7Rkb5SrPI0s0sDSXuczxD2Nx49r8AJ3bR5C4bo7GAAAAAElFTkSuQmCC',
       'searchUrl': 'https://ww1-yggtorrent.town/engine/search?name=%search_string_orig%&category=2145&sub_category=all&do=search',
@@ -8607,11 +8512,9 @@ async function activate_CheckURLs(button, completed_icon) {
       deduped_hosts = deduped_hosts.filter(function (e) {return e !== 'https://dognzb.cr';});
       deduped_hosts = deduped_hosts.filter(function (e) {return e !== 'https://hd-only.org';});
       deduped_hosts = deduped_hosts.filter(function (e) {return e !== 'http://voidtools.replacement';});
-      deduped_hosts = deduped_hosts.filter(function (e) {return e !== 'https://teracod.net';});
       deduped_hosts = deduped_hosts.filter(function (e) {return e !== 'http://zmk.pw';});
       deduped_hosts = deduped_hosts.filter(function (e) {return e !== 'stremio://search';});
-      deduped_hosts = deduped_hosts.filter(function (e) {return e !== 'https://ntelogo.org';});
-      deduped_hosts = deduped_hosts.filter(function (e) {return e !== 'https://search.rlsbb.cc';});
+      deduped_hosts = deduped_hosts.filter(function (e) {return e !== 'https://glodls.to';});  // GloTor
 
   const interval = 100;
   const timeout = 45000;
