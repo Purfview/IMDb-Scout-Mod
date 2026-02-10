@@ -1627,7 +1627,7 @@ The IMDb id without the tt prefix (e.g. 0055630).
 #  %tvdbid%:
 The TVDb id.
 
-#  %ÿ db 皸翴 
+#  %tmdbid%:
 The TMDb id. [it's not unique]
 
 #  %tmdb_orig_title%:
