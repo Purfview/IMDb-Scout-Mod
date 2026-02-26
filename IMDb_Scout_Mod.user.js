@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      25.7.2
+// @version      25.8.0
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from hundreds various sites. Adds movies/series to Radarr/Sonarr. Adds external ratings from Metacritic, Rotten Tomatoes, Letterboxd, Douban, Allocine, MyAnimeList, AniList. Media Server indicators for Plex, Jellyfin, Emby. Dark theme/style for Reference View. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAMFBMVEUAAAD/AAAcAAA1AABEAABVAAC3AADnAAD2AACFAAClAABlAAB3AADHAACVAADYAABCnXhrAAAD10lEQVRIx73TV4xMURgH8H/OnRmZWe3T7h2sOWaNXu7oJRg9UccuHgTRBatMtAgSg+gJu9q+kFmihcQoD8qLTkK0CIkoy0YJITsRD0rCKTHFrnkSv5e5c88/53znO+fiPwvsvrN038cPNqrG9pJmHkRVnPcpaTlHJY60cfPSpsrzl1LKihrmLvxhCM2i3OHvDx0d+H7e3F6JBv5iZMiJfhFTfPYDMHrMImpwimWWUdSgDQkbno7fFpUPVgh+pHFbZR4SovSctDCM9Hac9IKd9rO8EevtBCkXgY5IMmgquwypP7qqfcp/Tp4KLONDVsWh3RSBB2rnZfit69ocUdqLn2prrRZYM0Jg4JibamKsqe7gfEh5GOAfeYJjVHIPZvil97rcXkMog30byWRwXYRWoxHbzNFHJJpAarO8NdEBBsdCaP3WMJltTmQd4zlnekTq9Z5dgACwAlrpK4BxdV5mvLuspRgMSHbCIFF0iS8MZ5S8oYBYKY7rByC4dDM9uSIUmPOIwxgQBoYeF93auP4qFyPbIVXziWeGTH1EFM57kJo2hqQju6BwIyRf6RmCjdT4JOdiwNgiH/PPD3qoqlsNaXRd+fKtFfECxlZVNVF9SOsgTZEr2TUjJJbyeNX1IZrKIbyGlBABfpQPv2UDrly13LkJXDVhpQ5MhtGwcyF4HKjlU4E8xwB0AvDjd6AGmevZ87EcQRHgcO52e9uNsYELOrAa/Yh81YlmYLQJ5HWyq0+kzQ/DQKEusg6CRI27ryy8nReRS0wsoetkmRwogHSprliCckfEjXG9yAQc74J0WB99vu6DF3i3pMucsXM6tpBbxd2mVJAwXwGogNRBvGRA4jtHKTXkAIwLGCR/mT4Lh75oneQXXP9sAYfGRDCsnw7pX/jRZkU3M44kjw2l5zRIzb4CbZ8dULdL6wbNPZOpK0B6gN1UR1mdoxAaL/GrWiLPL3SEwW9YMTU/d64BtLahAVyucWhj9Mm8ign9IfQaBtd2/GbvCAEBpG5eMcrj2I0ktpKLeaqXQ3Pst42KGIshpdTmQLAeTgFGJ2wvh+tayMOR0n1RZ8B9z13vnOPBnsBq4E1ffgZpPFZHWVpO2cvhjYpOcbBd5TlhpDu5zq9mHGZcVi0y+VFkcFkDdyKJfTt99wEyHSEzDM90KH0nexpwZHJHKYYhjzlwGe0pP/IKfxociaEb7YDbi6KGJY1R2cR76E6NAtXqY4pPH3plLcl8LD7V+cOLUbUWRFZRPTAbVZO3mxK18Xc1ZaAiS8ARJXpZliXAomR94siiiMx8ZBOkXGTlnH0F/9ov1xPtWwEqP9wAAAAASUVORK5CYII=
@@ -1482,6 +1482,8 @@
           Removed: xThor, iDope, TeRaCoD, NTELogo, TamilBlasters, Yoinked, ArenaBG, Zamunda-stolen (zamunda.net), Zamunda (zelka.org)
 
 25.7.2  - Added: Aura4K, STC, C411, La-Cale, Torr9
+
+25.8.0  - Radarr: Add more error checks and logs to new_movie_lookup(). [ Blind fix for https://github.com/Purfview/IMDb-Scout-Mod/issues/318 ]
 
 
 //==============================================================================
@@ -9492,22 +9494,40 @@ async function check_exists(imdbid) {
 function new_movie_lookup(imdbid, radarr_url, radarr_apikey, exists_icon, second_instance = false) {
   GM.xmlHttpRequest({
     method: "GET",
+    timeout: 15000,
     url: radarr_url + "/api/v3/movie/lookup/imdb?imdbId=" + imdbid,
     headers: {
       "X-Api-Key": radarr_apikey,
       "Accept": "application/json"
     },
     onload: function(response) {
-      let responseJSON = null;
       if (!response.responseJSON) {
         if (!response.responseText) {
-          console.log("IMDb Scout Mod (Radarr): Lookup: No results found.");
-          GM.notification("Lookup: No results found.", "IMDb Scout Mod (Radarr)");
-          return;
+          console.log("IMDb Scout Mod (Radarr lookup): Response status: " + response.status);
+          console.log("IMDb Scout Mod (Radarr lookup): No results found.");
+          GM.notification("No results found.", "IMDb Scout Mod (Radarr lookup)");
+        } else if (response.status >= 400) {
+          console.log("IMDb Scout Mod (Radarr lookup): Response error status: " + response.status);
+          GM.notification("Response error status: " + response.status, "IMDb Scout Mod (Radarr lookup)");
+        } else {
+          const responseJSON = JSON.parse(response.responseText);
+          radarr_add_movie(responseJSON, imdbid, radarr_url, radarr_apikey, exists_icon, second_instance);
         }
-        responseJSON = JSON.parse(response.responseText);
-        radarr_add_movie(responseJSON, imdbid, radarr_url, radarr_apikey, exists_icon, second_instance);
+      } else {
+          console.log("IMDb Scout Mod (Radarr lookup): Response status on failure: " + response.status);
       }
+    },
+    onerror: function() {
+      console.log("IMDb Scout Mod (Radarr lookup): Request Error.");
+      GM.notification("Request Error.", "IMDb Scout Mod (Radarr lookup)");
+    },
+    onabort: function() {
+      console.log("IMDb Scout Mod (Radarr lookup): Request is aborted.");
+      GM.notification("Request is aborted.", "IMDb Scout Mod (Radarr lookup)");
+    },
+    ontimeout: function() {
+      console.log("IMDb Scout Mod (Radarr lookup): Request timed out.");
+      GM.notification("Request timed out!", "IMDb Scout Mod (Radarr lookup)");
     }
   });
 }
