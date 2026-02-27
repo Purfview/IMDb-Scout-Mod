@@ -1631,6 +1631,9 @@ The IMDb id without the tt prefix (e.g. 0055630).
 #  %tvdbid%:
 The TVDb id.
 
+#  %tvmazeid%:
+The TVmaze id.
+
 #  %tmdbid%:
 The TMDb id. [it's not unique]
 
@@ -3401,14 +3404,14 @@ var private_sites = [
       'both': true},
   {   'name': 'NBL',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgBAMAAACBVGfHAAAAHlBMVEUAAABGbbFQeMAuUXw1XKJagcogP1lljddtl994oOzaQiabAAAAAXRSTlMAQObYZgAAATxJREFUKM9VjLFuwjAYhM9uLeiGkyhzE6J0NTJipoqVGQqB9Z+6h0oNXemQ8AAMftvagQh6g8/3nX24iskQjxJn+/svW2snj+DH2stjHlnbrvDWrPUNvNja29ie1BWcffbk/HUlFwjFgkSj62Z9seKdOnZdTePuG4Crx23wiuMxR3siPBFDc/BFW6NtCCMFNBOWZsQVRk2B/Q6ixr5pdoiBfYyqJrERVVUdiBGcqrUSSw+qcqR7sAVU5ZWLHASkGwc+UqdcbDBzYAp9A3zrd3mmEuIexDxD7gGlmkspA8WnHiChJEYiZYYgdsgDFpJ7smSqYCEAVkIuwCaIlGIxnGJi0Sfw7FrZA0ZgoZ6/F2CyxKDIRModasjM+Lsx1KenBfUGU3j3RelGtYJRw39j9Ny1xX3A9Bv3ybkphvAHv4hEh6PLfC4AAAAASUVORK5CYII=',
-      'searchUrl': 'https://nebulance.io/torrents.php?order_by=time&order_way=desc&searchtext=%search_string%&search_type=0&taglist=&tags_type=0',
+      'searchUrl': 'https://nebulance.io/torrents.php?action=show&showid=%tvmazeid%',
       'loggedOutRegex': /Cloudflare|Ray ID|have cookies disabled|BpdhTfy/,
       'matchRegex': /search did not match|are Cylons aboard/,
       'seedingRegex': /icon_disk_seed/,
       'TV': true},
   {   'name': 'NBL-Req',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgBAMAAACBVGfHAAAAHlBMVEUAAABGbbFQeMAuUXw1XKJagcogP1lljddtl994oOzaQiabAAAAAXRSTlMAQObYZgAAATxJREFUKM9VjLFuwjAYhM9uLeiGkyhzE6J0NTJipoqVGQqB9Z+6h0oNXemQ8AAMftvagQh6g8/3nX24iskQjxJn+/svW2snj+DH2stjHlnbrvDWrPUNvNja29ie1BWcffbk/HUlFwjFgkSj62Z9seKdOnZdTePuG4Crx23wiuMxR3siPBFDc/BFW6NtCCMFNBOWZsQVRk2B/Q6ixr5pdoiBfYyqJrERVVUdiBGcqrUSSw+qcqR7sAVU5ZWLHASkGwc+UqdcbDBzYAp9A3zrd3mmEuIexDxD7gGlmkspA8WnHiChJEYiZYYgdsgDFpJ7smSqYCEAVkIuwCaIlGIxnGJi0Sfw7FrZA0ZgoZ6/F2CyxKDIRModasjM+Lsx1KenBfUGU3j3RelGtYJRw39j9Ny1xX3A9Bv3ybkphvAHv4hEh6PLfC4AAAAASUVORK5CYII=',
-      'searchUrl': 'https://nebulance.io/requests.php?type=&submit=true&search=%search_string_orig%',
+      'searchUrl': 'https://nebulance.io/requests.php?action=view&id=%tvmazeid%',
       'loggedOutRegex': /Cloudflare|Ray ID|have cookies disabled|BpdhTfy/,
       'matchRegex': /No requests/,
       'TV': true},
@@ -6680,6 +6683,8 @@ async function replaceSearchUrlParams(site, movie_id, movie_title, movie_title_o
 
   if (search_url.match("%tvdbid%")) {
     movie_id = await getTVDbID(movie_id);
+  } else if (search_url.match("%tvmazeid%")) {
+    movie_id = await getTVmazeID(movie_id);
   } else if (search_url.match("%tmdbid%")) {
     movie_id = await getTMDbID(movie_id);
   } else if (search_url.match("%tmdb_orig_title%")) {
@@ -6708,6 +6713,7 @@ async function replaceSearchUrlParams(site, movie_id, movie_title, movie_title_o
   var s = search_url.replace(/%tt%/g, 'tt' + movie_id)
                     .replace(/%nott%/g, movie_id)
                     .replace(/%tvdbid%/g, movie_id)
+                    .replace(/%tvmazeid%/g, movie_id)
                     .replace(/%tmdbid%/g, movie_id)
                     .replace(/%tmdb_orig_title%/g, movie_id)
                     .replace(/%doubanid%/g, movie_id)
@@ -6722,7 +6728,7 @@ async function replaceSearchUrlParams(site, movie_id, movie_title, movie_title_o
 }
 
 //==============================================================================
-//    Convert IMDb ID to TVDb/TMDb/Douban ID
+//    Convert IMDb ID to TVDb/TVmaze/TMDb/Douban ID
 //==============================================================================
 
 function getTVDbID(movie_id) {
@@ -6745,6 +6751,40 @@ function getTVDbID(movie_id) {
       onerror: function() {
         GM.notification("Request Error.", "IMDb Scout Mod (getTVDbID)");
         console.log("IMDb Scout Mod (getTVDbID): Request Error.");
+        resolve("00000000");
+      },
+      onabort: function() {
+        resolve("00000000");
+      },
+      ontimeout: function() {
+        resolve("00000000");
+      }
+    });
+  });
+}
+
+function getTVmazeID(movie_id) {
+  return new Promise(resolve => {
+    GM.xmlHttpRequest({
+      method: "GET",
+      timeout: 10000,
+      url:    "https://api.tvmaze.com/lookup/shows?imdb=tt" + movie_id,
+      onload: function(response) {
+        try {
+          const result = JSON.parse(response.responseText);
+          if (result && typeof result.id !== "undefined") {
+            const tvmaze_id = result.id;
+            resolve(tvmaze_id);
+          } else {
+            resolve("00000000");
+          }
+        } catch (e) {
+          resolve("00000000");
+        }
+      },
+      onerror: function() {
+        GM.notification("Request Error.", "IMDb Scout Mod (getTVmazeID)");
+        console.log("IMDb Scout Mod (getTVmazeID): Request Error.");
         resolve("00000000");
       },
       onabort: function() {
