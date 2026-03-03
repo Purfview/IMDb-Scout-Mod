@@ -6777,16 +6777,12 @@ function getTVmazeID(movie_id) {
       timeout: 10000,
       url:    "https://api.tvmaze.com/lookup/shows?imdb=tt" + movie_id,
       onload: function(response) {
-        try {
-          const result = JSON.parse(response.responseText);
-          if (result && typeof result.id !== "undefined") {
-            const tvmaze_id = result.id;
-            resolve(tvmaze_id);
-          } else {
-            resolve("00000000");
-          }
-        } catch (e) {
+        if (response.status >= 400) {
           resolve("00000000");
+        } else {
+          const result = JSON.parse(response.responseText);
+          const tvmaze_id = result.id;
+          resolve(tvmaze_id);
         }
       },
       onerror: function() {
@@ -6795,9 +6791,11 @@ function getTVmazeID(movie_id) {
         resolve("00000000");
       },
       onabort: function() {
+        console.log("IMDb Scout Mod (getTVmazeID): Request Aborted.");
         resolve("00000000");
       },
       ontimeout: function() {
+        console.log("IMDb Scout Mod (getTVmazeID): Request Timeout.");
         resolve("00000000");
       }
     });
