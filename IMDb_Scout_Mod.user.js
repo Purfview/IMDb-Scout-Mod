@@ -1755,7 +1755,7 @@ var public_sites = [
       'both': true},
   {   'name': 'DDLBase',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAABC1BMVEUXYJMXYZUZYZQSXJERW5DC7PO92uEobZkVXpIPWIwVWooXW4kWWYfH8PfZ7PG62eG51t2l0dywz9iSwM2FtcR6qLZek6pejqJGe5UVWYjd8PO/6fHQ5erH5Oqz3ei73OXC3eOr1uGz1Nyiztylx9WZxtSVwdCOusdzprl2pLRom7Fvna1sm6w+fqRajKI0dp8zdp5Cd5QiZpQYXIwFT4bY9frN9PjS6/C34uq34erM5OnF4ejG4eet0d+o096jz9u509qWx9emytaozNWgxtWsy9SoytGjwM2bvsyQvcuMusiCsL59qrlbmLdumrBRj7B0na5ZjqdYjqZCe5stcZsfZpctZ40LVYkGUYkY0BJsAAAAxklEQVQY04XMxa4CURAE0GaccRfc3eE93N1d/v9LmFx2bDhJ9aLSKXBhGIp7P3CCYFBwQBi6Uq7R5UrtRjPo3zsm/fGBn0y2Ul4MFf0O1etSQaqZeHpQMaNUOaZK88iKvbvbeCOjKNndUCnoyXSpQUDxaNrVi1m1z7mSZe6LEP8nQ1FBiLZJPSOE1jlI+MSILPpGsrg8BAKPF6SC4dhUkib26W8RVq80FDQtnzUMI69r1naTtoDleYflOKfO8azDc3XwfIGf3m6GFmTnjB29AAAAAElFTkSuQmCC',
-      'searchUrl': 'https://ddlbase.com/search/%tt%',
+      'searchUrl': 'https://ddlbase.com/search2/%tt%',
       'loggedOutRegex': /Cloudflare|Ray ID/,
       'matchRegex': />Pages:  </,
       'positiveMatch': true,
