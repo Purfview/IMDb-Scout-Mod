@@ -1486,7 +1486,7 @@
 25.8.0  - Radarr: Add more error checks and logs to new_movie_lookup(). [ Blind fix for https://github.com/Purfview/IMDb-Scout-Mod/issues/318 ]
 
 25.9.0  - New feature: Support search by TVmaze ID - %tvmazeid%
-          Updated: GPW, DDLBase, ACM, Torr9, Toca Share
+          Updated: NBL, GPW, DDLBase, ACM, Torr9, Toca Share
           Removed: UHDB, BitSearch
 
 
