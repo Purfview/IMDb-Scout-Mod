@@ -8607,6 +8607,7 @@ async function activate_CheckURLs(button, completed_icon) {
       deduped_hosts = deduped_hosts.filter(function (e) {return e !== 'http://zmk.pw';});
       deduped_hosts = deduped_hosts.filter(function (e) {return e !== 'stremio://search';});
       deduped_hosts = deduped_hosts.filter(function (e) {return e !== 'https://glodls.to';});  // GloTor
+      deduped_hosts = deduped_hosts.filter(function (e) {return e !== 'https://eztvx.to';});
 
   const interval = 100;
   const timeout = 45000;
