@@ -1618,7 +1618,7 @@ HTTP request by POST method. For the sites that doesn't support GET.
 Right mouse click won't submit such request.
 Atm 'goToUrl' not supported with it.
 Examples (3 types of formating):
-1) 'cat1=4&cat2=6&filter=%tt%'
+1) 'cat1=4&cat2=6&filter=%tt%'  // (supports duplicate keys)
 2) '{"cat1":4,"cat2":6,"filter":"all=%tt%&sort=date"}'
 3) '{key:"cat",value:"4"},{key:"cat",value:"6"},{key:"filter",value:"%tt%"}'  // (supports duplicate keys)
 Note: only these special chars are allowed in a site name if mPOST: .- ().
@@ -7303,7 +7303,7 @@ function addLink(elem, site_name, target, site, state, scout_tick, post_data) {
     var placebo_url = new URL(target).origin;
     link = $('<a />').attr('href', placebo_url).attr('onclick', "document.getElementById('"+form_name+"').submit(); return false;").attr('target', '_blank').attr('rel', 'noreferrer');
 
-    var data = (post_data.match('{')) ? post_data.replace(/\+/g, ' ') : '{"' + post_data.replace(/&/g, '","').replace(/=/g, '":"').replace(/\+/g, ' ') + '"}';
+    var data = (post_data.match('{')) ? post_data.replace(/\+/g, ' ') : '{key:"' + post_data.replace(/&/g, '"},{key:"').replace(/=/g, '",value:"').replace(/\+/g, ' ') + '"}';
     var addform = $('<form></form>');
         addform.attr('id', form_name);
         addform.attr('action', target);
@@ -7312,7 +7312,7 @@ function addLink(elem, site_name, target, site, state, scout_tick, post_data) {
         addform.attr('target', '_blank');
         addform.attr('rel', 'noreferrer');
 
-    if (post_data.match('},{')) {
+    if (data.startsWith('{key:')) {
       const dataArray = (new Function("return [" +data+ "];")());
       dataArray.forEach(function (item, index) {
         let addinput = $("<input>");
@@ -7867,7 +7867,7 @@ function addIconBar(movie_id, movie_title, movie_title_orig) {
         html = $('<a />').attr('href', placebo_url).attr('onclick', "document.getElementById('"+form_name+"').submit(); return false;").attr('target', '_blank').attr('rel', 'noreferrer').addClass('iconbar_icon').append(image);
 
         var post_data = await replaceSearchUrlParams(site, movie_id, movie_title, movie_title_orig);
-        var data = (post_data.match('{')) ? post_data.replace(/\+/g, ' ') : '{"' + post_data.replace(/&/g, '","').replace(/=/g, '":"').replace(/\+/g, ' ') + '"}';
+        var data = (post_data.match('{')) ? post_data.replace(/\+/g, ' ') : '{key:"' + post_data.replace(/&/g, '"},{key:"').replace(/=/g, '",value:"').replace(/\+/g, ' ') + '"}';
         var addform = $('<form></form>');
             addform.attr('id', form_name);
             addform.attr('action', search_url);
@@ -7876,7 +7876,7 @@ function addIconBar(movie_id, movie_title, movie_title_orig) {
             addform.attr('target', '_blank');
             addform.attr('rel', 'noreferrer');
 
-        if (post_data.match('},{')) {
+        if (data.startsWith('{key:')) {
           const dataArray = (new Function("return [" +data+ "];")());
           dataArray.forEach(function (item, index) {
             let addinput = $("<input>");
