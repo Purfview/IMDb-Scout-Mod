@@ -7301,7 +7301,7 @@ function addLink(elem, site_name, target, site, state, scout_tick, post_data) {
     var form_name = (site['TV']) ? site['name'] + '-TV-form-' + scout_tick : site['name'] + '-form-' + scout_tick;
         form_name = form_name.replace(/\s|\.|\(|\)/g, '-');
     var placebo_url = new URL(target).origin;
-    link = $('<a />').attr('href', placebo_url).attr('onclick', "$('#" + form_name + "').submit(); return false;").attr('target', '_blank').attr('rel', 'noreferrer');
+    link = $('<a />').attr('href', placebo_url).attr('onclick', "document.getElementById('"+form_name+"').submit(); return false;").attr('target', '_blank').attr('rel', 'noreferrer');
 
     var data = (post_data.match('{')) ? post_data.replace(/\+/g, ' ') : '{"' + post_data.replace(/&/g, '","').replace(/=/g, '":"').replace(/\+/g, ' ') + '"}';
     var addform = $('<form></form>');
@@ -7864,7 +7864,8 @@ function addIconBar(movie_id, movie_title, movie_title_orig) {
         var form_name = site['name'] + '-iconform';
             form_name = form_name.replace(/\s|\.|\(|\)/g, '-');
         var placebo_url = new URL(site['searchUrl']).origin;
-        html = $('<a />').attr('href', placebo_url).attr('onclick', "$('#" + form_name + "').submit(); return false;").attr('target', '_blank').attr('rel', 'noreferrer').addClass('iconbar_icon').append(image);
+        html = $('<a />').attr('href', placebo_url).attr('onclick', "document.getElementById('"+form_name+"').submit(); return false;").attr('target', '_blank').attr('rel', 'noreferrer').addClass('iconbar_icon').append(image);
+
         var post_data = await replaceSearchUrlParams(site, movie_id, movie_title, movie_title_orig);
         var data = (post_data.match('{')) ? post_data.replace(/\+/g, ' ') : '{"' + post_data.replace(/&/g, '","').replace(/=/g, '":"').replace(/\+/g, ' ') + '"}';
         var addform = $('<form></form>');
@@ -12834,14 +12835,6 @@ function startIMDbScout() {
     displayButton();
   }
 }
-
-// IMDb pages stopped using jQuery(?). It's needed for POST links.  // This should be replaced by pure js for POST, like in Discogs_Scout as document.events may not work on very slow PCs +Chrome
-document.events.on('headloaded', () => {
-  const addJquery = document.createElement("script");
-  addJquery.setAttribute("type","text/javascript");
-  addJquery.setAttribute("src","https://code.jquery.com/jquery-3.5.1.min.js");
-  document.getElementsByTagName("head")[0].appendChild(addJquery);
-});
 
 if (onReferencePage) {
   console.log("IMDb Scout Mod (Start): Reference page detected.");
