@@ -25,8 +25,8 @@
 //
 // @include      https://*.imdb.tld/title/tt*
 // @include      https://*.imdb.tld/search/title*
-// @include      https://*.imdb.tld/user/ur*/watchlist*
-// @include      https://*.imdb.tld/user/ur*/ratings*
+// @include      https://*.imdb.tld/user/*/watchlist*
+// @include      https://*.imdb.tld/user/*/ratings*
 // @include      https://*.imdb.tld/list/ls*
 //
 // @include      https://*.imdb.tld/*/title/tt*
