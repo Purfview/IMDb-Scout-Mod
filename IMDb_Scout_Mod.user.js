@@ -8062,7 +8062,7 @@ function performSearchSecondPart(elem, link, movie_id, showsites, scout_tick) {
   // Connection rate limiter for IMDb.
   var rate;
   if (!(GM_config.get('call_http_mod_search'))) {
-    rate =  400;
+    rate = 400;
   } else if (showsites > 99) {
     rate = 6500;
   } else if (showsites > 80) {
@@ -8093,70 +8093,69 @@ function performSearchSecondPart(elem, link, movie_id, showsites, scout_tick) {
     window.localStorage[domain+'_lastLoaded'] = (new Date())*1;
   }
 
-  GM.xmlHttpRequest({
-    method: "GET",
-    timeout: 10000,
-    url:    "https://www.imdb.com" + link.attr('href'),
-    anonymous: true, // prevent it sending cookies and going to a reference page if such option is enabled in imdb's acc
-    headers: { "User-Agent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:108.0) Gecko/20100101 Firefox/108.0" },
-    onload: function(response) {
-      var parser = new DOMParser();
-      var result = parser.parseFromString(response.responseText, "text/html");
+  const query = { query: `query { title(id: "tt${movie_id}") { id titleText { text isOriginalTitle } originalTitleText { text } releaseYear { year } titleGenres { genres { genre { genreId } } } titleType { id } series { displayableEpisodeNumber { displayableSeason { text } episodeNumber { text } } series { id } } } }` };
 
-      // Note: Podcast Series|TV Mini Series - added only English.
-      var is_tv    = Boolean($(result).find('title').text().match(/Podcast Series|TV Mini Series|TV Series|Série télévisée|Fernsehserie|टीवी सीरीज़|Serie TV|Série de TV|Serie de TV/));
-      // newLayout || reference : check if 'title' has just a year in brackets, eg. "(2009)" // Note: 'title' is fail-safe measure if other checks fail. // v18.1 Note: Probably "fail-safe" makes this work properly on non english languages
-      var is_movie = (Boolean($(result).find('[data-testid=hero-title-block__metadata]').text().match('TV')) || Boolean($(result).find('li.ipl-inline-list__item').text().match('TV'))) ? false : Boolean($(result).find('title').text().match(/.*? \(([0-9]*)\)/));
-      // newLayout || reference  // Documentaries should be searched in both (tv and movie)
-      if (Boolean($(result).find('[property="og:title"]').attr('content').match(/Document|डॉक्यूमेंटरी|Dokument/)) || Boolean($(result).find('li.ipl-inline-list__item').text().match(/Document|डॉक्यूमेंटरी|Dokument/))) {
-        is_tv    = false;
-        is_movie = false;
-      }
-      var movie_year  = result.title.replace(/^(.+) \((\D*|)(\d{4})(.*)$/gi, '$3');
-      var movie_title = "";
-      var movie_title_orig = "";
-      if ($(result).find('[type=application\\/ld\\+json]:eq(0)').length) {
-        const rawJsn = $(result).find('[type=application\\/ld\\+json]:eq(0)').text();
-        const parseJsn = JSON.parse(rawJsn);
-        movie_title = htmlDecode(parseJsn.alternateName);  //  htmlDecode added in v19.3, https://www.imdb.com/title/tt0108550
-        movie_title_orig = htmlDecode(parseJsn.name);
-        // movie_title not found
-        if (movie_title === "" || movie_title === undefined) {
+  GM.xmlHttpRequest({
+    method: "POST",
+    timeout: 10000,
+    url:     "https://api.graphql.imdb.com",
+    data:    JSON.stringify(query),
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    onload: function(response) {
+      if (response.status == 200) {
+        const body = JSON.parse(response.responseText);
+
+        // all titleType variations: movie, tvSeries, tvEpisode, tvMiniSeries, podcastSeries, podcastEpisode, video, tvMovie, tvSpecial, videoGame, musicVideo, tvShort, short
+        const titleType = (body.data.title.titleType == null) ? "" : body.data.title.titleType.id;
+        var is_tv    = (titleType.match(/tvSeries|podcastSeries|tvMiniSeries/)) ? true : false;
+        var is_movie = (titleType.match(/movie|video/)) ? true : false;
+
+        // Documentaries should be searched in both (tv and movie)
+        var genresString = (body.data.title.titleGenres == null) ? "" : body.data.title.titleGenres.genres.map(function(g){ return g.genre.genreId; }).join(", ");
+        if (genresString.match(/Documentary/)) {
+          is_tv    = false;
+          is_movie = false;
+        }
+
+        var movie_year       = (body.data.title.releaseYear == null) ? ""       : body.data.title.releaseYear.year + "";
+        var movie_title      = (body.data.title.titleText == null) ? ""         : body.data.title.titleText.text;
+        var movie_title_orig = (body.data.title.originalTitleText == null) ? "" : body.data.title.originalTitleText.text;
+        if (movie_title === "") {
           movie_title = movie_title_orig;
         }
-      } else {
-        console.log("IMDb Scout Mod (Get a title Error): Element not found! Please report it.");
-        GM.notification("Element not found! Please report it.", "IMDb Scout Mod (Get a title Error)");
-      }
-      // Streaming APIs support
-      var series_id  = "tt" + movie_id;
-      var season_id  = "1";
-      var episode_id = "1";
-      if (Boolean($(result).find('title').text().match(/TV Episode|Épisode télévisé|Fernsehepisode|टीवी एपिसोड|Episodio TV|Episódio de TV|Episodio de TV/))) {
-        if ($(result).find('h3[itemprop="name"]').length && $(result).find('.titlereference-overview-season-episode-numbers li').length) {
-          series_id  = $(result).find('h4[itemprop="name"] a').prop('href').match(/\/tt([0-9]+)\//)[0].replace(/\//g, "");
-          season_id  = $(result).find('.titlereference-overview-season-episode-numbers li').first().text().trim().match(/(\d+)/)[0];
-          episode_id = $(result).find('.titlereference-overview-season-episode-numbers li').last().text().trim().match(/(\d+)/)[0];
 
-        } else if ($('[data-testid=hero-subnav-bar-season-episode-numbers-section]').length) {
-          series_id  = $(result).find('[data-testid=hero-title-block__series-link]').prop('href').match(/\/tt([0-9]+)\//)[0].replace(/\//g, "");
-          const SE_numbers = $('[data-testid=hero-subnav-bar-season-episode-numbers-section]').text().trim().split('.');
-          season_id  = SE_numbers[0].match(/(\d+)/)[0];
-          episode_id = SE_numbers[1].match(/(\d+)/)[0];
+        // Streaming APIs support
+        let series_id, season_id, episode_id;
+        if (body.data.title.series == null) {
+          series_id  = "tt" + movie_id;
+          season_id  = "1";
+          episode_id = "1";
+        } else {
+            series_id  = body.data.title.series.series.id;
+            season_id  = body.data.title.series.displayableEpisodeNumber.displayableSeason.text;
+            episode_id = body.data.title.series.displayableEpisodeNumber.episodeNumber.text;
         }
-      }
 
-      perform(elem, movie_id, movie_title, movie_title_orig, is_tv, is_movie, series_id, season_id, episode_id, movie_year, scout_tick);
-      },
-      onerror: function() {
-        console.log("IMDb Scout Mod (Lists): Request Error.");
-      },
-      onabort: function() {
-        console.log("IMDb Scout Mod (Lists): Abort.");
-      },
-      ontimeout: function() {
-        console.log("IMDb Scout Mod (Lists): Time out.");
+        perform(elem, movie_id, movie_title, movie_title_orig, is_tv, is_movie, series_id, season_id, episode_id, movie_year, scout_tick);
+      } else {
+          console.log("IMDb Scout Mod (performSearchSecondPart): HTTP Error status - " + response.status);
+          GM.notification("HTTP Error status - " + response.status, "IMDb Scout Mod (performSearchSecondPart)");
       }
+    },
+    onerror: function() {
+      console.log("IMDb Scout Mod (performSearchSecondPart): Request Error.");
+      GM.notification("Request Error.", "IMDb Scout Mod (performSearchSecondPart)");
+    },
+    onabort: function() {
+      console.log("IMDb Scout Mod (performSearchSecondPart): Request aborted.");
+      GM.notification("Request aborted.", "IMDb Scout Mod (performSearchSecondPart)");
+    },
+    ontimeout: function() {
+      console.log("IMDb Scout Mod (performSearchSecondPart): Request timed out.");
+      GM.notification("Request timed out.", "IMDb Scout Mod (performSearchSecondPart)");
+    }
   });
 }
 
