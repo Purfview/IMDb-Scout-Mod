@@ -11227,9 +11227,6 @@ async function compactReferenceElemRemoval() {
   }
   $('.ipc-metadata-list-item__label:contains("Reviews")').parent().remove();
 
-  // Inject Box Office (graphQL API) // not actual anymore, left for example
-  // insertNewBoxOffice();
-
   // Delayed removal
   await sleep(500);
   delayedReferenceElemRemoval();
@@ -11318,80 +11315,6 @@ function getPrincipalCredits() {
     ontimeout: function() {
       console.log("IMDb Scout Mod (getPrincipalCredits): Request timed out.");
       GM.notification("Request timed out.", "IMDb Scout Mod (getPrincipalCredits)");
-    }
-  });
-}
-
-//==============================================================================
-//    Inject Box Office (graphQL API) // Deprecated, left for example
-//==============================================================================
-
-function insertNewBoxOffice() {
-  const x = `<section class="titlereference-section-box-office_scout">
-              <h4 class="ipl-header__content ipl-list-title">Box Office (graphQL API)</h4>
-              <table class="titlereference-list ipl-zebra-list">
-                <tbody>
-                  <tr class="ipl-zebra-list__item">
-                    <td class="ipl-zebra-list__label">Worldwide Gross</td>
-                    <td class="scout_box_office_worldwide_gross">
-                        scout_placeholder
-                    </td></tr></tbody></table></section>`
-
-  const y = jQuery.parseHTML(x);
-  $('section.article').find('section').last().after(y);
-
-  let imdbid = document.URL.match(/\/tt([0-9]+)/)[1];
-      imdbid = "tt" + imdbid;
-
-  const GraphQLReq = {
-    query: `
-      query {
-        title(id: "${imdbid}") {
-          worldwideGross: rankedLifetimeGross(boxOfficeArea: WORLDWIDE) {
-            total {
-              amount
-            }
-          }
-        }
-      }`
-  };
-
-  GM.xmlHttpRequest({
-    method:  "POST",
-    timeout: 10000,
-    url:     "https://api.graphql.imdb.com",
-    data:    JSON.stringify(GraphQLReq),
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    onload: function(response) {
-      if (response.status >= 200 && response.status < 300) {
-        const body = JSON.parse(response.responseText);
-        let worldwidegross_amount;
-        if(body.data.title.worldwideGross !== null) {
-          worldwidegross_amount = body.data.title.worldwideGross.total.amount;
-          if (Number.isInteger(worldwidegross_amount)) {
-            worldwidegross_amount = `$${worldwidegross_amount.toLocaleString()}`; // To get "$40,000,000" from 40000000
-          } else {
-              worldwidegross_amount = String(worldwidegross_amount);
-          }
-        } else {
-            worldwidegross_amount = "null";
-        }
-        $('.scout_box_office_worldwide_gross').html(worldwidegross_amount);
-      } else {
-          console.log("IMDb Scout Mod (insertGross): Error status: " +response.status);
-          console.log("IMDb Scout Mod (insertGross): Error response: " +response.responseText);
-      }
-    },
-    onerror: function() {
-      console.log("IMDb Scout Mod (insertGross): Request Error.");
-    },
-    onabort: function() {
-      console.log("IMDb Scout Mod (insertGross): Request is aborted.");
-    },
-    ontimeout: function() {
-      console.log("IMDb Scout Mod (insertGross): Request timed out.");
     }
   });
 }
