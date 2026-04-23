@@ -11212,8 +11212,8 @@ async function compactReferenceElemRemoval() {
     $('.ipc-page-section--sp-pageMargin:eq(0)').prev().remove(); // remove elem above the titles
   }
 
-  // Get principal credits from redesigned page
-  getStuffFomIMDb();
+  // Inject principal credits
+  getPrincipalCredits();
 
   // Inject Top Review
   if ($('.ipc-metadata-list-item__label:contains("Reviews")').length) {
@@ -11250,52 +11250,74 @@ function delayedReferenceElemRemoval() {
 }
 
 //==============================================================================
-//    Get some elems from Redesigned page for the compact mode
+//    Inject principal credits into the compact mode
 //==============================================================================
 
-function getStuffFomIMDb() {
+function getPrincipalCredits() {
   const imdbid = document.URL.match(/\/tt([0-9]+)/)[1].trim('tt');
-  const url = "https://www.imdb.com/title/tt" +imdbid+ "/";
+  const query  = { query: `query { title(id: "tt${imdbid}") { principalCreditsV2 { grouping { text } credits(limit: 3) { name { id nameText { text } } } } } }` };
 
   GM.xmlHttpRequest({
-    method: "GET",
-    timeout: 20000,
-    anonymous: true, // prevent sending cookies, so imdb wouldn't switch to reference because of the user settings
-    url:    url,
-    headers: { "User-Agent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:108.0) Gecko/20100101 Firefox/108.0" },
+    method: "POST",
+    timeout: 10000,
+    url:     "https://api.graphql.imdb.com",
+    data:    JSON.stringify(query),
+    headers: {
+      'Content-Type': 'application/json'
+    },
     onload: function(response) {
-      if (response.status >= 200 && response.status < 300) {
-        const parser = new DOMParser();
-        const result = parser.parseFromString(response.responseText, "text/html");
-        // inject principal credits
-        const credits = $(result).find('[data-testid=title-pc-list]:eq(0)');
+      if (response.status == 200) {
+        const body = JSON.parse(response.responseText);
+        const principalCredits = (body && body.data && body.data.title && body.data.title.principalCreditsV2) || [];
+
+        var creditsHtml = principalCredits.map(function (creditGroup) {
+          const label = creditGroup.grouping && creditGroup.grouping.text ? creditGroup.grouping.text : "";
+
+          const itemsHtml = (creditGroup.credits || []).map(function (credit) {
+            const name = credit.name;
+            return `
+              <li class="ipc-inline-list__item" role="presentation">
+                <a class="ipc-metadata-list-item__list-content-item ipc-metadata-list-item__list-content-item--link" tabindex="0" aria-disabled="false" href="/name/${name.id}/">${name.nameText.text}</a></li>`;
+          }).join("");
+
+          return `
+            <li class="ipc-metadata-list__item ipc-metadata-list__item--align-end" role="presentation" data-testid="title-pc-principal-credit">
+              <span class="ipc-metadata-list-item__label ipc-btn--not-interactable" aria-disabled="false">${label}</span>
+              <div class="ipc-metadata-list-item__content-container">
+                <ul class="ipc-inline-list ipc-inline-list--show-dividers ipc-inline-list--inline ipc-metadata-list-item__list-content baseAlt" role="presentation">${itemsHtml}</ul></div></li>`;
+        }).join("");
+
+        if (creditsHtml !== "") {
+          creditsHtml = `<ul class="ipc-metadata-list ipc-metadata-list--dividers-all title-pc-list ipc-metadata-list--baseAlt" role="presentation" data-testid="title-pc-list">${creditsHtml}</ul>`;
+        }
+
         const target = $('.ipc-metadata-list--dividers-between:eq(0)');
-        if (credits.length && target.length) {
+        if (creditsHtml && target.length) {
           if ($('[data-testid=plot]').length) {
             $('[data-testid=title-pc-principal-credit]').remove();
-            $('[data-testid=plot]:eq(0)').parent().parent().after(credits);
-            $('.ipc-icon--chevron-right').remove();
+            $('[data-testid=plot]:eq(0)').parent().parent().after(creditsHtml);
           } else {
               $('[data-testid=title-pc-principal-credit]').remove();
-              target.children().last().before(credits);
-              $('.ipc-icon--chevron-right').remove();
+              target.children().last().before(creditsHtml);
           }
-        } else {
-            console.log("IMDb Scout Mod (getStuffFomIMDb): Element not found! Please report it.");
-            GM.notification("Element not found! Please report it.", "IMDb Scout Mod (getStuffFomIMDb)");
         }
+
       } else {
-          console.log("IMDb Scout Mod (getStuffFomIMDb): HTTP status: " + response.status);
+          console.log("IMDb Scout Mod (getPrincipalCredits): HTTP error status: " + response.status);
+          GM.notification("HTTP error status: " + response.status, "IMDb Scout Mod (getPrincipalCredits)");
       }
     },
     onerror: function() {
-      console.log("IMDb Scout Mod (getStuffFomIMDb): Request Error.");
+      console.log("IMDb Scout Mod (getPrincipalCredits): Request Error.");
+      GM.notification("Request Error.", "IMDb Scout Mod (getPrincipalCredits)");
     },
     onabort: function() {
-      console.log("IMDb Scout Mod (getStuffFomIMDb): Request is aborted.");
+      console.log("IMDb Scout Mod (getPrincipalCredits): Request is aborted.");
+      GM.notification("Request is aborted.", "IMDb Scout Mod (getPrincipalCredits)");
     },
     ontimeout: function() {
-      console.log("IMDb Scout Mod (getStuffFomIMDb): Request timed out.");
+      console.log("IMDb Scout Mod (getPrincipalCredits): Request timed out.");
+      GM.notification("Request timed out.", "IMDb Scout Mod (getPrincipalCredits)");
     }
   });
 }
