@@ -11332,7 +11332,7 @@ function getIMDbBestReview() {
       if (response.status == 200) {
         const body = JSON.parse(response.responseText);
         if (!body.data.title.reviews.edges.length) {
-          console.log("IMDb Scout Mod (getIMDbBestReview): User reviews not detected.");
+          console.log("IMDb Scout Mod (getIMDbBestReview): User reviews not found.");
           return;
         }
 
