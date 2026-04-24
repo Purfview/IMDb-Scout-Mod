@@ -8106,6 +8106,11 @@ function performSearchSecondPart(elem, link, movie_id, showsites, scout_tick) {
     onload: function(response) {
       if (response.status == 200) {
         const body = JSON.parse(response.responseText);
+        if ("errors" in body || "error" in body) {
+          console.log("IMDb Scout Mod (performSearchSecondPart): Error in response.");
+          GM.notification("Error in response.", "IMDb Scout Mod (performSearchSecondPart)");
+          return;
+        }
 
         // all titleType variations: movie, tvSeries, tvEpisode, tvMiniSeries, podcastSeries, podcastEpisode, video, tvMovie, tvSpecial, videoGame, musicVideo, tvShort, short
         const titleType = (body.data.title.titleType == null) ? "" : body.data.title.titleType.id;
@@ -11257,6 +11262,12 @@ function getPrincipalCredits() {
     onload: function(response) {
       if (response.status == 200) {
         const body = JSON.parse(response.responseText);
+        if ("errors" in body || "error" in body) {
+          console.log("IMDb Scout Mod (getPrincipalCredits): Error in response.");
+          GM.notification("Error in response.", "IMDb Scout Mod (getPrincipalCredits)");
+          return;
+        }
+
         const principalCredits = (body && body.data && body.data.title && body.data.title.principalCreditsV2) || [];
 
         var creditsHtml = principalCredits.map(function (creditGroup) {
@@ -11331,6 +11342,11 @@ function getIMDbBestReview() {
     onload: function(response) {
       if (response.status == 200) {
         const body = JSON.parse(response.responseText);
+        if ("errors" in body || "error" in body) {
+          console.log("IMDb Scout Mod (getIMDbBestReview): Error in response.");
+          GM.notification("Error in response.", "IMDb Scout Mod (getIMDbBestReview)");
+          return;
+        }
         if (!body.data.title.reviews.edges.length) {
           console.log("IMDb Scout Mod (getIMDbBestReview): User reviews not found.");
           return;
