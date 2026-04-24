@@ -11215,16 +11215,8 @@ async function compactReferenceElemRemoval() {
   // Inject principal credits
   getPrincipalCredits();
 
-  // Inject Top Review
-  if ($('.ipc-metadata-list-item__label:contains("Reviews")').length) {
-    if (GM_config.get("helpful_reviews_spoilers")) {
-      getIMDbBestReview(use_spoilers=true);
-    } else {
-      getIMDbBestReview();
-    }
-  } else {
-      console.log("IMDb Scout Mod (BestReview): User reviews not detected.");
-  }
+  // Inject most helpful review
+  getIMDbBestReview();
   $('.ipc-metadata-list-item__label:contains("Reviews")').parent().remove();
 
   // Delayed removal
@@ -11320,157 +11312,123 @@ function getPrincipalCredits() {
 }
 
 //==============================================================================
-//    Helpful reviews
+//    Inject most helpful review into the compact mode
 //==============================================================================
 
-function getIMDbBestReview(use_spoilers=false) {
+function getIMDbBestReview() {
   const imdbid = document.URL.match(/\/tt([0-9]+)/)[1].trim('tt');
-  const new_url1 = "https://www.imdb.com/title/tt" +imdbid+ "/reviews/?sort=num_votes,desc&spoilers=EXCLUDE";
-  const new_url2 = "https://www.imdb.com/title/tt" +imdbid+ "/reviews/?sort=num_votes,desc";
-
-  let url;
-  if (use_spoilers) {
-    url = new_url2
-    console.log("IMDb Scout Mod (getIMDbBestReview): Started. Using new reviews URL with spoilers.");
-  } else {
-    url = new_url1
-    console.log("IMDb Scout Mod (getIMDbBestReview): Started. Using new reviews URL without spoilers.");
-  }
+  const use_spoilers = GM_config.get("helpful_reviews_spoilers");
+  const query = { query: `query { title(id: "tt${imdbid}") { reviews(first: 25) { edges { node { id spoiler submissionDate authorRating helpfulness { score } author { nickName userId } summary { originalText } text { originalText { plainText } } } } } } }` };
 
   GM.xmlHttpRequest({
-    method: "GET",
-    timeout: 20000,
-    url:    url,
-    headers: { "User-Agent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:108.0) Gecko/20100101 Firefox/108.0" },
+    method: "POST",
+    timeout: 10000,
+    url:     "https://api.graphql.imdb.com",
+    data:    JSON.stringify(query),
+    headers: {
+      'Content-Type': 'application/json'
+    },
     onload: function(response) {
-      const parser = new DOMParser();
-      const result = parser.parseFromString(response.responseText, "text/html");
-      var bestScore, topreview, hasspoilers;
-      var xTitle, xRevLink, xReview, xUser, xUsrLink, xDate, xRating, xSpoiler;
-
-      if ($(result).find('[id=__NEXT_DATA__]:eq(0)').length) {
-        console.log("IMDb Scout Mod (getIMDbBestReview): Redesigned reviews page detected.");
-        const rawJsn   = $(result).find('[id=__NEXT_DATA__]:eq(0)').text();
-        const parseJsn = JSON.parse(rawJsn);
-        const reviews  = parseJsn.props.pageProps.contentData.reviews;
-
-        if (!use_spoilers && !reviews.length) {
-          console.log("IMDb Scout Mod (getIMDbBestReview): Reviews not found! Restarting with spoilers enabled!.");
-          getIMDbBestReview(use_spoilers=true);
+      if (response.status == 200) {
+        const body = JSON.parse(response.responseText);
+        if (!body.data.title.reviews.edges.length) {
+          console.log("IMDb Scout Mod (getIMDbBestReview): User reviews not detected.");
           return;
         }
 
-        reviews.forEach((item) => {
-          const spoiler   = item.review.spoiler;
-          let upvotes, downvotes;
-          if (item.review.helpfulnessVotes === undefined) { // review doesn't have votes
-            upvotes   = 0;
-            downvotes = 0;
-          } else {
-            upvotes   = item.review.helpfulnessVotes.upVotes;
-            downvotes = item.review.helpfulnessVotes.downVotes;
-          }
-          const score = wilsonScore(upvotes, downvotes);
+        let spoilerless;
+        if (!use_spoilers) {
+          spoilerless = JSON.parse(JSON.stringify(body)); // clone body, ES6 compatible
+          spoilerless.data.title.reviews.edges = spoilerless.data.title.reviews.edges.filter(function (e) {
+            return !(e.node && e.node.spoiler);
+          });
+        }
 
-          if(bestScore === undefined) {
-              bestScore        = score;
-              topreview        = item;
-              hasspoilers      = spoiler;
-          } else if (score > bestScore) {
-              bestScore        = score;
-              topreview        = item;
-              hasspoilers      = spoiler;
-          }
-        });
+        let bestNode;
+        if (use_spoilers || !spoilerless.data.title.reviews.edges.length) {
+          bestNode = body.data.title.reviews.edges.reduce((best, edge) => {
+            return edge.node.helpfulness.score > best.node.helpfulness.score ? edge : best;
+          }).node;
+        } else {
+          bestNode = spoilerless.data.title.reviews.edges.reduce((best, edge) => {
+            return edge.node.helpfulness.score > best.node.helpfulness.score ? edge : best;
+          }).node;
+        }
 
-        xTitle   = htmlDecode(topreview.review.reviewSummary);
-        xRevLink = "/review/" + topreview.review.reviewId;
-        xReview  = htmlDecode(topreview.review.reviewText);
-        xUser    = htmlDecode(topreview.review.author.nickName);
-        xUsrLink = "/user/" + topreview.review.author.userId;
-        xDate    = topreview.review.submissionDate;
-        xRating  = topreview.review.authorRating;
-        xSpoiler = "";
+        const xTitle   = bestNode.summary.originalText;
+        const xRevLink = "/review/" + bestNode.id + "/";
+        const xReview  = newlines2brakes(bestNode.text.originalText.plainText);
+        const xUser    = bestNode.author.nickName;
+        const xUsrLink = "/user/" + bestNode.author.userId + "/";
+        const xDate    = bestNode.submissionDate;
+        const xRating  = (bestNode.authorRating == null) ? "x" : bestNode.authorRating;
+        const xSpoiler = bestNode.spoiler ? "Warning: Spoilers" : "";
 
-        if(xRating === undefined) {xRating = "x"}
-        if(hasspoilers) {xSpoiler = "Warning: Spoilers"}
+        let x = `
+          <section class="ipc-page-section ipc-page-section--base celwidget">
+            <div class="ipc-title ipc-title--base ipc-title--section-title ipc-title--on-textPrimary">
+              <div class="ipc-title__wrapper">
+                <hgroup>
+                  <h3 class="ipc-title__text ipc-title__text--reduced">
+                    <span>Most helpful review</span>
+                  </h3>
+                </hgroup>
+              </div>
+            </div>
+            <div data-testid="title-boxoffice-section" class="sc-314065ad-0 hZXevt">
+              <div>
+                <p class="spoiler-warning" style="font-weight:bold; color:red;">${xSpoiler}</p>
+                <div class="ipc-metadata-list__item ipc-metadata-list__item--align-end">
+                  <span class="scout_review_rating">
+                    <span class="ipc-rating-star ipc-rating-star--base ipc-rating-star--imdb ratingGroup--imdb-rating">
+                      <svg width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="ipc-icon ipc-icon--star-inline" viewBox="0 0 24 24" fill="currentColor" role="presentation">
+                        <path d="M12 20.1l5.82 3.682c1.066.675 2.37-.322 2.09-1.584l-1.543-6.926 5.146-4.667c.94-.85.435-2.465-.799-2.567l-6.773-.602L13.29.89a1.38 1.38 0 0 0-2.581 0l-2.65 6.53-6.774.602C.052 8.126-.453 9.74.486 10.59l5.147 4.666-1.542 6.926c-.28 1.262 1.023 2.26 2.09 1.585L12 20.099z"></path>
+                      </svg>
+                    </span><span class="ipc-metadata-list-item__label ipc-btn--not-interactable">${xRating}</span>
+                    <span class="ipc-metadata-list-item__label ipc-btn--not-interactable">|</span>
+                    <span>
+                      <a class="ipc-metadata-list-item__list-content-item ipc-metadata-list-item__list-content-item--link" style="font-size:20px; color:#3399ff;" href="${xRevLink}">${xTitle}</a>
+                    </span>
+                  </span>
+                </div>
+                <div class="ipc-chip__text">${xReview}</div>
+                <div class="display-name-date">
+                  <span class="ipc-metadata-list-item__label ipc-btn--not-interactable">Review by:</span>
+                  <span class="display-name-link">
+                    <a style="font-size:16px; color:#3399ff;" href="${xUsrLink}">${xUser}</a>
+                  </span>
+                  <span class="ipc-chip__text">(${xDate})</span>
+                </div>
+              </div>
+            </div>
+          </section>
+        `;
+
+        let y = jQuery.parseHTML(x);
+        $('.ipc-page-section--sp-pageMargin:eq(0)').parent().after(y);
 
       } else {
-          console.log("IMDb Scout Mod (getIMDbBestReview): Element not found! Please report it.");
-          GM.notification("Element not found! Please report it.", "IMDb Scout Mod (getIMDbBestReview)");
-          return;
+          console.log("IMDb Scout Mod (getIMDbBestReview): HTTP Error status - " + response.status);
+          GM.notification("HTTP Error status - " + response.status, "IMDb Scout Mod (getIMDbBestReview)");
       }
-
-      let x = '' +
-        '<section class="ipc-page-section ipc-page-section--base celwidget">' +
-        '  <div class="ipc-title ipc-title--base ipc-title--section-title ipc-title--on-textPrimary">' +
-        '    <div class="ipc-title__wrapper">' +
-        '      <hgroup>' +
-        '        <h3 class="ipc-title__text ipc-title__text--reduced">' +
-        '          <span>Most helpful review</span>' +
-        '        </h3>' +
-        '      </hgroup>' +
-        '    </div>' +
-        '  </div>' +
-        '  <div data-testid="title-boxoffice-section" class="sc-314065ad-0 hZXevt">' +
-        '    <div>' +
-        '      <p class="spoiler-warning" style="font-weight:bold; color:red;">xSpoiler</p>' +
-        '      <div class="ipc-metadata-list__item ipc-metadata-list__item--align-end">' +
-        '        <span class="scout_review_rating">' +
-        '          <span class="ipc-rating-star ipc-rating-star--base ipc-rating-star--imdb ratingGroup--imdb-rating">' +
-        '            <svg width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="ipc-icon ipc-icon--star-inline" viewBox="0 0 24 24" fill="currentColor" role="presentation">' +
-        '              <path d="M12 20.1l5.82 3.682c1.066.675 2.37-.322 2.09-1.584l-1.543-6.926 5.146-4.667c.94-.85.435-2.465-.799-2.567l-6.773-.602L13.29.89a1.38 1.38 0 0 0-2.581 0l-2.65 6.53-6.774.602C.052 8.126-.453 9.74.486 10.59l5.147 4.666-1.542 6.926c-.28 1.262 1.023 2.26 2.09 1.585L12 20.099z"></path>' +
-        '            </svg>' +
-        '          </span><span class="ipc-metadata-list-item__label ipc-btn--not-interactable">xRating</span>' +
-        '          <span class="ipc-metadata-list-item__label ipc-btn--not-interactable">|</span>' +
-        '          <span>' +
-        '            <a class="ipc-metadata-list-item__list-content-item ipc-metadata-list-item__list-content-item--link" style="font-size:20px; color:#3399ff;" href="xRevLink">xTitle</a>' +
-        '          </span>' +
-        '        </span>' +
-        '      </div>' +
-        '      <div class="ipc-chip__text">xReview</div>' +
-        '      <div class="display-name-date">' +
-        '        <span class="ipc-metadata-list-item__label ipc-btn--not-interactable">Review by:</span>' +
-        '        <span class="display-name-link">' +
-        '          <a style="font-size:16px; color:#3399ff;" href="xUsrLink">xUser</a>' +
-        '        </span>' +
-        '        <span class="ipc-chip__text">(xDate)</span>' +
-        '      </div>' +
-        '    </div>' +
-        '  </div>' +
-        '</section>';
-
-      x = x.replace('xTitle', xTitle);
-      x = x.replace('xRevLink', xRevLink);
-      x = x.replace('xReview', xReview);
-      x = x.replace('xUser', xUser);
-      x = x.replace('xUsrLink', xUsrLink);
-      x = x.replace('xDate', xDate);
-      x = x.replace('xRating', xRating);
-      x = x.replace('xSpoiler', xSpoiler);
-
-      let y = jQuery.parseHTML(x);
-      $('.ipc-page-section--sp-pageMargin:eq(0)').parent().after(y);
     },
     onerror: function() {
-      console.log("IMDb Scout Mod (Review): Request Error.");
+      console.log("IMDb Scout Mod (getIMDbBestReview): Request Error.");
+      GM.notification("Request Error.", "IMDb Scout Mod (getIMDbBestReview)");
     },
     onabort: function() {
-      console.log("IMDb Scout Mod (Review): Request is aborted.");
+      console.log("IMDb Scout Mod (getIMDbBestReview): Request aborted.");
+      GM.notification("Request aborted.", "IMDb Scout Mod (getIMDbBestReview)");
     },
     ontimeout: function() {
-      console.log("IMDb Scout Mod (Review): Request timed out.");
+      console.log("IMDb Scout Mod (getIMDbBestReview): Request timed out.");
+      GM.notification("Request timed out.", "IMDb Scout Mod (getIMDbBestReview)");
     }
   });
 }
 
-function wilsonScore(upVotes, downVotes, z = 1.95996) {
-  const n = upVotes + downVotes;
-  if (n === 0) return 0;
-  const phat = upVotes / n;
-  const numerator = phat + (z * z) / (2 * n) - z * Math.sqrt((phat * (1 - phat) + (z * z) / (4 * n)) / n);
-  const denominator = 1 + (z * z) / n;
-  return numerator / denominator;
+function newlines2brakes(value) {
+  return value.replace(/\n/g, "<br>");
 }
 
 //==============================================================================
