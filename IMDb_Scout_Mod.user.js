@@ -11713,6 +11713,36 @@ if (document.querySelector('script[src*="challenge.js"]')) {
 }
 
 //==============================================================================
+//    Remove tracking from IMDb's URL before start
+//    Force the title pages to open in Reference View
+//==============================================================================
+
+if (Boolean(location.href.match('\\?ref_=')) || Boolean(location.href.match('\\?pf_'))) {
+  let stripped_href = location.href.split('?ref_=')[0];
+      stripped_href = stripped_href.split('?pf_')[0];
+  if (GM_config.get('force_reference_view') && Boolean(location.href.match('/title/tt')) && !Boolean(location.href.match('reference'))) {
+    console.log("IMDb Scout Mod (Redirect): Redirect to Reference Page (tracking stripped).");
+    if (stripped_href.endsWith('/')) {
+      stripped_href = stripped_href + "reference";
+    } else {
+        stripped_href = stripped_href + "/reference";
+    }
+  }
+  window.location.replace(stripped_href);
+  return;
+} else if (GM_config.get('force_reference_view') && Boolean(location.href.match('/title/tt')) && !Boolean(location.href.match('reference'))) {
+    console.log("IMDb Scout Mod (Redirect): Redirect to Reference Page.");
+    let reference_href = location.href;
+    if (reference_href.endsWith('/')) {
+      reference_href = reference_href + "reference";
+    } else {
+        reference_href = reference_href + "/reference";
+    }
+    window.location.replace(reference_href);
+    return;
+}
+
+//==============================================================================
 //    Polyfill for GM3 notifications
 //==============================================================================
 
@@ -12576,36 +12606,6 @@ GM_config.init({
 });
 
 GM.registerMenuCommand('IMDb Scout Mod Settings', function() {GM_config.open();});
-
-//==============================================================================
-//    Remove tracking from IMDb's URL before start
-//    Force the title pages to open in Reference View
-//==============================================================================
-
-if (Boolean(location.href.match('\\?ref_=')) || Boolean(location.href.match('\\?pf_'))) {
-  let stripped_href = location.href.split('?ref_=')[0];
-      stripped_href = stripped_href.split('?pf_')[0];
-  if (GM_config.get('force_reference_view') && Boolean(location.href.match('/title/tt')) && !Boolean(location.href.match('reference'))) {
-    console.log("IMDb Scout Mod (Redirect): Redirect to Reference Page (tracking stripped).");
-    if (stripped_href.endsWith('/')) {
-      stripped_href = stripped_href + "reference";
-    } else {
-        stripped_href = stripped_href + "/reference";
-    }
-  }
-  window.location.replace(stripped_href);
-  return;
-} else if (GM_config.get('force_reference_view') && Boolean(location.href.match('/title/tt')) && !Boolean(location.href.match('reference'))) {
-    console.log("IMDb Scout Mod (Redirect): Redirect to Reference Page.");
-    let reference_href = location.href;
-    if (reference_href.endsWith('/')) {
-      reference_href = reference_href + "reference";
-    } else {
-        reference_href = reference_href + "/reference";
-    }
-    window.location.replace(reference_href);
-    return;
-}
 
 //==============================================================================
 //    Fetch per-site values from GM_config
