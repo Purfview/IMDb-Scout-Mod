@@ -11723,9 +11723,9 @@ if (Boolean(location.href.match('\\?ref_=')) || Boolean(location.href.match('\\?
   if (GM_config.get('force_reference_view') && Boolean(location.href.match('/title/tt')) && !Boolean(location.href.match('reference'))) {
     console.log("IMDb Scout Mod (Redirect): Redirect to Reference Page (tracking stripped).");
     if (stripped_href.endsWith('/')) {
-      stripped_href = stripped_href + "reference";
+      stripped_href = stripped_href + "reference/";
     } else {
-        stripped_href = stripped_href + "/reference";
+        stripped_href = stripped_href + "/reference/";
     }
   }
   window.location.replace(stripped_href);
@@ -11734,9 +11734,9 @@ if (Boolean(location.href.match('\\?ref_=')) || Boolean(location.href.match('\\?
     console.log("IMDb Scout Mod (Redirect): Redirect to Reference Page.");
     let reference_href = location.href;
     if (reference_href.endsWith('/')) {
-      reference_href = reference_href + "reference";
+      reference_href = reference_href + "reference/";
     } else {
-        reference_href = reference_href + "/reference";
+        reference_href = reference_href + "/reference/";
     }
     window.location.replace(reference_href);
     return;
