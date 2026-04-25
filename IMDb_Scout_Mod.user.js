@@ -11126,6 +11126,13 @@ function darkReferenceStyles() {
   if (!GM_config.get('dark_compact_reference_view') || !onReferencePage) {
     return;
   }
+
+  if (document.querySelector('.IMDbScoutStyles')) {  // temp test check
+    console.log("❌ IMDb Scout Mod (darkReferenceStyles): Double loading!");
+    GM.notification("Double loading!", "IMDb Scout Mod (darkReferenceStyles)");
+    return;
+  }
+
   console.log("IMDb Scout Mod (darkReferenceStyles): Started.");
   // www.w3schools.com/colors/colors_picker.asp
 
@@ -11193,7 +11200,8 @@ async function compactReferenceElemRemoval() {
 
   // Check if the Styles funcs were executed as it may not happened at 'bodyloaded' event on very slow PCs + Chrome
   if (!$('.IMDbScoutStyles').length) {
-    console.log("IMDb Scout Mod (Warning): Slow device!");
+    console.log("❌ IMDb Scout Mod (Warning): Slow device!");
+    GM.notification("Slow device!", "IMDb Scout Mod (Warning)");
     darkReferenceStyles();
   }
 
@@ -12755,20 +12763,18 @@ function startIMDbScout() {
 }
 
 if (onReferencePage) {
-  console.log("IMDb Scout Mod (Start): Reference page detected.");
-  document.events.on('bodyloaded', () => { // This instead of DOMContentLoaded is just to prevent white->black flick when darkstyle is enabled
-    darkReferenceStyles();
-  });
-  window.addEventListener('DOMContentLoaded', compactReferenceElemRemoval);
-  window.addEventListener('DOMContentLoaded', adsRemovalReference);
-  window.addEventListener('DOMContentLoaded', startIMDbScout);
+  console.log("✅ IMDb Scout Mod (Start): Starting Reference page.");
+  document.events.on('bodyloaded', () => { darkReferenceStyles(); });
+  document.addEventListener('DOMContentLoaded', compactReferenceElemRemoval, { once: true });
+  document.addEventListener('DOMContentLoaded', adsRemovalReference, { once: true });
+  document.addEventListener('DOMContentLoaded', startIMDbScout, { once: true });
 } else {
-  // Start for redesigned page
-  if (navigator.userAgent.toLowerCase().indexOf('firefox') > -1) {
-    window.addEventListener('DOMContentLoaded', startRedesign);
-  } else {
-    window.addEventListener('DOMContentLoaded', startObserver);  // counter reflow on Chrome
-  }
+    console.log("✅ IMDb Scout Mod (Start): Starting ReDesigned page.");
+    if (navigator.userAgent.toLowerCase().indexOf('firefox') > -1) {
+      document.addEventListener('DOMContentLoaded', startRedesign, { once: true });
+    } else {
+      document.addEventListener('DOMContentLoaded', startObserver, { once: true });  // counter reflow on Chrome
+    }
 }
 
 scoutWarning();
