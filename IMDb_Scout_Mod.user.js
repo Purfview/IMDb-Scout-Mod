@@ -3392,7 +3392,7 @@ var private_sites = [
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgBAMAAACBVGfHAAAAHlBMVEUAAABGbbFQeMAuUXw1XKJagcogP1lljddtl994oOzaQiabAAAAAXRSTlMAQObYZgAAATxJREFUKM9VjLFuwjAYhM9uLeiGkyhzE6J0NTJipoqVGQqB9Z+6h0oNXemQ8AAMftvagQh6g8/3nX24iskQjxJn+/svW2snj+DH2stjHlnbrvDWrPUNvNja29ie1BWcffbk/HUlFwjFgkSj62Z9seKdOnZdTePuG4Crx23wiuMxR3siPBFDc/BFW6NtCCMFNBOWZsQVRk2B/Q6ixr5pdoiBfYyqJrERVVUdiBGcqrUSSw+qcqR7sAVU5ZWLHASkGwc+UqdcbDBzYAp9A3zrd3mmEuIexDxD7gGlmkspA8WnHiChJEYiZYYgdsgDFpJ7smSqYCEAVkIuwCaIlGIxnGJi0Sfw7FrZA0ZgoZ6/F2CyxKDIRModasjM+Lsx1KenBfUGU3j3RelGtYJRw39j9Ny1xX3A9Bv3ybkphvAHv4hEh6PLfC4AAAAASUVORK5CYII=',
       'searchUrl': 'https://nebulance.io/torrents.php?action=show&showid=%tvmazeid%',
       'loggedOutRegex': /Cloudflare|Ray ID|have cookies disabled|BpdhTfy/,
-      'matchRegex': /search did not match|are Cylons aboard/,
+      'matchRegex': /search did not match|are Cylons aboard|Not found/,
       'seedingRegex': /icon_disk_seed/,
       'TV': true},
   {   'name': 'NBL-Title',
