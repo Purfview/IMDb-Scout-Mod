@@ -7665,15 +7665,15 @@ async function maybeAddLink(elem, site_name, search_url, site, scout_tick, movie
       },
       onerror: function() {
         addLink(elem, site_name, target, site, 'error', scout_tick, post_data);
-        console.log("IMDb Scout Mod (POST-Request Error. Site): " +site_name);
+        console.log("IMDb Scout Mod (POST-Request Error). Site: " +site_name);
       },
       onabort: function() {
         addLink(elem, site_name, target, site, 'error', scout_tick, post_data);
-        console.log("IMDb Scout Mod (POST-Request aborted. Site): " +site_name);
+        console.log("IMDb Scout Mod (POST-Request aborted). Site: " +site_name);
       },
       ontimeout: function() {
         addLink(elem, site_name, target, site, 'error', scout_tick, post_data);
-        console.log("IMDb Scout Mod (POST-Request timed out. Site): " +site_name);
+        console.log("IMDb Scout Mod (POST-Request timed out). Site: " +site_name);
       }
     });
     return;
@@ -7748,15 +7748,15 @@ async function maybeAddLink(elem, site_name, search_url, site, scout_tick, movie
     },
     onerror: function() {
       addLink(elem, site_name, target, site, 'error', scout_tick);
-      console.log("IMDb Scout Mod (GET-Request Error. Site): " +site_name);
+      console.log("IMDb Scout Mod (GET-Request Error). Site: " +site_name);
     },
     onabort: function() {
       addLink(elem, site_name, target, site, 'error', scout_tick);
-      console.log("IMDb Scout Mod (GET-Request aborted. Site): " +site_name);
+      console.log("IMDb Scout Mod (GET-Request aborted). Site: " +site_name);
     },
     ontimeout: function() {
       addLink(elem, site_name, target, site, 'error', scout_tick);
-      console.log("IMDb Scout Mod (GET-Request timed out. Site): " +site_name);
+      console.log("IMDb Scout Mod (GET-Request timed out). Site: " +site_name);
     }
   });
 }
