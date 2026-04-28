@@ -12606,12 +12606,14 @@ if (Boolean(location.href.match('\\?ref_=')) || Boolean(location.href.match('\\?
   let stripped_href = location.href.split('?ref_=')[0];
       stripped_href = stripped_href.split('?pf_')[0];
   if (GM_config.get('force_reference_view') && Boolean(location.href.match('/title/tt')) && !Boolean(location.href.match('reference'))) {
-    console.log("✅ IMDb Scout Mod (Redirect): Redirect to Reference Page (tracking stripped).");
+    console.log("✅ IMDb Scout Mod (Redirect): Redirect to Reference Page (with tracking stripped).");
     if (stripped_href.endsWith('/')) {
       stripped_href = stripped_href + "reference/";
     } else {
         stripped_href = stripped_href + "/reference/";
     }
+  } else {
+      console.log("✅ IMDb Scout Mod (Redirect): Stripped tracking.");
   }
   window.location.replace(stripped_href);
   return;
