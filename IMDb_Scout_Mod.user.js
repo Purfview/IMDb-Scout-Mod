@@ -12659,7 +12659,9 @@ const traktCodePage = Boolean(location.href.match(/tt0052077\/reference\/\?code=
 
 function startObserver() {
   // Double check if still on a redesigned page. Possible fix for a rare bug when the script runs before page transfers to a reference page if set on imdb's settings.
-  if ($('html[xmlns\\:og="http://ogp.me/ns#"]').length) {
+  if (Boolean(location.href.match('/reference'))) {
+    console.log("IMDb Scout Mod (BUG-1): BUG-1! Please report it.");
+    GM.notification("BUG-1! Please report it.", "IMDb Scout Mod (BUG-1)");
     return;
   }
 
@@ -12696,7 +12698,9 @@ function checkDummyElem(mutation, observer) {
 
 function startRedesign() {
   // Double check if still on a redesigned page. Possible fix for a rare bug when the script runs before page transfers to a reference page if set on imdb's settings.
-  if ($('html[xmlns\\:og="http://ogp.me/ns#"]').length) {
+  if (Boolean(location.href.match('/reference'))) {
+    console.log("IMDb Scout Mod (BUG-1): BUG-1! Please report it.");
+    GM.notification("BUG-1! Please report it.", "IMDb Scout Mod (BUG-1)");
     return;
   }
 
@@ -12748,7 +12752,6 @@ if (/com\/[^/]*\/title\/tt/.test(window.location.href)) {
   }
 }
 
-
 //==============================================================================
 //    Start: Display 'Load' button or add links to sites
 //==============================================================================
@@ -12775,15 +12778,22 @@ function startIMDbScout() {
 if (onReferencePage) {
   console.log("✅ IMDb Scout Mod (Start): Starting Reference page.");
   document.events.on('bodyloaded', () => { darkReferenceStyles(); });
-  document.addEventListener('DOMContentLoaded', compactReferenceElemRemoval, { once: true });
-  document.addEventListener('DOMContentLoaded', adsRemovalReference, { once: true });
-  document.addEventListener('DOMContentLoaded', startIMDbScout, { once: true });
+  if (navigator.userAgent.toLowerCase().indexOf('firefox') > -1) {
+    document.addEventListener('DOMContentLoaded', compactReferenceElemRemoval, { once: true });
+    document.addEventListener('DOMContentLoaded', adsRemovalReference, { once: true });
+    document.addEventListener('DOMContentLoaded', startIMDbScout, { once: true });
+  } else { // counter reflow on Chromium based browsers
+      document.addEventListener('DOMContentLoaded', () => {setTimeout(compactReferenceElemRemoval, 400);}, { once: true });
+      document.addEventListener('DOMContentLoaded', () => {setTimeout(adsRemovalReference, 400);}, { once: true });
+      document.addEventListener('DOMContentLoaded', () => {setTimeout(startIMDbScout, 400);}, { once: true });
+  }
 } else {
     console.log("✅ IMDb Scout Mod (Start): Starting ReDesigned page.");
     if (navigator.userAgent.toLowerCase().indexOf('firefox') > -1) {
       document.addEventListener('DOMContentLoaded', startRedesign, { once: true });
     } else {
-      document.addEventListener('DOMContentLoaded', startObserver, { once: true });  // counter reflow on Chrome
+        //document.addEventListener('DOMContentLoaded', startObserver, { once: true });  // counter reflow on Chromium based browsers
+        document.addEventListener('DOMContentLoaded', () => {setTimeout(startRedesign, 400);}, { once: true }); // let's try this instead startObserver
     }
 }
 
