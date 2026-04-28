@@ -1564,18 +1564,18 @@ UNIT3D Req:
     -= Each site is a dictionary with the following attributes: =-
 
 #  'name':
-The site name, abbreviated, unique (the 'TV' atribute internaly adds 'TV' to the name).
+A site name, abbreviated, unique (the 'TV' atribute internaly adds 'TV' to a name).
 Note: only these special chars are allowed in a site name if mPOST: .- ().
 
 #  'icon' (optional):
-Icon for the site. If not defined then script looks at site/favicon.ico.
+Icon for a site. If not defined then script looks at site/favicon.ico.
 Can be URL or Base64 string (www.base64-image.de).
 
 #  'searchUrl':
-The URL to perform the search against, see below for how to tailor the string to a site.
+URL to perform a search against, see below for how to tailor a string to a site.
 
 #  'matchRegex':
-The string which appears if the searchUrl *doesn't* return a result.
+A string which appears if the searchUrl *doesn't* return a result.
 
 #  'positiveMatch' (optional):
 Changes the test to return true if the searchUrl *does* return a result that matches matchRegex.
@@ -1588,24 +1588,24 @@ If true, it means that this site will only show up on TV pages.
 By default, sites only show up on movie pages.
 
 #  'both' (optional):
-Means that the site will show up on both movie and TV pages.
+Means that a site will show up on both movie and TV pages.
 
 #  'SpaceEncode' (optional):
-Changes the character used to encode spaces in movie/TV titles. The default is '+'.
+Changes a character used to encode spaces in movie/TV titles. Default is '+'.
 
 #  'goToUrl' (optional):
 Most of the time the same URLs that are used for checking are the ones that
-are used to actually get to the movie, but this allows overriding that.
+are used to actually get to a movie, but this allows overriding that.
 
 #  'loggedOutRegex' (optional):
-If any text on the page matches this regex, the site is treated as being logged out,
-rather than mising the movie. This option is not effected by positiveMatch.
+If any text on a page matches this regex, a site is treated as being logged out,
+rather than mising a movie. This option is not effected by positiveMatch.
 
 #  'ConfigName' (optional):
 Use this to allow changing names without breaking existing users.
 
 #  'inSecondSearchBar' & 'inThirdSearchBar' (optional):
-Places site at the extra searchable bar. Subtitles and other sites are set to 2nd bar.
+Places site at an extra searchable bar. Subtitles and other sites are set to 2nd bar.
 3rd bar is for the streaming sites. By defaut site goes to the 1st bar.
 Extra bars can be enabled/disabled/swapped at the Settings.
 
@@ -1632,34 +1632,34 @@ Use it if an empty response means that no results found, otherwise by default it
     -=  Search URL parameters: =-
 
 #  %tt%:
-The IMDb id with the tt prefix (e.g. tt0055630).
+IMDb id with the tt prefix (e.g. tt0055630).
 
 #  %nott%:
-The IMDb id without the tt prefix (e.g. 0055630).
+IMDb id without the tt prefix (e.g. 0055630).
 
 #  %tvdbid%:
-The TVDb id.
+TVDb id.
 
 #  %tvmazeid%:
-The TVmaze id.
+TVmaze id.
 
 #  %tmdbid%:
-The TMDb id. [it's not unique]
+TMDb id. [it's not unique]
 
 #  %tmdb_orig_title%:
-To get the native original title instead of IMDb's latinized one.
+To get a native original title instead of IMDb's latinized one.
 
 #  %doubanid%:
-The Douban id.
+Douban id.
 
 #  %search_string%:
-The local movie title. Depends on your preferences at www.imdb.com/preferences/general.
+Movie title. [US]
 
 #  %search_string_orig%:
-The original movie title (e.g. Yôjinbô). Reverts to %search_string% if original title is not set at IMDb.
+Original movie title (e.g. Yôjinbô). [Reverts to %search_string% if original is not set]
 
 #  %year%:
-The movie year (e.g. 1961).
+Movie year (e.g. 1961).
 
 #  %seriesid%
 #  %seasonid%
@@ -8169,91 +8169,100 @@ function performSearchSecondPart(elem, link, movie_id, showsites, scout_tick) {
 //==============================================================================
 
 function performPage() {
-  var movie_title = "";
-  var movie_title_orig = "";
-  if (!onReferencePage) {
-    if ($('[type=application\\/ld\\+json]:eq(0)').length) {
-      const rawJsn = $('[type=application\\/ld\\+json]:eq(0)').text();
-      const parseJsn = JSON.parse(rawJsn);
-      movie_title = htmlDecode(parseJsn.alternateName); //  htmlDecode added in v19.3, https://www.imdb.com/title/tt0108550
-      movie_title_orig = htmlDecode(parseJsn.name);
-      // movie_title not found
-      if (movie_title === "" || movie_title === undefined) {
-        movie_title = movie_title_orig;
+  const movie_id = document.URL.match(/\/tt([0-9]+)/)[1].trim('tt');
+  const query = { query: `query { title(id: "tt${movie_id}") { id titleText { text isOriginalTitle } originalTitleText { text } releaseYear { year } titleGenres { genres { genre { genreId } } } titleType { id } series { displayableEpisodeNumber { displayableSeason { text } episodeNumber { text } } series { id } } } }` };
+
+  GM.xmlHttpRequest({
+    method: "POST",
+    timeout: 10000,
+    url:     "https://api.graphql.imdb.com",
+    data:    JSON.stringify(query),
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    onload: function(response) {
+      if (response.status == 200) {
+        const body = JSON.parse(response.responseText);
+        if ("errors" in body || "error" in body) {
+          console.log("IMDb Scout Mod (performPage): Error in response.");
+          GM.notification("Error in response.", "IMDb Scout Mod (performPage)");
+          return;
+        }
+
+        // all titleType variations: movie, tvSeries, tvEpisode, tvMiniSeries, podcastSeries, podcastEpisode, video, tvMovie, tvSpecial, videoGame, musicVideo, tvShort, short
+        const titleType = (body.data.title.titleType == null) ? "" : body.data.title.titleType.id;
+        var is_tv    = (titleType.match(/tvSeries|podcastSeries|tvMiniSeries/)) ? true : false;
+        var is_movie = (titleType.match(/movie|video/)) ? true : false;
+
+        // Documentaries should be searched in both (tv and movie)
+        var genresString = (body.data.title.titleGenres == null) ? "" : body.data.title.titleGenres.genres.map(function(g){ return g.genre.genreId; }).join(", ");
+        if (genresString.match(/Documentary/)) {
+          is_tv    = false;
+          is_movie = false;
+        }
+
+        var movie_year       = (body.data.title.releaseYear == null) ? ""       : body.data.title.releaseYear.year + "";
+        var movie_title      = (body.data.title.titleText == null) ? ""         : body.data.title.titleText.text;
+        var movie_title_orig = (body.data.title.originalTitleText == null) ? "" : body.data.title.originalTitleText.text;
+        if (movie_title === "") {
+          movie_title = movie_title_orig;
+        }
+
+        // Streaming APIs support
+        let series_id, season_id, episode_id;
+        if (body.data.title.series == null) {
+          series_id  = "tt" + movie_id;
+          season_id  = "1";
+          episode_id = "1";
+        } else {
+            series_id  = body.data.title.series.series.id;
+            season_id  = body.data.title.series.displayableEpisodeNumber.displayableSeason.text;
+            episode_id = body.data.title.series.displayableEpisodeNumber.episodeNumber.text;
+        }
+
+        // Start of External ratings code
+        if (GM_config.get("ratings_cfg_metacritic") || GM_config.get("ratings_cfg_rotten") || GM_config.get("ratings_cfg_letterboxd") || GM_config.get("ratings_cfg_douban") || GM_config.get("ratings_cfg_allocine") || GM_config.get("ratings_cfg_anime")) {
+          externalRatings(movie_id, movie_title, movie_title_orig);
+        }
+        // Call to iconSorterCount() for the icons/sites sorting.
+        iconSorterCount(is_tv, is_movie);
+
+        // Create areas to put links in
+        if (!GM_config.get("disable_iconsites")) {
+          addIconBar(movie_id, movie_title, movie_title_orig);
+        }
+        if (!GM_config.get("disable_sites")) {
+          perform(getLinkArea(), movie_id, movie_title, movie_title_orig, is_tv, is_movie, series_id, season_id, episode_id);
+          if (GM_config.get('load_second_bar_movie') && !GM_config.get('load_third_bar_movie')) {
+            getLinkAreaSecond();
+          } else if (!GM_config.get('load_second_bar_movie') && GM_config.get('load_third_bar_movie')) {
+            getLinkAreaThird();
+          } else if (GM_config.get('load_second_bar_movie') && GM_config.get('load_third_bar_movie') && !GM_config.get('switch_bars')) {
+            getLinkAreaSecond();
+            getLinkAreaThird();
+          } else if (GM_config.get('load_second_bar_movie') && GM_config.get('load_third_bar_movie') && GM_config.get('switch_bars')) {
+            getLinkAreaThird();
+            getLinkAreaSecond();
+          }
+        }
+      } else {
+          console.log("IMDb Scout Mod (performPage): HTTP Error status - " + response.status);
+          GM.notification("HTTP Error status - " + response.status, "IMDb Scout Mod (performPage)");
       }
-    } else {
-      console.log("IMDb Scout Mod (Get a title Error): Element not found! Please report it.");
-      GM.notification("Element not found! Please report it.", "IMDb Scout Mod (Get a title Error)");
+    },
+    onerror: function() {
+      console.log("IMDb Scout Mod (performPage): Request Error.");
+      GM.notification("Request Error.", "IMDb Scout Mod (performPage)");
+    },
+    onabort: function() {
+      console.log("IMDb Scout Mod (performPage): Request aborted.");
+      GM.notification("Request aborted.", "IMDb Scout Mod (performPage)");
+    },
+    ontimeout: function() {
+      console.log("IMDb Scout Mod (performPage): Request timed out.");
+      GM.notification("Request timed out.", "IMDb Scout Mod (performPage)");
     }
-  } else {
-    // reference
-    const rawJsn   = $('[id=__NEXT_DATA__]:eq(0)').text();
-    const parseJsn = JSON.parse(rawJsn);
-    movie_title = htmlDecode(parseJsn.props.pageProps.aboveTheFoldData.titleText.text);
-    movie_title_orig = htmlDecode(parseJsn.props.pageProps.aboveTheFoldData.originalTitleText.text);
-    // movie_title_orig not found
-    if (movie_title_orig === "" || movie_title_orig === undefined) {
-      movie_title_orig = movie_title;
-    }
-  }
-
-  var movie_id = document.URL.match(/\/tt([0-9]+)/)[1].trim('tt');
-  // Note: Podcast Series|TV Mini Series - added only English.
-  var is_tv    = Boolean($('title').text().match(/Podcast Series|TV Mini Series|TV Series|Série télévisée|Fernsehserie|टीवी सीरीज़|Serie TV|Série de TV|Serie de TV/));
-  // newLayout || reference : check if 'title' has just a year in brackets, eg. "(2009)" // Note: 'title' is fail-safe measure if other checks fail. // v18.1 Note: Probably "fail-safe" makes this work properly on non english languages
-  var is_movie = (Boolean($('[data-testid=hero-title-block__metadata]').text().match('TV')) || Boolean($('.ipc-metadata-list:eq(0)').text().match('TV'))) ? false : Boolean($('title').text().match(/.*? \(([0-9]*)\)/));
-  // newLayout || reference  // Documentaries should be searched in both (tv and movie)
-  if (Boolean($('[property="og:title"]').attr('content').match(/Document|डॉक्यूमेंटरी|Dokument/)) || Boolean($('[data-testid=genres]').text().match(/Document|डॉक्यूमेंटरी|Dokument/))) {
-    is_tv    = false;
-    is_movie = false;
-  }
-  if (!onReferencePage && !$('[property="og:title"]').length || onReferencePage && !$('[data-testid=genres]').length) {
-    console.log("IMDb Scout Mod (Get a genre Error): Element not found! Please report it.");
-    GM.notification("Element not found! Please report it.", "IMDb Scout Mod (Get a genre Error)");
-  }
-
-  // Streaming APIs support
-  var series_id  = "tt" + movie_id;
-  var season_id  = "1";
-  var episode_id = "1";
-  if (Boolean($('title').text().match(/TV Episode|Épisode télévisé|Fernsehepisode|टीवी एपिसोड|Episodio TV|Episódio de TV|Episodio de TV/))) {
-    if ($('[data-testid=hero-subnav-bar-season-episode-numbers-section]').length) {
-      series_id  = $('[data-testid=hero-title-block__series-link]').prop('href').match(/\/tt([0-9]+)\//)[0].replace(/\//g, "");
-      const SE_numbers = $('[data-testid=hero-subnav-bar-season-episode-numbers-section]').text().trim().split('.');
-      season_id  = SE_numbers[0].match(/(\d+)/)[0];
-      episode_id = SE_numbers[1].match(/(\d+)/)[0];
-    }
-  }
-
-  // Start of External ratings code
-  if (GM_config.get("ratings_cfg_metacritic") || GM_config.get("ratings_cfg_rotten") || GM_config.get("ratings_cfg_letterboxd") || GM_config.get("ratings_cfg_douban") || GM_config.get("ratings_cfg_allocine") || GM_config.get("ratings_cfg_anime")) {
-    externalRatings(movie_id, movie_title, movie_title_orig);
-  }
-  // Call to iconSorterCount() for the icons/sites sorting.
-  iconSorterCount(is_tv, is_movie);
-
-  // Create areas to put links in
-  if (!GM_config.get("disable_iconsites")) {
-    addIconBar(movie_id, movie_title, movie_title_orig);
-  }
-  if (!GM_config.get("disable_sites")) {
-    perform(getLinkArea(), movie_id, movie_title, movie_title_orig, is_tv, is_movie, series_id, season_id, episode_id);
-    if (GM_config.get('load_second_bar_movie') && !GM_config.get('load_third_bar_movie')) {
-      getLinkAreaSecond();
-    } else if (!GM_config.get('load_second_bar_movie') && GM_config.get('load_third_bar_movie')) {
-      getLinkAreaThird();
-    } else if (GM_config.get('load_second_bar_movie') && GM_config.get('load_third_bar_movie') && !GM_config.get('switch_bars')) {
-      getLinkAreaSecond();
-      getLinkAreaThird();
-    } else if (GM_config.get('load_second_bar_movie') && GM_config.get('load_third_bar_movie') && GM_config.get('switch_bars')) {
-      getLinkAreaThird();
-      getLinkAreaSecond();
-    }
-  }
-}
-
-function htmlDecode(value) {
-  return $("<textarea/>").html(value).text();
+  });
 }
 
 //==============================================================================
@@ -12734,25 +12743,6 @@ if (navigator.userAgent.toLowerCase().indexOf('chrome') > -1 || navigator.userAg
 }
 
 //==============================================================================
-//    Warning for non-English IMDb shown 3 times per version
-//==============================================================================
-
-async function scoutWarning2() {
-if (/com\/[^/]*\/title\/tt/.test(window.location.href)) {
-    const warn_count = await GM.getValue("Scout_warning2_count", 0);
-    const warn_ver   = await GM.getValue("Scout_warning2_ver", "none");
-    if (warn_count < 3 && warn_ver !== GM.info.script.version) {
-      console.log("IMDb Scout Mod (Warning): Non-English IMDb detected! The script doesn't work properly here. Set language to English!");
-      GM.notification("Non-English IMDb detected! \nThe script doesn't work \nproperly here. \nSet language to English!", "IMDb Scout Mod (Warning)");
-      GM.setValue("Scout_warning2_count", warn_count +1);
-    } else if (warn_ver !== GM.info.script.version) {
-        GM.setValue("Scout_warning2_ver", GM.info.script.version);
-        GM.setValue("Scout_warning2_count", 0);
-    }
-  }
-}
-
-//==============================================================================
 //    Start: Display 'Load' button or add links to sites
 //==============================================================================
 
@@ -12798,5 +12788,3 @@ if (onReferencePage) {
 }
 
 scoutWarning();
-scoutWarning2();
-
