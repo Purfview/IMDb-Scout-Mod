@@ -11184,7 +11184,7 @@ function darkReferenceStyles() {
                    {color: #d9d9d9 !important;}
                   `);
 
-  addGlobalStyles('.sc-9c834405-4 {color: #808080 !important}');                                                        // dark grey // for the empty links on the right sidebar
+  addGlobalStyles('.sc-69374b6-4 {color: #808080 !important}');                                                         // dark grey // for the empty links on the right sidebar
   addGlobalStyles('.sc-b41e510f-2 {font-weight: bold; font-size: 20px; color: #cc0000 !important}');                    // red // original title
   addGlobalStyles('.ipc-rating-star--rating, .ipc-rating-star--rate {font-weight: bold; color: #00b300 !important}');   // green
 
