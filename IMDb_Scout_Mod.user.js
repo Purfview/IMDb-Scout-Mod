@@ -11419,7 +11419,7 @@ function getIMDbBestReview() {
                 </hgroup>
               </div>
             </div>
-            <div data-testid="title-boxoffice-section" class="sc-314065ad-0 hZXevt">
+            <div data-testid="title-boxoffice-section" class="sc-314065ad-0 hZXevt ipc-page-section--sp-pageMargin">
               <div>
                 <p class="spoiler-warning" style="font-weight:bold; color:red;">${xSpoiler}</p>
                 <div class="ipc-metadata-list__item ipc-metadata-list__item--align-end">
