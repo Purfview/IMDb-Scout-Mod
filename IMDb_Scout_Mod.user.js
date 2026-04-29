@@ -12602,9 +12602,10 @@ GM.registerMenuCommand('IMDb Scout Mod Settings', function() {GM_config.open();}
 //    Force the title pages to open in Reference View
 //==============================================================================
 
-if (Boolean(location.href.match('\\?ref_=')) || Boolean(location.href.match('\\?pf_'))) {
+if (Boolean(location.href.match('\\?ref_=')) || Boolean(location.href.match('\\?pf_')) || Boolean(location.href.match('\\?utm_'))) {
   let stripped_href = location.href.split('?ref_=')[0];
       stripped_href = stripped_href.split('?pf_')[0];
+      stripped_href = stripped_href.split('?utm_')[0];
   if (GM_config.get('force_reference_view') && Boolean(location.href.match('/title/tt')) && !Boolean(location.href.match('reference'))) {
     console.log("✅ IMDb Scout Mod (Redirect): Redirect to Reference Page (with tracking stripped).");
     if (stripped_href.endsWith('/')) {
