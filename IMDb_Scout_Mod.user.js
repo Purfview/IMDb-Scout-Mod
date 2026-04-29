@@ -11728,7 +11728,7 @@ function countSites(task) {
 //==============================================================================
 
 if (document.querySelector('script[src*="challenge.js"]')) {
-  console.log("❌ IMDb Scout Mod: Anti-bot JS challenge detected. Skipping execution.");
+  console.log("❌ IMDb Scout Mod (JS challenge 1): Anti-bot JS challenge detected. Skipping execution.");
   return;
 }
 
@@ -12615,7 +12615,8 @@ if (Boolean(location.href.match('\\?ref_=')) || Boolean(location.href.match('\\?
   } else {
       console.log("✅ IMDb Scout Mod (Redirect): Stripped tracking.");
   }
-  window.location.replace(stripped_href);
+  // window.location.replace(stripped_href);
+  window.location.assign(stripped_href);
   return;
 } else if (GM_config.get('force_reference_view') && Boolean(location.href.match('/title/tt')) && !Boolean(location.href.match('reference'))) {
     console.log("✅ IMDb Scout Mod (Redirect): Redirect to Reference Page.");
@@ -12625,7 +12626,8 @@ if (Boolean(location.href.match('\\?ref_=')) || Boolean(location.href.match('\\?
     } else {
         reference_href = reference_href + "/reference/";
     }
-    window.location.replace(reference_href);
+    // window.location.replace(reference_href);
+    window.location.assign(stripped_href);
     return;
 }
 
@@ -12682,8 +12684,8 @@ const traktCodePage = Boolean(location.href.match(/tt0052077\/reference\/\?code=
 function startObserver() {
   // Double check if still on a redesigned page. Possible fix for a rare bug when the script runs before page transfers to a reference page if set on imdb's settings.
   if (Boolean(location.href.match('/reference'))) {
-    console.log("❌ IMDb Scout Mod (BUG-1): BUG-1! Please report it.");
-    GM.notification("BUG-1! Please report it.", "IMDb Scout Mod (BUG-1)");
+    console.log("❌ IMDb Scout Mod (BUG-2): BUG-2! Please report it.");
+    GM.notification("BUG-2! Please report it.", "IMDb Scout Mod (BUG-2)");
     return;
   }
 
@@ -12715,10 +12717,14 @@ function checkDummyElem(mutation, observer) {
 }
 
 //==============================================================================
-//    Stuff for the new IMDb design (alternative to startObserver)
+//    Some checks before starting main funcs
 //==============================================================================
 
 function startRedesign() {
+  if (document.querySelector('script[src*="challenge.js"]')) {
+    console.log("❌ IMDb Scout Mod (JS challenge 2): Anti-bot JS challenge detected. Skipping execution.");
+    return;
+  }
   // Double check if still on a redesigned page. Possible fix for a rare bug when the script runs before page transfers to a reference page if set on imdb's settings.
   if (Boolean(location.href.match('/reference'))) {
     console.log("❌ IMDb Scout Mod (BUG-1): BUG-1! Please report it.");
@@ -12732,7 +12738,20 @@ function startRedesign() {
   } else {
     console.log("❌ IMDb Scout Mod (Start Redesign Error): Element not found! Please report it.");
     GM.notification("Element not found! Please report it.", "IMDb Scout Mod (Start Redesign Error)");
+    //console.log(document.documentElement.outerHTML);
   }
+}
+
+
+function startReference() {
+  if (document.querySelector('script[src*="challenge.js"]')) {
+    console.log("❌ IMDb Scout Mod (JS challenge 3): Anti-bot JS challenge detected. Skipping execution.");
+    return;
+  }
+
+  compactReferenceElemRemoval();
+  adsRemovalReference();
+  startIMDbScout();
 }
 
 //==============================================================================
@@ -12765,7 +12784,7 @@ function startIMDbScout() {
     GM.notification("Setup complete. Close this page.", "IMDb Scout Mod (Trakt-Watchlist)");
     return;
   }
-  console.log("IMDb Scout Mod (Start): Starting main functions.");
+  console.log("IMDb Scout Mod (startIMDbScout): Starting main functions.");
 
   if (!onSearchPage && GM_config.get('loadmod_on_start_movie')) {
     $('#ipc-wrap-background-id').remove(); // This div steals focus from the scout links. v19.1 fix
@@ -12779,24 +12798,19 @@ function startIMDbScout() {
 }
 
 if (onReferencePage) {
-  console.log("✅ IMDb Scout Mod (Start): Starting Reference page.");
+  console.log("✅ IMDb Scout Mod (Start): Starting Reference page: " + location.href);
   document.events.on('bodyloaded', () => { darkReferenceStyles(); });
   if (navigator.userAgent.toLowerCase().indexOf('firefox') > -1) {
-    document.addEventListener('DOMContentLoaded', compactReferenceElemRemoval, { once: true });
-    document.addEventListener('DOMContentLoaded', adsRemovalReference, { once: true });
-    document.addEventListener('DOMContentLoaded', startIMDbScout, { once: true });
+    document.addEventListener('DOMContentLoaded', startReference, { once: true });
   } else { // counter reflow on Chromium based browsers
-      document.addEventListener('DOMContentLoaded', () => {setTimeout(compactReferenceElemRemoval, 400);}, { once: true });
-      document.addEventListener('DOMContentLoaded', () => {setTimeout(adsRemovalReference, 400);}, { once: true });
-      document.addEventListener('DOMContentLoaded', () => {setTimeout(startIMDbScout, 400);}, { once: true });
+      document.addEventListener('DOMContentLoaded', () => {setTimeout(startReference, 400);}, { once: true });
   }
 } else {
-    console.log("✅ IMDb Scout Mod (Start): Starting ReDesigned page.");
+    console.log("✅ IMDb Scout Mod (Start): Starting ReDesigned page: " + location.href);
     if (navigator.userAgent.toLowerCase().indexOf('firefox') > -1) {
       document.addEventListener('DOMContentLoaded', startRedesign, { once: true });
-    } else {
-        //document.addEventListener('DOMContentLoaded', startObserver, { once: true });  // counter reflow on Chromium based browsers
-        document.addEventListener('DOMContentLoaded', () => {setTimeout(startRedesign, 400);}, { once: true }); // let's try this instead startObserver
+    } else { // counter reflow on Chromium based browsers
+        document.addEventListener('DOMContentLoaded', () => {setTimeout(startRedesign, 400);}, { once: true });
     }
 }
 
