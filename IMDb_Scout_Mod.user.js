@@ -11207,16 +11207,11 @@ function addGlobalStyles(css) {
 //    Compact mode for Reference View
 //==============================================================================
 
-async function compactReferenceElemRemoval() {
-  // Replace urls to fullcredits  // Removed in v22.0 as imdb removed these pages
-//   if (GM_config.get('fullcredits_reference_view')) {
-//     $('a[href^="/name/nm"]').attr('href', (n, old) => old.split('/?ref_=')[0] + '/fullcredits');
-//   }
-
+async function compactReference() {
   if (!GM_config.get('dark_compact_reference_view') || !onReferencePage) {
     return;
   }
-  console.log("IMDb Scout Mod (compactReferenceElemRemoval): Started.");
+  console.log("IMDb Scout Mod (compactReference): Started.");
 
   // Check if the Styles funcs were executed as it may not happened at 'bodyloaded' event on very slow PCs + Chrome
   if (!$('.IMDbScoutStyles').length) {
@@ -11245,8 +11240,8 @@ async function compactReferenceElemRemoval() {
     $('.ipc-page-section--sp-pageMargin:eq(0)').prev().remove(); // remove elem above the titles
   }
 
-  // Inject principal credits
-  getPrincipalCredits();
+  // Inject principal credits and plot
+  getStuffForCompact();
 
   // Inject most helpful review
   getIMDbBestReview();
@@ -11275,9 +11270,9 @@ function delayedReferenceElemRemoval() {
 //    Inject principal credits into the compact mode
 //==============================================================================
 
-function getPrincipalCredits() {
+function getStuffForCompact() {
   const imdbid = document.URL.match(/\/tt([0-9]+)/)[1].trim('tt');
-  const query  = { query: `query { title(id: "tt${imdbid}") { principalCreditsV2 { grouping { text } credits(limit: 3) { name { id nameText { text } } } } } }` };
+  const query  = { query: `query { title(id: "tt${imdbid}") { principalCreditsV2 { grouping { text } credits(limit: 3) { name { id nameText { text } } } } plots ( first:2 ) { edges { node { plotText { plainText } } } } } }` };
 
   GM.xmlHttpRequest({
     method: "POST",
@@ -11291,11 +11286,12 @@ function getPrincipalCredits() {
       if (response.status == 200) {
         const body = JSON.parse(response.responseText);
         if ("errors" in body || "error" in body) {
-          console.log("❌ IMDb Scout Mod (getPrincipalCredits): Error in response.");
-          GM.notification("Error in response.", "IMDb Scout Mod (getPrincipalCredits)");
+          console.log("❌ IMDb Scout Mod (getStuffForCompact): Error in response.");
+          GM.notification("Error in response.", "IMDb Scout Mod (getStuffForCompact)");
           return;
         }
 
+        // Inject principal credits:
         const principalCredits = (body && body.data && body.data.title && body.data.title.principalCreditsV2) || [];
 
         var creditsHtml = principalCredits.map(function (creditGroup) {
@@ -11330,22 +11326,41 @@ function getPrincipalCredits() {
           }
         }
 
+        // Inject plot as it can be truncated - tt7177316 tt2047812:
+        if (body.data.title.plots.edges[0]?.node) {
+          var plot        = body?.data?.title?.plots?.edges?.[0]?.node?.plotText?.plainText;
+          const plotLong  = body?.data?.title?.plots?.edges?.[1]?.node?.plotText?.plainText;
+          if (plot) {
+            if ($('[data-testid=plot]:eq(0)').length) {
+              if (GM_config.get("inject_storyline") && plotLong) {
+                plot = plotLong;
+              }
+              const elem = $('[data-testid=plot]:eq(0)').parent().parent();
+              elem.children().remove();
+              const div = $('<div>', {class: 'ipc-chip__text', text: plot});
+              elem.append(div)
+            } else {
+                console.log("❌ IMDb Scout Mod (getStuffForCompact): Element not found! Please report it.");
+                GM.notification("Element not found! Please report it.", "IMDb Scout Mod (getStuffForCompact)");
+            }
+          }
+        }
       } else {
-          console.log("❌ IMDb Scout Mod (getPrincipalCredits): HTTP error status: " + response.status);
-          GM.notification("HTTP error status: " + response.status, "IMDb Scout Mod (getPrincipalCredits)");
+          console.log("❌ IMDb Scout Mod (getStuffForCompact): HTTP error status: " + response.status);
+          GM.notification("HTTP error status: " + response.status, "IMDb Scout Mod (getStuffForCompact)");
       }
     },
     onerror: function() {
-      console.log("❌ IMDb Scout Mod (getPrincipalCredits): Request Error.");
-      GM.notification("Request Error.", "IMDb Scout Mod (getPrincipalCredits)");
+      console.log("❌ IMDb Scout Mod (getStuffForCompact): Request Error.");
+      GM.notification("Request Error.", "IMDb Scout Mod (getStuffForCompact)");
     },
     onabort: function() {
-      console.log("❌ IMDb Scout Mod (getPrincipalCredits): Request is aborted.");
-      GM.notification("Request is aborted.", "IMDb Scout Mod (getPrincipalCredits)");
+      console.log("❌ IMDb Scout Mod (getStuffForCompact): Request is aborted.");
+      GM.notification("Request is aborted.", "IMDb Scout Mod (getStuffForCompact)");
     },
     ontimeout: function() {
-      console.log("❌ IMDb Scout Mod (getPrincipalCredits): Request timed out.");
-      GM.notification("Request timed out.", "IMDb Scout Mod (getPrincipalCredits)");
+      console.log("❌ IMDb Scout Mod (getStuffForCompact): Request timed out.");
+      GM.notification("Request timed out.", "IMDb Scout Mod (getStuffForCompact)");
     }
   });
 }
@@ -11615,6 +11630,7 @@ function countSites(task) {
       'force_reference_view': {'type': 'checkbox'},
       'dark_compact_reference_view': {'type': 'checkbox'},
       'helpful_reviews_spoilers': {'type': 'checkbox'},
+      'inject_storyline': {'type': 'checkbox'},
       'greybackground_reference_view': {'type': 'checkbox'},
       'app_notification': {'type': 'checkbox'},
       'disable_iconsites': {'type': 'checkbox'},
@@ -11941,7 +11957,12 @@ var config_fields = {
   },
   'helpful_reviews_spoilers': {
     'type': 'checkbox',
-    'label': "Reference View: Allow Helpful reviews with spoilers? (compact mode)",
+    'label': "Reference View: Allow Helpful reviews with spoilers in compact mode?",
+    'default': false
+  },
+  'inject_storyline': {
+    'type': 'checkbox',
+    'label': "Reference View: Inject long plot instead of short in compact mode?",
     'default': false
   },
   'greybackground_reference_view': {
@@ -12750,7 +12771,7 @@ function startReference() {
     return;
   }
 
-  compactReferenceElemRemoval();
+  compactReference();
   adsRemovalReference();
   startIMDbScout();
 }
