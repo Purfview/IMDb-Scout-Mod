@@ -7419,9 +7419,7 @@ function addLink(elem, site_name, target, site, state, scout_tick, post_data) {
   // Add links to IMDb page.
   var in_element_two = ('inSecondSearchBar' in site) ? site['inSecondSearchBar'] : false;
   var in_element_three = ('inThirdSearchBar' in site) ? site['inThirdSearchBar'] : false;
-  if (in_element_two && !getPageSetting('load_second_bar') || in_element_three && !getPageSetting('load_third_bar') || in_element_two && in_element_three) {
-    return;
-  } else if (!onSearchPage && in_element_two) {
+  if (!onSearchPage && in_element_two) {
     $('#imdbscoutsecondbar_' + state).append(link).append(' ');
   } else if (!onSearchPage && in_element_three) {
     $('#imdbscoutthirdbar_' + state).append(link).append(' ');
@@ -7593,12 +7591,7 @@ async function maybeAddLink(elem, site_name, search_url, site, scout_tick, movie
     });
     return;
   }
-  // Don't check the second/third bar sites if a 2nd/3rd bar is disabled in the Settings.
-  var in_element_two = ('inSecondSearchBar' in site) ? site['inSecondSearchBar'] : false;
-  var in_element_three = ('inThirdSearchBar' in site) ? site['inThirdSearchBar'] : false;
-  if (in_element_two && !getPageSetting('load_second_bar') || in_element_three && !getPageSetting('load_third_bar') || in_element_two && in_element_three) {
-    return;
-  }
+
   // Connection rate limiter per domain.
   var set_rate = ('rateLimit' in site) ? site['rateLimit'] : 200;
   var rate     = (!onSearchPage) ? set_rate : (set_rate > 1000) ? set_rate : set_rate * 4;
@@ -7780,23 +7773,34 @@ function perform(elem, movie_id, movie_title, movie_title_orig, is_tv, is_movie,
   var site_shown = false;
   $.each(sites, async function(index, site) {
     if (site['show']) {
-      site_shown = true;
-      // For TV Series show only TV links. TV Special, TV Movie, Episode & Documentary are treated as TV and Movie.
-      if ((Boolean(site['TV']) == is_tv || Boolean(site['both'])) || (!is_tv && !is_movie) || getPageSetting('ignore_type')) {
-        var searchUrl = await replaceSearchUrlParams(site, movie_id, movie_title, movie_title_orig, movie_year, series_id, season_id, episode_id, true);
-        if ('goToUrl' in site && getPageSetting('call_http_mod')) {
-          maybeAddLink(elem, site['name'], searchUrl, site, scout_tick, movie_id, movie_title, movie_title_orig, movie_year, series_id, season_id, episode_id);
-        }
-        if ('goToUrl' in site && !getPageSetting('call_http_mod')) {
-          searchUrl = await replaceSearchUrlParams({'searchUrl': site['goToUrl'], 'spaceEncode': ('spaceEncode' in site) ? site['spaceEncode'] : '+'}, movie_id, movie_title, movie_title_orig, movie_year, series_id, season_id, episode_id);
-          addLink(elem, site['name'], searchUrl, site, 'found', scout_tick);
-        }
-        if (!('goToUrl' in site) && getPageSetting('call_http_mod')) {
-          maybeAddLink(elem, site['name'], searchUrl, site, scout_tick, movie_id, movie_title, movie_title_orig, movie_year, series_id, season_id, episode_id);
-        }
-        if (!('goToUrl' in site) && !getPageSetting('call_http_mod')){
-          const post_data = await replaceSearchUrlParams(site, movie_id, movie_title, movie_title_orig, movie_year, series_id, season_id, episode_id, false); // runs on non-post sites too to keep order of icons
-          addLink(elem, site['name'], searchUrl, site, 'found', scout_tick, post_data);
+
+      // Don't process the second/third bar sites if a 2nd/3rd bar is disabled in the Settings.
+      let site_is_actually_to_be_displayed = true;
+      const in_element_two = ('inSecondSearchBar' in site) ? site['inSecondSearchBar'] : false;
+      const in_element_three = ('inThirdSearchBar' in site) ? site['inThirdSearchBar'] : false;
+      if (in_element_two && !getPageSetting('load_second_bar') || in_element_three && !getPageSetting('load_third_bar') || in_element_two && in_element_three) {
+        site_is_actually_to_be_displayed = false;
+      }
+
+      if (site_is_actually_to_be_displayed) {
+        site_shown = true;
+        // For TV Series show only TV links. TV Special, TV Movie, Episode & Documentary are treated as TV and Movie.
+        if ((Boolean(site['TV']) == is_tv || Boolean(site['both'])) || (!is_tv && !is_movie) || getPageSetting('ignore_type')) {
+          var searchUrl = await replaceSearchUrlParams(site, movie_id, movie_title, movie_title_orig, movie_year, series_id, season_id, episode_id, true);
+          if ('goToUrl' in site && getPageSetting('call_http_mod')) {
+            maybeAddLink(elem, site['name'], searchUrl, site, scout_tick, movie_id, movie_title, movie_title_orig, movie_year, series_id, season_id, episode_id);
+          }
+          if ('goToUrl' in site && !getPageSetting('call_http_mod')) {
+            searchUrl = await replaceSearchUrlParams({'searchUrl': site['goToUrl'], 'spaceEncode': ('spaceEncode' in site) ? site['spaceEncode'] : '+'}, movie_id, movie_title, movie_title_orig, movie_year, series_id, season_id, episode_id);
+            addLink(elem, site['name'], searchUrl, site, 'found', scout_tick);
+          }
+          if (!('goToUrl' in site) && getPageSetting('call_http_mod')) {
+            maybeAddLink(elem, site['name'], searchUrl, site, scout_tick, movie_id, movie_title, movie_title_orig, movie_year, series_id, season_id, episode_id);
+          }
+          if (!('goToUrl' in site) && !getPageSetting('call_http_mod')){
+            const post_data = await replaceSearchUrlParams(site, movie_id, movie_title, movie_title_orig, movie_year, series_id, season_id, episode_id, false); // runs on non-post sites too to keep order of icons
+            addLink(elem, site['name'], searchUrl, site, 'found', scout_tick, post_data);
+          }
         }
       }
     }
