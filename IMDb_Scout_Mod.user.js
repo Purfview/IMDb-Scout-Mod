@@ -8026,6 +8026,25 @@ function performSearch() {
     $('.ipc-metadata-list-summary-item').each(function() {
       processListElement($(this), showsites);
     });
+
+    // MutationObserver callback // Because 25+/50+ '.ipc-metadata-list-summary-item' elems are dynamically loaded
+    var observerCallback = function(mutationsList, observer) {
+      mutationsList.forEach(function(mutation) {
+        if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+          $(mutation.addedNodes).each(function() {
+            // Only process if the added node is a new '.ipc-metadata-list-summary-item' element
+            if ($(this).hasClass('ipc-metadata-list-summary-item')) {
+              processListElement($(this), showsites);
+            }
+          });
+        }
+      });
+    };
+
+    var targetNode = document.querySelector('.ipc-metadata-list'); // Select the parent node of '.ipc-metadata-list-summary-item' to observe
+    var observerOptions = {childList: true, subtree: true};        // Observer options
+    var observer = new MutationObserver(observerCallback);         // Create a MutationObserver instance
+    observer.observe(targetNode, observerOptions);                 // Start observing
   } else {
     console.log("❌ IMDb Scout Mod (Lists): Element not found! Please report it.");
     GM.notification("Element not found! Please report it.", "IMDb Scout Mod (Lists)");
