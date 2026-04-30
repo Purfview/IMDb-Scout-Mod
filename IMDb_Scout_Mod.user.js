@@ -10457,7 +10457,7 @@ function getMetacriticRatings_IMDb(imdbid, meta_icon, meta_badge) {
       //console.log("!!!!!!!!!!!!!: " + meta_count);
       //console.log("!!!!!!!!!!!!!: " + meta_url);
       $('.MetaCritRatingImg').attr('src', meta_icon);
-      if (meta_url.match("metacritic")) {
+      if (meta_url != undefined && meta_url.match("metacritic")) {
         $('.MetaCritRatingUrl').attr('href', meta_url);
       }
       $('.MetaCritRating').text(meta_crit);
@@ -10489,8 +10489,14 @@ function getMetacritic_User(url) {
       const parser = new DOMParser();
       const result = parser.parseFromString(response.responseText, "text/html");
       let meta_user;
-      if ($(result).find('.c-productScoreInfo_scoreNumber span:eq(1)').length) {
-        const x = $(result).find('.c-productScoreInfo_scoreNumber span:eq(1)').text().trim();
+      let x = $(result).find('[aria-label^="User score"][data-testid="global-score-value-wrapper"] [data-testid="global-score-value"]').first().text().trim();
+      if (!x.length) {
+        x = $(result).find('.user-score__scoreContainer [aria-label^="User score"] span').first().text().trim();
+      }
+      if (!x.length) {
+        x = $(result).find('.c-productScoreInfo_scoreNumber span:eq(1)').text().trim();
+      }
+      if (x.length) {
         if ($.isNumeric(x)) {
           meta_user = x *10;
         } else {
@@ -10533,8 +10539,11 @@ async function getMetacriticRatings(imdbid, meta_icon, meta_badge) {
       const parser = new DOMParser();
       const result = parser.parseFromString(response.responseText, "text/html");
       let meta_crit, meta_user;
-      if ($(result).find('.c-productScoreInfo_scoreNumber span:eq(0)').length) {
-        const x = $(result).find('.c-productScoreInfo_scoreNumber span:eq(0)').text().trim();
+      let x = $(result).find('[aria-label^="Metascore"][data-testid="global-score-value-wrapper"] [data-testid="global-score-value"]').first().text().trim();
+      if (!x.length) {
+        x = $(result).find('.c-productScoreInfo_scoreNumber span:eq(0)').text().trim();
+      }
+      if (x.length) {
         if (Boolean(x.match('\\.'))) { // fixes: if meta_crit missing then it picks meta_user element where score is with dot
           meta_crit = "-";
         } else {
@@ -10545,8 +10554,14 @@ async function getMetacriticRatings(imdbid, meta_icon, meta_badge) {
           }
         }
       }
-      if ($(result).find('.c-productScoreInfo_scoreNumber span:eq(1)').length) {
-        const x = $(result).find('.c-productScoreInfo_scoreNumber span:eq(1)').text().trim();
+      x = $(result).find('[aria-label^="User score"][data-testid="global-score-value-wrapper"] [data-testid="global-score-value"]').first().text().trim();
+      if (!x.length) {
+        x = $(result).find('.user-score__scoreContainer [aria-label^="User score"] span').first().text().trim();
+      }
+      if (!x.length) {
+        x = $(result).find('.c-productScoreInfo_scoreNumber span:eq(1)').text().trim();
+      }
+      if (x.length) {
         if ($.isNumeric(x)) {
           meta_user = x *10;
         } else {
