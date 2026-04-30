@@ -7819,6 +7819,7 @@ function perform(elem, movie_id, movie_title, movie_title_orig, is_tv, is_movie,
 
 // Runs when "Load on Start?" is disabled.
 function displayButton() {
+  console.log("✅ IMDb Scout Mod (displayButton): Adding Load button.");
   var p = $('<p />').attr('id', 'imdbscout_button');
   p.append($('<button>Load links</button>').css({'background-color':'#F5C518', 'color':'blue', 'font-weight':'bold'}).click(function() {
     $('#imdbscout_button').remove();
@@ -8025,25 +8026,6 @@ function performSearch() {
     $('.ipc-metadata-list-summary-item').each(function() {
       processListElement($(this), showsites);
     });
-
-    // MutationObserver callback // Because 25+/50+ '.ipc-metadata-list-summary-item' elems are dynamically loaded
-    var observerCallback = function(mutationsList, observer) {
-      mutationsList.forEach(function(mutation) {
-        if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
-          $(mutation.addedNodes).each(function() {
-            // Only process if the added node is a new '.ipc-metadata-list-summary-item' element
-            if ($(this).hasClass('ipc-metadata-list-summary-item')) {
-              processListElement($(this), showsites);
-            }
-          });
-        }
-      });
-    };
-
-    var targetNode = document.querySelector('.ipc-metadata-list'); // Select the parent node of '.ipc-metadata-list-summary-item' to observe
-    var observerOptions = {childList: true, subtree: true};        // Observer options
-    var observer = new MutationObserver(observerCallback);         // Create a MutationObserver instance
-    observer.observe(targetNode, observerOptions);                 // Start observing
   } else {
     console.log("❌ IMDb Scout Mod (Lists): Element not found! Please report it.");
     GM.notification("Element not found! Please report it.", "IMDb Scout Mod (Lists)");
@@ -12828,7 +12810,7 @@ if (onReferencePage) {
       document.addEventListener('DOMContentLoaded', () => {setTimeout(startReference, 400);}, { once: true });
   }
 } else {
-    console.log("✅ IMDb Scout Mod (Start): Starting ReDesigned page: " + location.href);
+    console.log("✅ IMDb Scout Mod (Start): Starting Redesigned or List page: " + location.href);
     if (navigator.userAgent.toLowerCase().indexOf('firefox') > -1) {
       document.addEventListener('DOMContentLoaded', startRedesign, { once: true });
     } else { // counter reflow on Chromium based browsers
