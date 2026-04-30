@@ -7787,20 +7787,20 @@ function perform(elem, movie_id, movie_title, movie_title_orig, is_tv, is_movie,
         // For TV Series show only TV links. TV Special, TV Movie, Episode & Documentary are treated as TV and Movie.
         if ((Boolean(site['TV']) == is_tv || Boolean(site['both'])) || (!is_tv && !is_movie) || getPageSetting('ignore_type')) {
           var searchUrl = await replaceSearchUrlParams(site, movie_id, movie_title, movie_title_orig, movie_year, series_id, season_id, episode_id, true);
-          if ('goToUrl' in site && getPageSetting('call_http_mod')) {
+          if (getPageSetting('call_http_mod')) {
             maybeAddLink(elem, site['name'], searchUrl, site, scout_tick, movie_id, movie_title, movie_title_orig, movie_year, series_id, season_id, episode_id);
+          } else {
+              if ('goToUrl' in site) {
+                searchUrl = await replaceSearchUrlParams({'searchUrl': site['goToUrl'], 'spaceEncode': ('spaceEncode' in site) ? site['spaceEncode'] : '+'}, movie_id, movie_title, movie_title_orig, movie_year, series_id, season_id, episode_id);
+                addLink(elem, site['name'], searchUrl, site, 'found', scout_tick);
+              } else {
+                  const post_data = await replaceSearchUrlParams(site, movie_id, movie_title, movie_title_orig, movie_year, series_id, season_id, episode_id, false); // runs on non-post sites too to keep order of icons
+                  addLink(elem, site['name'], searchUrl, site, 'found', scout_tick, post_data);
+              }
           }
-          if ('goToUrl' in site && !getPageSetting('call_http_mod')) {
-            searchUrl = await replaceSearchUrlParams({'searchUrl': site['goToUrl'], 'spaceEncode': ('spaceEncode' in site) ? site['spaceEncode'] : '+'}, movie_id, movie_title, movie_title_orig, movie_year, series_id, season_id, episode_id);
-            addLink(elem, site['name'], searchUrl, site, 'found', scout_tick);
-          }
-          if (!('goToUrl' in site) && getPageSetting('call_http_mod')) {
-            maybeAddLink(elem, site['name'], searchUrl, site, scout_tick, movie_id, movie_title, movie_title_orig, movie_year, series_id, season_id, episode_id);
-          }
-          if (!('goToUrl' in site) && !getPageSetting('call_http_mod')){
-            const post_data = await replaceSearchUrlParams(site, movie_id, movie_title, movie_title_orig, movie_year, series_id, season_id, episode_id, false); // runs on non-post sites too to keep order of icons
-            addLink(elem, site['name'], searchUrl, site, 'found', scout_tick, post_data);
-          }
+        } else {
+            console.log("❌ IMDb Scout Mod (perform): Some error. Site: " + site.name);
+            GM.notification("Some error. Site: "  + site.name, "IMDb Scout Mod (perform)");
         }
       }
     }
@@ -7847,8 +7847,8 @@ function displayButton() {
   } else if (!onSearchPage && $('.ipc-page-section').length) {
     $('.ipc-page-section:eq(0)').parent().before(p);
   } else {
-    console.log("❌ IMDb Scout Mod (displayButton Error): Element not found! Please report it.");
-    GM.notification("Element not found! Please report it.", "IMDb Scout Mod (displayButton Error)");
+    console.log("❌ IMDb Scout Mod (displayButton): Element not found! Please report it.");
+    GM.notification("Element not found! Please report it.", "IMDb Scout Mod (displayButton)");
   }
 }
 
