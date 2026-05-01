@@ -7798,9 +7798,6 @@ function perform(elem, movie_id, movie_title, movie_title_orig, is_tv, is_movie,
                   addLink(elem, site['name'], searchUrl, site, 'found', scout_tick, post_data);
               }
           }
-        } else {
-            console.log("❌ IMDb Scout Mod (perform): Some error. Site: " + site.name);
-            GM.notification("Some error. Site: "  + site.name, "IMDb Scout Mod (perform)");
         }
       }
     }
