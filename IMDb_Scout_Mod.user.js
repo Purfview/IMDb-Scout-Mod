@@ -7784,18 +7784,22 @@ function perform(elem, movie_id, movie_title, movie_title_orig, is_tv, is_movie,
 
       if (site_is_actually_to_be_displayed) {
         site_shown = true;
-        // For TV Series show only TV links. TV Special, TV Movie, Episode & Documentary are treated as TV and Movie.
+        // For TV Series show only on TV links. TV Special, TV Movie, Episode & Documentary are treated as TV and Movie.
         if ((Boolean(site['TV']) == is_tv || Boolean(site['both'])) || (!is_tv && !is_movie) || getPageSetting('ignore_type')) {
-          var searchUrl = await replaceSearchUrlParams(site, movie_id, movie_title, movie_title_orig, movie_year, series_id, season_id, episode_id, true);
           if (getPageSetting('call_http_mod')) {
-            maybeAddLink(elem, site['name'], searchUrl, site, scout_tick, movie_id, movie_title, movie_title_orig, movie_year, series_id, season_id, episode_id);
+            const processedUrl = await replaceSearchUrlParams(site, movie_id, movie_title, movie_title_orig, movie_year, series_id, season_id, episode_id, true);
+            maybeAddLink(elem, site['name'], processedUrl, site, scout_tick, movie_id, movie_title, movie_title_orig, movie_year, series_id, season_id, episode_id);
           } else {
               if ('goToUrl' in site) {
-                searchUrl = await replaceSearchUrlParams({'searchUrl': site['goToUrl'], 'spaceEncode': ('spaceEncode' in site) ? site['spaceEncode'] : '+'}, movie_id, movie_title, movie_title_orig, movie_year, series_id, season_id, episode_id);
-                addLink(elem, site['name'], searchUrl, site, 'found', scout_tick);
+                const site_a = {'searchUrl': site['goToUrl'], 'spaceEncode': ('spaceEncode' in site) ? site['spaceEncode'] : '+'};
+                const processedUrl = await replaceSearchUrlParams(site_a, movie_id, movie_title, movie_title_orig, movie_year, series_id, season_id, episode_id);
+                addLink(elem, site['name'], processedUrl, site, 'found', scout_tick);
+              } else if ('mPOST' in site) {
+                  const processed_mPOST = await replaceSearchUrlParams(site, movie_id, movie_title, movie_title_orig, movie_year, series_id, season_id, episode_id, false);
+                  addLink(elem, site['name'], site['searchUrl'], site, 'found', scout_tick, processed_mPOST);
               } else {
-                  const post_data = await replaceSearchUrlParams(site, movie_id, movie_title, movie_title_orig, movie_year, series_id, season_id, episode_id, false); // runs on non-post sites too to keep order of icons
-                  addLink(elem, site['name'], searchUrl, site, 'found', scout_tick, post_data);
+                  const processedUrl = await replaceSearchUrlParams(site, movie_id, movie_title, movie_title_orig, movie_year, series_id, season_id, episode_id);
+                  addLink(elem, site['name'], processedUrl, site, 'found', scout_tick);
               }
           }
         }
