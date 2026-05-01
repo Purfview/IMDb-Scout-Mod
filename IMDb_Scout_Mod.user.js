@@ -11240,6 +11240,7 @@ async function compactReference() {
   $('[data-testid=title-details-akas]').remove();
   $('.ipc-icon--chevron-right-inline').remove();
   $('[data-testid=hero-subnav-bar-right-block]:eq(0)').remove();
+  $('a[href^="/preferences/general"]').closest('li').remove(); // remove "Reference view Switch view View settings" element
 
   // Leave that elem on Episode pages, to get season_id and episode_id
   if($('[data-testid=hero-subnav-bar-season-episode-numbers-section]').length == 0) {
