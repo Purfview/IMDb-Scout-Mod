@@ -10832,42 +10832,29 @@ async function getRotten(rott_url, rott_rotten, rott_certified, rott_fresh, rott
 }
 
 async function getDoubanRatings(imdbid, douban_icon) {
-  let id = await getDoubanID0_1(imdbid);
-  if (id == "00000000") {
-    id = await getDoubanID0_2(imdbid);
-  }
-  if (id == "00000000") {
-    id = await getDoubanID1(imdbid);
-  }
-  if (id == "00000000") {
-    id = await getDoubanID2(imdbid);
-  }
-  if (id == "00000000") {
-    id = await getDoubanID3(imdbid);
-  }
-  if (id == "00000000") {
-    return;
-  }
-  const url = "https://movie.douban.com/subject/" +id;
+  const url = "https://www.douban.com/search?cat=1002&q=tt" + imdbid;
+  //const url = "https://movie.douban.com/subject_search?search_text=tt" + imdbid;  // alt
   $('.DoubanUserRatingUrl').attr('href', url);
   GM.xmlHttpRequest({
     method: "GET",
     timeout: 20000,
-    url:    url,
+    url:     url,
     headers: { "User-Agent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:108.0) Gecko/20100101 Firefox/108.0" },
     onload: function(response) {
       const parser = new DOMParser();
       const result = parser.parseFromString(response.responseText, "text/html");
 
       let user_rating;
-      if ($(result).find('.rating_num').length) {
-        const x = $(result).find('.rating_num').text();
+      if ($(result).find('.rating_nums').length) {
+        const x = $(result).find('.rating_nums').text();
         if ($.isNumeric(x)) {
           user_rating = x *10;
           $('.DoubanUserRating').text(user_rating);
           $('.DoubanUserRatingImg').attr('src', douban_icon);
           ratingsColor();
         }
+      } else {
+        console.log("❌ IMDb Scout Mod (Douban): Rating element not found.");
       }
     },
     onerror: function() {
