@@ -10534,9 +10534,6 @@ async function getMetacriticRatings(imdbid, meta_icon, meta_badge) {
       const result = parser.parseFromString(response.responseText, "text/html");
       let meta_crit, meta_user;
       let x = $(result).find('[aria-label^="Metascore"][data-testid="global-score-value-wrapper"] [data-testid="global-score-value"]').first().text().trim();
-      if (!x.length) {
-        x = $(result).find('.c-productScoreInfo_scoreNumber span:eq(0)').text().trim();
-      }
       if (x.length) {
         if (Boolean(x.match('\\.'))) { // fixes: if meta_crit missing then it picks meta_user element where score is with dot
           meta_crit = "-";
