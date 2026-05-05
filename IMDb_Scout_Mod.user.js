@@ -10490,12 +10490,6 @@ function getMetacritic_User(url) {
       const result = parser.parseFromString(response.responseText, "text/html");
       let meta_user;
       let x = $(result).find('[aria-label^="User score"][data-testid="global-score-value-wrapper"] [data-testid="global-score-value"]').first().text().trim();
-      if (!x.length) {
-        x = $(result).find('.user-score__scoreContainer [aria-label^="User score"] span').first().text().trim();
-      }
-      if (!x.length) {
-        x = $(result).find('.c-productScoreInfo_scoreNumber span:eq(1)').text().trim();
-      }
       if (x.length) {
         if ($.isNumeric(x)) {
           meta_user = x *10;
@@ -10555,12 +10549,6 @@ async function getMetacriticRatings(imdbid, meta_icon, meta_badge) {
         }
       }
       x = $(result).find('[aria-label^="User score"][data-testid="global-score-value-wrapper"] [data-testid="global-score-value"]').first().text().trim();
-      if (!x.length) {
-        x = $(result).find('.user-score__scoreContainer [aria-label^="User score"] span').first().text().trim();
-      }
-      if (!x.length) {
-        x = $(result).find('.c-productScoreInfo_scoreNumber span:eq(1)').text().trim();
-      }
       if (x.length) {
         if ($.isNumeric(x)) {
           meta_user = x *10;
