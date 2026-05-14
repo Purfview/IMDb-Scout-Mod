@@ -11105,11 +11105,11 @@ function ratingsColor() {
     const ref_low  = parseInt(GM_config.get('ratings_cfg_color_scheme').split(',')[1], 10);
     $( ".scoutRatings").each(function(index) {
       if ($(this).text() > ref_high) {
-        $(this).css('color', '#00e600');
+        $(this).attr('style', 'color: #00e600 !important;');
       } else if ($(this).text() <= ref_high && $(this).text() > ref_low) {
-        $(this).css('color', '#f5c20a');
+        $(this).attr('style', 'color: #f5c20a !important;');
       } else if ($(this).text() <= ref_low && $(this).text() >= 0) {
-        $(this).css('color', '#e60000');
+        $(this).attr('style', 'color: #e60000 !important;');
       }
     });
   }
