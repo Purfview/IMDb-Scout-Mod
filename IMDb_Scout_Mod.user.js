@@ -6667,15 +6667,6 @@ async function replaceSearchUrlParams(site, movie_id, movie_title, movie_title_o
     search_url = search_url.replace("http://voidtools.replacement", voidURL);
   }
 
-  // If an array, do a little bit of recursion
-  if ($.isArray(search_url)) {
-    var search_array = [];
-    $.each(search_url, function(index, url) {
-      search_array[index] = replaceSearchUrlParams(url, movie_id, movie_title, movie_title_orig, movie_year, series_id, season_id, episode_id);
-    });
-    return search_array;
-  }
-
   if (search_url.match("%tvdbid%")) {
     movie_id = await getTVDbID(movie_id);
   } else if (search_url.match("%tvmazeid%")) {
@@ -7568,14 +7559,6 @@ function iconToButtonHack() {
 //==============================================================================
 
 async function maybeAddLink(elem, site_name, search_url, site, scout_tick, movie_id, movie_title, movie_title_orig, movie_year, series_id, season_id, episode_id) {
-  // If the search URL is an array, recurse briefly on the elements.
-  if ($.isArray(search_url)) {
-    $.each(search_url, function(index, url) {
-      maybeAddLink(elem, site_name + '_' + (index + 1).toString(), url, site);
-    });
-    return;
-  }
-
   // Connection rate limiter per domain.
   var set_rate = ('rateLimit' in site) ? site['rateLimit'] : 200;
   var rate     = (!onSearchPage) ? set_rate : (set_rate > 1000) ? set_rate : set_rate * 4;
