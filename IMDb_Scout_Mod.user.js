@@ -11250,7 +11250,7 @@ async function compactReference() {
 }
 
 function delayedReferenceElemRemoval() {
-  $('[data-testid=shoveler]').parent().parent().parent().parent().parent().remove();
+  $('.recently-viewed-items').closest('section').remove();
   $('.ipc-metadata-list--dividers-between:eq(0)').children().last().find('button').remove(); // remove "Add photo"
   $('.ipc-title__text:contains("All topics")').parent().remove();
   $('.ipc-link:contains("IMDbPro")').parent().remove();
