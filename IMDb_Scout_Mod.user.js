@@ -6683,8 +6683,7 @@ async function replaceSearchUrlParams(site, movie_id, movie_title, movie_title_o
   if (allStrings.match("%tvmazeid%")) { resolved["%tvmazeid%"] = await getTVmazeID(movie_id); }
   if (allStrings.match("%tmdbid%")) { resolved["%tmdbid%"] = await getTMDbID(movie_id);  }
   if (allStrings.match("%tmdb_orig_title%")) { resolved["%tmdb_orig_title%"] = (await getTMDb_original_title(movie_id))[1]; }
-  if (allStrings.match("%doubanid%")) { resolved["%doubanid%"] = await getDoubanID0_1(movie_id);
-    if (resolved["%doubanid%"] == "00000000") {resolved["%doubanid%"] = await getDoubanID0_2(movie_id);}
+  if (allStrings.match("%doubanid%")) { resolved["%doubanid%"] = await getDoubanID0(movie_id);
     if (resolved["%doubanid%"] == "00000000") {resolved["%doubanid%"] = await getDoubanID1(movie_id);}
     if (resolved["%doubanid%"] == "00000000") {resolved["%doubanid%"] = await getDoubanID2(movie_id);}
     if (resolved["%doubanid%"] == "00000000") {resolved["%doubanid%"] = await getDoubanID3(movie_id);}
@@ -6866,81 +6865,8 @@ function getTMDb_original_title(movie_id) {
   });
 }
 
-function getDoubanID0_1(movie_id) {
-  console.log("IMDb Scout Mod (getDoubanID0_1): Started.");
-  return new Promise(resolve => {
-    GM.xmlHttpRequest({
-      method: "GET",
-      timeout: 4000,
-      url:    "https://movie.douban.com/j/subject_suggest?q=tt" + movie_id,
-      headers: { "User-Agent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:108.0) Gecko/20100101 Firefox/108.0" },
-      onload: function(response) {
-        try {
-          const result = JSON.parse(response.responseText);
-          if (String(response.responseText).match(movie_id)) {
-            const douban_id = result[0].id;
-            resolve(douban_id);
-          } else {
-            resolve("00000000");
-          }
-        } catch (e) {
-            console.log("❌ IMDb Scout Mod (getDoubanID0_1): Error: Response is not JSON.");
-            resolve("00000000");
-        }
-      },
-      onerror: function() {
-        GM.notification("Request Error.", "IMDb Scout Mod (getDoubanID0_1)");
-        console.log("❌ IMDb Scout Mod (getDoubanID0_1): Request Error.");
-        resolve("00000000");
-      },
-      onabort: function() {
-        console.log("❌ IMDb Scout Mod (getDoubanID0_1): Request Aborted.");
-        resolve("00000000");
-      },
-      ontimeout: function() {
-        console.log("❌ IMDb Scout Mod (getDoubanID0_1): Request Timeout.");
-        resolve("00000000");
-      }
-    });
-  });
-}
-
-function getDoubanID0_2(movie_id) {
-  console.log("IMDb Scout Mod (getDoubanID0_2): Started.");
-  return new Promise(resolve => {
-    GM.xmlHttpRequest({
-      method: "GET",
-      timeout: 4000,
-      url:    "https://movie.douban.com/subject_search?search_text=tt" + movie_id,
-      headers: { "User-Agent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:108.0) Gecko/20100101 Firefox/108.0" },
-      onload: function(response) {
-        const result = String(response.responseText);
-        if (result.match(/subject\/(\d+)/)) {
-          const y = result.match(/subject\/(\d+)/)[1];
-          resolve(y);
-        } else {
-            resolve("00000000");
-        }
-      },
-      onerror: function() {
-        GM.notification("Request Error.", "IMDb Scout Mod (getDoubanID0_2)");
-        console.log("❌ IMDb Scout Mod (getDoubanID0_2): Request Error.");
-        resolve("00000000");
-      },
-      onabort: function() {
-        console.log("❌ IMDb Scout Mod (getDoubanID0_2): Request Aborted.");
-        resolve("00000000");
-      },
-      ontimeout: function() {
-        console.log("❌ IMDb Scout Mod (getDoubanID0_2): Request Timeout.");
-        resolve("00000000");
-      }
-    });
-  });
-}
-
-function getDoubanID1(movie_id) {
-  console.log("IMDb Scout Mod (getDoubanID1): Started.");
+function getDoubanID0(movie_id) {
+  console.log("IMDb Scout Mod (getDoubanID0): Started.");
   return new Promise(resolve => {
     GM.xmlHttpRequest({
       method: "GET",
@@ -6960,6 +6886,40 @@ function getDoubanID1(movie_id) {
           }
         } else {
           resolve("00000000");
+        }
+      },
+      onerror: function() {
+        GM.notification("Request Error.", "IMDb Scout Mod (getDoubanID0)");
+        console.log("❌ IMDb Scout Mod (getDoubanID0): Request Error.");
+        resolve("00000000");
+      },
+      onabort: function() {
+        console.log("❌ IMDb Scout Mod (getDoubanID0): Request Aborted.");
+        resolve("00000000");
+      },
+      ontimeout: function() {
+        console.log("❌ IMDb Scout Mod (getDoubanID0): Request Timeout.");
+        resolve("00000000");
+      }
+    });
+  });
+}
+
+function getDoubanID1(movie_id) {
+  console.log("IMDb Scout Mod (getDoubanID1): Started.");
+  return new Promise(resolve => {
+    GM.xmlHttpRequest({
+      method: "GET",
+      timeout: 8000,
+      url:    "https://movie.douban.com/subject_search?search_text=tt" + movie_id,
+      headers: { "User-Agent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:108.0) Gecko/20100101 Firefox/108.0" },
+      onload: function(response) {
+        const result = String(response.responseText);
+        if (result.match(/subject\/(\d+)/)) {
+          const y = result.match(/subject\/(\d+)/)[1];
+          resolve(y);
+        } else {
+            resolve("00000000");
         }
       },
       onerror: function() {
