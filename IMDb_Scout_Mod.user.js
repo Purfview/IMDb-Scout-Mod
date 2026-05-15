@@ -6659,58 +6659,62 @@ var icon_sites = icon_sites_main.concat(special_buttons);
 //    Replace Search URL parameters
 //==============================================================================
 
-async function replaceSearchUrlParams(site, movie_id, movie_title, movie_title_orig, movie_year, series_id, season_id, episode_id, mPOSTsearch) {
-  var search_url = ('mPOST' in site && !mPOSTsearch) ? site['mPOST'] : site['searchUrl'];
-
-  if (search_url.includes("http://voidtools.replacement")) {
+async function replaceSearchUrlParams(site, movie_id, movie_title, movie_title_orig, movie_year, series_id, season_id, episode_id) {
+  if (site.searchUrl.includes("http://voidtools.replacement")) {
     const voidURL = GM_config.get("void_url").replace(/\/+$/, "");
-    search_url = search_url.replace("http://voidtools.replacement", voidURL);
+    site.searchUrl = site.searchUrl.replace("http://voidtools.replacement", voidURL);
   }
 
-  if (search_url.match("%tvdbid%")) {
-    movie_id = await getTVDbID(movie_id);
-  } else if (search_url.match("%tvmazeid%")) {
-    movie_id = await getTVmazeID(movie_id);
-  } else if (search_url.match("%tmdbid%")) {
-    movie_id = await getTMDbID(movie_id);
-  } else if (search_url.match("%tmdb_orig_title%")) {
-    const xxx = await getTMDb_original_title(movie_id);
-    movie_id = xxx[1];
-  } else if (search_url.match("%doubanid%")) {
-    movie_id = await getDoubanID0_1(movie_id);
+  var fields = [];
+  if ('goToUrl' in site) {
+    fields.push('searchUrl');
+    fields.push('goToUrl');
+  } else if ('mPOST' in site) {
+      fields.push('mPOST');
+  } else {
+      fields.push('searchUrl');
   }
-  if (search_url.match("%doubanid%") && movie_id == "00000000") {
-    movie_id = await getDoubanID0_2(movie_id);
-  }
-  if (search_url.match("%doubanid%") && movie_id == "00000000") {
-    movie_id = await getDoubanID1(movie_id);
-  }
-  if (search_url.match("%doubanid%") && movie_id == "00000000") {
-    movie_id = await getDoubanID2(movie_id);
-  }
-  if (search_url.match("%doubanid%") && movie_id == "00000000") {
-    movie_id = await getDoubanID3(movie_id);
+
+  var allStrings = fields.map(f => site[f]).join(' ');
+  var resolved = {};
+
+  if (allStrings.match("%tvdbid%")) { resolved["%tvdbid%"] = await getTVDbID(movie_id); }
+  if (allStrings.match("%tvmazeid%")) { resolved["%tvmazeid%"] = await getTVmazeID(movie_id); }
+  if (allStrings.match("%tmdbid%")) { resolved["%tmdbid%"] = await getTMDbID(movie_id);  }
+  if (allStrings.match("%tmdb_orig_title%")) { resolved["%tmdb_orig_title%"] = (await getTMDb_original_title(movie_id))[1]; }
+  if (allStrings.match("%doubanid%")) { resolved["%doubanid%"] = await getDoubanID0_1(movie_id);
+    if (resolved["%doubanid%"] == "00000000") {resolved["%doubanid%"] = await getDoubanID0_2(movie_id);}
+    if (resolved["%doubanid%"] == "00000000") {resolved["%doubanid%"] = await getDoubanID1(movie_id);}
+    if (resolved["%doubanid%"] == "00000000") {resolved["%doubanid%"] = await getDoubanID2(movie_id);}
+    if (resolved["%doubanid%"] == "00000000") {resolved["%doubanid%"] = await getDoubanID3(movie_id);}
   }
 
   var space_replace      = ('spaceEncode' in site) ? site['spaceEncode'] : '+';
   var search_string      = movie_title.trim().replace(/ +\(.*|&|:/g, '').replace(/\s+/g, space_replace);
   var search_string_orig = movie_title_orig.trim().replace(/ +\(.*|&|:/g, '').replace(/\s+/g, space_replace);
   var movie_year         = (onSearchPage) ? movie_year : document.title.replace(/^(.+) \((\D*|)(\d{4})(.*)$/gi, '$3').match(/\b\d{4}\b/g)?.join(" ") || '';
-  var s = search_url.replace(/%tt%/g, 'tt' + movie_id)
-                    .replace(/%nott%/g, movie_id)
-                    .replace(/%tvdbid%/g, movie_id)
-                    .replace(/%tvmazeid%/g, movie_id)
-                    .replace(/%tmdbid%/g, movie_id)
-                    .replace(/%tmdb_orig_title%/g, movie_id)
-                    .replace(/%doubanid%/g, movie_id)
-                    .replace(/%seriesid%/g, series_id)
-                    .replace(/%seasonid%/g, season_id)
-                    .replace(/%episodeid%/g, episode_id)
-                    .replace(/%search_string%/g, search_string)
-                    .replace(/%search_string_orig%/g, search_string_orig)
-                    .replace(/%year%/g, movie_year)
-                    .replace(/---/g, '-');
-  return s;
+
+  fields.forEach(function(field) {
+    var s = site[field];
+    s = s.replace(/%tt%/g, 'tt' + movie_id)
+         .replace(/%nott%/g, movie_id)
+         .replace(/%tvdbid%/g, resolved["%tvdbid%"])
+         .replace(/%tvmazeid%/g, resolved["%tvmazeid%"])
+         .replace(/%tmdbid%/g, resolved["%tmdbid%"])
+         .replace(/%tmdb_orig_title%/g, resolved["%tmdb_orig_title%"])
+         .replace(/%doubanid%/g, resolved["%doubanid%"])
+         .replace(/%seriesid%/g, series_id)
+         .replace(/%seasonid%/g, season_id)
+         .replace(/%episodeid%/g, episode_id)
+         .replace(/%search_string%/g, search_string)
+         .replace(/%search_string_orig%/g, search_string_orig)
+         .replace(/%year%/g, movie_year)
+         .replace(/---/g, '-');
+
+    site[field] = s;
+  });
+
+  return site;
 }
 
 //==============================================================================
@@ -7275,7 +7279,8 @@ function getFavicon(site, hide_on_err) {
 //    Add search links to an element
 //==============================================================================
 
-function addLink(elem, site_name, target, site, state, scout_tick, post_data) {
+function addLink(elem, site, state, scout_tick) {
+  const target = ('goToUrl' in site) ? site.goToUrl : site.searchUrl;
   // State should always be one of the values defined in valid_states.
   if ($.inArray(state, valid_states) < 0) {
     console.log("❌ Unknown state: " + state);
@@ -7289,6 +7294,7 @@ function addLink(elem, site_name, target, site, state, scout_tick, post_data) {
     var placebo_url = new URL(target).origin;
     link = $('<a />').attr('href', placebo_url).attr('onclick', "document.getElementById('"+form_name+"').submit(); return false;").attr('target', '_blank').attr('rel', 'noreferrer');
 
+    const post_data = site.mPOST;
     var data = (post_data.match('{')) ? post_data.replace(/\+/g, ' ') : '{key:"' + post_data.replace(/&/g, '"},{key:"').replace(/=/g, '",value:"').replace(/\+/g, ' ') + '"}';
     var addform = $('<form></form>');
         addform.attr('id', form_name);
@@ -7349,6 +7355,7 @@ function addLink(elem, site_name, target, site, state, scout_tick, post_data) {
     }
     link.append(icon);
   } else if (!getPageSetting('use_mod_icons')) {
+    var site_name = site.name;
     site_name = (getPageSetting('highlight_sites').split(',').includes(site['name'])) ? site_name.bold() : site_name;
     if (state == 'missing' || state == 'error' || state == 'logged_out') {
       link.append($('<s />').append(site_name));
@@ -7558,7 +7565,9 @@ function iconToButtonHack() {
 //    Determine whether a site should be displayed
 //==============================================================================
 
-async function maybeAddLink(elem, site_name, search_url, site, scout_tick, movie_id, movie_title, movie_title_orig, movie_year, series_id, season_id, episode_id) {
+async function maybeAddLink(elem, site, scout_tick) {
+  var search_url = site.searchUrl;
+  var site_name = site.name;
   // Connection rate limiter per domain.
   var set_rate = ('rateLimit' in site) ? site['rateLimit'] : 200;
   var rate     = (!onSearchPage) ? set_rate : (set_rate > 1000) ? set_rate : set_rate * 4;
@@ -7571,20 +7580,17 @@ async function maybeAddLink(elem, site_name, search_url, site, scout_tick, movie
     lastLoaded = parseInt(lastLoaded);
   }
   if (now - lastLoaded < rate) {
-    window.setTimeout(maybeAddLink.bind(undefined, elem, site['name'], search_url, site, scout_tick, movie_id, movie_title, movie_title_orig, movie_year, series_id, season_id, episode_id), rate);
+    window.setTimeout(maybeAddLink.bind(undefined, elem, site, scout_tick), rate);
     return;
   } else {
     window.localStorage[domain+'_lastLoaded'] = (new Date())*1;
   }
 
   var success_match = ('positiveMatch' in site) ? site['positiveMatch'] : false;
-  var target = search_url;
-  if ('goToUrl' in site) {
-    target = await replaceSearchUrlParams({'searchUrl': site['goToUrl'], 'spaceEncode': ('spaceEncode' in site) ? site['spaceEncode'] : '+'}, movie_id, movie_title, movie_title_orig, movie_year, series_id, season_id, episode_id);
-  }
+
   // Check tmdb/tvdb conversion.
   if (search_url.indexOf('=00000000') > -1 || search_url.indexOf('=undefined') > -1) {
-    addLink(elem, site_name, target, site, 'error', scout_tick);
+    addLink(elem, site, 'error', scout_tick);
     return;
   }
 
@@ -7596,12 +7602,11 @@ async function maybeAddLink(elem, site_name, search_url, site, scout_tick, movie
 
   // Check for results with POST method.
   if ('mPOST' in site) {
-    const post_data = await replaceSearchUrlParams(site, movie_id, movie_title, movie_title_orig, movie_year, series_id, season_id, episode_id);
     GM.xmlHttpRequest({
       method: 'POST',
       timeout: parseInt(GM_config.get('timeout_ms')),
       url: search_url,
-      data: post_data,
+      data: site.mPOST,
       headers: reqPOSTHeader,
       onload: function(response) {
         if (GM_config.get('debug_sites')) {
@@ -7612,9 +7617,9 @@ async function maybeAddLink(elem, site_name, search_url, site, scout_tick, movie
           console.log(name + " POST Response: " + response.responseText + "\n ");
         }
         if (response.responseHeaders.indexOf('efresh: 0; url') > -1 || response.status > 499 || (response.status > 399 && !site.ignore404) || (response.responseText == "" && !site.ignoreEmpty)) {
-          addLink(elem, site_name, target, site, 'logged_out', scout_tick, post_data);
+          addLink(elem, site, 'logged_out', scout_tick);
         } else if (site['positiveMatch'] && site['loggedOutRegex'] && String(response.responseText).match(site['loggedOutRegex'])) {
-          addLink(elem, site_name, target, site, 'logged_out', scout_tick, post_data);
+          addLink(elem, site, 'logged_out', scout_tick);
         } else if (String(response.responseText).match(site['matchRegex']) ? !(success_match) : success_match) {
             if (getPageSetting('highlight_missing').split(',').includes(site['name'])) {
               if (elem.style) {
@@ -7624,26 +7629,26 @@ async function maybeAddLink(elem, site_name, search_url, site, scout_tick, movie
               }
             }
             if (!getPageSetting('hide_missing')) {
-              addLink(elem, site_name, target, site, 'missing', scout_tick, post_data);
+              addLink(elem, site, 'missing', scout_tick);
             }
         } else if (site['loggedOutRegex'] && String(response.responseText).match(site['loggedOutRegex'])) {
-          addLink(elem, site_name, target, site, 'logged_out', scout_tick, post_data);
+          addLink(elem, site, 'logged_out', scout_tick);
         } else if (site['seedingRegex'] && String(response.responseText).match(site['seedingRegex'])) {
-          addLink(elem, site_name, target, site, 'seeding', scout_tick, post_data);
+          addLink(elem, site, 'seeding', scout_tick);
         } else {
-          addLink(elem, site_name, target, site, 'found', scout_tick, post_data);
+          addLink(elem, site, 'found', scout_tick);
         }
       },
       onerror: function() {
-        addLink(elem, site_name, target, site, 'error', scout_tick, post_data);
+        addLink(elem, site, 'error', scout_tick);
         console.log("❌ IMDb Scout Mod (POST-Request Error). Site: " +site_name);
       },
       onabort: function() {
-        addLink(elem, site_name, target, site, 'error', scout_tick, post_data);
+        addLink(elem, site, 'error', scout_tick);
         console.log("❌ IMDb Scout Mod (POST-Request aborted). Site: " +site_name);
       },
       ontimeout: function() {
-        addLink(elem, site_name, target, site, 'error', scout_tick, post_data);
+        addLink(elem, site, 'error', scout_tick);
         console.log("❌ IMDb Scout Mod (POST-Request timed out). Site: " +site_name);
       }
     });
@@ -7695,9 +7700,9 @@ async function maybeAddLink(elem, site_name, search_url, site, scout_tick, movie
         console.log(name + " GET Response: " + response.responseText + "\n ");
       }
       if (response.responseHeaders.indexOf('efresh: 0; url') > -1 || response.status > 499 || (response.status > 399 && !site.ignore404) || (response.responseText == "" && !site.ignoreEmpty)) {
-        addLink(elem, site_name, target, site, 'logged_out', scout_tick);
+        addLink(elem, site, 'logged_out', scout_tick);
       } else if (site['positiveMatch'] && site['loggedOutRegex'] && String(response.responseText).match(site['loggedOutRegex'])) {
-        addLink(elem, site_name, target, site, 'logged_out', scout_tick);
+        addLink(elem, site, 'logged_out', scout_tick);
       } else if (String(response.responseText).match(site['matchRegex']) ? !(success_match) : success_match) {
           if (getPageSetting('highlight_missing').split(',').includes(site['name'])) {
             if (elem.style) {
@@ -7707,26 +7712,26 @@ async function maybeAddLink(elem, site_name, search_url, site, scout_tick, movie
             }
           }
           if (!getPageSetting('hide_missing')) {
-            addLink(elem, site_name, target, site, 'missing', scout_tick);
+            addLink(elem, site, 'missing', scout_tick);
           }
       } else if (site['loggedOutRegex'] && String(response.responseText).match(site['loggedOutRegex'])) {
-        addLink(elem, site_name, target, site, 'logged_out', scout_tick);
+        addLink(elem, site, 'logged_out', scout_tick);
       } else if (site['seedingRegex'] && String(response.responseText).match(site['seedingRegex'])) {
-        addLink(elem, site_name, target, site, 'seeding', scout_tick);
+        addLink(elem, site, 'seeding', scout_tick);
       } else {
-        addLink(elem, site_name, target, site, 'found', scout_tick);
+        addLink(elem, site, 'found', scout_tick);
       }
     },
     onerror: function() {
-      addLink(elem, site_name, target, site, 'error', scout_tick);
+      addLink(elem, site, 'error', scout_tick);
       console.log("❌ IMDb Scout Mod (GET-Request Error). Site: " +site_name);
     },
     onabort: function() {
-      addLink(elem, site_name, target, site, 'error', scout_tick);
+      addLink(elem, site, 'error', scout_tick);
       console.log("❌ IMDb Scout Mod (GET-Request aborted). Site: " +site_name);
     },
     ontimeout: function() {
-      addLink(elem, site_name, target, site, 'error', scout_tick);
+      addLink(elem, site, 'error', scout_tick);
       console.log("❌ IMDb Scout Mod (GET-Request timed out). Site: " +site_name);
     }
   });
@@ -7753,21 +7758,11 @@ function perform(elem, movie_id, movie_title, movie_title_orig, is_tv, is_movie,
         site_shown = true;
         // For TV Series show only on TV links. TV Special, TV Movie, Episode & Documentary are treated as TV and Movie.
         if ((Boolean(site['TV']) == is_tv || Boolean(site['both'])) || (!is_tv && !is_movie) || getPageSetting('ignore_type')) {
+          site = await replaceSearchUrlParams(site, movie_id, movie_title, movie_title_orig, movie_year, series_id, season_id, episode_id);
           if (getPageSetting('call_http_mod')) {
-            const processedUrl = await replaceSearchUrlParams(site, movie_id, movie_title, movie_title_orig, movie_year, series_id, season_id, episode_id, true);
-            maybeAddLink(elem, site['name'], processedUrl, site, scout_tick, movie_id, movie_title, movie_title_orig, movie_year, series_id, season_id, episode_id);
+            maybeAddLink(elem, site, scout_tick);
           } else {
-              if ('goToUrl' in site) {
-                const site_a = {'searchUrl': site['goToUrl'], 'spaceEncode': ('spaceEncode' in site) ? site['spaceEncode'] : '+'};
-                const processedUrl = await replaceSearchUrlParams(site_a, movie_id, movie_title, movie_title_orig, movie_year, series_id, season_id, episode_id);
-                addLink(elem, site['name'], processedUrl, site, 'found', scout_tick);
-              } else if ('mPOST' in site) {
-                  const processed_mPOST = await replaceSearchUrlParams(site, movie_id, movie_title, movie_title_orig, movie_year, series_id, season_id, episode_id, false);
-                  addLink(elem, site['name'], site['searchUrl'], site, 'found', scout_tick, processed_mPOST);
-              } else {
-                  const processedUrl = await replaceSearchUrlParams(site, movie_id, movie_title, movie_title_orig, movie_year, series_id, season_id, episode_id);
-                  addLink(elem, site['name'], processedUrl, site, 'found', scout_tick);
-              }
+            addLink(elem, site, 'found', scout_tick);
           }
         }
       }
@@ -7839,7 +7834,8 @@ function addIconBar(movie_id, movie_title, movie_title_orig) {
 
   $.each(icon_sites, async function(index, site) {
     if (site['show']) {
-      var search_url = ('mPOST' in site) ? site['searchUrl'] : await replaceSearchUrlParams(site, movie_id, movie_title, movie_title_orig);
+      site = await replaceSearchUrlParams(site, movie_id, movie_title, movie_title_orig);
+      var search_url = site.searchUrl;
       var image = getFavicon(site).css('margin', '2px 2px 2px');
       var html = $('<a />').attr('href', search_url).attr('target', '_blank').attr('rel', 'noreferrer').addClass('iconbar_icon').append(image);
 
@@ -7850,7 +7846,7 @@ function addIconBar(movie_id, movie_title, movie_title_orig) {
         var placebo_url = new URL(site['searchUrl']).origin;
         html = $('<a />').attr('href', placebo_url).attr('onclick', "document.getElementById('"+form_name+"').submit(); return false;").attr('target', '_blank').attr('rel', 'noreferrer').addClass('iconbar_icon').append(image);
 
-        var post_data = await replaceSearchUrlParams(site, movie_id, movie_title, movie_title_orig);
+        const post_data = site.mPOST
         var data = (post_data.match('{')) ? post_data.replace(/\+/g, ' ') : '{key:"' + post_data.replace(/&/g, '"},{key:"').replace(/=/g, '",value:"').replace(/\+/g, ' ') + '"}';
         var addform = $('<form></form>');
             addform.attr('id', form_name);
