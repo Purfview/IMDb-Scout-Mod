@@ -4850,7 +4850,7 @@ var german_sites = [
       'TV': true},
   {   'name': 'TorSyndikat',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgBAMAAACBVGfHAAAAMFBMVEUAAQAFKAUhniENRg00yzQlpyUwvTAdgh0uqy0otCgdkR0VZBUZchkslCw3njdBp0A8K5mgAAABPElEQVQoz2KgBmAUhAAgy9jYECggU75qlZJqaLgAc21H6/WNDAxWqpEz01xc/AR2pKVldGgLwAQ8hFvc0jo6eg0YxFcpTUtJS8sTd3FpB2o6wMBsbB3mMv3MaSEXt8M2Ea2FQMOFw1x8DQUtXNw2Wl8NAgowMIcBjWQwc3E7aHz8zAa4gIWLSzfIOSCBEJAA0NCMw0AeRMBXgIH5mltm10EgF6wlV4CBwTYtc4a6AVQAsHQBIFU6c2rQYohAyhwBIC1cFBoEVsKsmQYUEDYWkF6kpLQBLDAzWoDB7v9lRnMlpUKIgDbQHWntgtaLIAKqIAGjmeHWp6ECSyNBwRAadP85TCBUB+jS0NC4R0paG+AC3KpKQACxdpES0D2Mh0AC1SAHMR4vB/lBumrVqmoDsGcEBUHiQKcZg2nKAQDVkV5eM0/GfQAAAABJRU5ErkJggg==',
-      'searchUrl': 'https://torrent-syndikat.org/browse.php?search=1&sterm=%tt%&stype=imdb&genre=0&ttype=all&timespan=all',
+      'searchUrl': 'https://torrent-syndikat.org/torrents/torrents.php?ms=1&cat=all&lb=0&sterm=%tt%&stype=imdb&timespan=all&ttype=all&foreign=yes',
       'loggedOutRegex': /Cloudflare|Ray ID|Domain erwerben/,
       'matchRegex': /Keine Ergebnisse/,
       'both': true},
