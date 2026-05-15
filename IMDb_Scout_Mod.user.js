@@ -6693,7 +6693,6 @@ async function replaceSearchUrlParams(site, movie_id, movie_title, movie_title_o
   var space_replace      = ('spaceEncode' in site) ? site['spaceEncode'] : '+';
   var search_string      = movie_title.trim().replace(/ +\(.*|&|:/g, '').replace(/\s+/g, space_replace);
   var search_string_orig = movie_title_orig.trim().replace(/ +\(.*|&|:/g, '').replace(/\s+/g, space_replace);
-  var movie_year         = (onSearchPage) ? movie_year : document.title.replace(/^(.+) \((\D*|)(\d{4})(.*)$/gi, '$3').match(/\b\d{4}\b/g)?.join(" ") || '';
 
   fields.forEach(function(field) {
     var s = site[field];
@@ -7821,7 +7820,7 @@ function displayButton() {
 //==============================================================================
 
 // Unlike the other URLs, they aren't checked to see if the movie exists.
-function addIconBar(movie_id, movie_title, movie_title_orig) {
+function addIconBar(movie_id, movie_title, movie_title_orig, movie_year) {
   var iconbar;
   // reference + remove "Reference View" txt and a link to settings
   if (onReferencePage) {
@@ -7834,7 +7833,7 @@ function addIconBar(movie_id, movie_title, movie_title_orig) {
 
   $.each(icon_sites, async function(index, site) {
     if (site['show']) {
-      site = await replaceSearchUrlParams(site, movie_id, movie_title, movie_title_orig);
+      site = await replaceSearchUrlParams(site, movie_id, movie_title, movie_title_orig, movie_year);
       var search_url = site.searchUrl;
       var image = getFavicon(site).css('margin', '2px 2px 2px');
       var html = $('<a />').attr('href', search_url).attr('target', '_blank').attr('rel', 'noreferrer').addClass('iconbar_icon').append(image);
@@ -8209,10 +8208,10 @@ function performPage() {
 
         // Create areas to put links in
         if (!GM_config.get("disable_iconsites")) {
-          addIconBar(movie_id, movie_title, movie_title_orig);
+          addIconBar(movie_id, movie_title, movie_title_orig, movie_year);
         }
         if (!GM_config.get("disable_sites")) {
-          perform(getLinkArea(), movie_id, movie_title, movie_title_orig, is_tv, is_movie, series_id, season_id, episode_id);
+          perform(getLinkArea(), movie_id, movie_title, movie_title_orig, is_tv, is_movie, series_id, season_id, episode_id, movie_year);
           if (GM_config.get('load_second_bar_movie') && !GM_config.get('load_third_bar_movie')) {
             getLinkAreaSecond();
           } else if (!GM_config.get('load_second_bar_movie') && GM_config.get('load_third_bar_movie')) {
