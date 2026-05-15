@@ -6670,6 +6670,7 @@ async function replaceSearchUrlParams(site, movie_id, movie_title, movie_title_o
     fields.push('searchUrl');
     fields.push('goToUrl');
   } else if ('mPOST' in site) {
+      fields.push('searchUrl');
       fields.push('mPOST');
   } else {
       fields.push('searchUrl');
@@ -7830,7 +7831,6 @@ function addIconBar(movie_id, movie_title, movie_title_orig) {
   } else {
     iconbar = getIconsLinkArea();
   }
-
 
   $.each(icon_sites, async function(index, site) {
     if (site['show']) {
