@@ -4835,21 +4835,6 @@ var german_sites = [
       'matchRegex': /<a href="\/serie\//,
       'positiveMatch': true,
       'TV': true},
-  {   'name': 'SFP',
-      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQBAMAAADt3eJSAAAAMFBMVEX+AAZ/AAN/AAT9fH/9uLn9UVT8zc7+CxH89fX+Mjf9p6j+X2NAAAL8nZ/+ICX9gobtCjzaAAAAb0lEQVQI12M4qCioKCgoJMMgZxzAAASMDMKXE0AMJgbhgASIiJwfw2ZrEENhSoErWESAcwGEIR+Q4MrAbDyRQbrDwcu0wvYigwIDgytDGedCBgEURkXHJxBjJ0MZyByQuWVAKwQgDEaQMwQVlYRkAAKIFa90L3ECAAAAAElFTkSuQmCC',
-      'searchUrl': 'https://s-f-p.dyndns.dk/browse.php?do=search&keywords=%tt%&search_type=t_genre&category=0&include_dead_torrents=yes',
-      'loggedOutRegex': /Cloudflare|Ray ID|Passwort Vergessen/,
-      'matchRegex': /\/dl.png/,
-      'positiveMatch': true,
-      'both': true},
-  {   'name': 'SFP-Req',
-      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQBAMAAADt3eJSAAAAMFBMVEX+AAZ/AAN/AAT9fH/9uLn9UVT8zc7+CxH89fX+Mjf9p6j+X2NAAAL8nZ/+ICX9gobtCjzaAAAAb0lEQVQI12M4qCioKCgoJMMgZxzAAASMDMKXE0AMJgbhgASIiJwfw2ZrEENhSoErWESAcwGEIR+Q4MrAbDyRQbrDwcu0wvYigwIDgytDGedCBgEURkXHJxBjJ0MZyByQuWVAKwQgDEaQMwQVlYRkAAKIFa90L3ECAAAAAElFTkSuQmCC',
-      'searchUrl': 'https://s-f-p.dyndns.dk/viewrequests.php?do=search_request',
-      'mPOST': 'keywords=%search_string_orig%',
-      'loggedOutRegex': /Cloudflare|Ray ID|Passwort Vergessen/,
-      'matchRegex': /input_true.gif/,
-      'positiveMatch': true,
-      'both': true},
   {   'name': 'TNT',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJUAAACVAQMAAABrbCoMAAAABlBMVEXm5uYmLzenm8r7AAAC9klEQVRIx73Tz27TMBgAcIcgBSE074R2GMsLIAHiAIeqZuJF9gZw7KFqslNv9AWQhsQL8ASQnXJj10G7OlMOHJcKafXWLB9tbH92Yrb2Aj641q/x5+/zH/Jv2v1V5zXtUW3xWtup+6Rhz+v+oGHvsTctq/vXNnnSOrb5MvqebYHMgtpG8S/T9jCEaR1cylTWU4NZbCoTaiDM5BeFGvRNdbmO08VKvFRPCXexipEOTT9gFUdoJ1hFiP+msa6ii1Hy5A7r9DGDWaatRLvS1jMmCm0CK0K7Mlbq4cyyngry21jVv932c8s62/XvW9u60nLb1K7ObWNyYWiYuN3sXCJldh13WHRl9qqEQpowJtAqPA9trBygzSBTxvB8z5WFlbEcEmkQ4t1I0UZ4r0ZoKVqojIK5kwxiZTO8u5GyIBJ4x2GuEj0q9fs4h+9qdAL6HaXwUZ8vjFTKo6qPUXIZeYth5IrNZFa7ER5NNBTSdoDqrFhRyTf1UkSZrqjUb/oQdJUUsF6I9a4B4AB3HPTJQIWnBaBOGko86QitQDO7lqGFQLbkGglaADEV9XdIy4WToKpP1ZgHmb8KyUpiWlR4q1ARLisnQbYKYVkAq28CsOjBciYTy/0hMdoWgSIUJBK+MQqhWH4EKRjzIS1p6QHmJ68+BFUgLz1OFmwINJNTcQOHKYQU7DoAzlPYZWDPZZBfwFcGWaOOY4AyBGK3MF5UgiYN65JXcOBnDeuRd/CFFKTZOD8l7TbnvTZ5n6dP2+bvTx47djzZa9u9w8lDJ543uU8cnJCNzJ+6FgR/sZFrlMeOhTxxjPHMsYgXjgEXTsrASyflOR846f0aMSeVE37UToZRPmwnU4b8uL3wmydnyfYmdQzGbh3VWGxiXjUuNzG//+PSuQfXP683mns5dvaKVmOI23u1tMQplzsFR9/4RbtgAA6ibRGft21wc7Zoz2U3Z9BeIwTu5EIXUydnfzGt1t8XfIPr798z/mmjOx7wde8I35vbTsn/bH8ANSe+EaJ+o2YAAAAASUVORK5CYII=',
       'searchUrl': 'https://tntracker.org/api/browse?cats=6,7,17,18,19,20,22,24,34,35,36,37,38,39,43,45,46,48&orderC=4&orderD=desc&start=0&length=1&search=%search_string_orig%+%year%',
@@ -7450,11 +7435,12 @@ function addLink(elem, site, state, scout_tick) {
     }
   }
   // Hack: Same-origin problem with POST, so remove 'onclick' form (icons mode only).
-  if (site['name'] == "SFP-Req") {
-    const button = $('img[title="SFP-Req"]').parent();
-          button.prop("href", "https://s-f-p.dyndns.dk/viewrequests.php");
-          button.removeAttr("onclick");
-  }
+  // SFP dead, left for example
+//   if (site['name'] == "SFP-Req") {
+//     const button = $('img[title="SFP-Req"]').parent();
+//           button.prop("href", "https://s-f-p.dyndns.dk/viewrequests.php");
+//           button.removeAttr("onclick");
+//   }
 
   // Call to the sorting launcher.
   if (!onSearchPage && !in_element_two && !in_element_three) {
