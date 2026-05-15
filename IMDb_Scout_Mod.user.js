@@ -2285,7 +2285,7 @@ var private_sites = [
   {   'name': 'ADC2',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwAQMAAABtzGvEAAAABlBMVEXIyMgAAAAyQEDlAAAAxUlEQVQY04XNMQrCMBQG4D+NWKfESd9QrEdwDCjo4OAhRBQvUJzcrHgRT2LrLRxzAaGjQvCZZOmm//C+5X/8+JlyXkoH1LnVDqKmY9aBsGQMIC1lhaeIpBNSnq6JKIpoF8ldrJCi7AgYRWaWYJJSM1Io0srqDwpZQTTtbmojcxdhDlcwlx7JXIcGc+ho5qYlZ36FN1tFHicX2A4Ds1IHDkgCK4ibZwxsPDUwABIBdICeRF949tclFpg+75c3YXde4/LB/3wBcl9Cgxe+faAAAAAASUVORK5CYII=',
       'searchUrl': 'https://asiandvdclub.org/torrents/?searchbox=%tt%&search=Search',
-      'loggedOutRegex': /Cloudflare|Ray ID|Forgot password|title>Welcome/,
+      'loggedOutRegex': /Cloudflare|Ray ID|Forgot password|title>Welcome|AUTOMATICALLY REDIRECTED/,
       'matchRegex': /No torrents found/,
       'both': true},
   {   'name': 'Aither',
