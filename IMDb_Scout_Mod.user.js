@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      25.9.2
+// @version      26.0.0
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from hundreds various sites. Adds movies/series to Radarr/Sonarr. Adds external ratings from Metacritic, Rotten Tomatoes, Letterboxd, Douban, Allocine, MyAnimeList, AniList. Media Server indicators for Plex, Jellyfin, Emby. Dark theme/style for Reference View. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAMFBMVEUAAAD/AAAcAAA1AABEAABVAAC3AADnAAD2AACFAAClAABlAAB3AADHAACVAADYAABCnXhrAAAD10lEQVRIx73TV4xMURgH8H/OnRmZWe3T7h2sOWaNXu7oJRg9UccuHgTRBatMtAgSg+gJu9q+kFmihcQoD8qLTkK0CIkoy0YJITsRD0rCKTHFrnkSv5e5c88/53znO+fiPwvsvrN038cPNqrG9pJmHkRVnPcpaTlHJY60cfPSpsrzl1LKihrmLvxhCM2i3OHvDx0d+H7e3F6JBv5iZMiJfhFTfPYDMHrMImpwimWWUdSgDQkbno7fFpUPVgh+pHFbZR4SovSctDCM9Hac9IKd9rO8EevtBCkXgY5IMmgquwypP7qqfcp/Tp4KLONDVsWh3RSBB2rnZfit69ocUdqLn2prrRZYM0Jg4JibamKsqe7gfEh5GOAfeYJjVHIPZvil97rcXkMog30byWRwXYRWoxHbzNFHJJpAarO8NdEBBsdCaP3WMJltTmQd4zlnekTq9Z5dgACwAlrpK4BxdV5mvLuspRgMSHbCIFF0iS8MZ5S8oYBYKY7rByC4dDM9uSIUmPOIwxgQBoYeF93auP4qFyPbIVXziWeGTH1EFM57kJo2hqQju6BwIyRf6RmCjdT4JOdiwNgiH/PPD3qoqlsNaXRd+fKtFfECxlZVNVF9SOsgTZEr2TUjJJbyeNX1IZrKIbyGlBABfpQPv2UDrly13LkJXDVhpQ5MhtGwcyF4HKjlU4E8xwB0AvDjd6AGmevZ87EcQRHgcO52e9uNsYELOrAa/Yh81YlmYLQJ5HWyq0+kzQ/DQKEusg6CRI27ryy8nReRS0wsoetkmRwogHSprliCckfEjXG9yAQc74J0WB99vu6DF3i3pMucsXM6tpBbxd2mVJAwXwGogNRBvGRA4jtHKTXkAIwLGCR/mT4Lh75oneQXXP9sAYfGRDCsnw7pX/jRZkU3M44kjw2l5zRIzb4CbZ8dULdL6wbNPZOpK0B6gN1UR1mdoxAaL/GrWiLPL3SEwW9YMTU/d64BtLahAVyucWhj9Mm8ign9IfQaBtd2/GbvCAEBpG5eMcrj2I0ktpKLeaqXQ3Pst42KGIshpdTmQLAeTgFGJ2wvh+tayMOR0n1RZ8B9z13vnOPBnsBq4E1ffgZpPFZHWVpO2cvhjYpOcbBd5TlhpDu5zq9mHGZcVi0y+VFkcFkDdyKJfTt99wEyHSEzDM90KH0nexpwZHJHKYYhjzlwGe0pP/IKfxociaEb7YDbi6KGJY1R2cR76E6NAtXqY4pPH3plLcl8LD7V+cOLUbUWRFZRPTAbVZO3mxK18Xc1ZaAiS8ARJXpZliXAomR94siiiMx8ZBOkXGTlnH0F/9ov1xPtWwEqP9wAAAAASUVORK5CYII=
@@ -1494,6 +1494,34 @@
 
 25.9.2  - Updated: ST
 
+26.0.0  - New feature: Added option to inject long plot (aka Storyline) instead of short in compact mode.
+          Improvement: Inject plot in compact mode as it can be truncated. [www.imdb.com/title/tt7177316/reference]
+          Improvement: Prevent multiple executions of a event with DOMContentLoaded.
+          Improvement: Reworked the most helpful review injection to bypass recent IMDb restrictions for non-logged-in users.
+          Improvement: Faster Douban ratings and %doubanid%. [removed non-working method and swapped some]
+          Improvement: Removed jQuery from POST onclick links.
+          Improvement: Added support for duplicate keys in 'mPOST' example "1".
+          Improvement: Reworked performPage func.
+          Change: On the redesigned pages with non-Firefox - start with delay instead of using MutationObserver.
+          Fixed: The script wasn't running on new format IMDb URLs for user ratings/watchlist pages.
+          Fixed: Functionality on the list pages was borked because of IMDb anti-bot measures.
+          Fixed: Principal credits injection was broken in compact mode due to IMDb anti-bot measures.
+          Fixed: An author of a review was missing in compact mode.
+          Fixed: The script wasn't working on the reference pages with Chromium based browsers.
+          Fixed: Long standing issue - %search_string% was affected by the user's location and IMDb preferences.
+          Fixed: Issues with non-English IMDb pages.
+          Fixed: Barely visible 'empty' links in the right sidebar in compact mode.
+          Fixed: No borders in the most helpful review [compact mode].
+          Fixed: Sites selected in the 2nd/3rd bars were processed when the bars were disabled and auto-search was off.
+          Fixed: URL parameters in 'searchUrl' were parsed twice when auto-search was off.
+          Fixed: Douban ratings weren't working.
+          Fixed: Metacritic user ratings weren't working.
+          Fixed: Ratings color scheme wasn't working in compact mode.
+          Fixed: URL parameters were parsed twice in the sites with 'goToUrl'.
+          Fixed: Redundant movie_year processing in a wrong place.
+          Removed various deprecated code.
+          Added: yggReborn, SuperEmbed.
+          Removed: FearNoPeer, YGG, SFP, AXEL torrents (BG), Videoteka, GDrivePlayer.
 
 //==============================================================================
 //    Notes.
@@ -1519,7 +1547,7 @@ UNIT3D:
       'seedingRegex': /fal fa-leaf/,
 
       or
-      
+
       'matchRegex': /torrents\/download|torrent-search--poster__poster/,
       'positiveMatch': true,
 
