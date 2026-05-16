@@ -1603,7 +1603,8 @@ Can be URL or Base64 string (www.base64-image.de).
 URL to perform a search against, see below for how to tailor a string to a site.
 
 #  'matchRegex':
-A string which appears if the searchUrl *doesn't* return a result.
+A string or regex which appears if the searchUrl *doesn't* return a result.
+Can contain URL parameters, but matchRegex should be string.
 
 #  'positiveMatch' (optional):
 Changes the test to return true if the searchUrl *does* return a result that matches matchRegex.
@@ -6667,15 +6668,10 @@ async function replaceSearchUrlParams(site, movie_id, movie_title, movie_title_o
   }
 
   var fields = [];
-  if ('goToUrl' in site) {
-    fields.push('searchUrl');
-    fields.push('goToUrl');
-  } else if ('mPOST' in site) {
-      fields.push('searchUrl');
-      fields.push('mPOST');
-  } else {
-      fields.push('searchUrl');
-  }
+  if ('goToUrl'    in site) {fields.push('goToUrl');}
+  if ('mPOST'      in site) {fields.push('mPOST');}
+  if ('searchUrl'  in site) {fields.push('searchUrl');}
+  if ('matchRegex' in site && typeof site.matchRegex === 'string') {fields.push('matchRegex');}
 
   var allStrings = fields.map(f => site[f]).join(' ');
   var resolved = {};
