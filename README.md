@@ -42,7 +42,7 @@ Inside the script, there is a list of dictionaries that contains of all the site
   - `name`: A site name.
   - `icon` (optional): Icon for a site.
   - `searchUrl`: The URL to perform a search against, see below for how to tailor a string to a site.
-  - `matchRegex`: A string or regex which appears if the searchUrl *doesn't* return a result.
+  - `matchRegex`: A string or regex which appears if the searchUrl *doesn't* return a result. Supports URL parameters.
   - `positiveMatch` (optional): Changes the test to return true if the searchUrl *does* return a result that matches matchRegex
   - `seedingRegex` (optional): The string which appears if the searchUrl does return a result with seeding indicator   
   - `TV` (optional): If true, it means that this site will only show up on TV pages. By default, sites only show up on movie pages.
