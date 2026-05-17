@@ -12544,7 +12544,7 @@ if (Boolean(location.href.match('\\?ref_=')) || Boolean(location.href.match('\\?
         reference_href = reference_href + "/reference/";
     }
     // window.location.replace(reference_href);
-    window.location.assign(stripped_href);
+    window.location.assign(reference_href);
     return;
 }
 
