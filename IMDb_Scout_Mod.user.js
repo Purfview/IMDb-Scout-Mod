@@ -4045,9 +4045,9 @@ var private_sites = [
       'loggedOutRegex': /Cloudflare|Ray ID|forgot-password/,
       'matchRegex': /Sonuç bulunamadı|no results found/,
       'both': true},
-  {   'name': 'TVCUK',
+  {   'name': 'TVCK',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAABrVBMVEUAAAAKCkekpquLio6fnrKujJGpuLru6enf3+BaW382NVaXR0h8e4GgpbCGhZTO2OScmp7S0/JWVHeuh4nq3NzX0tMoJlLSIySlVW62MTLbvb3RtLYdHUfCJiTRm6KVc4TwY2PYVFu/YWGgfYI/PGvoLCyrkZa3fH6fam2VKCvAm56ZJCWOWXeaOjyRf4MvL3lDQWUlJEZdX4HsUVQ0M4yOVVu3NjejlaiChpZCQWYpKbfOtMLhra7FoKalWFrArrfMprIvLlebiJz8/PxydoaOOz2YZGaZhIjKtLZ+fo64u8BPT2KRkal4aHdJSnR/g7uIgIhzX2yZOjteZLd6eb5rc6G/V1e9eXzjrq1JR1jhioqXnObksLVKTJxaSFxsbJCvo6hoZ3jDyNvk4uf3o6Khm63ptrhGRnU5Ooi8sbKAforqwr+7t7Zqa4eLkqjy8fF/fqL+w72ne31FTHrEx8WIhoqRlrfRpKOGjZJteoD///+Vm6DCv79xcYfh4uakaWvpFhbh19jnzc3Zy8y2tsfrubnKhoitXnSeWVyoTVsAAFryVlfETlDiJiXqJCRdnEgIAAAAf3RSTlMA/Tg3FQ0J/vz7vLyDXEUrHwn+/fv6+ff09PPz8/Py8vLy8O/v7+7u7u7s6uno5+fm5uTj4N/e19fW1NHPzs7MyMjGxcPBwL25t7axrKqqqaSemJKQkIyJiIiHhYSAf318enlzb2tmZmJdXE1NSkg/PDkzMjAwLi4tJiUlJB0QJvYP6gAAANRJREFUGNNjgIAq53wGOKgD4uQWH1a4QLxfarkHp0wWX6g/E1ggnVEoIducq8SpXacCLFBmxGkfYesSpdDjxgYW4Of14mBn59BS5uEVBHJZ06xjbNqaGoX13Aujg2sZGMJke/saGlqb6yXFVY0lPJkYioK0XbnVRUTrlTS4zXR5BBgY2PiYkuSkpDvULPJymCGGOihqBsrbBYjph0AcltLdGVes4ltj2WXFAhYIN/XOjWU0yEx0NCkAC1RXsjFkMBoyM7CWssD9w8IVCWMKQihmASgfAFEOKVdX7K2WAAAAAElFTkSuQmCC',
-      'searchUrl': 'https://tvchaosuk.com/torrents/filter?imdb=%tt%',
+      'searchUrl': 'https://tvchaosuk.com/torrents/filter?_token=666&imdb=%tt%',
       'loggedOutRegex': /Forgot Your Password|Forgot your password/,
       'matchRegex': /<tbody>\s*<\/tbody>/,
       'both': true},
@@ -7632,6 +7632,11 @@ async function maybeAddLink(elem, site, scout_tick) {
       "Referer": "https://videothek.io",
       "Authorization": GM_config.get("videothek_authToken")
     };
+  } else if (site['name'] == "TVCK") {
+    reqHeader = {
+      "Host": "tvchaosuk.com",
+      "Referer": "https://tvchaosuk.com",
+    };
   }
 
   // Check for results with GET method.
@@ -9656,7 +9661,7 @@ async function sonarrButtonBuilder(tvdbid, sonarr_url, sonarr_apikey) {
   let button = $('a[href="https://sonarr.tv"]');
       button.prop("href", "javascript: void(0)");
       button.removeAttr("target");
-  if (exists) {
+  ifÿ ex ᆖ翴 ) {
     button.find('img').prop("src", exists_icon);
     button.click(function() {
       GM.openInTab(sonarr_url + "/series/" + exists[0].titleSlug);
