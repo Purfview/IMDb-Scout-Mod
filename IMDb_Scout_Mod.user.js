@@ -9661,7 +9661,7 @@ async function sonarrButtonBuilder(tvdbid, sonarr_url, sonarr_apikey) {
   let button = $('a[href="https://sonarr.tv"]');
       button.prop("href", "javascript: void(0)");
       button.removeAttr("target");
-  ifÿ ex ᆖ翴 ) {
+  if (exists) {
     button.find('img').prop("src", exists_icon);
     button.click(function() {
       GM.openInTab(sonarr_url + "/series/" + exists[0].titleSlug);
