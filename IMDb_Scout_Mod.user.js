@@ -32,6 +32,7 @@
 // @include      https://*.imdb.tld/*/title/tt*
 //
 // @exclude      /title\/tt\d+\/\w(?!(eference))/
+// @exclude      /list\/ls.*\/edit/
 // @exclude      /anon/
 // @exclude      /pro.imdb/
 //
