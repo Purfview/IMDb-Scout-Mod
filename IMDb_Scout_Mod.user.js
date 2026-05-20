@@ -1530,7 +1530,7 @@
           Updated Skwirll. [to use the new 'matchRegex' feature and fix false positives]
 
 26.2.0  - Fixed: Regression bug with "Redirect to Reference Page" introduced in 26.0.0
-          Bulk update of UNIT3D matchRegexl.
+          Bulk update of UNIT3D matchRegex.
           Removed: LBM
 
 26.3.0  - Fixed: Broken functionality on the list pages.
