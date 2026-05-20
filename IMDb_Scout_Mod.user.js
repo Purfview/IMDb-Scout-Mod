@@ -6654,9 +6654,11 @@ var icon_sites = icon_sites_main.concat(special_buttons);
 //==============================================================================
 
 async function replaceSearchUrlParams(site, movie_id, movie_title, movie_title_orig, movie_year, series_id, season_id, episode_id) {
+  const clonedSite = structuredClone(site);
+
   if (site.searchUrl.includes("http://voidtools.replacement")) {
     const voidURL = GM_config.get("void_url").replace(/\/+$/, "");
-    site.searchUrl = site.searchUrl.replace("http://voidtools.replacement", voidURL);
+    clonedSite.searchUrl = clonedSite.searchUrl.replace("http://voidtools.replacement", voidURL);
   }
 
   var fields = [];
@@ -6683,7 +6685,7 @@ async function replaceSearchUrlParams(site, movie_id, movie_title, movie_title_o
   var search_string_orig = movie_title_orig.trim().replace(/ +\(.*|&|:/g, '').replace(/\s+/g, space_replace);
 
   fields.forEach(function(field) {
-    var s = site[field];
+    var s = clonedSite[field];
     s = s.replace(/%tt%/g, 'tt' + movie_id)
          .replace(/%nott%/g, movie_id)
          .replace(/%tvdbid%/g, resolved["%tvdbid%"])
@@ -6699,10 +6701,10 @@ async function replaceSearchUrlParams(site, movie_id, movie_title, movie_title_o
          .replace(/%year%/g, movie_year)
          .replace(/---/g, '-');
 
-    site[field] = s;
+    clonedSite[field] = s;
   });
 
-  return site;
+  return clonedSite;
 }
 
 //==============================================================================
