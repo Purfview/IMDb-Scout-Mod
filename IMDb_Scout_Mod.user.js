@@ -5010,7 +5010,7 @@ var usenet_sites = [
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACIAAAAiBAMAAADIaRbxAAAAElBMVEUaHSBISkzDxcB9f36ipaD29+oztTEkAAAA3ElEQVQoz62QQXbDIAxEB5sDqNjdB7D3YHKA2uYCpeH+V6nimEDWyaz0vkYaAT6r3iC5FgjbQS/UkAiJH9hmxkEYgqwmBQgQcHlu4WoIjjuFLMQkem7pE7i7j+i+8EBde4dywCNBLMYepsPvuLDE0J1tzhQrrnGngc60wC095nxzhEeYdNCz7m24clnusWKzx4PLzesfROL9o0dByS83glSKCsk5e40vX39ti5lM1Ph+EtHnyTieq8TPaRoIqERv0z4SqsQvBZItwbz7MaJVl5O5oJVgQniRCive0T/BTBnUxBXQvwAAAABJRU5ErkJggg==',
       'searchUrl': 'https://newzbay.cc/movies/?imdb=%nott%',
       'loggedOutRegex': /Cloudflare|Ray ID|Forgotten your password?/,
-      'matchRegex': /nzb_multi_operations_form/,
+      'matchRegex': /dropdown-item downloadnzb/,
       'positiveMatch': true},
   {   'name': 'NewzBay (DE)',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACIAAAAiBAMAAADIaRbxAAAAElBMVEUaHSBISkzDxcB9f36ipaD29+oztTEkAAAA3ElEQVQoz62QQXbDIAxEB5sDqNjdB7D3YHKA2uYCpeH+V6nimEDWyaz0vkYaAT6r3iC5FgjbQS/UkAiJH9hmxkEYgqwmBQgQcHlu4WoIjjuFLMQkem7pE7i7j+i+8EBde4dywCNBLMYepsPvuLDE0J1tzhQrrnGngc60wC095nxzhEeYdNCz7m24clnusWKzx4PLzesfROL9o0dByS83glSKCsk5e40vX39ti5lM1Ph+EtHnyTieq8TPaRoIqERv0z4SqsQvBZItwbz7MaJVl5O5oJVgQniRCive0T/BTBnUxBXQvwAAAABJRU5ErkJggg==',
