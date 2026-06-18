@@ -1538,7 +1538,7 @@
           Added: NXM.
           Renamed: TVCK to TVCUK.
 
-26.3.1  - Added: Apple Deluxe
+26.3.1  - Added: Apple Deluxe, MNS
           Removed: TVCUK, Podnapisi, GayTor
 
 
