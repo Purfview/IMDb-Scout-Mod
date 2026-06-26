@@ -4706,7 +4706,7 @@ var german_sites = [
       'both': true},
   {   'name': 'Data-Load',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgBAMAAACBVGfHAAAAGFBMVEUAAABHPnB/RKTzQfzFR+dVY6eUc/pXrvt/ApnCAAAAAXRSTlMAQObYZgAAAKxJREFUKM+FkuENwiAQhcsGvab6H9AB8FigtQto0gE0hhFkfR9ognBN+jVpwpd75ODoviiivvuDMs0alHVtVBF9XQBKQSmRgiqEaBLIJDEYvd4OK/iJkXV4xBjf4QmBMutHf84iaEqCnfXHgMT9NUEgYdidZgL4dznBml0RfMnKgAURJKZrVsx+wabKssmKwZz6GAwaw5cgCNH67mn3b6zJiDHIQdVmc9jiOXwA+nIrbK/VvwoAAAAASUVORK5CYII=',
-      'searchUrl': 'https://www.data-load.in/search/12345678/?q=%tt%&c[container_only]=1&o=date',
+      'searchUrl': 'https://www.data-load.me/search/12345678/?q=%tt%&c[container_only]=1&o=date',
       'loggedOutRegex': /Cloudflare|Ray ID|Passwort vergessen|Forgot your password/,
       'matchRegex': /No results found|Keine Ergebnisse gefunden/,
       'both': true},
