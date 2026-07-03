@@ -10560,7 +10560,7 @@ function getLetterboxdRatingsCustom(url, lboxd_cust) {
         ratings_array.push($(result).find('.rated-large-10').parentsUntil('.section').find('li').length *10);
 
         const voters = $(result).find('.film-rating-group').find('li').length;
-        const average = (eval(ratings_array.join("+")) / voters) *10;
+        const average = (ratings_array.reduce((a, b) => a + b, 0) / voters) *10;
         user_rating = Math.round(average);
       } else {
         return;
