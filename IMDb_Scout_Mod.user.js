@@ -10548,16 +10548,16 @@ function getLetterboxdRatingsCustom(url, lboxd_cust) {
       let user_rating;
       if ($(result).find('[class*=rated-large-]').length) {
         let ratings_array = [];
-        ratings_array.push($(result).find('.rated-large-1').parentsUntil('.section').find('li').length);
-        ratings_array.push($(result).find('.rated-large-2').parentsUntil('.section').find('li').length *2);
-        ratings_array.push($(result).find('.rated-large-3').parentsUntil('.section').find('li').length *3);
-        ratings_array.push($(result).find('.rated-large-4').parentsUntil('.section').find('li').length *4);
-        ratings_array.push($(result).find('.rated-large-5').parentsUntil('.section').find('li').length *5);
-        ratings_array.push($(result).find('.rated-large-6').parentsUntil('.section').find('li').length *6);
-        ratings_array.push($(result).find('.rated-large-7').parentsUntil('.section').find('li').length *7);
-        ratings_array.push($(result).find('.rated-large-8').parentsUntil('.section').find('li').length *8);
-        ratings_array.push($(result).find('.rated-large-9').parentsUntil('.section').find('li').length *9);
-        ratings_array.push($(result).find('.rated-large-10').parentsUntil('.section').find('li').length *10);
+        ratings_array.push($(result).find('.rated-large-1').closest('.film-rating-group').find('li').length);
+        ratings_array.push($(result).find('.rated-large-2').closest('.film-rating-group').find('li').length *2);
+        ratings_array.push($(result).find('.rated-large-3').closest('.film-rating-group').find('li').length *3);
+        ratings_array.push($(result).find('.rated-large-4').closest('.film-rating-group').find('li').length *4);
+        ratings_array.push($(result).find('.rated-large-5').closest('.film-rating-group').find('li').length *5);
+        ratings_array.push($(result).find('.rated-large-6').closest('.film-rating-group').find('li').length *6);
+        ratings_array.push($(result).find('.rated-large-7').closest('.film-rating-group').find('li').length *7);
+        ratings_array.push($(result).find('.rated-large-8').closest('.film-rating-group').find('li').length *8);
+        ratings_array.push($(result).find('.rated-large-9').closest('.film-rating-group').find('li').length *9);
+        ratings_array.push($(result).find('.rated-large-10').closest('.film-rating-group').find('li').length *10);
 
         const voters = $(result).find('.film-rating-group').find('li').length;
         const average = (ratings_array.reduce((a, b) => a + b, 0) / voters) *10;
