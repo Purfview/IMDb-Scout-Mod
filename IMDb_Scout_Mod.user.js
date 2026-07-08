@@ -5290,7 +5290,7 @@ var subs_sites = [
   {   'name': 'AltyaziDB (TR)',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAAA6CAMAAAA3Dq9LAAAAVFBMVEUAAAAkzHIkzHIkzHIkzHIkzHIkzHIkzHIkzHIkzHIkzHIkzHIkzHIkzHIkzHIkzHIkzHIkzHIkzHIkzHIkzHIkzHIkzHIkzHIkzHIkzHIkzHIkzHL6b0hOAAAAG3RSTlMAx/p8U8+KQiDzT2s3ngaq1OrAFt2zp4MuSg/o2cMmAAABTUlEQVRIx+2W246DIBRFD0KrVkS5qFj+/z9HkBSpsV6amXRS19N2J66AgggARPBkJ6rM4MHVHIFT8BBzjPruBcgchHhBMuT8sg9lBVcvsBnBPtJTcAo+WdALNAHDSFZO21IuC3RiIgpwiLhtlgWFiRHjAPK4zeW7guyloNHUom1GD4GiIylfFZS+pDnPm4eg9i27cK62CZiU8h4EzNdyANYFgSAInII/E2QYYzITsALj4r5JkNpyvpC4McnrhaTaytKKaC/kVevayubs9zYTMTEtWCSPW778DFgz+4OYDywp3LC6rrv2zwJg6S3QS/Do2wQNgWMf1VPg0UIIVHzg0fafBNQMdBOBIuvQ8VYbb9gds73LwM02GrBUsx7KjYIKLO1znUCm3hSARjum0Mz6oWQ9XqcjYCGdvXDTRtgBjoOvMXBoIX23gKq6VnjMPy8PeUra0QYuAAAAAElFTkSuQmCC',
       'searchUrl': 'https://altyazidb.com/onizleme.php?type=imdb&id=%tt%',
-      'matchRegex': /TMDB veritabanında bulunamadı/,
+      'matchRegex': /TMDB veritabanında bulunamadı|sistemimize kazandırılıyor/,
       'inSecondSearchBar': true,
       'both': true},
   {   'name': 'AnimeSub (PL)',
