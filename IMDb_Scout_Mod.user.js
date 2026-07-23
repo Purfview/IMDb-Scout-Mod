@@ -8502,6 +8502,7 @@ async function activate_CheckURLs(button, completed_icon) {
       deduped_hosts = deduped_hosts.filter(function (e) {return e !== 'https://eztvx.to';});
       deduped_hosts = deduped_hosts.filter(function (e) {return e !== 'https:///w-o-t.pro';});
       deduped_hosts = deduped_hosts.filter(function (e) {return e !== 'https://filmboards.com';});
+      deduped_hosts = deduped_hosts.filter(function (e) {return e !== 'https://www.bit-hdtv.com';});
 
   const interval = 100;
   const timeout = 45000;
@@ -8519,7 +8520,7 @@ async function activate_CheckURLs(button, completed_icon) {
         onload: function(response) {
           const s = response.status;
           countdown_CheckURLs(button, completed_icon);
-          if (s != 200 && s != 403 && s != 302) {  // 403 - cloudflare challenge, 302 - www.bit-hdtv.com
+          if (s != 200 && s != 403) {  // 403 - cloudflare challenge
             console.log("❌ IMDb Scout Mod (CheckURLs): HTTP Status " + s +" - "+ i);
             log_CheckURLs(i, days_now)
           } else {
