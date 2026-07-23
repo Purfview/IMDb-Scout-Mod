@@ -8520,6 +8520,7 @@ async function activate_CheckURLs(button, completed_icon) {
         method: "GET",
         timeout: timeout,
         url: i,
+        cookiePartition: { topLevelSite: i },
         onload: function(response) {
           const s = response.status;
           countdown_CheckURLs(button, completed_icon);
