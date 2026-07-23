@@ -5899,7 +5899,7 @@ var streaming_sites = [
   {   'name': 'StreamCloud (DE)',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQBAMAAADt3eJSAAAAGFBMVEX9/vwiXbE1b75Gf8Zcj9GLrtnZ6fvE2O7Yo1L8AAAAUklEQVQI12PABthDQhPAjBAXlzAQzeoCBCAGizEQhDMwsAUbg4ADQ7GSkpKRkpIqg5MSGCgzKCkqKikKKQkzGAqCgQhDIIQhxsCqCKKFExhwAwDALgv/lINodwAAAABJRU5ErkJggg==',
       'loggedOutRegex': /Cloudflare|Ray ID/,
-      'searchUrl': 'https://streamcloud.my/?do=search&subaction=search&story=%tt%',
+      'searchUrl': 'https://streamcloud.forum/?do=search&subaction=search&story=%tt%',
       'matchRegex': /item-video/,
       'positiveMatch': true,
       'inThirdSearchBar': true,
