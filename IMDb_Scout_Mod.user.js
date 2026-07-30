@@ -5591,6 +5591,21 @@ var subs_sites = [
 ];
 
 var pre_databases = [
+  {   'name': 'crowdNFO',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwAgMAAAAqbBEUAAAACVBMVEUAAAD///8AAABzxoNxAAAAAXRSTlMAQObYZgAAALpJREFUKM990rENxSAMBNCIMqNkH6dgBKZgifRpkOCm/IdtPogiViTy4Nxgju86gTr+A1iv4+qAA1p5dMzchSaSAE89ImK5wANW1NzJg9jkVlwQ6UnUjsYIiiQQKB3ccaQSwaZ8BMYTO0QUXAzvcXKxLxHtA6ybiH80Q+mIK1JZgMfh/RPNoWv5RNqBBYGwQsczkIlisZs4BiL03gxJAQOq3fXEnMI2H59cBNaZVkUw5P0d7C+ER+zY6wdFUso28xDDuwAAAABJRU5ErkJggg==',
+      'searchUrl': 'https://crowdnfo.net/home/search?query=%search_string%&categories=Movies',
+      'loggedOutRegex': /Cloudflare|Ray ID/,
+      'matchRegex': /No results found/,
+      'spaceEncode': '.',
+      'inSecondSearchBar': true},
+  {   'name': 'crowdNFO',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwAgMAAAAqbBEUAAAACVBMVEUAAAD///8AAABzxoNxAAAAAXRSTlMAQObYZgAAALpJREFUKM990rENxSAMBNCIMqNkH6dgBKZgifRpkOCm/IdtPogiViTy4Nxgju86gTr+A1iv4+qAA1p5dMzchSaSAE89ImK5wANW1NzJg9jkVlwQ6UnUjsYIiiQQKB3ccaQSwaZ8BMYTO0QUXAzvcXKxLxHtA6ybiH80Q+mIK1JZgMfh/RPNoWv5RNqBBYGwQsczkIlisZs4BiL03gxJAQOq3fXEnMI2H59cBNaZVkUw5P0d7C+ER+zY6wdFUso28xDDuwAAAABJRU5ErkJggg==',
+      'searchUrl': 'https://crowdnfo.net/home/search?query=%search_string%&categories=TV',
+      'loggedOutRegex': /Cloudflare|Ray ID/,
+      'matchRegex': /No results found/,
+      'spaceEncode': '.',
+      'inSecondSearchBar': true,
+      'TV': true},
   {   'name': 'preDataBa.se',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwBAMAAAClLOS0AAAAD1BMVEUAAAC63PSImaZndoCft8hCQvrIAAAAAXRSTlMAQObYZgAAAM9JREFUOMu1kt0NwyAQg1EyQSoGCJQBEEwQxP4z9fipDFwRbaX4Bclf7IPoxFdymnRyXxc9Jz4jW3FZ256tGPMxBsxBCkMkfU52JV3AHFUEbPuE6w0ebVcJINLcSQEEgK00ocsCHJDEEJdGQAB6DlQLwj3AdGB9Xf5AgKsDdvUTMZ0DdMm8QRiimsAJgIgcl6ES2a+P0ZVE3S6J94aK+fLu3rsIHxM8SWOrTwRIls7iWwQKIDn0pwBAL88AAqS/A4vRAGIC7AyIT0KAR8QvegHFvkYLmHvzwwAAAABJRU5ErkJggg==',
       'searchUrl': 'https://predataba.se/api/search.php?query=%search_string%+%year%&page=0',
