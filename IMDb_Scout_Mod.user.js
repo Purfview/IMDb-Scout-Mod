@@ -7998,7 +7998,8 @@ function performSearchSecondPart(elem, link, movie_id, showsites, scout_tick) {
     data:    JSON.stringify(query),
     headers: {
       'Content-Type': 'application/json',
-      'x-imdb-client-name': 'imdb-web-next-localized'
+      'x-imdb-client-name': 'imdb-web-next-localized',
+      'x-imdb-user-country': 'US'
     },
     onload: function(response) {
       if (response.status == 200) {
@@ -8076,7 +8077,8 @@ function performPage() {
     data:    JSON.stringify(query),
     headers: {
       'Content-Type': 'application/json',
-      'x-imdb-client-name': 'imdb-web-next-localized'
+      'x-imdb-client-name': 'imdb-web-next-localized',
+      'x-imdb-user-country': 'US'
     },
     onload: function(response) {
       if (response.status == 200) {
@@ -11163,7 +11165,8 @@ function getStuffForCompact() {
     data:    JSON.stringify(query),
     headers: {
       'Content-Type': 'application/json',
-      'x-imdb-client-name': 'imdb-web-next-localized'
+      'x-imdb-client-name': 'imdb-web-next-localized',
+      'x-imdb-user-country': 'US'
     },
     onload: function(response) {
       if (response.status == 200) {
@@ -11264,7 +11267,8 @@ function getIMDbBestReview() {
     data:    JSON.stringify(query),
     headers: {
       'Content-Type': 'application/json',
-      'x-imdb-client-name': 'imdb-web-next-localized'
+      'x-imdb-client-name': 'imdb-web-next-localized',
+      'x-imdb-user-country': 'US'
     },
     onload: function(response) {
       if (response.status == 200) {
