@@ -7997,7 +7997,8 @@ function performSearchSecondPart(elem, link, movie_id, showsites, scout_tick) {
     url:     "https://api.graphql.imdb.com",
     data:    JSON.stringify(query),
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'x-imdb-client-name': 'imdb-web-next-localized'
     },
     onload: function(response) {
       if (response.status == 200) {
@@ -8074,7 +8075,8 @@ function performPage() {
     url:     "https://api.graphql.imdb.com",
     data:    JSON.stringify(query),
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'x-imdb-client-name': 'imdb-web-next-localized'
     },
     onload: function(response) {
       if (response.status == 200) {
@@ -11160,7 +11162,8 @@ function getStuffForCompact() {
     url:     "https://api.graphql.imdb.com",
     data:    JSON.stringify(query),
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'x-imdb-client-name': 'imdb-web-next-localized'
     },
     onload: function(response) {
       if (response.status == 200) {
@@ -11260,7 +11263,8 @@ function getIMDbBestReview() {
     url:     "https://api.graphql.imdb.com",
     data:    JSON.stringify(query),
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'x-imdb-client-name': 'imdb-web-next-localized'
     },
     onload: function(response) {
       if (response.status == 200) {
