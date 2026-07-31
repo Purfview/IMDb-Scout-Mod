@@ -7504,8 +7504,8 @@ async function maybeAddLink(elem, site, scout_tick) {
 
   var success_match = ('positiveMatch' in site) ? site['positiveMatch'] : false;
 
-  // Check tmdb/tvdb conversion.
-  if (search_url.indexOf('=00000000') > -1 || search_url.indexOf('=undefined') > -1) {
+  // Check tmdb/tvdb & ect conversion.
+  if (search_url.indexOf('00000000') > -1 || search_url.indexOf('undefined') > -1) {
     addLink(elem, site, 'error', scout_tick);
     return;
   }
