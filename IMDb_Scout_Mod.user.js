@@ -1,7 +1,7 @@
 ﻿// ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      27.3.0
+// @version      27.3.1
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from hundreds various sites. Adds movies/series to Radarr/Sonarr. Adds external ratings from Metacritic, Rotten Tomatoes, Letterboxd, Douban, Allocine, MyAnimeList, AniList. Media Server indicators for Plex, Jellyfin, Emby. Dark theme/style for Reference View. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAMFBMVEUAAAD/AAAcAAA1AABEAABVAAC3AADnAAD2AACFAAClAABlAAB3AADHAACVAADYAABCnXhrAAAD10lEQVRIx73TV4xMURgH8H/OnRmZWe3T7h2sOWaNXu7oJRg9UccuHgTRBatMtAgSg+gJu9q+kFmihcQoD8qLTkK0CIkoy0YJITsRD0rCKTHFrnkSv5e5c88/53znO+fiPwvsvrN038cPNqrG9pJmHkRVnPcpaTlHJY60cfPSpsrzl1LKihrmLvxhCM2i3OHvDx0d+H7e3F6JBv5iZMiJfhFTfPYDMHrMImpwimWWUdSgDQkbno7fFpUPVgh+pHFbZR4SovSctDCM9Hac9IKd9rO8EevtBCkXgY5IMmgquwypP7qqfcp/Tp4KLONDVsWh3RSBB2rnZfit69ocUdqLn2prrRZYM0Jg4JibamKsqe7gfEh5GOAfeYJjVHIPZvil97rcXkMog30byWRwXYRWoxHbzNFHJJpAarO8NdEBBsdCaP3WMJltTmQd4zlnekTq9Z5dgACwAlrpK4BxdV5mvLuspRgMSHbCIFF0iS8MZ5S8oYBYKY7rByC4dDM9uSIUmPOIwxgQBoYeF93auP4qFyPbIVXziWeGTH1EFM57kJo2hqQju6BwIyRf6RmCjdT4JOdiwNgiH/PPD3qoqlsNaXRd+fKtFfECxlZVNVF9SOsgTZEr2TUjJJbyeNX1IZrKIbyGlBABfpQPv2UDrly13LkJXDVhpQ5MhtGwcyF4HKjlU4E8xwB0AvDjd6AGmevZ87EcQRHgcO52e9uNsYELOrAa/Yh81YlmYLQJ5HWyq0+kzQ/DQKEusg6CRI27ryy8nReRS0wsoetkmRwogHSprliCckfEjXG9yAQc74J0WB99vu6DF3i3pMucsXM6tpBbxd2mVJAwXwGogNRBvGRA4jtHKTXkAIwLGCR/mT4Lh75oneQXXP9sAYfGRDCsnw7pX/jRZkU3M44kjw2l5zRIzb4CbZ8dULdL6wbNPZOpK0B6gN1UR1mdoxAaL/GrWiLPL3SEwW9YMTU/d64BtLahAVyucWhj9Mm8ign9IfQaBtd2/GbvCAEBpG5eMcrj2I0ktpKLeaqXQ3Pst42KGIshpdTmQLAeTgFGJ2wvh+tayMOR0n1RZ8B9z13vnOPBnsBq4E1ffgZpPFZHWVpO2cvhjYpOcbBd5TlhpDu5zq9mHGZcVi0y+VFkcFkDdyKJfTt99wEyHSEzDM90KH0nexpwZHJHKYYhjzlwGe0pP/IKfxociaEb7YDbi6KGJY1R2cR76E6NAtXqY4pPH3plLcl8LD7V+cOLUbUWRFZRPTAbVZO3mxK18Xc1ZaAiS8ARJXpZliXAomR94siiiMx8ZBOkXGTlnH0F/9ov1xPtWwEqP9wAAAAASUVORK5CYII=
@@ -1558,6 +1558,8 @@
 27.2.0  - Fix "HTTP Error status - 403" from IMDB API
 
 27.3.0  - Tweak the tmdb/tvdb & ect conversion check
+
+27.3.1  - Added: Curupira (BR usenet, needs personal API key - see 'Authorization Tokens' in Config)
 
 //==============================================================================
 //    Notes.
@@ -4887,6 +4889,21 @@ var usenet_sites = [
       'loggedOutRegex': /Cloudflare|Ray ID|Passwort vergessen/,
       'matchRegex': /Keine Ergebnisse gefunden/,
       'both': true},
+  {   'name': 'Curupira',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAAsTAAALEwEAmpwYAAADeElEQVRYhcXX2U8TURQG8Pui/iMa6YKFrrSlINJOQVSkFCoURIIiIVpBiAFCRIkaVATKIuJCINEQl6BGIioFRVwgAi4FtYDGB41GjUbB4EL5zJWEWDuDKKW9yXmah9+de86dyUfIH2tpXaS/Xy1jFdboBkRVzJjYqoOsXIugMi3UpeEIORCOsJIV0O5bgYg9YYgqXo41u5YjZmcojIWhMBWEIDEvBMk7NNiQq0FatnosfZtqIHOrqsJiUQoJ11psjVi0pE5/mFfLOIU1DERVDOaMbw9GepYamRY1tm5RIStTOZGzOai6KI6/kA3v4NXqMX+4CjkZSuxIVyJ/U1C7yyaW1DG1XsRRmKbAzlRF1XTP5/fY3fGiVAV2p8gmitfLBGRq4LyLF6fIsTdZjhKzrIwIq3WDPsJRmiCzE1ElM+ojHOUmyWfiO1yKyjgpiC/xmlgJiCfxxjItOptWw9YQhYvVelTmambEj8SIQTz55mP2RGAk2aWeXTXg0AYFK34sWgziKTw/Q4XJ4SS3DdCqt6hZ8frVgSCe6rm1IIQV//EkCdYEdrwxKhDEUwN3rkLHuoEPd02c+MnIABBPTbvjisEFnnxsxuTTJLyyxXLiTfoAEE/gZ0u17kffY8L37ni8uBTDiZ/ViUDmgu/OUKL9eCScQ+5HP37NAKc9Ee9uxnHizeHLQGaLF+ZoUF4Uhvr94Thfo0d/czS+Pjaz9v1bpxHfuoxTrRhKxun1clb8YtgykNngpyoYfOowYtLBfs3+VvcrGVa8JdQf5G/45eMr8eWKAT/6TP+F03p5YS0r3qrxB5kJd1yKxrjNgK/trhP+r/XeFsuKX1MLQbjwhgoGEw8S4LTTcv/E/ku9OLWKFW9XCUG4pn3k+tQQzaacjiSMP0zAWO86YNj12Xe7GW1mOSt+I0gAkpYd/Jntqp0o0eJNdzze9pjgaI3BUKsBr7vi8fHeOry7HY/nLWtxq0qPM5ZgHI2VTF+1JqMEnfmhGKzW49FBLVqNUk78pkzwiWzKUg3O5X8+00eG69gp3iUX4I6Ebyc0sfgEl/LRLeYdIjQu/UosXsZ7AnkT/QF8/q9sQOOSV3ExD30iP+t0MqIxKW+jwuYtvFfk19YrkSxwyYd0EzQu0cQyn8dO39wN/33RuEQTCw0NZSbp6JxxmWCUTjsduOme/7Z+AqhHpizOuMJiAAAAAElFTkSuQmCC',
+      'searchUrl': 'https://curupira.cc/api?t=movie&imdbid=%tt%&apikey=CURUPIRA_APIKEY_PLACEHOLDER',
+      'goToUrl': 'https://curupira.cc/titles/movie/%tmdbid%',
+      'loggedOutRegex': /code="100"/,
+      'matchRegex': /total="0"/,
+      'rateLimit': 1200},
+  {   'name': 'Curupira',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAAsTAAALEwEAmpwYAAADeElEQVRYhcXX2U8TURQG8Pui/iMa6YKFrrSlINJOQVSkFCoURIIiIVpBiAFCRIkaVATKIuJCINEQl6BGIioFRVwgAi4FtYDGB41GjUbB4EL5zJWEWDuDKKW9yXmah9+de86dyUfIH2tpXaS/Xy1jFdboBkRVzJjYqoOsXIugMi3UpeEIORCOsJIV0O5bgYg9YYgqXo41u5YjZmcojIWhMBWEIDEvBMk7NNiQq0FatnosfZtqIHOrqsJiUQoJ11psjVi0pE5/mFfLOIU1DERVDOaMbw9GepYamRY1tm5RIStTOZGzOai6KI6/kA3v4NXqMX+4CjkZSuxIVyJ/U1C7yyaW1DG1XsRRmKbAzlRF1XTP5/fY3fGiVAV2p8gmitfLBGRq4LyLF6fIsTdZjhKzrIwIq3WDPsJRmiCzE1ElM+ojHOUmyWfiO1yKyjgpiC/xmlgJiCfxxjItOptWw9YQhYvVelTmambEj8SIQTz55mP2RGAk2aWeXTXg0AYFK34sWgziKTw/Q4XJ4SS3DdCqt6hZ8frVgSCe6rm1IIQV//EkCdYEdrwxKhDEUwN3rkLHuoEPd02c+MnIABBPTbvjisEFnnxsxuTTJLyyxXLiTfoAEE/gZ0u17kffY8L37ni8uBTDiZ/ViUDmgu/OUKL9eCScQ+5HP37NAKc9Ee9uxnHizeHLQGaLF+ZoUF4Uhvr94Thfo0d/czS+Pjaz9v1bpxHfuoxTrRhKxun1clb8YtgykNngpyoYfOowYtLBfs3+VvcrGVa8JdQf5G/45eMr8eWKAT/6TP+F03p5YS0r3qrxB5kJd1yKxrjNgK/trhP+r/XeFsuKX1MLQbjwhgoGEw8S4LTTcv/E/ku9OLWKFW9XCUG4pn3k+tQQzaacjiSMP0zAWO86YNj12Xe7GW1mOSt+I0gAkpYd/Jntqp0o0eJNdzze9pjgaI3BUKsBr7vi8fHeOry7HY/nLWtxq0qPM5ZgHI2VTF+1JqMEnfmhGKzW49FBLVqNUk78pkzwiWzKUg3O5X8+00eG69gp3iUX4I6Ebyc0sfgEl/LRLeYdIjQu/UosXsZ7AnkT/QF8/q9sQOOSV3ExD30iP+t0MqIxKW+jwuYtvFfk19YrkSxwyYd0EzQu0cQyn8dO39wN/33RuEQTCw0NZSbp6JxxmWCUTjsduOme/7Z+AqhHpizOuMJiAAAAAElFTkSuQmCC',
+      'searchUrl': 'https://curupira.cc/api?t=tvsearch&imdbid=%tt%&apikey=CURUPIRA_APIKEY_PLACEHOLDER',
+      'goToUrl': 'https://curupira.cc/titles/tv/%tmdbid%',
+      'loggedOutRegex': /code="100"/,
+      'matchRegex': /total="0"/,
+      'rateLimit': 1200,
+      'TV': true},
   {   'name': 'Digital Carnage',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwAgMAAAAqbBEUAAAADFBMVEUDAwP39/ejo6NKSkqAAbjJAAAAX0lEQVQoz2OAA/5VexAcvtAcBId3wDmcQI7dKihYCeRYhsIA2ZwomHlrgJz8/1DwB8hJgAYIMocPrCwB7rZBy+FD4fx/g+QfBht0n2bBw4DCEIXED8I05v9w8IEBGQAAoXiN4YV4/UMAAAAASUVORK5CYII=',
       'searchUrl': 'https://digitalcarnage.info/movies?imdb=%nott%',
@@ -6626,6 +6643,10 @@ async function replaceSearchUrlParams(site, movie_id, movie_title, movie_title_o
   if (site.searchUrl.includes("http://voidtools.replacement")) {
     const voidURL = GM_config.get("void_url").replace(/\/+$/, "");
     clonedSite.searchUrl = clonedSite.searchUrl.replace("http://voidtools.replacement", voidURL);
+  }
+
+  if (site.searchUrl.includes("CURUPIRA_APIKEY_PLACEHOLDER")) {
+    clonedSite.searchUrl = clonedSite.searchUrl.replace("CURUPIRA_APIKEY_PLACEHOLDER", GM_config.get("curupira_apikey"));
   }
 
   var fields = [];
@@ -11590,6 +11611,7 @@ function countSites(task) {
       'milkie_authToken': {'type': 'text'},
       'tnt_authToken': {'type': 'text'},
       'videothek_authToken': {'type': 'text'},
+      'curupira_apikey': {'type': 'text'},
       'void_url': {'type': 'text'},
       'void_username': {'type': 'text'},
       'void_password': {'type': 'text'}
@@ -12209,6 +12231,11 @@ var config_fields = {
   },
   'videothek_authToken': {
     'label': 'Videothek:',
+    'type': 'text',
+    'default': ''
+  },
+  'curupira_apikey': {
+    'label': 'Curupira:',
     'type': 'text',
     'default': ''
   },
