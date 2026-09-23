@@ -11631,7 +11631,7 @@ function countSites(task) {
 //    IMDb anti-bot JS challenge detection
 //==============================================================================
 
-if (window.awsWafCookieDomainList || window.gokuProps) {
+if (document.documentElement.innerHTML.includes('gokuProps')) {
   // console.log(document.documentElement.outerHTML);
   console.log("❌ IMDb Scout Mod (JS challenge 1): Anti-bot JS challenge detected. Skipping execution.");
   return;
@@ -12637,7 +12637,7 @@ function checkDummyElem(mutation, observer) {
 //==============================================================================
 
 function startRedesign() {
-  if (window.awsWafCookieDomainList || window.gokuProps) {
+  if (document.documentElement.innerHTML.includes('gokuProps')) {
     console.log("❌ IMDb Scout Mod (JS challenge 2): Anti-bot JS challenge detected. Skipping execution.");
     return;
   }
@@ -12660,7 +12660,7 @@ function startRedesign() {
 
 
 function startReference() {
-  if (window.awsWafCookieDomainList || window.gokuProps) {
+  if (document.documentElement.innerHTML.includes('gokuProps')) {
     console.log("❌ IMDb Scout Mod (JS challenge 3): Anti-bot JS challenge detected. Skipping execution.");
     return;
   }
