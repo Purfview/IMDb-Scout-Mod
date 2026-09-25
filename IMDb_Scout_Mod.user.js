@@ -11406,6 +11406,7 @@ async function adsRemovalReference() {
   $('#ad_feedback_handler').remove();
   $('.nas-slot').remove();
   $('.sc-8e2141d1-1').remove();
+  $('[class*=AdSlot]').remove();
 
   // after 2 secs run same again:
   await sleep(2000);
@@ -11426,6 +11427,7 @@ async function adsRemovalReference() {
   $('#ad_feedback_handler').remove();
   $('.nas-slot').remove();
   $('.sc-8e2141d1-1').remove();
+  $('[class*=AdSlot]').remove();
 }
 
 async function adsRemoval() {
