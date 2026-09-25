@@ -11452,6 +11452,7 @@ async function adsRemoval() {
   $('.imdb-footer').remove();
   $('.navbar__imdbpro').remove();
   $('[class^=Root__Separator]').remove();
+  $('[class*=AdSlot]').remove();
 
   // after 3 secs run same again:
   await sleep(3000);
@@ -11467,6 +11468,7 @@ async function adsRemoval() {
   $('.imdb-footer').remove();
   $('.navbar__imdbpro').remove();
   $('[class^=Root__Separator]').remove();
+  $('[class*=AdSlot]').remove();
 }
 
 //==============================================================================
