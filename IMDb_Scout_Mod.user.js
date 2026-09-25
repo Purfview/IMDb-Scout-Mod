@@ -12694,6 +12694,20 @@ if (navigator.userAgent.toLowerCase().indexOf('chrome') > -1 || navigator.userAg
 }
 
 //==============================================================================
+//    Remove focus stealing div
+//==============================================================================
+
+// Note1: This div steals focus from the scout links in a redesigned title page. v19.1 fix
+// Note2: The div can be added again later. Observed in Firefox Nightly. v27.5.0 fix
+async function deleteFocusStealingDiv() {
+  $('#ipc-wrap-background-id').remove();
+  await sleep(1000);
+  $('#ipc-wrap-background-id').remove();
+  await sleep(2000);
+  $('#ipc-wrap-background-id').remove();
+}
+
+//==============================================================================
 //    Start: Display 'Load' button or add links to sites
 //==============================================================================
 
@@ -12706,12 +12720,12 @@ function startIMDbScout() {
   console.log("IMDb Scout Mod (startIMDbScout): Starting main functions.");
 
   if (!onSearchPage && GM_config.get('loadmod_on_start_movie')) {
-    $('#ipc-wrap-background-id').remove(); // This div steals focus from the scout links. v19.1 fix
+    deleteFocusStealingDiv();
     performPage();
   } else if (onSearchPage && GM_config.get('loadmod_on_start_search')) {
     performSearch();
   } else {
-    $('#ipc-wrap-background-id').remove(); // This div steals focus from the scout links. v19.1 fix
+    deleteFocusStealingDiv();
     displayButton();
   }
 }
