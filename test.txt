@@ -1,1 +1,14 @@
-testing01
+[
+  {   'name': 'new_SC',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAgBAMAAAD3btVMAAAAMFBMVEUODg7v7+8bGxvR0dGSkpJubm6np6eNjY1JSUkvLy9dXV20tLSbm5t/f3/IyMjAwMC3pUdjAAAAWklEQVQY02MY/IDPGAYegPmMgjAgAOYzKcGAAkwLezrDnAwkI45yXdjB1oDgX5vAVYBsBVf+0gBkfgPDjgOcExD8sPAL6dFIfM4IBo4AXO5ld4GBAgz3DjoAAL/WFfMU8gzyAAAAAElFTkSuQmCC',
+      'searchUrl': 'https://secret-cinema.pw/torrents.php?action=advanced&searchsubmit=1&filter_cat=1&cataloguenumber=%tt%&order_by=time&order_way=desc&tags_type=0',
+      'loggedOutRegex': /<title>Login :: Secret Cinema/,
+      'matchRegex': /Your search did not match anything/,
+      'both': true},
+  {   'name': 'new2_SC-Desc',
+      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAgBAMAAAD3btVMAAAAMFBMVEUODg7v7+8bGxvR0dGSkpJubm6np6eNjY1JSUkvLy9dXV20tLSbm5t/f3/IyMjAwMC3pUdjAAAAWklEQVQY02MY/IDPGAYegPmMgjAgAOYzKcGAAkwLezrDnAwkI45yXdjB1oDgX5vAVYBsBVf+0gBkfgPDjgOcExD8sPAL6dFIfM4IBo4AXO5ld4GBAgz3DjoAAL/WFfMU8gzyAAAAAElFTkSuQmCC',
+      'searchUrl': 'https://secret-cinema.pw/torrents.php?action=advanced&searchsubmit=1&filter_cat=1&description=%tt%&order_by=time&order_way=desc&tags_type=0',
+      'loggedOutRegex': /<title>Login :: Secret Cinema/,
+      'matchRegex': /Your search did not match anything/,
+      'both': true}
+]
