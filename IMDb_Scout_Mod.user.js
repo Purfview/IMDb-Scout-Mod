@@ -1580,7 +1580,8 @@
                        Enable it by adding a URL to "Direct URL to custom_sites" setting.
                        Content should be just an array. ( usual configs inside [] )
                        Note1: Custom sites must be assigned to the 3rd or 2nd search bar.
-                       Note2: An additional script refresh is required for full sync, as the process is not synchronous.
+                       Note2: Site names should be unique. [no dupes with other site names in the script]
+                       Note3: An additional script refresh is required for full sync, as the process is not synchronous.
           Added: Is it Woke or Not.
 
 
