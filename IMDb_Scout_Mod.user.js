@@ -1,4 +1,4 @@
-﻿// ==UserScript==
+// ==UserScript==
 //
 // @name         IMDb Scout Mod
 // @version      27.5.0
@@ -1747,6 +1747,14 @@ var custom_sites = [
       'inThirdSearchBar': true,
       'both': true}
 ];
+
+// URL to personal custom_sites. Read 27.6.0 log
+var custom_sites_link = GM_getValue('custom_sites_link', '');
+var custom_sites_code = GM_getValue('custom_sites_code', '');
+getCustomSites();
+if (custom_sites_link && custom_sites_code) {
+  custom_sites = Function('"use strict"; return (' + custom_sites_code + ');')();
+}
 
 var public_sites = [
   {   'name': '1337x',
@@ -6672,6 +6680,62 @@ async function replaceSearchUrlParams(site, movie_id, movie_title, movie_title_o
 }
 
 //==============================================================================
+//    Get custom_sites from personal URL
+//==============================================================================
+
+function getCustomSites() {
+  if (custom_sites_link) {
+    GM.xmlHttpRequest({
+      method: "GET",
+      timeout: 8000,
+      url:     custom_sites_link,
+      cookiePartition: { topLevelSite: custom_sites_link },
+      headers: { "User-Agent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:108.0) Gecko/20100101 Firefox/108.0" },
+      onload: function(response) {
+        if (response.status < 400) {
+          const result = String(response.responseText);
+          try {
+            const custom_var = Function('"use strict"; return (' + result + ');')();
+            if (Array.isArray(custom_var)) {
+              if (custom_var.every(function(site) {
+                return site['inThirdSearchBar'] === true || site['inSecondSearchBar'] === true;
+              })) {
+                GM.setValue("custom_sites_code", result);
+              } else {
+                  GM.notification("Syntax Error 2.", "IMDb Scout Mod (Custom sites)");
+                  console.log("❌ IMDb Scout Mod (Custom sites): Syntax Error 2.");
+              }
+            }
+          } catch (e) {
+              GM.notification("Syntax Error.", "IMDb Scout Mod (Custom sites)");
+              console.log("❌ IMDb Scout Mod (Custom sites): Syntax Error.");
+          }
+        } else {
+            console.log("❌ IMDb Scout Mod (Custom sites): Request Status Error: " + response.status);
+            if (!custom_sites_code) {
+              GM.notification("Request Status Error: " + response.status, "IMDb Scout Mod (Custom sites)");
+            }
+        }
+      },
+      onerror: function() {
+        GM.notification("Request Error.", "IMDb Scout Mod (Custom sites)");
+        console.log("❌ IMDb Scout Mod (Custom sites): Request Error.");
+      },
+      onabort: function() {
+        GM.notification("Request Error.", "IMDb Scout Mod (Custom sites)");
+        console.log("❌ IMDb Scout Mod (Custom sites): Request Aborted.");
+      },
+      ontimeout: function() {
+        GM.notification("Request Error.", "IMDb Scout Mod (Custom sites)");
+        console.log("❌ IMDb Scout Mod (Custom sites): Request Timeout.");
+      }
+    });
+  } else {
+      GM.setValue("custom_sites_code", '');
+  }
+}
+
+//==============================================================================
 //    Convert IMDb ID to TVDb/TVmaze/TMDb/Douban ID
 //==============================================================================
 
@@ -11507,6 +11571,7 @@ function countSites(task) {
       'imdbscoutmod_header_text': {'type': 'text'},
       'imdbscoutsecondbar_header_text': {'type': 'text'},
       'imdbscoutthirdbar_header_text': {'type': 'text'},
+      'custom_sites_link': {'type': 'text'},
       'mod_icons_size': {'type': 'text'},
       'iconsborder_size': {'type': 'select', 'options': ['2px', '3px', '4px', '5px', '6px']},
       'cfg_iconsize': {'type': 'text'},
@@ -11753,6 +11818,11 @@ var config_fields = {
   },
   'imdbscoutthirdbar_header_text': {
     'label': 'Header text for the 3rd bar:&nbsp',
+    'type': 'text',
+    'default': ''
+  },
+  'custom_sites_link': {
+    'label': 'Direct URL to custom_sites:',
     'type': 'text',
     'default': ''
   },
@@ -12513,7 +12583,9 @@ GM_config.init({
 
       $('#imdb_scout').contents().find("img").css({"margin-right": "4px", "width": GM_config.get('cfg_iconsize'), "height": GM_config.get('cfg_iconsize')});
     },
-
+    'save': function() {
+      GM.setValue("custom_sites_link", GM_config.get('custom_sites_link'));
+    },
     'close': function() {
       location.reload();
     }
