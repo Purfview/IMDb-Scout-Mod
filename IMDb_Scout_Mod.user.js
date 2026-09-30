@@ -9388,7 +9388,7 @@ function getInfoFromPlex(title, movie_id, tvdb_id, plex_url, plex_token) {
     const titleUri = title.replace(/&/g,'%26').replace(/#/g,'%23');
     const imdbid = "tt" +movie_id;
     const tvdbid = "thetvdb://" +tvdb_id;
-    const url = plex_url+ "/search?query=" +titleUri+ "&X-Plex-Token=" +plex_token;
+    const url = plex_url+ "/search?query=" +titleUri+ "&includeGuids=1&X-Plex-Token=" +plex_token;
     GM.xmlHttpRequest({
       method: "GET",
       timeout: 10000,
@@ -9399,7 +9399,7 @@ function getInfoFromPlex(title, movie_id, tvdb_id, plex_url, plex_token) {
           const parser = new DOMParser();
           const result = parser.parseFromString(response.responseText, "text/xml");
           if (resultStr.match(imdbid)) {
-            const metadata_key = $(result).find('[guid*=' +imdbid+ ']').attr("key");
+            const metadata_key = $(result).find(`Guid[id*="${imdbid}"]`).first().parent().attr("key");
             if (metadata_key != undefined) {
               GM.setValue("Plex_metadata_key", metadata_key);
             }
