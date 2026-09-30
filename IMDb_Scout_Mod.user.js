@@ -9304,23 +9304,17 @@ async function start_plex(movie_id, movie_title, movie_title_orig) {
     titles.push(movie_title_orig);
   }
 
-  let tvdb_id = "00000000";
-  // newLayout || reference : check if 'title' has just a year in brackets, eg. "(2009)" // Note: 'title' is fail-safe measure if other checks fail.
-  const is_movie = (Boolean($('[data-testid=hero-title-block__metadata]').text().match('TV')) || Boolean($('li.ipl-inline-list__item').text().match('TV'))) ? false : Boolean($('title').text().match(/.*? \(([0-9]*)\)/));
-  if (!is_movie) {
-    tvdb_id = await getTVDbID(movie_id);
-  }
-
   let search_found = false;
   let found_title = "";
   let metadata_key = "none";
   let machineId = "none";
   for (var i = 0; i < titles.length; i++) {
-    const x = await getInfoFromPlex(titles[i], movie_id, tvdb_id, plex_url, plex_token);
+    const x = await getInfoFromPlex(titles[i], movie_id, plex_url, plex_token);
     if (x === true) {
       search_found = x;
       found_title = titles[i];
       metadata_key = await GM.getValue("Plex_metadata_key", "none");
+      metadata_key = metadata_key.replace(/\/children$/, ''); // TV-Series contains "/children" at the end, but then it doesn't open anything
       machineId = await machineIdentifierFromPlex(plex_url);
       break;
     } else if (x === "stop"){
@@ -9329,7 +9323,7 @@ async function start_plex(movie_id, movie_title, movie_title_orig) {
     }
   }
 
-  const link_notfound = plex_url+ "/search?query=" +movie_title+ "&X-Plex-Token=" +plex_token;
+  const link_notfound = plex_url+ "/search?query=" +movie_title+ "&includeGuids=1&X-Plex-Token=" +plex_token;
   if (search_found === true) {
     let link_found;
     if (machineId !== "none" && metadata_key !== "none") {
@@ -9383,11 +9377,10 @@ function machineIdentifierFromPlex(plex_url) {
   });
 }
 
-function getInfoFromPlex(title, movie_id, tvdb_id, plex_url, plex_token) {
+function getInfoFromPlex(title, movie_id, plex_url, plex_token) {
   return new Promise(resolve => {
-    const titleUri = title.replace(/&/g,'%26').replace(/#/g,'%23');
+    const titleUri = encodeURIComponent(title);
     const imdbid = "tt" +movie_id;
-    const tvdbid = "thetvdb://" +tvdb_id;
     const url = plex_url+ "/search?query=" +titleUri+ "&includeGuids=1&X-Plex-Token=" +plex_token;
     GM.xmlHttpRequest({
       method: "GET",
@@ -9400,12 +9393,6 @@ function getInfoFromPlex(title, movie_id, tvdb_id, plex_url, plex_token) {
           const result = parser.parseFromString(response.responseText, "text/xml");
           if (resultStr.match(imdbid)) {
             const metadata_key = $(result).find(`Guid[id*="${imdbid}"]`).first().parent().attr("key");
-            if (metadata_key != undefined) {
-              GM.setValue("Plex_metadata_key", metadata_key);
-            }
-            resolve(true);
-          } else if (resultStr.match(tvdbid)) {
-            const metadata_key = $(result).find('[guid*=' +tvdb_id+ ']').attr("key");
             if (metadata_key != undefined) {
               GM.setValue("Plex_metadata_key", metadata_key);
             }
