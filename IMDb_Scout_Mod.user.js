@@ -1848,13 +1848,6 @@ var public_sites = [
       'loggedOutRegex': /Cloudflare|Ray ID/,
       'matchRegex': /no posts matched your criteria/,
       'TV': true},
-  {   'name': 'DonTor',
-      'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEwAAABMAgMAAAC6+bm4AAAADFBMVEUAAAABPKf5+v2GoM92jUKqAAAAAXRSTlMAQObYZgAAAVZJREFUOMu91LFtwzAQBVClyAjZJyOkiERABdNrBDWZwiOo8CeIVEQm4RJsUqUJYDt3lqHzN1m4SQgX0sPdkabI67qu5yHSPd7YyxZGgQ+VPVuqJTftqbLXpvX1+DvLDfs6fd+aK4Ag2QwgsDnoSGTz2eLFLOx0DNfm12olX1lBAKRCMpPUT40bFzOPMKj5aDYjekSxvVlBHrGIhc0cgoQmMs2bsNOHzUYkTSeb5R3oyaagJdnKvh+wPxcxizpNZbo8LWy26PLUAttOJyObkPXBbFr6cq4E2wMf1wiHaHtwkAi27c1jIVsue2E26JsuiL5lWrebTCPA31wjXMM8n5dRbUZi07+IXWVApnpiejrYNDaSDZJWkMgckoM4n+fkEao7UxDJ3uQHJDKf+x8gs30csabSGbdUuwuXWfnOfJPpeD/8R9+wcW9fu7dPNntsPXGzZ7d6+y+u2i95hsgMCwAAAABJRU5ErkJggg==',
-      'searchUrl': 'https://dontorrent.club/buscar/%search_string_orig%',
-      'loggedOutRegex': /Cloudflare|Ray ID/,
-      'matchRegex': /encontrado <b>0</,
-      'spaceEncode': ' ',
-      'both': true},
   {   'name': 'DW',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAMFBMVEUAAAA3Qlb///+Ll51jbH62uL7N0M/k6+4F/wX/AQH/5x7Nze6M+I38+Zn/ZmbwyM37p+M4AAAAAXRSTlMAQObYZgAAA3tJREFUSMetlT+P00AQxVEa6sWbNBTkxrGNCCDF3kCJ1lnSxwmhRDgHNTqBoKZKwRdIAz0SBaGku4qCihKJho7mkBAg0fFmdn3EKA0SUySbnV/mvdk/9pl/iM5jCvG4vzd/RKeR9ffn03mBGNcgHuzLr4ybFAU+xntqIG9cEcJNQLTzmc/vEkctAaIF8jvETaIHLYEY+RaR74qcJbKTNmBcjRJ/ChxygTYxpeyPgxT9/R22QolG4bUUaIfrUf9Uwe4D7DZrCgz03wqTrDC2DBodGrUs3CZKczLGRUReIdUA8jhANXEMHTRqr0EDAKak25ieFzld+fjpE9Eb56DRFwsz5wxWTmJRX3mJ4JFzXTHRQQ+O81dPTr5SRpx/RdeInNNEYkE5d52Ifm02mxfkC8T4R6xtlTEQwwLRKr+6QXy+hPwHMgX2YmRLBuhA65pW2OAvXOIK59GRuUmxOkd99minFMNGzSWeEzpIjN9wC5cARqomN3GuhAsAnJ8gj3W6Gwlge3SINlZQPdl8pqEcHoNlqGINoEMqT1mAoMqhSlogj+iRPeqf6aSaC3Bbjm/EUCn2yICmWQUg6ZJ1iCrVqnf5GSlVDrXjsPlBDiAuY82/IrKqvLg+HikeydQ0FiC/65xSSmO6erc+PlBqO1MI9CFAko+UCsC39fp4CI2B8lM/xMNSNYAmADRT52LlY1lzF3MZQ1lFlwFUiYqSAIx3gTIW4IOm1yrbBYYBqAeqC4AXym7tDkAe6GJPuhfXzxKg8Smw5d28Jb8qZC5cXD8dsBsKjc3pAQOHGE9hntep5iXAsvuqtwSY/zRuTAn7fIKVRuiaYouvasynlh5WhBgx8O7YL1Fe8wOtTqZ87o8GEX6KaPkenAAL+dPdc3JoE+UK6+e/QVsGI10s7xmVM9AhZL2nNLUBmPlvIn+zApCn35uRV8KR9HczTE+WbUBOvb9aIXoNWnmgyprnQ2OiAWrxIldTTByE+Sg0oe9bUWALojFsgCQAj3wdUdjtQ9/brdRlhWCiOUF3rPdyKK1wD0GjKXHD2702k0UQhaAROr258GeVuSpYDCUGXnwln3zGzlPWfl9IcX3LSh0WQIH2G0f8jQ2o8UjpbeuNIyKykxE2fmL4SGV73noGBF98G+17c3bk2cO3ulhi2M6HXjnuvyXa916VGvfuk4eW+P//i996sTilZguE0AAAAABJRU5ErkJggg==',
       'searchUrl': 'https://forum.dirtywarez.com/search/search?keywords=%tt%',
@@ -7672,11 +7665,6 @@ async function maybeAddLink(elem, site, scout_tick) {
     reqHeader = {
       "Host": "tntracker.org",
       "Authorization": GM_config.get("tnt_authToken")
-    };
-  } else if (site['name'] == "DonTor") {
-    reqHeader = {
-      "Host": "dontorrent.club",
-      "Referer": "https://dontorrent.club"
     };
   } else if (site['name'].includes("Voidtools-")) {
     if (GM_config.get("void_username") !== "") {
