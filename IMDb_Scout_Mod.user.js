@@ -6271,6 +6271,7 @@ var icon_sites_main = [
   {   'name': 'Jackett (Title)',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEQAAABEAgMAAABFfXshAAAADFBMVEUAAAAaGhro6OiJiYlDa1W1AAAAAXRSTlMAQObYZgAAAOlJREFUOMu91DEOgjAUBmAcPAL38QgMPF7iwEFcPIV6BJNHjBNyEiRx4ADdWVj0UWxfG0BCjP5Jh37pe+3SF/RZA0AU2IRgEhmQxB2swM1Gjjh14CU2RRIRabSelWhEwinBZ2mu7wUVZb4kOWxLX66VMgK90I18aVkurqTEQrkIKi2ZyI600MWK4t2RVzYqoIV+LjQt+AcprZy1tAN5fJBkRIovpKaDlXzP0qSuIAuKpFRcWVTtyEn6xEvlTrmVUrFkiSuo+D1vCbUAVg340gWnxY2I/7+WyyZYzcpwJozODb/Mzifpa0ngBTp25EkshcgPAAAAAElFTkSuQmCC',
       'searchUrl': 'http://localhost:9117/UI/Dashboard#search=%search_string%',
+      'spaceEncode': ' ',
       'showByDefault': false},
   {   'name': 'JustWatch',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgBAMAAACBVGfHAAAAElBMVEUAAAAYIivZs0BnXjaljDvxylNUOgvkAAAAAXRSTlMAQObYZgAAAJdJREFUKM9lkuENQjEIhOsGVljgQR2A6AING7yk+68iErUI/PxyXIFra62HalaXCK4uiJUEJjEBaiQGbsQZ0ExAkf+AdiQOALqB+xEUYmAABw/B0WHxBvToBtbxA+MpBk7RDxiCJHAKLHWAZmpd8u6aG+gG3jK9hb+mON2U87N5sDJ6Xa6uXw9UT1iPXGIoQeUoa9jlO7wA7EAu8zbNLQcAAAAASUVORK5CYII=',
