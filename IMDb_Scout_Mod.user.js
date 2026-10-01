@@ -1736,7 +1736,7 @@ To get a native original title instead of IMDb's latinized one.
 Douban id.
 
 #  %search_string%:
-Movie title. [US]
+Movie title. [US title]
 
 #  %search_string_orig%:
 Original movie title (e.g. Yôjinbô). [Reverts to %search_string% if original is not set]
