@@ -1763,8 +1763,12 @@ var custom_sites = [
 ];
 
 // URL to personal custom_sites. Read 27.6.0 log
-var custom_sites_link = GM_getValue('custom_sites_link', '');
-var custom_sites_code = GM_getValue('custom_sites_code', '');
+var custom_sites_link = '';
+var custom_sites_code = '';
+if (typeof GM_getValue !== 'undefined') { // Isolate the feature from Greasemonkey v4, as it dropped support for the legacy API
+  custom_sites_link = GM_getValue('custom_sites_link', '');
+  custom_sites_code = GM_getValue('custom_sites_code', '');
+}
 getCustomSites();
 if (custom_sites_link && custom_sites_code) {
   custom_sites = Function('"use strict"; return (' + custom_sites_code + ');')();
