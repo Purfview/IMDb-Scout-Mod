@@ -8641,6 +8641,7 @@ async function activate_CheckURLs(button, completed_icon) {
       deduped_hosts = deduped_hosts.filter(function (e) {return e !== 'https://www.amazon.com';});
       deduped_hosts = deduped_hosts.filter(function (e) {return e !== 'https://www.amazon.de';});
       deduped_hosts = deduped_hosts.filter(function (e) {return e !== 'https://cinefiles.bampfa.berkeley.edu';});
+      deduped_hosts = deduped_hosts.filter(function (e) {return e !== 'https://dl4all.org';});
 
   const interval = 100;
   const timeout = 45000;
