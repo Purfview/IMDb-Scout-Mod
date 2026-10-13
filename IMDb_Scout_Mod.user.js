@@ -12827,18 +12827,10 @@ function startIMDbScout() {
 if (onReferencePage) {
   console.log("✅ IMDb Scout Mod (Start): Starting Reference page: " + location.href);
   document.events.on('bodyloaded', () => { darkReferenceStyles(); });
-  if (navigator.userAgent.toLowerCase().indexOf('firefox') > -1) {
-    document.addEventListener('DOMContentLoaded', startReference, { once: true });
-  } else { // counter reflow on Chromium based browsers
-      document.addEventListener('DOMContentLoaded', () => {setTimeout(startReference, 400);}, { once: true });
-  }
+  document.addEventListener('DOMContentLoaded', () => {setTimeout(startReference, 400);}, { once: true });
 } else {
     console.log("✅ IMDb Scout Mod (Start): Starting Redesigned or List page: " + location.href);
-    if (navigator.userAgent.toLowerCase().indexOf('firefox') > -1) {
-      document.addEventListener('DOMContentLoaded', startRedesign, { once: true });
-    } else { // counter reflow on Chromium based browsers
-        document.addEventListener('DOMContentLoaded', () => {setTimeout(startRedesign, 400);}, { once: true });
-    }
+    document.addEventListener('DOMContentLoaded', () => {setTimeout(startRedesign, 400);}, { once: true });
 }
 
 scoutWarning();
