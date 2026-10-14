@@ -7813,8 +7813,8 @@ function displayButton() {
   } else if (onSearchPage && $('div.ipc-title hgroup h1.ipc-title__text').length) {
     $('div.ipc-title hgroup h1.ipc-title__text').parent().append(p);
   // title reference
-  } else if (!onSearchPage && $('.titlereference-header').length) {
-    $('.titlereference-header').append(p);
+  } else if (!onSearchPage && $('.ipc-page-section--sp-pageMargin').length) {
+    $('.ipc-page-section--sp-pageMargin:eq(0)').before(p);
   // title redesign
   } else if (!onSearchPage && $('.ipc-page-section').length) {
     $('.ipc-page-section:eq(0)').parent().before(p);
