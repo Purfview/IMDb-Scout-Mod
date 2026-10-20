@@ -31,9 +31,16 @@ Meanings of the color borders around the icons:
 
 [Press here to install](https://greasyfork.org/en/scripts/407284-imdb-scout-mod)
 
-## Contributing:
+## Notes:
 
-Contributions are welcome.
+- **Recommended browser:** `Firefox`      
+- **Bugged browsers:** `Chrome`/`Chromium` based (super slow - the synchronous requests bug that they don't want to address)
+- **Safari:** It doesn't support sending cookies, so auto-search don't work with sites that require login.
+- **Recommended manager:** `Tampermonkey` [currently the only managers that supports all features]
+
+# Contributing
+
+Contributions made by human are welcome.
 
 ## Adding new sites:
 
