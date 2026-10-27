@@ -34,7 +34,7 @@ Meanings of the color borders around the icons:
 ## Notes:
 
 - **Recommended browser:** `Firefox`      
-- **Bugged browsers:** `Chrome`/`Chromium` based (super slow - the synchronous requests bug that they don't want to address)
+- **Bugged browsers:** `Chrome` & `Chromium` based browsers (super slow & doesn't send proper requests)
 - **Safari:** It doesn't support sending cookies, so auto-search don't work with sites that require login.
 - **Recommended manager:** `Tampermonkey` [currently the only manager that supports all features]
 
