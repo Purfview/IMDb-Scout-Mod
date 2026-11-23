@@ -1,7 +1,7 @@
 // ==UserScript==
 //
 // @name         IMDb Scout Mod
-// @version      28.1.3
+// @version      28.1.4
 // @namespace    https://github.com/Purfview/IMDb-Scout-Mod
 // @description  Auto search for movie/series on torrent, usenet, ddl, subtitles, streaming, predb and other sites. Adds links to IMDb pages from hundreds various sites. Adds movies/series to Radarr/Sonarr. Adds external ratings from Metacritic, Rotten Tomatoes, Letterboxd, Douban, Allocine, MyAnimeList, AniList. Media Server indicators for Plex, Jellyfin, Emby. Dark theme/style for Reference View. Adds/Removes to/from Trakt's watchlist. Removes ads.
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAMFBMVEUAAAD/AAAcAAA1AABEAABVAAC3AADnAAD2AACFAAClAABlAAB3AADHAACVAADYAABCnXhrAAAD10lEQVRIx73TV4xMURgH8H/OnRmZWe3T7h2sOWaNXu7oJRg9UccuHgTRBatMtAgSg+gJu9q+kFmihcQoD8qLTkK0CIkoy0YJITsRD0rCKTHFrnkSv5e5c88/53znO+fiPwvsvrN038cPNqrG9pJmHkRVnPcpaTlHJY60cfPSpsrzl1LKihrmLvxhCM2i3OHvDx0d+H7e3F6JBv5iZMiJfhFTfPYDMHrMImpwimWWUdSgDQkbno7fFpUPVgh+pHFbZR4SovSctDCM9Hac9IKd9rO8EevtBCkXgY5IMmgquwypP7qqfcp/Tp4KLONDVsWh3RSBB2rnZfit69ocUdqLn2prrRZYM0Jg4JibamKsqe7gfEh5GOAfeYJjVHIPZvil97rcXkMog30byWRwXYRWoxHbzNFHJJpAarO8NdEBBsdCaP3WMJltTmQd4zlnekTq9Z5dgACwAlrpK4BxdV5mvLuspRgMSHbCIFF0iS8MZ5S8oYBYKY7rByC4dDM9uSIUmPOIwxgQBoYeF93auP4qFyPbIVXziWeGTH1EFM57kJo2hqQju6BwIyRf6RmCjdT4JOdiwNgiH/PPD3qoqlsNaXRd+fKtFfECxlZVNVF9SOsgTZEr2TUjJJbyeNX1IZrKIbyGlBABfpQPv2UDrly13LkJXDVhpQ5MhtGwcyF4HKjlU4E8xwB0AvDjd6AGmevZ87EcQRHgcO52e9uNsYELOrAa/Yh81YlmYLQJ5HWyq0+kzQ/DQKEusg6CRI27ryy8nReRS0wsoetkmRwogHSprliCckfEjXG9yAQc74J0WB99vu6DF3i3pMucsXM6tpBbxd2mVJAwXwGogNRBvGRA4jtHKTXkAIwLGCR/mT4Lh75oneQXXP9sAYfGRDCsnw7pX/jRZkU3M44kjw2l5zRIzb4CbZ8dULdL6wbNPZOpK0B6gN1UR1mdoxAaL/GrWiLPL3SEwW9YMTU/d64BtLahAVyucWhj9Mm8ign9IfQaBtd2/GbvCAEBpG5eMcrj2I0ktpKLeaqXQ3Pst42KGIshpdTmQLAeTgFGJ2wvh+tayMOR0n1RZ8B9z13vnOPBnsBq4E1ffgZpPFZHWVpO2cvhjYpOcbBd5TlhpDu5zq9mHGZcVi0y+VFkcFkDdyKJfTt99wEyHSEzDM90KH0nexpwZHJHKYYhjzlwGe0pP/IKfxociaEb7YDbi6KGJY1R2cR76E6NAtXqY4pPH3plLcl8LD7V+cOLUbUWRFZRPTAbVZO3mxK18Xc1ZaAiS8ARJXpZliXAomR94siiiMx8ZBOkXGTlnH0F/9ov1xPtWwEqP9wAAAAASUVORK5CYII=
@@ -1605,6 +1605,8 @@
 28.1.3  - Added: V3X,
           Updated: LDU, THR, Treasure-Maps, NGP.
 
+28.1.4  - Update psarips
+
 //==============================================================================
 //    Notes.
 //==============================================================================
@@ -2074,12 +2076,12 @@ var public_sites = [
       'matchRegex': /сообщений не найдено/},
   {   'name': 'PSArips',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAWlBMVEUAAAD+/v4QEBA5ODhGRkYoKChbW1tRUVGDg4NsbGxjY2Ojo6P19fXLysqUlJSsrKy1tbXq6urCwMB3d3fc3Nzw8PDg4ODV1dWIWFi4jIzi0dG5qKiLOzuPGBhT4c7lAAAAAXRSTlMAQObYZgAAAbBJREFUOMt1k9mOnTAQROndu7HNMpPl/38zeOYmChK3JJ5O0dCu8nITtOKClh1geRJsnZBQhP0GT/wkCrUd3aGGJ0NSynM27A65Pjga6fljn45UxAo8TPj4+PXRpyOjPHwEVvr92X5OsDNSf3Dkz/a9IEQk2x/2mPRlEMnLe8GKPNa3FKYBQ3uHq78eU67whFPvbJA8indw6Y6PfDrypJDZmEYq3sNt+OYphhGtBUEKYxOl8z98uGhSuh6uBFPhUKTq+o+XWoeEaNm5yGqoHDiEXr7gpXZW55Rj9NWrEpmQMdpYZ7qxRCJeAfbsBxOpMImxxnxyvAJQ5wRFfNp8EJGLK7I3Yj6h65ItBEV3RFFCRvHIRCyEyDYA8sJ4SdZZIyQ0tGnToKU3x7DAglOWoMt8B0l4/gEar1BsHhOhsGuwkeDl8IEQKXYfAx9ZZ14+71/xOWMjP0p0FUcC6HweNCvxugFH2urQrVUNDi1dDR0x+RVuhSvtGrQWxBkR1JBOO+9hQVdCktmErxFw3EdAFbxEGb7v6QC48c3ja+e/5YFbl4p8c3q8uNN/5GtXi/ud/wGyiBNPa2asYgAAAABJRU5ErkJggg==',
-      'searchUrl': 'https://psa.rip/?s=%tt%',
+      'searchUrl': 'https://psarips.is/?s=%tt%',
       'loggedOutRegex': /Cloudflare|Ray ID/,
       'matchRegex': /try another search/},
   {   'name': 'PSArips',
       'icon': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAWlBMVEUAAAD+/v4QEBA5ODhGRkYoKChbW1tRUVGDg4NsbGxjY2Ojo6P19fXLysqUlJSsrKy1tbXq6urCwMB3d3fc3Nzw8PDg4ODV1dWIWFi4jIzi0dG5qKiLOzuPGBhT4c7lAAAAAXRSTlMAQObYZgAAAbBJREFUOMt1k9mOnTAQROndu7HNMpPl/38zeOYmChK3JJ5O0dCu8nITtOKClh1geRJsnZBQhP0GT/wkCrUd3aGGJ0NSynM27A65Pjga6fljn45UxAo8TPj4+PXRpyOjPHwEVvr92X5OsDNSf3Dkz/a9IEQk2x/2mPRlEMnLe8GKPNa3FKYBQ3uHq78eU67whFPvbJA8indw6Y6PfDrypJDZmEYq3sNt+OYphhGtBUEKYxOl8z98uGhSuh6uBFPhUKTq+o+XWoeEaNm5yGqoHDiEXr7gpXZW55Rj9NWrEpmQMdpYZ7qxRCJeAfbsBxOpMImxxnxyvAJQ5wRFfNp8EJGLK7I3Yj6h65ItBEV3RFFCRvHIRCyEyDYA8sJ4SdZZIyQ0tGnToKU3x7DAglOWoMt8B0l4/gEar1BsHhOhsGuwkeDl8IEQKXYfAx9ZZ14+71/xOWMjP0p0FUcC6HweNCvxugFH2urQrVUNDi1dDR0x+RVuhSvtGrQWxBkR1JBOO+9hQVdCktmErxFw3EdAFbxEGb7v6QC48c3ja+e/5YFbl4p8c3q8uNN/5GtXi/ud/wGyiBNPa2asYgAAAABJRU5ErkJggg==',
-      'searchUrl': 'https://psa.rip/?s=%search_string%',
+      'searchUrl': 'https://psarips.is/?s=%search_string%',
       'loggedOutRegex': /Cloudflare|Ray ID/,
       'matchRegex': /try another search/,
       'TV': true},
